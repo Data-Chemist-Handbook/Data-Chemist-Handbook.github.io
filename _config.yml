@@ -1,8 +1,8 @@
 # Configurations
-title:            Jekyll Gitbook
-longtitle:        Jekyll Gitbook
-author:           HE Tao
-email:            sighingnow@gmail.com
+title:            Handbook
+longtitle:        Handbook AI4Chem
+author:           C2D
+email:            email@gmail.com
 description: >
   Build Jekyll site with the GitBook style.
 
@@ -10,7 +10,7 @@ version:          1.0
 gitbook_version:  3.2.3
 
 url:              'https://data-chemist-handbook.github.io/'
-baseurl:          '/jekyll-gitbook'
+baseurl:          '/start'
 rss:              RSS
 
 # bootstrap: use the remote theme for the site itself
