@@ -1,7 +1,7 @@
 ---
 title: 8. Retrosynthesis
 author: Haomin
-date: 2024-09-11
+date: 2024-09-18
 category: Jekyll
 layout: post
 ---
