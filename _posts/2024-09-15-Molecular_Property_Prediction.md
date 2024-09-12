@@ -1,7 +1,7 @@
 ---
 title: 5. Molecular Property Prediction
 author: Haomin
-date: 2024-09-12
+date: 2024-09-15
 category: Jekyll
 layout: post
 ---
