@@ -1,19 +1,19 @@
 ---
-title: 7. Yield Prediction
+title: 6. Yield Prediction
 author: Haomin
 date: 2024-09-11
 category: Jekyll
 layout: post
 ---
 
-7.1 RNNs
+6.1 RNNs
 -------------
 
-7.2 GNNs
+6.2 GNNs
 -------------
 
-7.3 Random Forests
+6.3 Random Forests
 -------------
 
-7.4 Neural Networks
+6.4 Neural Networks
 -------------
