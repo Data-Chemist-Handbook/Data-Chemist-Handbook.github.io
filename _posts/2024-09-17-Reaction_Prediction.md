@@ -1,14 +1,14 @@
 ---
-title: 7. Retrosynthesis
+title: 8. Retrosynthesis
 author: Haomin
 date: 2024-09-11
 category: Jekyll
 layout: post
 ---
 
-7.1 Recurrent Neural Networks
+8.1 Recurrent Neural Networks
 -------------
 
-7.2 Graph Neural Networks
+8.2 Graph Neural Networks
 -------------
 
