@@ -6,17 +6,17 @@ category: Jekyll
 layout: post
 ---
 
-Introduction to Machine Learning Models
+3. Introduction to Machine Learning Models
 -------------
 Something here
 
-GNN
+3.1 GNN
 -------------
 Something here
 
-CNN
+3.2 CNN
 -------------
 Something here
 
-Model Evaluation and Selection
+3.3 Model Evaluation and Selection
 -------------
