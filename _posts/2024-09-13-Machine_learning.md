@@ -6,7 +6,7 @@ category: Jekyll
 layout: post
 ---
 
-3. Introduction to Machine Learning Models
+3.0 Introduction to Machine Learning Models
 -------------
 Something here
 
