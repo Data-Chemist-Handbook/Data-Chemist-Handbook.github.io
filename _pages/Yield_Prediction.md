@@ -1,8 +1,8 @@
 ---
 title: 7. Yield Prediction
 author: Haomin
-date: 2024-09-17
-category: chapter
+date: 2024-08-17
+category: Jekyll
 layout: post
 ---
 

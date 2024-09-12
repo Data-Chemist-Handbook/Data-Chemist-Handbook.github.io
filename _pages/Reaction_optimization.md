@@ -1,7 +1,7 @@
 ---
 title: 4. Reaction optimization
 author: Haomin
-date: 2024-09-14
+date: 2024-08-14
 category: Jekyll
 layout: post
 ---
