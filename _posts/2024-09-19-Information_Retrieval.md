@@ -1,7 +1,7 @@
 ---
 title: 9. Information Retrieval
 author: Haomin
-date: 2024-09-11
+date: 2024-09-19
 category: Jekyll
 layout: post
 ---
