@@ -8,7 +8,7 @@ layout: post
 
 4.1 Bayesian Optimization 
 -------------
-Content here
+Content here.
 
 4.2 Multi-arm bandit machines
 -------------
