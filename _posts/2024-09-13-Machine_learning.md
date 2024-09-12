@@ -1,7 +1,7 @@
 ---
 title: 3. Machine Learning Models
 author: Haomin
-date: 2024-09-11
+date: 2024-09-13
 category: Jekyll
 layout: post
 ---
