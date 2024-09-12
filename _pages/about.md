@@ -1,5 +1,5 @@
 ---
-title: acknowledgement
+title: Acknowledgement
 author: Haomin
 date: 2024-09-12
 category: Jekyll
