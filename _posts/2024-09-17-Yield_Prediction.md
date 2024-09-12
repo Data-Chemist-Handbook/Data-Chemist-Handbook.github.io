@@ -5,7 +5,7 @@ date: 2024-09-17
 category: Jekyll
 layout: post
 ---
-
+ 
 7.1 RNNs
 -------------
 
