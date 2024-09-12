@@ -6,7 +6,7 @@ category: Jekyll
 layout: post
 ---
 
-4.1 Bayesian Optimization
+4.1 Bayesian Optimization 
 -------------
 Content here
 
