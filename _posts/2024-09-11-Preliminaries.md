@@ -8,7 +8,7 @@ layout: post
 
 In the Preliminaries character, we will introduce some base coding still and data analysis still for the beginners.
 
-Introduction to Python
+2.1 Introduction to Python
 -------------
 Here is some python coding content.
 ### Setting up Python environment
@@ -18,7 +18,7 @@ variables, loops, functions
 ### Python packages
 josn
 
-Data Analysis with Python
+2.2 Data Analysis with Python
 -------------
 ### Importing and managing datasets
 For example, NumPy, Pandas
