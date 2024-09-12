@@ -8,7 +8,7 @@ layout: post
 
 In the Preliminaries character, we will introduce some base coding still and data analysis still for the beginners.
 
-2.1 Introduction to Python
+2.1 Introduction to Python 
 -------------
 Here is some python coding content.
 ### 2.1.1 Setting up Python environment
