@@ -11,17 +11,17 @@ In the Preliminaries character, we will introduce some base coding still and dat
 2.1 Introduction to Python
 -------------
 Here is some python coding content.
-### Setting up Python environment
+### 2.1.1 Setting up Python environment
 Anaconda, Jupyter Notebook
-### Basic syntax and structure
+### 2.1.2 Basic syntax and structure
 variables, loops, functions
-### Python packages
+### 2.1.3 Python packages
 josn
 
 2.2 Data Analysis with Python
 -------------
-### Importing and managing datasets
+### 2.2.1 Importing and managing datasets
 For example, NumPy, Pandas
-### Data visualization
+### 2.2.2 Data visualization
 Matplotlib, Seaborn
-### Statistical analysis basics
+### 2.2.3 Statistical analysis basics
