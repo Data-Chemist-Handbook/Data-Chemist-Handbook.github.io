@@ -1,15 +1,15 @@
 ---
-title: 6. Molecular Property Optimization
+title: 5. Molecular Property Optimization
 author: Haomin
-date: 2024-08-16
+date: 2024-08-15
 category: Jekyll
 layout: post
 ---
 
-## 6.1 Bayesian Optimization
+## 5.1 Bayesian Optimization
 
-## 6.2 Reinforcement Learning
+## 5.2 Reinforcement Learning
 
-## 6.3 Genetic Algorithms
+## 5.3 Genetic Algorithms
 
-## 6.4 Generative models with conditions
+## 5.4 Generative models with conditions

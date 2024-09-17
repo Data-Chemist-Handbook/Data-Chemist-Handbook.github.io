@@ -1,19 +1,17 @@
 ---
-title: 5. Molecular Property Prediction
+title: 4. Molecular Property Prediction
 author: Haomin
-date: 2024-08-15
+date: 2024-08-14
 category: Jekyll
 layout: post
 ---
 
-5.1 Recurrent Neural Networks
-
----
+## 4.1 Recurrent Neural Networks
 
 Content here.
 
-## 5.2 Graph Neural Networks
+## 4.2 Graph Neural Networks
 
-## 5.3 Random Forests
+## 4.3 Random Forests
 
-## 5.4 Neural Networks
+## 4.4 Neural Networks

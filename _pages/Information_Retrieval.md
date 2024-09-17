@@ -1,17 +1,17 @@
 ---
-title: 9. Information Retrieval
+title: 10. LLMs for Chemistry
 author: Haomin
-date: 2024-08-19
+date: 2024-08-20
 category: Jekyll
 layout: post
 ---
 
-## 9.1 Introduction of LLMs
+## 10.1 Introduction of LLMs
 
-## 9.2 Prompting engineering
+## 10.2 Prompting engineering
 
-## 9.3 LLMs call for tools
+## 10.3 LLMs call for tools
 
-## 9.4 Usage of LLM APIs
+## 10.4 Usage of LLM APIs
 
-## 9.5 Interactive programming
+## 10.5 Interactive programming

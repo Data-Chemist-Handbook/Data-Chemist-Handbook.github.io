@@ -1,11 +1,11 @@
 ---
-title: 8. Retrosynthesis
+title: 6. Reaction Prediction
 author: Haomin
-date: 2024-08-18
+date: 2024-08-16
 category: Jekyll
 layout: post
 ---
 
-## 8.1 Recurrent Neural Networks
+## 6.1 RNNs and LSTM
 
-## 8.2 Graph Neural Networks
+## 6.2 Graph Neural Networks

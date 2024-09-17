@@ -1,9 +1,10 @@
 ---
 title: Contact
 author: Tao He
-date: 2022-02-05
+date: 2024-09-05
 category: Jekyll
 layout: post
 ---
 
-This is an contact page.
+Project contact person: Haomin
+Email: hzhuang2@nd.edu
