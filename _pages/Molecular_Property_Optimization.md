@@ -9,7 +9,7 @@ In molecular property optimization, the vastness and complexity of chemical spac
 
 ## 5.1 Bayesian Optimization
 
-5.1.1 Introduction to Bayesian Optimization
+### 5.1.1 Introduction to Bayesian Optimization
 
 Bayesian optimization (BO) has emerged as a powerful tool for optimizing expensive-to-evaluate functions, particularly when working with complex molecular systems where running experiments or simulations can be costly and time-consuming. In molecular property optimization, where the goal is to find the optimal molecule with desired properties (such as binding affinity, stability, or solubility), traditional optimization methods like brute-force searches or gradient-based methods are often impractical. BO, by efficiently balancing exploration and exploitation of the molecular space, offers a practical solution for these optimization challenges.
 
@@ -19,13 +19,13 @@ This uncertainty is critical: BO deliberately chooses molecules with high uncert
 
 By constantly adjusting the trade-off between exploration and exploitation, BO allows chemists to efficiently search through a large molecular space, maximizing the chances of discovering optimal molecules while minimizing unnecessary experiments. This makes BO especially valuable in fields like drug discovery or materials science, where the cost of synthesizing and testing each molecule is high, and there is immense value in strategically selecting the most promising candidates.
 
-5.1.2 Key Concepts of Bayesian Optimization
+### 5.1.2 Key Concepts of Bayesian Optimization
 
-5.1.3 Steps in Bayesian Optimization
+### 5.1.3 Steps in Bayesian Optimization
 
-5.1.4 Gaussian Process in Molecular Optimziation
+### 5.1.4 Gaussian Process in Molecular Optimziation
 
-5.1.5 Acquisition Functions
+### 5.1.5 Acquisition Functions
 
 5.1.6 Applications in Molecular Property Optimization
 
