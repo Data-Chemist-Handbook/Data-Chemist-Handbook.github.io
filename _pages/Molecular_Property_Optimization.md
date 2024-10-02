@@ -27,7 +27,7 @@ By constantly adjusting the trade-off between exploration and exploitation, BO a
 
 ### 5.1.5 Acquisition Functions
 
-5.1.6 Applications in Molecular Property Optimization
+### 5.1.6 Applications in Molecular Property Optimization
 
 ## 5.2 Reinforcement Learning
 
