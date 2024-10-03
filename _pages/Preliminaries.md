@@ -35,3 +35,21 @@ For example, NumPy, Pandas
 Matplotlib, Seaborn
 
 ### 2.2.3 Statistical analysis basics
+
+## 2.3 Representation
+
+### 2.3.1 Smiles and
+
+### 2.3.2 Smarts
+
+### 2.3.3 Fingerprint
+
+### 2.3.4 3D coordinate
+
+### 2.3.5 [Rdkit](https://www.rdkit.org/docs/GettingStartedInPython.html)
+
+## 2.4 Calculation on Representation
+
+### 2.4.1 Frigerprint
+
+### 2.4.2
