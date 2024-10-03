@@ -1,1 +1,1 @@
-This website aims to help students and scientists to learn computing chemistry.
+This book serves as a practical introduction to the integration of data science and chemistry. Designed specifically for chemists, it bridges the gap between these fields, offering step-by-step tutorials and real-world applications to tackle complex chemical problems. Whether you are new to data science or looking to enhance your research with machine learning, programming, and data visualization, this guide provides the tools you need to harness the power of data science in your chemistry work.
