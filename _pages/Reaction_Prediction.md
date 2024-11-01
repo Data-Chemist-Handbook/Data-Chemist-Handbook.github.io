@@ -5,6 +5,7 @@ date: 2024-08-16
 category: Jekyll
 layout: post
 ---
+dataset: USPTO subset (https://pubs.acs.org/doi/full/10.1021/acscentsci.7b00064)
 
 ## 6.1 RNNs and LSTM
 
