@@ -6,7 +6,7 @@ category: Jekyll
 layout: post
 ---
 
-dataset:(https://pubs.acs.org/doi/epdf/10.1021/acs.chemrev.1c00033?ref=article_openPDF)
+dataset:(https://github.com/doyle-lab-ucla/edboplus,https://github.com/doyle-lab-ucla/edboplus/blob/main/examples/tutorials/1_CLI_example.ipynb)
 
 ## 9.1 Bayesian Optimization
 
