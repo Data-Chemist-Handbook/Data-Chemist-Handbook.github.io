@@ -1,7 +1,7 @@
 ---
 title: 2. Preliminaries
-author: Haomin, Dan Yoo
-date: 2024-11-06
+author: Dan Yoo, Haomin
+date: 2024-08-12
 category: Jekyll
 layout: post
 ---
