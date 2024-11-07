@@ -5,7 +5,7 @@ date: 2024-08-14
 category: Jekyll
 layout: post
 ---
-dataset classification (DDDP)
+dataset classification [BBBP](https://paperswithcode.com/sota/molecular-property-prediction-on-bbbp-1)
 
 ## 4.1 Recurrent Neural Networks
 
