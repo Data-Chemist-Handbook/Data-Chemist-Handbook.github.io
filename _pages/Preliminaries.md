@@ -13,7 +13,7 @@ In the Preliminaries character, we will introduce some base coding still and dat
 This section covers essential Python skills, including setting up your environment, understanding basic syntax, and using packages to aid data analysis. This foundational knowledge is valuable for beginners and will support more advanced data analysis in later sections.
 
 ### 2.1.1 Setting up Python Environment
-### Option 1: Installing Anaconda and Jupyter Notebook
+#### Option 1: Installing Anaconda and Jupyter Notebook
 
 To get started with Python, we’ll set up a development environment using **Anaconda** and **Jupyter Notebook**.
 
@@ -25,9 +25,9 @@ Here's a detailed guide on installing Anaconda on different operating systems. E
 
 ---
 
-### Installing Anaconda on Windows, macOS, and Linux
+##### Installing Anaconda on Windows, macOS, and Linux
 
-### Step 1: Download Anaconda
+##### Download Anaconda
 
 1. **Go to the Anaconda Download Page**:
    - Visit the [Anaconda download page](https://www.anaconda.com/products/distribution).
@@ -38,7 +38,7 @@ Here's a detailed guide on installing Anaconda on different operating systems. E
 
 ---
 
-### Windows Installation Instructions
+##### Windows Installation Instructions
 
 1. **Run the Installer**:
    - Open the downloaded `.exe` file.
@@ -69,7 +69,7 @@ Here's a detailed guide on installing Anaconda on different operating systems. E
 
 ---
 
-### macOS Installation Instructions
+##### macOS Installation Instructions
 
 1. **Run the Installer**:
    - Open the downloaded `.pkg` file.
@@ -95,7 +95,7 @@ Here's a detailed guide on installing Anaconda on different operating systems. E
 
 ---
 
-### Linux Installation Instructions
+##### Linux Installation Instructions
 
 1. **Open Terminal**.
 
@@ -132,7 +132,7 @@ Here's a detailed guide on installing Anaconda on different operating systems. E
 
 ---
 
-### Post-Installation: Launch Jupyter Notebook
+##### Post-Installation: Launch Jupyter Notebook
 
 1. **Open Anaconda Prompt (Windows) or Terminal (macOS/Linux)**.
 2. **Start Jupyter Notebook**:
@@ -141,22 +141,16 @@ Here's a detailed guide on installing Anaconda on different operating systems. E
 
 ---
 
-### Option 2: Using Google Colab
+#### Option 2: Using Google Colab
 
-Using Google Colab allows you to run Python code in a flexible, collaborative environment without any local setup. It's particularly useful for working with large datasets or sharing notebooks with others.
+**Google Colab** is a cloud-based platform for running Python code in Jupyter-like notebooks, ideal for data science and machine learning. Follow these steps to get started. Using Google Colab allows you to run Python code in a flexible, collaborative environment without any local setup. It's particularly useful for working with large datasets or sharing notebooks with others.
 
----
-
-### Using Google Colab
-
-**Google Colab** is a cloud-based platform for running Python code in Jupyter-like notebooks, ideal for data science and machine learning. Follow these steps to get started.
-
-#### Step 1: Access Google Colab
+##### Step 1: Access Google Colab
 
 1. **Open Google Colab**: Go to [Google Colab](https://colab.research.google.com).
 2. **Sign in with Google**: Log in with your Google account to access and save notebooks in Google Drive.
 
-#### Step 2: Create or Open a Notebook
+##### Step 2: Create or Open a Notebook
 
 1. **Create a New Notebook**:
    - Click on **File > New notebook** to open a blank notebook.
@@ -164,7 +158,7 @@ Using Google Colab allows you to run Python code in a flexible, collaborative en
 2. **Open an Existing Notebook**:
    - Choose **File > Open notebook**. You can load notebooks from Google Drive, GitHub, or your computer.
 
-#### Step 3: Set Up and Run Code
+##### Step 3: Set Up and Run Code
 
 1. **Using Code Cells**:
    - Colab organizes code into **cells**. To run a cell, click on it and press **Shift + Enter** or click the **Play** button.
@@ -177,7 +171,7 @@ Using Google Colab allows you to run Python code in a flexible, collaborative en
    !pip install some_package
    ```
 
-#### Step 4: Save and Export Your Work
+##### Step 4: Save and Export Your Work
 
 1. **Saving to Google Drive**:
    - Your Colab notebooks will automatically save to Google Drive. You can access them later under **Colab Notebooks** in Drive.
@@ -185,7 +179,7 @@ Using Google Colab allows you to run Python code in a flexible, collaborative en
 2. **Downloading Notebooks**:
    - To keep a copy on your computer, go to **File > Download > Download .ipynb**.
 
-#### Step 5: Loading Files and Datasets in Colab
+##### Step 5: Loading Files and Datasets in Colab
 
 1. **Mount Google Drive**: 
    - Run the following code to access your files on Google Drive. After running, authorize access to your Drive.
@@ -198,7 +192,7 @@ Using Google Colab allows you to run Python code in a flexible, collaborative en
 2. **Load Local Files**:
    - Use Colab’s file upload feature by clicking the **Files** icon on the left sidebar, then selecting **Upload**.
 
-#### Step 6: Adding and Executing Markdown Cells
+##### Step 6: Adding and Executing Markdown Cells
 
 1. **Adding Markdown for Documentation**:
    - To add notes, explanations, or instructions in text, you can insert a **Markdown cell** by clicking **+ Text** in the toolbar.
@@ -402,13 +396,9 @@ print(f"Double molecular weight: {double_weight(molecular_weight)}")
 
 ## 2.2 Data Analysis with Python
 
-In this chapter, we'll explore how to use Python for data analysis, focusing on importing and managing datasets commonly encountered in chemistry. Data analysis is a crucial skill for chemists, allowing you to extract meaningful insights from experimental data, predict outcomes, and make informed decisions in your research.
+In this chapter, we'll explore how to use Python for data analysis, focusing on importing and managing datasets commonly encountered in chemistry. Data analysis is a crucial skill for chemists, allowing you to extract meaningful insights from experimental data, predict outcomes, and make informed decisions in your research. Effective data analysis begins with properly importing and managing your datasets. This section will guide you through loading data from various file formats, including those specific to chemistry, and handling data from databases.
 
-### 2.2.1 Importing and Managing Datasets
-
-Effective data analysis begins with properly importing and managing your datasets. This section will guide you through loading data from various file formats, including those specific to chemistry, and handling data from databases.
-
-#### 2.2.1.1 Loading Data from Various File Formats
+#### 2.2.1 Loading Data from Various File Formats
 
 **Reading Data from CSV, Excel, and JSON Files**
 
@@ -462,7 +452,7 @@ Calculate the proportion of permeable compounds, i.e., those for which the p_np 
     </code> 
 </pre>
 
-### 2.2.1.2 Data Cleaning and Preprocessing
+### 2.2.2 Data Cleaning and Preprocessing
 
 **Handling Missing Values and Duplicates**
 
@@ -648,7 +638,7 @@ The `p_np` column is a binary classification of permeability (1 or 0). We will a
     </code>
 </pre>
 ---
-### 2.2.1.3 Data Manipulation with Pandas
+### 2.2.3 Data Manipulation with Pandas
 
 **Filtering and Selecting Data**
 
@@ -852,7 +842,7 @@ Pivot tables help reorganize data to make it easier to analyze by converting row
     </code>
 </pre>
 
-### 2.2.1.4 Working with NumPy Arrays
+### 2.2.4 Working with NumPy Arrays
 
 ---
 
@@ -1017,11 +1007,8 @@ Reshaping changes the shape of an array, and broadcasting applies operations acr
     </code>
 </pre>
 
-### 2.2.2 Data Visualization
-
+### 2.2.5 Introduction to Visualization Libraries
 Data visualization is critical for interpreting data and uncovering insights. In this section, we’ll use Python’s visualization libraries to create various plots and charts.
-
-#### 2.2.2.1 Introduction to Visualization Libraries
 
 **Explanation:**
 Python has several powerful libraries for data visualization, including **Matplotlib**, **Seaborn**, and **Plotly**.
@@ -1041,7 +1028,7 @@ import plotly.express as px
 
 ---
 
-#### 2.2.2.2 Line and Scatter Plots
+#### Line and Scatter Plots
 
 **Explanation:**
 Line and scatter plots are used to display relationships between variables. Line plots are commonly used for trend analysis, while scatter plots are useful for examining the correlation between two numerical variables.
@@ -1083,7 +1070,7 @@ plt.show()
 
 ---
 
-#### 2.2.2.3 Histograms and Density Plots
+#### Histograms and Density Plots
 
 **Explanation:**
 Histograms display the distribution of a single variable by dividing it into bins, while density plots are smoothed versions of histograms that show the probability density.
@@ -1121,7 +1108,7 @@ plt.show()
 
 ---
 
-#### 2.2.2.4 Box Plots and Violin Plots
+#### Box Plots and Violin Plots
 
 **Explanation:**
 Box plots show the distribution of data based on quartiles and are useful for spotting outliers. Violin plots combine box plots and density plots to provide more detail on the distribution’s shape.
@@ -1155,7 +1142,7 @@ plt.show()
 
 ---
 
-#### 2.2.2.5 Heatmaps and Correlation Matrices
+#### Heatmaps and Correlation Matrices
 
 **Explanation:**
 Heatmaps display data as a color-coded matrix. They are often used to show correlations between variables or visualize patterns within data.
@@ -1193,7 +1180,7 @@ plt.show()
 
 ---
 
-#### 2.2.2.6 Interactive Plots with Plotly
+#### Interactive Plots with Plotly
 
 **Explanation:**
 Plotly provides a range of interactive charts that can be easily embedded in web applications. Interactive plots allow users to hover over data points and zoom in on sections of the plot.
@@ -1214,13 +1201,13 @@ fig.show()
     </code>
 </pre>
 
-### 2.2.3 Statistical Analysis Basics
+### 2.2.6 Statistical Analysis Basics
 
 Statistical analysis is essential for interpreting data and making informed conclusions. In this section, we’ll explore fundamental statistical techniques using Python, which are particularly useful in scientific research.
 
 ---
 
-#### 2.2.3.1 Descriptive Statistics
+#### Descriptive Statistics
 
 **Explanation:**
 Descriptive statistics summarize and describe the main features of a dataset. Common descriptive statistics include the mean, median, mode, variance, and standard deviation.
@@ -1267,7 +1254,7 @@ print(f"Mean: {mean_num}, Median: {median_num}, Variance: {variance_num}")
 
 ---
 
-#### 2.2.3.2 Probability Distributions
+#### Probability Distributions
 
 **Explanation:**
 Probability distributions describe how values are distributed across a dataset. The normal distribution is a common distribution that is symmetric about the mean.
@@ -1319,7 +1306,7 @@ plt.show()
 
 ---
 
-#### 2.2.3.3 Hypothesis Testing
+#### Hypothesis Testing
 
 **Explanation:**
 Hypothesis testing is a method for testing a hypothesis about a population parameter. A t-test, for example, can help determine if the means of two groups are significantly different.
@@ -1364,7 +1351,7 @@ print(f"T-statistic: {t_stat}, P-value: {p_val}")
 
 ---
 
-#### 2.2.3.4 Correlation and Regression
+#### Correlation and Regression
 
 **Explanation:**
 Correlation measures the strength and direction of a relationship between two variables, while regression predicts the value of a dependent variable based on one or more independent variables.
@@ -1422,7 +1409,7 @@ print(f"Intercept: {model.intercept_}")
 
 ---
 
-#### 2.2.3.5 ANOVA (Analysis of Variance)
+#### ANOVA (Analysis of Variance)
 
 **Explanation:**
 ANOVA tests whether there are statistically significant differences between the means of three or more independent groups. It’s useful for analyzing the impact of categorical variables on continuous data.
@@ -1478,12 +1465,11 @@ print(f"F-statistic: {f_stat}, P-value: {p_val}")
 
 ### 2.3.5 [Rdkit](https://www.rdkit.org/docs/GettingStartedInPython.html)
 
-
 ### 2.3.6 Molecular Visualization
 
 Introduce molecular visualization as a crucial part of understanding complex molecular structures. In this section, you can cover **using molecular visualization libraries**, particularly **PyMOL** and **RDKit**, both of which are popular for rendering molecules in 3D and useful for chemists.
 
-#### 2.3.6.1 Using PyMOL for Visualization
+#### Using PyMOL for Visualization
 
 **Explanation:**
 PyMOL is a molecular visualization system that allows you to view and analyze molecular structures in detail, ideal for chemists needing to study structural interactions and visualize conformations.
@@ -1503,7 +1489,7 @@ with pymol2.PyMOL() as pymol:
     </code>
 </pre>
 
-#### 2.3.6.2 Visualizing with RDKit
+#### Visualizing with RDKit
 
 **Explanation:**
 RDKit offers molecular visualization capabilities, especially with SMILES strings, enabling the quick display of 2D representations of molecules. This can be particularly useful in data exploration and chemical informatics.
