@@ -13,17 +13,204 @@ In the Preliminaries character, we will introduce some base coding still and dat
 This section covers essential Python skills, including setting up your environment, understanding basic syntax, and using packages to aid data analysis. This foundational knowledge is valuable for beginners and will support more advanced data analysis in later sections.
 
 ### 2.1.1 Setting up Python Environment
+### Option 1: Installing Anaconda and Jupyter Notebook
 
 To get started with Python, we’ll set up a development environment using **Anaconda** and **Jupyter Notebook**.
 
 - **Anaconda**: A package manager and environment manager commonly used for data science. It simplifies package installation and management.
+
 - **Jupyter Notebook**: An interactive environment ideal for data exploration and analysis. Jupyter Notebooks can be launched directly from Anaconda.
 
-#### Steps to Set Up:
+Here's a detailed guide on installing Anaconda on different operating systems. Each step is tailored for Windows, macOS, and Linux to ensure a smooth setup.
 
-1. [Download Anaconda](https://www.anaconda.com/products/distribution) and install it according to your operating system.
-2. Launch Anaconda Navigator and start **Jupyter Notebook**.
-3. Once Jupyter Notebook opens in your browser, create a new notebook and start coding!
+---
+
+### Installing Anaconda on Windows, macOS, and Linux
+
+### Step 1: Download Anaconda
+
+1. **Go to the Anaconda Download Page**:
+   - Visit the [Anaconda download page](https://www.anaconda.com/products/distribution).
+
+2. **Select Your Operating System**:
+   - Choose the appropriate installer for your OS: Windows, macOS, or Linux.
+   - Select the Python 3.x version (e.g., Python 3.9 or 3.10) for the latest stable release.
+
+---
+
+### Windows Installation Instructions
+
+1. **Run the Installer**:
+   - Open the downloaded `.exe` file.
+   - Click **Next** on the Welcome screen.
+
+2. **Agree to the License Agreement**:
+   - Read the agreement, then click **I Agree**.
+
+3. **Select Installation Type**:
+   - Choose **Just Me** unless multiple users need access.
+
+4. **Choose Installation Location**:
+   - Choose the default or specify a custom path.
+   - Avoid spaces or special characters in the path if choosing a custom location.
+
+5. **Advanced Installation Options**:
+   - Check **Add Anaconda to my PATH environment variable** (optional but not recommended due to potential conflicts).
+   - Ensure **Register Anaconda as my default Python 3.x** is selected, so Anaconda’s Python is used by default.
+
+6. **Complete the Installation**:
+   - Click **Install** and wait for the process to finish.
+   - Once complete, you can choose to open Anaconda Navigator or continue with manual setup.
+
+7. **Verify the Installation**:
+   - Open **Anaconda Prompt** from the Start Menu.
+   - Type `conda --version` to verify the installation.
+   - Launch **Jupyter Notebook** by typing `jupyter notebook`.
+
+---
+
+### macOS Installation Instructions
+
+1. **Run the Installer**:
+   - Open the downloaded `.pkg` file.
+   - Follow the prompts on the installer.
+
+2. **Agree to the License Agreement**:
+   - Review and agree to the terms to proceed.
+
+3. **Choose Installation Location**:
+   - By default, Anaconda is installed in the `/Users/username/anaconda3` directory.
+
+4. **Advanced Options**:
+   - You may be asked if you want Anaconda’s Python to be your default Python.
+   - Choose **Yes** to add Anaconda to your PATH automatically.
+
+5. **Complete the Installation**:
+   - Wait for the installation to complete, then close the installer.
+
+6. **Verify the Installation**:
+   - Open **Terminal**.
+   - Type `conda --version` to verify that Anaconda is installed.
+   - Launch **Jupyter Notebook** by typing `jupyter notebook`.
+
+---
+
+### Linux Installation Instructions
+
+1. **Open Terminal**.
+
+2. **Navigate to the Download Directory**:
+   - Use `cd` to navigate to where you downloaded the Anaconda installer.
+   
+   ```bash
+   cd ~/Downloads
+   ```
+
+3. **Run the Installer**:
+   - Run the installer script. Replace `Anaconda3-202X.X.X-Linux-x86_64.sh` with your specific file name.
+   
+   ```bash
+   bash Anaconda3-202X.X.X-Linux-x86_64.sh
+   ```
+
+4. **Review the License Agreement**:
+   - Press **Enter** to scroll through the agreement.
+   - Type `yes` when prompted to accept the agreement.
+
+5. **Specify Installation Location**:
+   - Press **Enter** to accept the default installation path (`/home/username/anaconda3`), or specify a custom path.
+
+6. **Add Anaconda to PATH**:
+   - Type `yes` when asked if the installer should initialize Anaconda3 by running `conda init`.
+
+7. **Complete the Installation**:
+   - Once installation is finished, restart the terminal or use `source ~/.bashrc` to activate the changes.
+
+8. **Verify the Installation**:
+   - Type `conda --version` to confirm that Anaconda is installed.
+   - Launch **Jupyter Notebook** by typing `jupyter notebook`.
+
+---
+
+### Post-Installation: Launch Jupyter Notebook
+
+1. **Open Anaconda Prompt (Windows) or Terminal (macOS/Linux)**.
+2. **Start Jupyter Notebook**:
+   - Type `jupyter notebook` and press **Enter**.
+   - Jupyter Notebook will open in your default web browser, allowing you to create and run Python code interactively.
+
+---
+
+### Option 2: Using Google Colab
+
+Using Google Colab allows you to run Python code in a flexible, collaborative environment without any local setup. It's particularly useful for working with large datasets or sharing notebooks with others.
+
+---
+
+### Using Google Colab
+
+**Google Colab** is a cloud-based platform for running Python code in Jupyter-like notebooks, ideal for data science and machine learning. Follow these steps to get started.
+
+#### Step 1: Access Google Colab
+
+1. **Open Google Colab**: Go to [Google Colab](https://colab.research.google.com).
+2. **Sign in with Google**: Log in with your Google account to access and save notebooks in Google Drive.
+
+#### Step 2: Create or Open a Notebook
+
+1. **Create a New Notebook**:
+   - Click on **File > New notebook** to open a blank notebook.
+   
+2. **Open an Existing Notebook**:
+   - Choose **File > Open notebook**. You can load notebooks from Google Drive, GitHub, or your computer.
+
+#### Step 3: Set Up and Run Code
+
+1. **Using Code Cells**:
+   - Colab organizes code into **cells**. To run a cell, click on it and press **Shift + Enter** or click the **Play** button.
+   
+2. **Installing Packages**:
+   - Colab has many libraries installed by default. You can install additional packages if needed using `pip` commands within a cell.
+   
+   ```python
+   # Install additional libraries
+   !pip install some_package
+   ```
+
+#### Step 4: Save and Export Your Work
+
+1. **Saving to Google Drive**:
+   - Your Colab notebooks will automatically save to Google Drive. You can access them later under **Colab Notebooks** in Drive.
+   
+2. **Downloading Notebooks**:
+   - To keep a copy on your computer, go to **File > Download > Download .ipynb**.
+
+#### Step 5: Loading Files and Datasets in Colab
+
+1. **Mount Google Drive**: 
+   - Run the following code to access your files on Google Drive. After running, authorize access to your Drive.
+   
+   ```python
+   from google.colab import drive
+   drive.mount('/content/drive')
+   ```
+   
+2. **Load Local Files**:
+   - Use Colab’s file upload feature by clicking the **Files** icon on the left sidebar, then selecting **Upload**.
+
+#### Step 6: Adding and Executing Markdown Cells
+
+1. **Adding Markdown for Documentation**:
+   - To add notes, explanations, or instructions in text, you can insert a **Markdown cell** by clicking **+ Text** in the toolbar.
+
+#### Tips for Chemists Using Colab
+
+- **Managing Data Files**: Store datasets in Google Drive to access them easily across multiple sessions.
+- **Running Long Calculations**: Colab may disconnect if idle. To prevent data loss, make sure to save work frequently.
+- **Collaborative Editing**: Share Colab notebooks with colleagues for real-time collaboration by clicking **Share** in the top-right corner.
+
+---
+
 
 ### 2.1.2 Basic Syntax and Structure
 
@@ -62,6 +249,94 @@ def molecular_weight_ratio(compound_weight, standard_weight=100):
 print(molecular_weight_ratio(molecular_weight))
     </code>
 </pre>
+
+#### Basic Printing Techniques in Python
+
+Printing output is essential for checking code functionality, displaying calculations, and formatting data. Here are a few common ways to print in Python, along with examples that can help navigate real-world coding scenarios.
+
+---
+
+##### Simple Print Statements
+
+**Explanation:** The `print()` function displays text or values to the screen. You can print variables or text strings directly.
+
+<pre>
+    <code class="python">
+# Basic print
+print("Welcome to Python programming!")
+
+# Printing a variable
+compound_name = "Aspirin"
+print("Compound:", compound_name)
+    </code>
+</pre>
+
+---
+
+##### Using f-strings for Formatted Output
+
+**Explanation:** Python’s f-strings (formatted string literals) make it easy to embed variable values in text, which simplifies displaying complex data clearly.
+
+<pre>
+    <code class="python">
+molecular_weight = 180.16
+print(f"The molecular weight of {compound_name} is {molecular_weight}")
+    </code>
+</pre>
+
+---
+
+##### Concatenating Strings and Variables
+
+**Explanation:** You can also combine strings and variables using the `+` operator, though it requires converting numbers to strings explicitly.
+
+<pre>
+    <code class="python">
+print("The molecular weight of " + compound_name + " is " + str(molecular_weight))
+    </code>
+</pre>
+
+---
+
+##### Formatting Numbers
+
+**Explanation:** To control the display of floating-point numbers (e.g., limiting decimal places), use formatting options within f-strings.
+
+<pre>
+    <code class="python">
+# Display molecular weight with two decimal places
+print(f"Molecular weight: {molecular_weight:.2f}")
+    </code>
+</pre>
+
+---
+
+**Practice Problem**
+
+Write a program to define variables for a compound’s name and molecular weight. Display the information using each print method above.
+
+**Solution**
+
+<pre>
+    <code class="python">
+compound_name = "Ibuprofen"
+molecular_weight = 206.29
+
+# Simple print
+print("Compound:", compound_name)
+
+# f-string
+print(f"The molecular weight of {compound_name} is {molecular_weight}")
+
+# Concatenation
+print("The molecular weight of " + compound_name + " is " + str(molecular_weight))
+
+# Formatting numbers
+print(f"Molecular weight: {molecular_weight:.2f}")
+    </code>
+</pre>
+
+---
 
 ### 2.1.3 Python Packages
 
@@ -105,7 +380,7 @@ print(data['compound_name'])
     </code>
 </pre>
 
-### Practice Problem
+**Practice Problem:**
 
 **Problem**: Write Python code to create a variable for a compound’s molecular weight, set it to 180.16, and then create a function that doubles the molecular weight.
 
@@ -1202,6 +1477,75 @@ print(f"F-statistic: {f_stat}, P-value: {p_val}")
 ### 2.3.4 3D coordinate
 
 ### 2.3.5 [Rdkit](https://www.rdkit.org/docs/GettingStartedInPython.html)
+
+
+### 2.3.6 Molecular Visualization
+
+Introduce molecular visualization as a crucial part of understanding complex molecular structures. In this section, you can cover **using molecular visualization libraries**, particularly **PyMOL** and **RDKit**, both of which are popular for rendering molecules in 3D and useful for chemists.
+
+#### 2.3.6.1 Using PyMOL for Visualization
+
+**Explanation:**
+PyMOL is a molecular visualization system that allows you to view and analyze molecular structures in detail, ideal for chemists needing to study structural interactions and visualize conformations.
+
+**Example Code:**
+
+<pre>
+    <code class="python">
+import pymol2
+
+# Load a molecule (example: a sample protein or small molecule file in PDB format)
+with pymol2.PyMOL() as pymol:
+    pymol.cmd.load("sample_molecule.pdb")
+    pymol.cmd.show("cartoon")  # Show structure in cartoon form
+    pymol.cmd.zoom("all")
+    pymol.cmd.png("molecule_visualization.png")  # Save an image of the visualization
+    </code>
+</pre>
+
+#### 2.3.6.2 Visualizing with RDKit
+
+**Explanation:**
+RDKit offers molecular visualization capabilities, especially with SMILES strings, enabling the quick display of 2D representations of molecules. This can be particularly useful in data exploration and chemical informatics.
+
+**Example Code:**
+
+<pre>
+    <code class="python">
+from rdkit import Chem
+from rdkit.Chem import Draw
+
+# Generate a molecule from a SMILES string
+smiles = "CCO"  # Example: Ethanol
+molecule = Chem.MolFromSmiles(smiles)
+
+# Draw and display the molecule
+Draw.MolToImage(molecule, size=(300, 300))
+    </code>
+</pre>
+
+---
+
+**Practice Problem:** 
+
+Write code to visualize the structure of Ibuprofen from a SMILES string using RDKit. Then, save the output image as `ibuprofen.png`.
+
+**Solution Code:**
+
+<pre>
+    <code class="python">
+from rdkit import Chem
+from rdkit.Chem import Draw
+
+# SMILES string for Ibuprofen
+ibuprofen_smiles = "CC(C)CC1=CC=C(C=C1)C(C)C(=O)O"
+ibuprofen = Chem.MolFromSmiles(ibuprofen_smiles)
+
+# Generate and save the visualization
+img = Draw.MolToImage(ibuprofen, size=(300, 300))
+img.save("ibuprofen.png")
+    </code>
+</pre>
 
 ## 2.4 Calculation on Representation
 
