@@ -58,13 +58,214 @@ Acquisition functions are essential because they guide the optimization process.
 In summary, acquisition functions help us choose the next steps in our optimization journey by balancing the need to explore new possibilities and the desire to make the most of what we already know.
 
 
-### 5.1.3 Steps in Bayesian Optimization
+### 5.1.3 Bayesian Optimization for Molecular Property Optimization Shortcut
 
-### 5.1.4 Gaussian Process in Molecular Optimziation
+The EDBOplus library presents an easy shortcut option without having to understand the full process of Bayesian Optimization: https://github.com/doyle-lab-ucla/edboplus/blob/main/examples/tutorials/1_CLI_example.ipynb
 
-### 5.1.5 Acquisition Functions
+### 5.1.4 Bayesian Optimization for Molecular Property Optimization Full Manual Process
 
-### 5.1.6 Applications in Molecular Property Optimization
+In the event where we may want to do something more complex, here is the full process laid out in an example looking to optimize logP values:
+
+google colab: https://colab.research.google.com/drive/1uXjcu_bzygtia9xgEHN76xMmQtcV0sY-?usp=sharing
+
+**Step 1: Install RDKit and Other Required Libraries**
+<pre>
+    <code class="python">
+# Install RDKit in Google Colab
+!pip install rdkit
+
+# Import necessary libraries
+import pandas as pd
+from rdkit import Chem
+from rdkit.Chem import Descriptors
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.gaussian_process import GaussianProcessRegressor
+from sklearn.gaussian_process.kernels import RBF
+from scipy.stats import norm
+from google.colab import files
+import io
+    </code>
+</pre>
+
+**Step 2: Download and Upload the BACE Dataset (Stage 1a) from Drug Design Data**
+
+The **BACE dataset** is available on Drug Design Data: https://drugdesigndata.org/about/grand-challenge-4/bace
+
+<pre>
+    <code class="python">
+# Load dataset
+uploaded = files.upload()
+print(uploaded.keys()) #verifying if getting a file error
+data = pd.read_csv(io.BytesIO(uploaded['BACE_FEset_compounds_D3R_GC4.csv'])) #file name should match your download file
+    </code>
+</pre>
+
+**Step 3: Understand the Dataset**
+
+Use the head and columns function to understand what our dataset looks like.
+
+<pre>
+    <code class="python">
+data.head()
+    </code>
+</pre>
+
+<pre>
+    <code class="python">
+data.columns
+    </code>
+</pre>
+
+**Step 4: Calculate Properties and Application to SMILES**
+
+
+<pre>
+   <code class = "python">
+# Function to calculate LogP, Molecular Weight, and TPSA for each SMILES string, returning none if does not exist
+def calculate_properties(smiles):
+    mol = Chem.MolFromSmiles(smiles)
+    if mol is not None:
+        logP = Descriptors.MolLogP(mol)
+        mw = Descriptors.MolWt(mol)
+        tpsa = Descriptors.TPSA(mol)
+        return logP, mw, tpsa
+    else:
+        return None, None, None
+
+# Apply the function to the SMILES column (SMILES contains complex organic molecules)
+properties = data['smiles'].apply(calculate_properties)
+data[['LogP', 'Molecular_Weight', 'TPSA']] = pd.DataFrame(properties.tolist(), index=data.index)
+   </code>
+</pre>
+
+**Step 5: Select Target Properties for Optimization and Sample**
+<pre>
+   <code class = "python">
+# Select the target property for optimization (e.g., LogP)
+target_property = 'LogP'  # Change to 'Molecular_Weight' or 'TPSA' as desire
+x_range = np.linspace(-2*np.pi, 2*np.pi, 100)  # Adjust the range based on your specific goals
+
+# Sample x values and outputs from the target property
+sample_x = np.array(range(len(data)))
+sample_y = data[target_property].values
+   </code>
+</pre>
+
+**Define Black Box Functions, Gaussian Process, and Bayesian Optimization**
+<pre>
+   <code class = "python">
+def black_box_function(x):
+    # Use the target property values directly
+    return data[target_property].iloc[int(x)]  # Ensure x is an integer
+
+def upper_confidence_bound(x, gp_model, beta):
+    y_pred, y_std = gp_model.predict(x.reshape(-1, 1), return_std=True)
+    return y_pred + beta * y_std
+
+# Initial setup for sample_x and sample_y
+initial_x_values = np.array([0, 1, 2, 3])  # Example initial x values (replace with your actual initial values)
+initial_y_values = np.array([10, 20, 15, 18])  # Corresponding initial y values (replace with your actual initial values)
+
+sample_x = initial_x_values  # Initial sample_x values (ensure it is a 1D array)
+sample_y = initial_y_values  # Corresponding initial sample_y values (same length as sample_x)
+
+# Gaussian process with RBF kernel
+kernel = RBF(length_scale=1.0)
+gp_model = GaussianProcessRegressor(kernel=kernel)
+num_iterations = 5
+
+# Perform the optimization
+for i in range(num_iterations):
+    # Ensure sample_x and sample_y have the same length
+    gp_model.fit(sample_x.reshape(-1, 1), sample_y)
+    beta = 1.0 # change beta to lower exploration (lower value) or raise (higher value) to help the model focus more on exploiting the known best performing points
+    ucb = upper_confidence_bound(sample_x, gp_model, beta)
+    best_idx = np.argmax(ucb)
+
+    # Append new data (ensure sample_x and sample_y stay the same length)
+    new_x_value = sample_x[best_idx]  # Get the best value from sample_x
+    new_y_value = black_box_function(new_x_value)  # Get the corresponding y value from the black box function
+
+    # Append the new values to sample_x and sample_y
+    sample_x = np.append(sample_x, new_x_value)
+    sample_y = np.append(sample_y, new_y_value)
+
+    # Plot the optimization progress for this iteration
+    plt.plot(sample_x, sample_y, label=f"Iteration {i+1}")
+    plt.xlabel("Compound Index")
+    plt.ylabel(target_property)
+    plt.legend()
+    plt.show()  # Show the plot after each iteration
+
+   </code>
+</pre>
+
+**Pinpointing the Optimal and Maximized LogP Value**
+<pre>
+   <code class = "python">
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.gaussian_process import GaussianProcessRegressor
+from sklearn.gaussian_process.kernels import RBF
+
+def black_box_function(x):
+    # Use the target property values directly
+    return data[target_property].iloc[int(x)]  # Ensure x is an integer
+
+def upper_confidence_bound(x, gp_model, beta):
+    y_pred, y_std = gp_model.predict(x.reshape(-1, 1), return_std=True)
+    return y_pred + beta * y_std
+
+# Initial setup for sample_x and sample_y
+initial_x_values = np.array([0, 1, 2, 3])  # Example initial x values (replace with your actual initial values)
+initial_y_values = np.array([10, 20, 15, 18])  # Corresponding initial y values (replace with your actual initial values)
+
+sample_x = initial_x_values  # Initial sample_x values (ensure it is a 1D array)
+sample_y = initial_y_values  # Corresponding initial sample_y values (same length as sample_x)
+
+# Gaussian process with RBF kernel
+kernel = RBF(length_scale=1.0)
+gp_model = GaussianProcessRegressor(kernel=kernel)
+num_iterations = 5
+
+# Variables to track the best index and LogP
+best_logP_value = -np.inf  # Start with a very low value
+best_index = -1  # To store the index of the best LogP value
+
+# Perform the optimization
+for i in range(num_iterations):
+    # Ensure sample_x and sample_y have the same length
+    gp_model.fit(sample_x.reshape(-1, 1), sample_y)
+    beta = 2.0
+    ucb = upper_confidence_bound(sample_x, gp_model, beta)
+    best_idx = np.argmax(ucb)
+
+    # Append new data (ensure sample_x and sample_y stay the same length)
+    new_x_value = sample_x[best_idx]  # Get the best value from sample_x
+    new_y_value = black_box_function(new_x_value)  # Get the corresponding y value from the black box function
+
+    # Append the new values to sample_x and sample_y
+    sample_x = np.append(sample_x, new_x_value)
+    sample_y = np.append(sample_y, new_y_value)
+
+    # Track the best LogP value and its index
+    if new_y_value > best_logP_value:
+        best_logP_value = new_y_value
+        best_index = new_x_value  # Track the index of the best LogP value
+
+    # Plot the optimization progress
+    plt.plot(sample_x, sample_y, label=f"Iteration {i+1}")
+
+# After all iterations, print the best index and LogP value
+print(f"Best LogP value: {best_logP_value} at index {best_index}")
+
+plt.xlabel("Compound Index")
+plt.ylabel(target_property)
+plt.legend()
+plt.show()
+   </code>
+</pre>
 
 ## 5.2 Reinforcement Learning
 
