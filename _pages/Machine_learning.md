@@ -85,59 +85,147 @@ suggested most frequently by his friends, mirroring the Random Forest
 algorithm\'s method of aggregating multiple decision trees\'
 outputs.
 
-#### **Implementing Random Forest**
 
-The following code demonstrates how to implement a simple Random Forest
-algorithm in Python using the QSAR dataset. The QSAR (Quantitative
-Structure-Activity Relationship) dataset is primarily utilized in
-cheminformatics and computational biology to predict the activity or
-properties of chemical compounds based on their molecular structures. It
-contains 41 predictor columns in the CSV file.
+### **Implementing Random Forest on the BBBP Dataset**
 
-**Example code:**
+This guide demonstrates how to implement a **Random Forest** algorithm in Python using the **BBBP (Blood–Brain Barrier Permeability)** dataset. The **BBBP dataset** is used in cheminformatics to predict whether a compound can cross the blood-brain barrier based on its chemical structure.
 
-<pre>
-    <code class="python">
-!pip install scikit-learn # install needed library
+The dataset contains **SMILES** (Simplified Molecular Input Line Entry System) strings representing chemical compounds, and a **target column** that indicates whether the compound is permeable to the blood-brain barrier or not.
 
-# Import necessary libraries
-import pandas as pd  # For data manipulation
-from sklearn.model_selection import train_test_split  # For splitting data into training and test sets
-from sklearn.ensemble import RandomForestClassifier  # For building a Random Forest model
-from sklearn.metrics import accuracy_score  # For measuring model accuracy
+The goal is to predict whether a given chemical compound will cross the blood-brain barrier, based on its molecular structure. This guide walks you through downloading the dataset, processing it, and training a **Random Forest** model.
 
-# Load the dataset from a CSV file
-data = pd.read_csv('qsar-biodeg.csv')  # Assumes the file 'qsar-biodeg.csv' is in the same directory
+**Step 1: Install RDKit (Required for SMILES to Fingerprint Conversion)**
 
-# Separate the independent variables (features) and the target variable (label)
-X = data.iloc[:, :-1]  # All columns except the last one as features
-y = data.iloc[:, -1]   # The last column as the target variable
+We need to use the RDKit library, which is essential for converting **SMILES strings** into molecular fingerprints, a numerical representation of the molecule.
 
-# Split the data into training and testing sets (80% train, 20% test)
+```python
+# Install the RDKit package via conda-forge
+!pip install -q condacolab
+import condacolab
+condacolab.install()
+
+# Now install RDKit
+!mamba install -c conda-forge rdkit -y
+
+# Import RDKit and check if it's installed successfully
+from rdkit import Chem
+print("RDKit is successfully installed!")
+```
+
+**Step 2: Download the BBBP Dataset from Kaggle**
+
+The **BBBP dataset** is available on Kaggle. To download it into your environment, we will use the `kagglehub` package. Make sure you have a Kaggle account and set up the API key for authentication.
+
+```python
+import kagglehub
+
+# Download the latest version of the BBBP dataset
+path = kagglehub.dataset_download("priyanagda/bbbp-smiles")
+
+# Print the path to dataset files
+print("Path to dataset files:", path)
+
+# Inform that the dataset has been downloaded
+print("Dataset download complete. Proceeding with analysis.")
+```
+
+**Step 3: Load the BBBP Dataset**
+
+After downloading the dataset, we'll load the **BBBP dataset** into a **pandas DataFrame**. The dataset contains the **SMILES strings** and the **target variable** (`p_np`), which indicates whether the compound can cross the blood-brain barrier (binary classification: `1` for permeable, `0` for non-permeable).
+
+```python
+import pandas as pd
+
+# Load the BBBP dataset (adjust the filename if it's different)
+data = pd.read_csv("bbbp.csv")  # Assuming the dataset is named bbbp.csv
+print("Dataset Head:
+", data.head())
+```
+
+**Step 4: Convert SMILES to Molecular Fingerprints**
+
+To use the **SMILES strings** for modeling, we need to convert them into **molecular fingerprints**. This process turns the chemical structures into a numerical format that can be fed into machine learning models. We’ll use **RDKit** to generate these fingerprints using the **Morgan Fingerprint** method.
+
+```python
+from rdkit import Chem
+from rdkit.Chem import AllChem
+import numpy as np
+
+# Function to convert SMILES to molecular fingerprints
+def featurize_molecule(smiles):
+    mol = Chem.MolFromSmiles(smiles)
+    if mol:
+        return AllChem.GetMorganFingerprintAsBitVect(mol, 2, nBits=1024)
+    else:
+        return None
+
+# Apply featurization to the dataset
+features = [featurize_molecule(smi) for smi in data['smiles']]  # Replace 'smiles' with the actual column name if different
+features = [list(fp) if fp is not None else np.zeros(1024) for fp in features]  # Handle missing data by filling with zeros
+X = np.array(features)
+y = data['p_np']  # Target column (1 for permeable, 0 for non-permeable)
+```
+
+**Step 5: Split Data into Training and Testing Sets**
+
+To evaluate the model, we need to split the data into training and testing sets. The **train_test_split** function from **scikit-learn** will handle this. We’ll use 80% of the data for training and 20% for testing.
+
+```python
+from sklearn.model_selection import train_test_split
+
+# Split data into train and test sets (80% training, 20% testing)
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+```
 
-# Initialize the Random Forest Classifier with 100 trees and a fixed random state for reproducibility
+**Step 6: Train the Random Forest Model**
+
+We’ll use the **RandomForestClassifier** from **scikit-learn** to build the model. A Random Forest is an ensemble method that uses multiple decision trees to make predictions. The more trees (`n_estimators`) we use, the more robust the model will be.
+
+```python
+from sklearn.ensemble import RandomForestClassifier
+
+# Train a Random Forest classifier
 rf_model = RandomForestClassifier(n_estimators=100, random_state=42)
-
-# Train the Random Forest model using the training data
 rf_model.fit(X_train, y_train)
+```
 
-# Use the trained model to make predictions on the test set
+**Step 7: Evaluate the Model**
+
+After training the model, we’ll use the **test data** to evaluate its performance. We will print the accuracy and the classification report to assess the model’s precision, recall, and F1 score.
+
+```python
+from sklearn.metrics import accuracy_score, classification_report
+
+# Predictions on the test set
 y_pred = rf_model.predict(X_test)
 
-# Calculate the accuracy of the model by comparing the predictions to the actual test labels
+# Evaluate accuracy and performance
 accuracy = accuracy_score(y_test, y_pred)
+print("Accuracy:", accuracy)
+print("Classification Report:
+", classification_report(y_test, y_pred))
+```
 
-# Print the accuracy of the model, formatted to two decimal places
-print(f"Model accuracy: {accuracy * 100:.2f}%")
-    </code>
-</pre>
+**Model Performance and Parameters**
 
-With this model, we achieved an accuracy score of **90.05%**.
+- **Accuracy**: The proportion of correctly predicted instances out of all instances.
+- **Classification Report**: Provides additional metrics like precision, recall, and F1 score.
+  
+In this case, we achieved an **accuracy score of ~87%**.
 
-In this Random Forest classification model, adjusting specific parameters can significantly impact performance and efficiency. The test_size parameter in the train_test_split function determines the proportion of data reserved for testing. A larger test_size provides more data to evaluate model accuracy but reduces the data available for training, potentially affecting accuracy. The n_estimators parameter in RandomForestClassifier controls the number of trees in the forest. Increasing the number of trees typically enhances accuracy by reducing variance, though it requires more computational resources, while a lower n_estimators value can speed up training at the cost of some accuracy. Finally, the random_state parameter sets a seed to ensure reproducible results. While it doesn't affect model performance directly, it guarantees consistent results across runs, which can be helpful in iterative model refinement. Adjusting these parameters thoughtfully can help achieve a balance between accuracy and efficiency.
+**Key Hyperparameters:**
+- **n_estimators**: The number of trees in the Random Forest. More trees generally lead to better performance but also require more computational resources.
+- **test_size**: The proportion of data used for testing. A larger test size gives a more reliable evaluation but reduces the amount of data used for training.
+- **random_state**: Ensures reproducibility by initializing the random number generator to a fixed seed.
 
-# Approaching Random Forest Problems
+##### **Conclusion**
+
+This guide demonstrated how to implement a Random Forest model to predict the **Blood–Brain Barrier Permeability (BBBP)** using the **BBBP dataset**. By converting **SMILES strings** to molecular fingerprints and using a **Random Forest classifier**, we were able to achieve an accuracy score of around **87%**.
+
+Adjusting parameters like the number of trees (`n_estimators`) or the split ratio (`test_size`) can help improve the model's performance. Feel free to experiment with these parameters and explore other machine learning models for this task!
+
+
+### Approaching Random Forest Problems
 
 When tackling a classification or regression problem using the Random Forest algorithm, a systematic approach can enhance your chances of success. Here’s a step-by-step guide to effectively solve any Random Forest problem:
 
@@ -160,48 +248,6 @@ When tackling a classification or regression problem using the Random Forest alg
 9. **Deployment**: Once satisfied with the model's performance, prepare it for deployment. Ensure the model can process incoming data and make predictions in a real-world setting, and consider implementing monitoring tools to track its performance over time.
 
 By following this structured approach, practitioners can effectively leverage the Random Forest algorithm to solve a wide variety of problems, ensuring thorough analysis, accurate predictions, and actionable insights.
-
-## Practice Problems ##
-
-Now it's your turn! Below are Five Random Forest Problems, as well as corresponding datasets. Try your hand at solving them!
-
-# Practice Problems Using Random Forest
-
-## Problem 1: Iris Species Classification
-- **Dataset**: Iris dataset. To load this dataset, execute the following command in your python script: 
-<pre>
-    <code class="python">
-from sklearn import datasets
-
-
-iris = datasets.load_iris()
-    </code>
-</pre>
-The iris dataset will now be stored in the iris variable. Feel free to print it out to get an understanding of what it contains
-- **Task**: Use the Random Forest algorithm to classify different species of iris flowers based on features such as sepal length, sepal width, petal length, and petal width.
-- **Goal**: Predict the species (Setosa, Versicolor, or Virginica) based on the provided measurements.
-
-## Problem 2: Wine Quality Prediction
-- **Dataset**: [Wine Quality dataset](https://archive.ics.uci.edu/ml/datasets/Wine+Quality)
-- **Task**: Implement a Random Forest model to predict the quality of red and white wine based on physicochemical tests (e.g., acidity, sugar level, pH).
-- **Goal**: Predict the quality score (ranging from 0 to 10) and evaluate the model’s accuracy.
-
-## Problem 3: Titanic Survival Prediction
-- **Dataset**: [Titanic dataset](https://www.kaggle.com/c/titanic/data)
-- **Task**: Use the Random Forest algorithm to predict whether a passenger survived the Titanic disaster based on features such as age, gender, class, and fare.
-- **Goal**: Predict survival (1 for survived, 0 for did not survive) and analyze feature importance.
-
-## Problem 4: Heart Disease Diagnosis
-- **Dataset**: [Heart Disease dataset](https://archive.ics.uci.edu/ml/datasets/heart+Disease)
-- **Task**: Build a Random Forest classifier to determine the presence of heart disease based on clinical attributes such as age, cholesterol levels, blood pressure, and other health metrics.
-- **Goal**: Classify patients as having heart disease (1) or not (0) and assess the model's performance.
-
-## Problem 5: Handwritten Digit Recognition
-- **Dataset**: [MNIST dataset](http://yann.lecun.com/exdb/mnist/)
-- **Task**: Implement a Random Forest classifier to recognize handwritten digits (0-9) based on pixel intensity values.
-- **Goal**: Classify images of handwritten digits and evaluate the model’s accuracy on a test set.
-
-
 
 ### **Strengths and Weaknesses of Random Forest**
 
