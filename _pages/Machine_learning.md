@@ -98,7 +98,8 @@ The goal is to predict whether a given chemical compound will cross the blood-br
 
 We need to use the RDKit library, which is essential for converting **SMILES strings** into molecular fingerprints, a numerical representation of the molecule.
 
-```python
+<pre>
+    <code class="python">
 # Install the RDKit package via conda-forge
 !pip install -q condacolab
 import condacolab
@@ -110,13 +111,15 @@ condacolab.install()
 # Import RDKit and check if it's installed successfully
 from rdkit import Chem
 print("RDKit is successfully installed!")
-```
+    </code>
+</pre>
 
 **Step 2: Download the BBBP Dataset from Kaggle**
 
 The **BBBP dataset** is available on Kaggle. To download it into your environment, we will use the `kagglehub` package. Make sure you have a Kaggle account and set up the API key for authentication.
 
-```python
+<pre>
+    <code class="python">
 import kagglehub
 
 # Download the latest version of the BBBP dataset
@@ -127,26 +130,30 @@ print("Path to dataset files:", path)
 
 # Inform that the dataset has been downloaded
 print("Dataset download complete. Proceeding with analysis.")
-```
+    </code>
+</pre>
 
 **Step 3: Load the BBBP Dataset**
 
 After downloading the dataset, we'll load the **BBBP dataset** into a **pandas DataFrame**. The dataset contains the **SMILES strings** and the **target variable** (`p_np`), which indicates whether the compound can cross the blood-brain barrier (binary classification: `1` for permeable, `0` for non-permeable).
 
-```python
+<pre>
+    <code class="python">
 import pandas as pd
 
 # Load the BBBP dataset (adjust the filename if it's different)
 data = pd.read_csv("bbbp.csv")  # Assuming the dataset is named bbbp.csv
 print("Dataset Head:
 ", data.head())
-```
+    </code>
+</pre>
 
 **Step 4: Convert SMILES to Molecular Fingerprints**
 
 To use the **SMILES strings** for modeling, we need to convert them into **molecular fingerprints**. This process turns the chemical structures into a numerical format that can be fed into machine learning models. We’ll use **RDKit** to generate these fingerprints using the **Morgan Fingerprint** method.
 
-```python
+<pre>
+    <code class="python">
 from rdkit import Chem
 from rdkit.Chem import AllChem
 import numpy as np
@@ -164,36 +171,42 @@ features = [featurize_molecule(smi) for smi in data['smiles']]  # Replace 'smile
 features = [list(fp) if fp is not None else np.zeros(1024) for fp in features]  # Handle missing data by filling with zeros
 X = np.array(features)
 y = data['p_np']  # Target column (1 for permeable, 0 for non-permeable)
-```
+    </code>
+</pre>
 
 **Step 5: Split Data into Training and Testing Sets**
 
 To evaluate the model, we need to split the data into training and testing sets. The **train_test_split** function from **scikit-learn** will handle this. We’ll use 80% of the data for training and 20% for testing.
 
-```python
+<pre>
+    <code class="python">
 from sklearn.model_selection import train_test_split
 
 # Split data into train and test sets (80% training, 20% testing)
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-```
+    </code>
+</pre>
 
 **Step 6: Train the Random Forest Model**
 
 We’ll use the **RandomForestClassifier** from **scikit-learn** to build the model. A Random Forest is an ensemble method that uses multiple decision trees to make predictions. The more trees (`n_estimators`) we use, the more robust the model will be.
 
-```python
+<pre>
+    <code class="python">
 from sklearn.ensemble import RandomForestClassifier
 
 # Train a Random Forest classifier
 rf_model = RandomForestClassifier(n_estimators=100, random_state=42)
 rf_model.fit(X_train, y_train)
-```
+    </code>
+</pre>
 
 **Step 7: Evaluate the Model**
 
 After training the model, we’ll use the **test data** to evaluate its performance. We will print the accuracy and the classification report to assess the model’s precision, recall, and F1 score.
 
-```python
+<pre>
+    <code class="python">
 from sklearn.metrics import accuracy_score, classification_report
 
 # Predictions on the test set
@@ -204,7 +217,8 @@ accuracy = accuracy_score(y_test, y_pred)
 print("Accuracy:", accuracy)
 print("Classification Report:
 ", classification_report(y_test, y_pred))
-```
+    </code>
+</pre>
 
 **Model Performance and Parameters**
 
