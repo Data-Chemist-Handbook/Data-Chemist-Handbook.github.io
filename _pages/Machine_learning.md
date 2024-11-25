@@ -153,7 +153,7 @@ To interact with Kaggle and download the dataset, you need the Kaggle API client
 
 <pre> 
     <code class="python"> 
-    !pip install kaggle 
+!pip install kaggle 
     </code> 
 </pre>
 
@@ -162,10 +162,10 @@ Now that the API key is set up, you can download the dataset using the Kaggle AP
 
 <pre> 
     <code class="python"> 
-        # Download the BBBP dataset using the Kaggle API 
-        !kaggle datasets download -d priyanagda/bbbp-smiles 
-        # Unzip the downloaded file 
-        !unzip bbbp-smiles.zip -d bbbp_dataset 
+# Download the BBBP dataset using the Kaggle API 
+!kaggle datasets download -d priyanagda/bbbp-smiles 
+# Unzip the downloaded file 
+!unzip bbbp-smiles.zip -d bbbp_dataset 
     </code> 
 </pre>
 This code will:
@@ -178,11 +178,11 @@ After downloading, check the dataset files to confirm that everything is in plac
 
 <pre> 
     <code class="python"> 
-        # List the files in the dataset folder 
-        import os 
-        dataset_path = "bbbp_dataset" 
-        files = os.listdir(dataset_path) 
-        print("Files in the dataset:", files) 
+# List the files in the dataset folder 
+import os 
+dataset_path = "bbbp_dataset" 
+files = os.listdir(dataset_path) 
+print("Files in the dataset:", files) 
     </code> 
 </pre>
 
@@ -198,8 +198,7 @@ import pandas as pd
 
 # Load the BBBP dataset (adjust the filename if it's different)
 data = pd.read_csv("bbbp.csv")  # Assuming the dataset is named bbbp.csv
-print("Dataset Head:
-", data.head())
+print("Dataset Head:", data.head())
     </code>
 </pre>
 
@@ -228,6 +227,8 @@ X = np.array(features)
 y = data['p_np']  # Target column (1 for permeable, 0 for non-permeable)
     </code>
 </pre>
+The diagram below provides a visual representation of what this code does:
+<img src="./smiles.png" alt="Logo" width="300"/>
 
 **Step 5: Split Data into Training and Testing Sets**
 
@@ -241,6 +242,8 @@ from sklearn.model_selection import train_test_split
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
     </code>
 </pre>
+The diagram below provides a visual representation of what this code does:
+<img src="./train_test_split.png" alt="Logo" width="300"/>
 
 **Step 6: Train the Random Forest Model**
 
@@ -256,6 +259,10 @@ rf_model.fit(X_train, y_train)
     </code>
 </pre>
 
+The diagram below provides a visual explanation of what is going on here:
+
+<img src="./random_forest_diagram.png" alt="Logo" width="300"/>
+
 **Step 7: Evaluate the Model**
 
 After training the model, we’ll use the **test data** to evaluate its performance. We will print the accuracy and the classification report to assess the model’s precision, recall, and F1 score.
@@ -270,8 +277,7 @@ y_pred = rf_model.predict(X_test)
 # Evaluate accuracy and performance
 accuracy = accuracy_score(y_test, y_pred)
 print("Accuracy:", accuracy)
-print("Classification Report:
-", classification_report(y_test, y_pred))
+print("Classification Report:", classification_report(y_test, y_pred))
     </code>
 </pre>
 
