@@ -116,22 +116,77 @@ print("RDKit is successfully installed!")
 
 **Step 2: Download the BBBP Dataset from Kaggle**
 
-The **BBBP dataset** is available on Kaggle. To download it into your environment, we will use the `kagglehub` package. Make sure you have a Kaggle account and set up the API key for authentication.
+The **BBBP dataset** is hosted on Kaggle, a popular platform for datasets and machine learning competitions. To access the dataset, you need a Kaggle account and an API key for authentication. Here's how you can set it up:
 
-<pre>
-    <code class="python">
-import kagglehub
 
-# Download the latest version of the BBBP dataset
-path = kagglehub.dataset_download("priyanagda/bbbp-smiles")
+***Step 2.1: Create a Kaggle Account***
+1. Visit Kaggle and create an account if you don't already have one.
+2. Once you're logged in, go to your profile by clicking on your profile picture in the top right corner, and select My Account.
 
-# Print the path to dataset files
-print("Path to dataset files:", path)
 
-# Inform that the dataset has been downloaded
-print("Dataset download complete. Proceeding with analysis.")
-    </code>
+***Step 2.2: Set Up the Kaggle API Key***
+1. Scroll down to the section labeled API on your account page.
+2. Click on the button "Create New API Token". This will download a file named kaggle.json to your computer.
+3. Keep this file safe! It contains your API key, which you'll use to authenticate when downloading datasets.
+
+***Step 2.3: Upload the Kaggle API Key***
+Once you have the kaggle.json file, you need to upload it to your Python environment:
+
+1. If you're using a notebook environment like Google Colab, use the code below to upload the file.
+<pre> 
+    <code class="python"> 
+# Upload the kaggle.json file from google.colab import 
+files uploaded = files.upload() 
+# Move the file to the right directory for authentication 
+!mkdir -p ~/.kaggle !mv kaggle.json ~/.kaggle/ !chmod 600 ~/.kaggle/kaggle.json 
+    </code> 
 </pre>
+
+2. If you're using a local Jupyter Notebook:
+Place the kaggle.json file in a folder named .kaggle within your home directory:
+On Windows: Place it in C:\Users\<YourUsername>\.kaggle.
+On Mac/Linux: Place it in ~/.kaggle.
+
+
+***Step 2.4: Install the Required Libraries***
+To interact with Kaggle and download the dataset, you need the Kaggle API client. Install it with the following command:
+
+<pre> 
+    <code class="python"> 
+    !pip install kaggle 
+    </code> 
+</pre>
+
+***Step 2.5: Download the BBBP Dataset***
+Now that the API key is set up, you can download the dataset using the Kaggle API:
+
+<pre> 
+    <code class="python"> 
+        # Download the BBBP dataset using the Kaggle API 
+        !kaggle datasets download -d priyanagda/bbbp-smiles 
+        # Unzip the downloaded file 
+        !unzip bbbp-smiles.zip -d bbbp_dataset 
+    </code> 
+</pre>
+This code will:
+
+1. Download the dataset into your environment.
+2. Extract the dataset files into a folder named bbbp_dataset.
+
+Step 2.6: Verify the Download
+After downloading, check the dataset files to confirm that everything is in place:
+
+<pre> 
+    <code class="python"> 
+        # List the files in the dataset folder 
+        import os 
+        dataset_path = "bbbp_dataset" 
+        files = os.listdir(dataset_path) 
+        print("Files in the dataset:", files) 
+    </code> 
+</pre>
+
+By following these steps, you will have successfully downloaded and extracted the BBBP dataset, ready for further analysis and processing. 
 
 **Step 3: Load the BBBP Dataset**
 
