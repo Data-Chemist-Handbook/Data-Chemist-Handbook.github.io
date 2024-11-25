@@ -132,7 +132,7 @@ The **BBBP dataset** is hosted on Kaggle, a popular platform for datasets and ma
 ***Step 2.3: Upload the Kaggle API Key***
 Once you have the kaggle.json file, you need to upload it to your Python environment:
 
-1. If you're using a notebook environment like Google Colab, use the code below to upload the file.
+1. If you're using a notebook environment like Google Colab, use the code below to upload the file:
 <pre> 
     <code class="python"> 
 # Upload the kaggle.json file from google.colab import 
@@ -144,8 +144,8 @@ files uploaded = files.upload()
 
 2. If you're using a local Jupyter Notebook:
 Place the kaggle.json file in a folder named .kaggle within your home directory:
-On Windows: Place it in C:\Users\<YourUsername>\.kaggle.
-On Mac/Linux: Place it in ~/.kaggle.
+    a. On Windows: Place it in C:\Users\<YourUsername>\.kaggle.
+    b. On Mac/Linux: Place it in ~/.kaggle.
 
 
 ***Step 2.4: Install the Required Libraries***
