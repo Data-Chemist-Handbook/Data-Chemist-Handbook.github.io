@@ -261,7 +261,7 @@ rf_model.fit(X_train, y_train)
 
 The diagram below provides a visual explanation of what is going on here:
 
-<img src="../resource/img/random_forest_decision_tree/random_forest_diagram.png" alt="Logo" width="300"/>
+![Alt text](https://github.com/Data-Chemist-Handbook/Data-Chemist-Handbook.github.io/blob/master/resource/img/random_forest_decision_tree/random_forest_diagram.png)
 
 **Step 7: Evaluate the Model**
 
