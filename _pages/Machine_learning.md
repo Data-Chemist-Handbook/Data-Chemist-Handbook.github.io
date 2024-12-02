@@ -228,7 +228,7 @@ y = data['p_np']  # Target column (1 for permeable, 0 for non-permeable)
     </code>
 </pre>
 The diagram below provides a visual representation of what this code does:
-![Alt text](../resource/img/random_forest_decision_tree/smiles.png)
+![Smiles Diagram](https://github.com/Data-Chemist-Handbook/Data-Chemist-Handbook.github.io/blob/master/resource/img/random_forest_decision_tree/smiles.png)
 
 **Step 5: Split Data into Training and Testing Sets**
 
@@ -243,7 +243,7 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_
     </code>
 </pre>
 The diagram below provides a visual representation of what this code does:
-<img src="../resource/img/random_forest_decision_tree/train_test_split.png" alt="Logo" width="300"/>
+![Train Test Split Diagram](https://github.com/Data-Chemist-Handbook/Data-Chemist-Handbook.github.io/blob/master/resource/img/random_forest_decision_tree/train_test_split.png)
 
 **Step 6: Train the Random Forest Model**
 
@@ -261,7 +261,7 @@ rf_model.fit(X_train, y_train)
 
 The diagram below provides a visual explanation of what is going on here:
 
-![Alt text](https://github.com/Data-Chemist-Handbook/Data-Chemist-Handbook.github.io/blob/master/resource/img/random_forest_decision_tree/random_forest_diagram.png)
+![Random Forest Decision Tree Diagram](https://github.com/Data-Chemist-Handbook/Data-Chemist-Handbook.github.io/blob/master/resource/img/random_forest_decision_tree/random_forest_diagram.png)
 
 **Step 7: Evaluate the Model**
 
