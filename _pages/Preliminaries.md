@@ -398,7 +398,7 @@ print(f"Double molecular weight: {double_weight(molecular_weight)}")
 
 In this chapter, we'll explore how to use Python for data analysis, focusing on importing and managing datasets commonly encountered in chemistry. Data analysis is a crucial skill for chemists, allowing you to extract meaningful insights from experimental data, predict outcomes, and make informed decisions in your research. Effective data analysis begins with properly importing and managing your datasets. This section will guide you through loading data from various file formats, including those specific to chemistry, and handling data from databases.
 
-#### 2.2.1 Loading Data from Various File Formats
+### 2.2.1 Loading Data from Various File Formats
 
 **Reading Data from CSV, Excel, and JSON Files**
 
@@ -454,7 +454,7 @@ Calculate the proportion of permeable compounds, i.e., those for which the p_np 
 
 ### 2.2.2 Data Cleaning and Preprocessing
 
-**Handling Missing Values and Duplicates**
+#### Handling Missing Values and Duplicates
 
 **Explanation:**
 Data cleaning involves dealing with missing or incorrect data entries to improve the quality of the dataset. Handling missing values and removing duplicates ensures that analyses are accurate and reliable.
@@ -486,11 +486,13 @@ print(f"Number of rows after removing duplicates: {len(df_no_duplicates)}")
 - `drop_duplicates()` removes duplicate rows from the DataFrame.
 
 **Practice Problem:**
-We will clean the dataset by filling missing `name` and `smiles` values and removing any duplicate entries based on smiles.
+
+We will clean the dataset by filling missing `name` and `smiles` values and removing any duplicate entries based on `smiles`.
 
 Given a DataFrame with missing values:
-1. Fill missing values in the `name` column with `'Unknown'` and in the `smiles` column with an `empty string`.
+1. Fill missing values in the `name` column with `'Unknown'` and in the `smiles` column with an empty string.
 2. Remove any duplicate rows based on the `smiles` column.
+
 ---
 
 **Data Type Conversions**
