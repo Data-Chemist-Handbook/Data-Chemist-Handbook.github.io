@@ -982,6 +982,8 @@ plt.ylabel('Concentration')
 plt.title('Concentration over Time')
 plt.show()
 ```
+![Line Plot Example](../../resource/img/preliminaries/pre_2-2/2.2.5-1.png)
+*Figure: Line Plot of Time vs. Concentration*
 
 **Example Code for Scatter Plot:**
 ```python
@@ -997,6 +999,8 @@ sns.scatterplot(data=df, x='MolecularWeight', y='BoilingPoint')
 plt.title('Molecular Weight vs Boiling Point')
 plt.show()
 ```
+![Scatter Plot Example](../../resource/img/preliminaries/pre_2-2/2.2.5-2.png)
+*Figure: Scatter Plot of Molecular Weight vs. Boiling Point*
 
 ---
 
@@ -1010,28 +1014,35 @@ Histograms display the distribution of a single variable by dividing it into bin
 import matplotlib.pyplot as plt
 
 # Example data
-data = [1.5, 2.3, 2.9, 3.2, 4.0, 4.5, 5.1, 5.5, 6.3, 6.8]
+data = [1.1, 2.3, 2.9, 3.5, 4.0, 4.4, 5.1, 5.9, 6.3, 6.8, 7.2, 8.0, 9.1, 9.7, 10.2]
 
-# Histogram
-plt.hist(data, bins=5, edgecolor='black')
+# Create histogram
+plt.hist(data, bins=8, edgecolor='black', color='skyblue')
 plt.xlabel('Value')
 plt.ylabel('Frequency')
-plt.title('Histogram')
+plt.title('Histogram Demonstrating Data Distribution')
+plt.grid(axis='y', linestyle='--', alpha=0.7)  # Add grid for better readability
 plt.show()
 ```
+![Histogram Example](../../resource/img/preliminaries/pre_2-2/2.2.5-3.png)
+*Figure: Histogram Demonstrating Data Distribution*
 
 **Example Code for Density Plot:**
 ```python
 import seaborn as sns
 
+# Example data
+data = [1.1, 2.3, 2.9, 3.5, 4.0, 4.4, 5.1, 5.9, 6.3, 6.8, 7.2, 8.0, 9.1, 9.7, 10.2]
+
 # Density plot
-sns.kdeplot(data, shade=True)
+sns.kdeplot(data, fill=True)
 plt.xlabel('Value')
 plt.ylabel('Density')
 plt.title('Density Plot')
 plt.show()
 ```
-
+![Density Plot Example](../../resource/img/preliminaries/pre_2-2/2.2.5-4.png)
+*Figure: Density Plot Visualizing Data Distribution*
 ---
 
 #### Box Plots and Violin Plots
@@ -1053,15 +1064,25 @@ sns.boxplot(data=df, x='Category', y='Value')
 plt.title('Box Plot')
 plt.show()
 ```
+![Box Plot Example](../../resource/img/preliminaries/pre_2-2/2.2.5-5.png)
+*Figure: Box Plot Showing Value Distribution Across Categories*
 
 **Example Code for Violin Plot:**
 ```python
+import seaborn as sns
+import pandas as pd
+
+# Sample data
+df = pd.DataFrame({'Category': ['A', 'A', 'B', 'B', 'C', 'C'],
+                   'Value': [10, 15, 10, 20, 15, 25]})
+
 # Violin plot
 sns.violinplot(data=df, x='Category', y='Value')
 plt.title('Violin Plot')
 plt.show()
 ```
-
+![Violin Plot Example](../../resource/img/preliminaries/pre_2-2/2.2.5-6.png)
+*Figure: Violin Plot Highlighting Value Distribution and Density Across Categories*
 ---
 
 #### Heatmaps and Correlation Matrices
@@ -1084,9 +1105,19 @@ sns.heatmap(df, annot=True, cmap='coolwarm')
 plt.title('Heatmap')
 plt.show()
 ```
+![Heatmap Example](../../resource/img/preliminaries/pre_2-2/2.2.5-7.png)
+*Figure: Heatmap Depicting Data as a Color-Coded Matrix*
 
 **Example Code for Correlation Matrix:**
 ```python
+import seaborn as sns
+import numpy as np
+import pandas as pd
+
+# Sample correlation data
+data = np.random.rand(5, 5)
+df = pd.DataFrame(data, columns=['A', 'B', 'C', 'D', 'E'])
+
 # Correlation matrix of a DataFrame
 corr_matrix = df.corr()
 
@@ -1095,6 +1126,8 @@ sns.heatmap(corr_matrix, annot=True, cmap='coolwarm')
 plt.title('Correlation Matrix')
 plt.show()
 ```
+![Correlation Matrices Example](../../resource/img/preliminaries/pre_2-2/2.2.5-8.png)
+*Figure: Heatmap Visualizing the Correlation Matrix Across Variables*
 
 ---
 
@@ -1116,6 +1149,8 @@ fig = px.scatter(df, x='MolecularWeight', y='BoilingPoint',
                  title='Molecular Weight vs Boiling Point')
 fig.show()
 ```
+![Correlation Matrices Example](../../resource/img/preliminaries/pre_2-2/2.2.5-9.png)
+*Figure: Interactive Scatter Plot Showing the Relationship Between Molecular Weight and Boiling Point*
 
 ### 2.2.6 Statistical Analysis Basics
 
@@ -1144,6 +1179,12 @@ std_mw = df['MolecularWeight'].std()
 print(f"Mean Molecular Weight: {mean_mw}")
 print(f"Median Boiling Point: {median_bp}")
 print(f"Standard Deviation of Molecular Weight: {std_mw}")
+```
+**Result**
+```python3
+Mean Molecular Weight: 182.0
+Median Boiling Point: 105.0
+Standard Deviation of Molecular Weight: 23.874672772626646
 ```
 
 **Practice Problem:**
