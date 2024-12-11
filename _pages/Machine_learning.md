@@ -243,7 +243,7 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_
     </code>
 </pre>
 The diagram below provides a visual representation of what this code does:
-![Train Test Split Diagram](../../resource/img/random_forest_decision_tree/random_forest_diagram.png)
+![Train Test Split Diagram](../../resource/img/random_forest_decision_tree/train_test_split.png)
 
 **Step 6: Train the Random Forest Model**
 
