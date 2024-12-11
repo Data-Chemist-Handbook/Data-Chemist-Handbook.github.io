@@ -2384,23 +2384,11 @@ Quantum chemistry is a branch of chemistry focused on the application of quantum
 
 Quantum chemistry is essential for predicting molecular behavior, understanding reaction mechanisms, and designing new compounds. It plays a critical role in fields such as drug discovery, materials science, and nanotechnology.
 
-**Example Code:**
+**Basis Sets**: In quantum chemistry, a basis set is a set of functions used to describe the wave functions of electrons in a molecule. The choice of basis set affects the accuracy and computational cost of the calculation. Common basis sets include STO-3G, 6-31G*, and cc-pVDZ.
+  
+**Quantum Chemistry Methods**: Methods like Hartree-Fock, Density Functional Theory (DFT), and post-Hartree-Fock methods (e.g., MP2, CCSD) are used to approximate the solutions to the Schrödinger equation. Each method has its strengths and trade-offs in terms of accuracy and computational resources.
 
-```python
-# Note: This is a conceptual example. Actual quantum chemistry calculations require specialized software like Gaussian or ORCA.
-
-# Define a simple molecule
-molecule = "H2O"
-
-# Set up quantum chemistry calculation parameters
-basis_set = "STO-3G"
-method = "Hartree-Fock"
-
-# Run the calculation (conceptual)
-print(f"Running quantum chemistry calculation for {molecule} using {method} with {basis_set} basis set...")
-# Calculation code would go here
-print("Calculation complete.")
-```
+Quantum chemistry calculations are essential for predicting molecular properties, understanding reaction mechanisms, and designing new compounds. They are widely used in drug discovery, materials science, and nanotechnology to explore the electronic properties and interactions of molecules at a fundamental level.
 
 #### Common Software and Tools
 
@@ -2417,22 +2405,31 @@ These tools are integral to modern computational chemistry, enabling researchers
 **Example Code:**
 
 ```python
-# Note: This is a conceptual example. Actual setup requires software like Gaussian or ORCA.
+# Define the molecule and calculation parameters
+molecule = "H2O"
+basis_set = "STO-3G"
+method = "HF"
 
-# Load molecular structure
-molecule_file = "molecule.xyz"
+# Define the molecular geometry
+geometry = """
+O  0.000000  0.000000  0.000000
+H  0.000000  0.757160  0.586260
+H  0.000000 -0.757160  0.586260
+"""
 
-# Select quantum chemistry software
-software = "Gaussian"
+# Create the ORCA input file
+input_file_content = f"""
+! {method} {basis_set}
+* xyz 0 1
+{geometry}
+*
+"""
 
-# Define calculation parameters
-basis_set = "6-31G*"
-method = "DFT"
+# Write the input file
+with open("water.inp", "w") as file:
+    file.write(input_file_content)
 
-# Prepare the input file (conceptual)
-print(f"Preparing input file for {software} using {method} with {basis_set} basis set...")
-# Setup code would go here
-print("Input file prepared.")
+print("ORCA input file 'water.inp' created.")
 ```
 
 #### Applications in Drug Design
@@ -2446,24 +2443,6 @@ Quantum chemistry plays a crucial role in drug design by providing insights into
 - **Activity Prediction**: Quantum chemistry models can predict the biological activity of new compounds, guiding the design of more effective drugs.
 
 These applications make quantum chemistry an invaluable tool in the pharmaceutical industry, accelerating the drug discovery process and improving the success rate of new drug candidates.
-
-**Example Code:**
-
-```python
-# Note: This is a conceptual example. Actual drug design applications require specialized software and data.
-
-# Define a drug molecule
-drug_molecule = "aspirin"
-
-# Set up quantum chemistry calculation
-basis_set = "cc-pVDZ"
-method = "MP2"
-
-# Run the calculation (conceptual)
-print(f"Running quantum chemistry calculation for {drug_molecule} using {method} with {basis_set} basis set...")
-# Calculation code would go here
-print("Calculation complete.")
-```
 
 **Practice Problem:**
 
