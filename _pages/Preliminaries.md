@@ -214,35 +214,29 @@ Python's simple syntax makes it a powerful and beginner-friendly language for da
 
 **Variables**: Used to store data. You can define a variable by simply assigning it a value.
 
-<pre>
-    <code class="python">
+```python
 # Defining variables
 compound_name = "Aspirin"
 molecular_weight = 180.16
-    </code>
-</pre>
+```
 
 **Loops**: Used to perform repetitive tasks.
 
-<pre>
-    <code class="python">
+```python
 # For loop example
 for i in range(3):
     print(f"Compound {i+1}")
-    </code>
-</pre>
+```
 
 **Functions**: Functions in Python allow you to reuse blocks of code and organize your script.
 
-<pre>
-    <code class="python">
+```python
 # Function to calculate the molecular weight ratio
 def molecular_weight_ratio(compound_weight, standard_weight=100):
     return compound_weight / standard_weight
 
 print(molecular_weight_ratio(molecular_weight))
-    </code>
-</pre>
+```
 
 #### Basic Printing Techniques in Python
 
@@ -254,16 +248,14 @@ Printing output is essential for checking code functionality, displaying calcula
 
 **Explanation:** The `print()` function displays text or values to the screen. You can print variables or text strings directly.
 
-<pre>
-    <code class="python">
+```python
 # Basic print
 print("Welcome to Python programming!")
 
 # Printing a variable
 compound_name = "Aspirin"
 print("Compound:", compound_name)
-    </code>
-</pre>
+```
 
 ---
 
@@ -271,12 +263,10 @@ print("Compound:", compound_name)
 
 **Explanation:** Python’s f-strings (formatted string literals) make it easy to embed variable values in text, which simplifies displaying complex data clearly.
 
-<pre>
-    <code class="python">
+```python
 molecular_weight = 180.16
 print(f"The molecular weight of {compound_name} is {molecular_weight}")
-    </code>
-</pre>
+```
 
 ---
 
@@ -284,11 +274,9 @@ print(f"The molecular weight of {compound_name} is {molecular_weight}")
 
 **Explanation:** You can also combine strings and variables using the `+` operator, though it requires converting numbers to strings explicitly.
 
-<pre>
-    <code class="python">
+```python
 print("The molecular weight of " + compound_name + " is " + str(molecular_weight))
-    </code>
-</pre>
+```
 
 ---
 
@@ -296,12 +284,10 @@ print("The molecular weight of " + compound_name + " is " + str(molecular_weight
 
 **Explanation:** To control the display of floating-point numbers (e.g., limiting decimal places), use formatting options within f-strings.
 
-<pre>
-    <code class="python">
+```python
 # Display molecular weight with two decimal places
 print(f"Molecular weight: {molecular_weight:.2f}")
-    </code>
-</pre>
+```
 
 ---
 
@@ -311,8 +297,7 @@ Write a program to define variables for a compound’s name and molecular weight
 
 **Solution**
 
-<pre>
-    <code class="python">
+```python
 compound_name = "Ibuprofen"
 molecular_weight = 206.29
 
@@ -327,8 +312,7 @@ print("The molecular weight of " + compound_name + " is " + str(molecular_weight
 
 # Formatting numbers
 print(f"Molecular weight: {molecular_weight:.2f}")
-    </code>
-</pre>
+```
 
 ---
 
@@ -344,8 +328,7 @@ Python packages are pre-built libraries that simplify data analysis. Here, we’
 
 #### Example Code to Install and Import Packages
 
-<pre>
-    <code class="python">
+```python
 # Installing packages
 !pip install numpy pandas matplotlib seaborn
 
@@ -354,15 +337,13 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-    </code>
-</pre>
+```
 
 #### Working with JSON Data
 
 **JSON (JavaScript Object Notation)** is a common data format for sharing data between systems, especially in APIs. JSON files are lightweight and easy to parse.
 
-<pre>
-    <code class="python">
+```python
 import json
 
 # Loading data from a JSON file
@@ -371,8 +352,7 @@ with open('data.json') as f:
 
 # Accessing data in JSON format
 print(data['compound_name'])
-    </code>
-</pre>
+```
 
 **Practice Problem:**
 
@@ -380,8 +360,7 @@ print(data['compound_name'])
 
 **Solution**
 
-<pre>
-    <code class="python">
+```python
 # Define a variable for molecular weight
 molecular_weight = 180.16
 
@@ -391,8 +370,7 @@ def double_weight(weight):
 
 # Test the function
 print(f"Double molecular weight: {double_weight(molecular_weight)}")
-    </code>
-</pre>
+```
 
 ## 2.2 Data Analysis with Python
 
@@ -408,8 +386,7 @@ CSV (Comma-Separated Values), Excel, and JSON (JavaScript Object Notation) are c
 
 **Example Code:**
 
-<pre>
-    <code class="python">
+```python
 import pandas as pd
 
 # Reading a CSV file
@@ -420,8 +397,7 @@ excel_data = pd.read_excel('compound_properties.xlsx', sheet_name='Sheet1')
 
 # Reading a JSON file
 json_data = pd.read_json('reaction_conditions.json')
-    </code>
-</pre>
+```
 
 **Explanation of the Code:**
 
@@ -461,8 +437,7 @@ Data cleaning involves dealing with missing or incorrect data entries to improve
 
 **Example Code:**
 
-<pre>
-    <code class="python">
+```python
 import pandas as pd
 
 # Loading the BBBP dataset
@@ -479,8 +454,7 @@ print(df_filled.head())
 
 # Displaying the number of rows after removing duplicates
 print(f"Number of rows after removing duplicates: {len(df_no_duplicates)}")
-    </code>
-</pre>
+```
 
 - `fillna()` is used to fill missing values with specified values.
 - `drop_duplicates()` removes duplicate rows from the DataFrame.
@@ -502,8 +476,7 @@ Converting data types ensures consistency and prevents errors, especially when p
 
 **Example Code:**
 
-<pre>
-    <code class="python">
+```python
 import pandas as pd
 
 # Example DataFrame with mixed types
@@ -519,8 +492,7 @@ df['Quantity'] = df['Quantity'].astype(int)
 df['Purity'] = df['Purity'].astype(str)
 
 print(df.dtypes)
-    </code>
-</pre>
+```
 
 **Practice Problem:**
 In the BBBP dataset, the `num` column (compound number) should be treated as an integer, and the `p_np` column (permeability label) should be converted to categorical data.
@@ -528,21 +500,19 @@ In the BBBP dataset, the `num` column (compound number) should be treated as an 
 2. Verify that the conversions are successful by printing the data types.
 
 **Solution**
-<pre>
-    <code>
-        import pandas as pd
+```python
+    import pandas as pd
 
-        # Loading the BBBP dataset
-        df = pd.read_csv('BBBP.csv')
+    # Loading the BBBP dataset
+    df = pd.read_csv('BBBP.csv')
 
-        # Convert 'num' to integer and 'p_np' to categorical
-        df['num'] = df['num'].astype(int)
-        df['p_np'] = df['p_np'].astype('category')
+    # Convert 'num' to integer and 'p_np' to categorical
+    df['num'] = df['num'].astype(int)
+    df['p_np'] = df['p_np'].astype('category')
 
-        # Print the data types of the columns
-        print(df.dtypes)
-    </code>
-</pre>
+    # Print the data types of the columns
+    print(df.dtypes)
+```
 ---
 
 **Normalizing and Scaling Data**
@@ -552,8 +522,7 @@ Normalization adjusts the values of numerical columns to a common scale without 
 
 **Example Code:**
 
-<pre>
-    <code class="python">
+```python
 import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
 
@@ -568,8 +537,7 @@ scaler = MinMaxScaler()
 df[['Concentration', 'pH']] = scaler.fit_transform(df[['Concentration', 'pH']])
 
 print(df)
-    </code>
-</pre>
+```
 
 **Practice Problem:**
 We’ll normalize the `num` column using Min-Max scaling, which adjusts values to a common scale between 0 and 1.
@@ -577,8 +545,7 @@ We’ll normalize the `num` column using Min-Max scaling, which adjusts values t
 2. Print the first few rows to verify the normalization.
 
 **Solution**
-<pre>
-    <code>
+```python
         import pandas as pd
         from sklearn.preprocessing import MinMaxScaler
 
@@ -591,8 +558,7 @@ We’ll normalize the `num` column using Min-Max scaling, which adjusts values t
 
         # Print the first few rows of the normalized dataset
         print(df.head())
-    </code>
-</pre>
+```
 ---
 
 **Encoding Categorical Variables**
@@ -603,8 +569,7 @@ Encoding converts non-numeric data (like categories) into numeric values so that
 
 **Example Code:**
 
-<pre>
-    <code class="python">
+```python
 import pandas as pd
 
 # Example DataFrame with categorical data
@@ -616,8 +581,7 @@ df = pd.DataFrame(data)
 df_encoded = pd.get_dummies(df, columns=['State'])
 
 print(df_encoded)
-    </code>
-</pre>
+```
 
 **Practice Problem:**
 The `p_np` column is a binary classification of permeability (1 or 0). We will apply one-hot encoding to this column.
@@ -625,8 +589,7 @@ The `p_np` column is a binary classification of permeability (1 or 0). We will a
 2. Print the first few rows of the encoded DataFrame to verify the result.
 
 **Solution**
-<pre>
-    <code>
+```python
         import pandas as pd
 
         # Loading the BBBP dataset
@@ -637,8 +600,7 @@ The `p_np` column is a binary classification of permeability (1 or 0). We will a
 
         # Print the first few rows of the encoded DataFrame
         print(df_encoded.head())
-    </code>
-</pre>
+```
 ---
 ### 2.2.3 Data Manipulation with Pandas
 
@@ -650,8 +612,7 @@ Filtering allows you to select specific rows or columns from a DataFrame that me
 
 **Example Code:**
 
-<pre>
-    <code class="python">
+```python
         import pandas as pd
 
         # Example DataFrame
@@ -663,8 +624,7 @@ Filtering allows you to select specific rows or columns from a DataFrame that me
         filtered_df = df[df['MolecularWeight'] > 200]
 
         print(filtered_df)
-    </code>
-</pre>
+```
 
 **Practice Problem:**
 
@@ -672,8 +632,7 @@ Filtering allows you to select specific rows or columns from a DataFrame that me
 2. Select a subset of columns from the dataset and display only the `name` and `smiles` columns.
 
 **Solution**
-<pre>
-    <code class="python">
+```python
         import pandas as pd
 
         # Loading the BBBP dataset
@@ -687,8 +646,7 @@ Filtering allows you to select specific rows or columns from a DataFrame that me
 
         print(filtered_df.head())
         print(subset_df.head())
-    </code>
-</pre>
+```
 
 ---
 
@@ -700,8 +658,7 @@ Merging allows for combining data from multiple DataFrames based on a common col
 
 **Example Code:**
 
-<pre>
-    <code class="python">
+```python
         import pandas as pd
 
         # Example DataFrames
@@ -715,8 +672,7 @@ Merging allows for combining data from multiple DataFrames based on a common col
         merged_df = pd.merge(df1, df2, on='Compound')
 
         print(merged_df)
-    </code>
-</pre>
+```
 
 **Practice Problem:**
 
@@ -724,8 +680,7 @@ Merging allows for combining data from multiple DataFrames based on a common col
 2. Perform a left join on the `name` column and display the result.
 
 **Solution**
-<pre>
-    <code class="python">
+```python
         import pandas as pd
 
         # Loading the BBBP dataset
@@ -740,8 +695,7 @@ Merging allows for combining data from multiple DataFrames based on a common col
 
         # Print the merged DataFrame
         print(merged_df.head())
-    </code>
-</pre>
+```
 
 ---
 
@@ -753,8 +707,7 @@ Grouping organizes data based on specific columns, and aggregation provides summ
 
 **Example Code:**
 
-<pre>
-    <code class="python">
+```python
         import pandas as pd
 
         # Example DataFrame
@@ -766,8 +719,7 @@ Grouping organizes data based on specific columns, and aggregation provides summ
         grouped_df = df.groupby('Compound').sum()
 
         print(grouped_df)
-    </code>
-</pre>
+```
 
 **Practice Problem:**
 
@@ -775,8 +727,7 @@ Grouping organizes data based on specific columns, and aggregation provides summ
 2. Use multiple aggregation functions (e.g., count and mean) on the `num` column.
 
 **Solution**
-<pre>
-    <code class="python">
+```python
         import pandas as pd
 
         # Loading the BBBP dataset
@@ -790,8 +741,7 @@ Grouping organizes data based on specific columns, and aggregation provides summ
 
         print(grouped_df)
         print(aggregated_df)
-    </code>
-</pre>
+```
 
 ---
 
@@ -803,8 +753,7 @@ Pivot tables help reorganize data to make it easier to analyze by converting row
 
 **Example Code:**
 
-<pre>
-    <code class="python">
+```python
         import pandas as pd
 
         # Example DataFrame
@@ -817,8 +766,7 @@ Pivot tables help reorganize data to make it easier to analyze by converting row
         pivot_df = df.pivot_table(values='Value', index='Compound', columns='Property')
 
         print(pivot_df)
-    </code>
-</pre>
+```
 
 **Practice Problem:**
 
@@ -826,8 +774,7 @@ Pivot tables help reorganize data to make it easier to analyze by converting row
 2. Use the `melt()` function to reshape the DataFrame, converting columns back into rows.
 
 **Solution**
-<pre>
-    <code class="python">
+```python
         import pandas as pd
 
         # Loading the BBBP dataset
@@ -841,8 +788,7 @@ Pivot tables help reorganize data to make it easier to analyze by converting row
 
         print(pivot_df)
         print(melted_df.head())
-    </code>
-</pre>
+```
 
 ### 2.2.4 Working with NumPy Arrays
 
@@ -856,8 +802,7 @@ NumPy is a library for numerical computing in Python, allowing for efficient arr
 
 **Example Code:**
 
-<pre>
-    <code class="python">
+```python
         import numpy as np
 
         # Example array
@@ -868,8 +813,7 @@ NumPy is a library for numerical computing in Python, allowing for efficient arr
         arr_mean = np.mean(arr)
 
         print(f"Sum: {arr_sum}, Mean: {arr_mean}")
-    </code>
-</pre>
+```
 
 **Practice Problem:**
 
@@ -877,8 +821,7 @@ NumPy is a library for numerical computing in Python, allowing for efficient arr
 2. Perform basic statistical operations like `sum`, `mean`, and `median` on the `num` array.
 
 **Solution**
-<pre>
-    <code class="python">
+```python
         import pandas as pd
         import numpy as np
 
@@ -894,8 +837,7 @@ NumPy is a library for numerical computing in Python, allowing for efficient arr
         num_median = np.median(num_array)
 
         print(f"Sum: {num_sum}, Mean: {num_mean}, Median: {num_median}")
-    </code>
-</pre>
+```
 
 ---
 
@@ -907,8 +849,7 @@ NumPy arrays can be sliced to access subsets of data.
 
 **Example Code:**
 
-<pre>
-    <code class="python">
+```python
         import numpy as np
 
         # Example array
@@ -918,8 +859,7 @@ NumPy arrays can be sliced to access subsets of data.
         slice_arr = arr[1:4]
 
         print(slice_arr)
-    </code>
-</pre>
+```
 
 **Practice Problem:**
 
@@ -928,8 +868,7 @@ NumPy arrays can be sliced to access subsets of data.
 3. Reverse the array using slicing.
 
 **Solution**
-<pre>
-    <code class="python">
+```python
         import pandas as pd
         import numpy as np
 
@@ -947,8 +886,7 @@ NumPy arrays can be sliced to access subsets of data.
 
         print(f"Sliced Array (every second element): {sliced_array}")
         print(f"Reversed Array: {reversed_array}")
-    </code>
-</pre>
+```
 
 ---
 
@@ -960,8 +898,7 @@ Reshaping changes the shape of an array, and broadcasting applies operations acr
 
 **Example Code:**
 
-<pre>
-    <code class="python">
+```python
         import numpy as np
 
         # Example array
@@ -975,8 +912,7 @@ Reshaping changes the shape of an array, and broadcasting applies operations acr
 
         print(reshaped_arr)
         print(broadcast_arr)
-    </code>
-</pre>
+```
 
 **Practice Problem:**
 
@@ -984,8 +920,7 @@ Reshaping changes the shape of an array, and broadcasting applies operations acr
 2. Use broadcasting to add 100 to all elements in the reshaped array.
 
 **Solution**
-<pre>
-    <code class="python">
+```python
         import pandas as pd
         import numpy as np
 
@@ -1006,8 +941,7 @@ Reshaping changes the shape of an array, and broadcasting applies operations acr
 
         print("\nBroadcasted Array (after adding 100):")
         print(broadcasted_array)
-    </code>
-</pre>
+```
 
 ### 2.2.5 Introduction to Visualization Libraries
 Data visualization is critical for interpreting data and uncovering insights. In this section, we’ll use Python’s visualization libraries to create various plots and charts.
@@ -1020,13 +954,11 @@ Python has several powerful libraries for data visualization, including **Matplo
 - **Plotly**: Allows for creating interactive, web-ready plots.
 
 **Example Code:**
-<pre>
-    <code class="python">
+```python
 import matplotlib.pyplot as plt
 import seaborn as sns
 import plotly.express as px
-    </code>
-</pre>
+```
 
 ---
 
@@ -1036,8 +968,7 @@ import plotly.express as px
 Line and scatter plots are used to display relationships between variables. Line plots are commonly used for trend analysis, while scatter plots are useful for examining the correlation between two numerical variables.
 
 **Example Code for Line Plot:**
-<pre>
-    <code class="python">
+```python
 import matplotlib.pyplot as plt
 
 # Example data
@@ -1050,12 +981,10 @@ plt.xlabel('Time')
 plt.ylabel('Concentration')
 plt.title('Concentration over Time')
 plt.show()
-    </code>
-</pre>
+```
 
 **Example Code for Scatter Plot:**
-<pre>
-    <code class="python">
+```python
 import seaborn as sns
 import pandas as pd
 
@@ -1067,8 +996,7 @@ df = pd.DataFrame({'MolecularWeight': [180, 200, 150, 170, 210],
 sns.scatterplot(data=df, x='MolecularWeight', y='BoilingPoint')
 plt.title('Molecular Weight vs Boiling Point')
 plt.show()
-    </code>
-</pre>
+```
 
 ---
 
@@ -1078,8 +1006,7 @@ plt.show()
 Histograms display the distribution of a single variable by dividing it into bins, while density plots are smoothed versions of histograms that show the probability density.
 
 **Example Code for Histogram:**
-<pre>
-    <code class="python">
+```python
 import matplotlib.pyplot as plt
 
 # Example data
@@ -1091,12 +1018,10 @@ plt.xlabel('Value')
 plt.ylabel('Frequency')
 plt.title('Histogram')
 plt.show()
-    </code>
-</pre>
+```
 
 **Example Code for Density Plot:**
-<pre>
-    <code class="python">
+```python
 import seaborn as sns
 
 # Density plot
@@ -1105,8 +1030,7 @@ plt.xlabel('Value')
 plt.ylabel('Density')
 plt.title('Density Plot')
 plt.show()
-    </code>
-</pre>
+```
 
 ---
 
@@ -1116,8 +1040,7 @@ plt.show()
 Box plots show the distribution of data based on quartiles and are useful for spotting outliers. Violin plots combine box plots and density plots to provide more detail on the distribution’s shape.
 
 **Example Code for Box Plot:**
-<pre>
-    <code class="python">
+```python
 import seaborn as sns
 import pandas as pd
 
@@ -1129,18 +1052,15 @@ df = pd.DataFrame({'Category': ['A', 'A', 'B', 'B', 'C', 'C'],
 sns.boxplot(data=df, x='Category', y='Value')
 plt.title('Box Plot')
 plt.show()
-    </code>
-</pre>
+```
 
 **Example Code for Violin Plot:**
-<pre>
-    <code class="python">
+```python
 # Violin plot
 sns.violinplot(data=df, x='Category', y='Value')
 plt.title('Violin Plot')
 plt.show()
-    </code>
-</pre>
+```
 
 ---
 
@@ -1150,8 +1070,7 @@ plt.show()
 Heatmaps display data as a color-coded matrix. They are often used to show correlations between variables or visualize patterns within data.
 
 **Example Code for Heatmap:**
-<pre>
-    <code class="python">
+```python
 import seaborn as sns
 import numpy as np
 import pandas as pd
@@ -1164,12 +1083,10 @@ df = pd.DataFrame(data, columns=['A', 'B', 'C', 'D', 'E'])
 sns.heatmap(df, annot=True, cmap='coolwarm')
 plt.title('Heatmap')
 plt.show()
-    </code>
-</pre>
+```
 
 **Example Code for Correlation Matrix:**
-<pre>
-    <code class="python">
+```python
 # Correlation matrix of a DataFrame
 corr_matrix = df.corr()
 
@@ -1177,8 +1094,7 @@ corr_matrix = df.corr()
 sns.heatmap(corr_matrix, annot=True, cmap='coolwarm')
 plt.title('Correlation Matrix')
 plt.show()
-    </code>
-</pre>
+```
 
 ---
 
@@ -1188,8 +1104,7 @@ plt.show()
 Plotly provides a range of interactive charts that can be easily embedded in web applications. Interactive plots allow users to hover over data points and zoom in on sections of the plot.
 
 **Example Code for Interactive Scatter Plot:**
-<pre>
-    <code class="python">
+```python
 import plotly.express as px
 
 # Sample data
@@ -1200,8 +1115,7 @@ df = pd.DataFrame({'MolecularWeight': [180, 200, 150, 170, 210],
 fig = px.scatter(df, x='MolecularWeight', y='BoilingPoint',
                  title='Molecular Weight vs Boiling Point')
 fig.show()
-    </code>
-</pre>
+```
 
 ### 2.2.6 Statistical Analysis Basics
 
@@ -1215,8 +1129,7 @@ Statistical analysis is essential for interpreting data and making informed conc
 Descriptive statistics summarize and describe the main features of a dataset. Common descriptive statistics include the mean, median, mode, variance, and standard deviation.
 
 **Example Code:**
-<pre>
-    <code class="python">
+```python
 import pandas as pd
 
 # Load a sample dataset
@@ -1231,15 +1144,13 @@ std_mw = df['MolecularWeight'].std()
 print(f"Mean Molecular Weight: {mean_mw}")
 print(f"Median Boiling Point: {median_bp}")
 print(f"Standard Deviation of Molecular Weight: {std_mw}")
-    </code>
-</pre>
+```
 
 **Practice Problem:**
 Calculate the mean, median, and variance for the `num` column in the BBBP dataset.
 
 **Solution**
-<pre>
-    <code class="python">
+```python
 import pandas as pd
 
 # Load the BBBP dataset
@@ -1251,8 +1162,7 @@ median_num = df['num'].median()
 variance_num = df['num'].var()
 
 print(f"Mean: {mean_num}, Median: {median_num}, Variance: {variance_num}")
-    </code>
-</pre>
+```
 
 ---
 
@@ -1262,8 +1172,7 @@ print(f"Mean: {mean_num}, Median: {median_num}, Variance: {variance_num}")
 Probability distributions describe how values are distributed across a dataset. The normal distribution is a common distribution that is symmetric about the mean.
 
 **Example Code for Normal Distribution:**
-<pre>
-    <code class="python">
+```python
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -1276,15 +1185,13 @@ plt.xlabel('Value')
 plt.ylabel('Probability')
 plt.title('Normal Distribution')
 plt.show()
-    </code>
-</pre>
+```
 
 **Practice Problem:**
 Generate a normally distributed dataset based on the mean and standard deviation of the `num` column in the BBBP dataset. Plot a histogram of the generated data.
 
 **Solution**
-<pre>
-    <code class="python">
+```python
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -1303,8 +1210,7 @@ plt.xlabel('Value')
 plt.ylabel('Density')
 plt.title('Normal Distribution of num')
 plt.show()
-    </code>
-</pre>
+```
 
 ---
 
@@ -1314,8 +1220,7 @@ plt.show()
 Hypothesis testing is a method for testing a hypothesis about a population parameter. A t-test, for example, can help determine if the means of two groups are significantly different.
 
 **Example Code for t-test:**
-<pre>
-    <code class="python">
+```python
 from scipy.stats import ttest_ind
 import pandas as pd
 
@@ -1326,15 +1231,13 @@ group_b = [2.0, 2.1, 2.6, 2.8, 2.4]
 # Perform t-test
 t_stat, p_val = ttest_ind(group_a, group_b)
 print(f"T-statistic: {t_stat}, P-value: {p_val}")
-    </code>
-</pre>
+```
 
 **Practice Problem:**
 In the BBBP dataset, compare the mean `num` values between permeable (p_np=1) and non-permeable (p_np=0) compounds using a t-test.
 
 **Solution**
-<pre>
-    <code class="python">
+```python
 from scipy.stats import ttest_ind
 import pandas as pd
 
@@ -1348,8 +1251,7 @@ non_permeable = df[df['p_np'] == 0]['num']
 # Perform t-test
 t_stat, p_val = ttest_ind(permeable, non_permeable)
 print(f"T-statistic: {t_stat}, P-value: {p_val}")
-    </code>
-</pre>
+```
 
 ---
 
@@ -1359,8 +1261,7 @@ print(f"T-statistic: {t_stat}, P-value: {p_val}")
 Correlation measures the strength and direction of a relationship between two variables, while regression predicts the value of a dependent variable based on one or more independent variables.
 
 **Example Code for Correlation and Linear Regression:**
-<pre>
-    <code class="python">
+```python
 import pandas as pd
 import seaborn as sns
 from scipy.stats import pearsonr
@@ -1380,15 +1281,13 @@ y = df['BoilingPoint']
 model = LinearRegression().fit(X, y)
 print(f"Regression coefficient: {model.coef_[0]}")
 print(f"Intercept: {model.intercept_}")
-    </code>
-</pre>
+```
 
 **Practice Problem:**
 Calculate the correlation between `num` and `p_np` in the BBBP dataset. Then, perform a linear regression to predict `num` based on `p_np`.
 
 **Solution**
-<pre>
-    <code class="python">
+```python
 import pandas as pd
 from scipy.stats import pearsonr
 from sklearn.linear_model import LinearRegression
@@ -1406,8 +1305,7 @@ y = df['num']
 model = LinearRegression().fit(X, y)
 print(f"Regression coefficient: {model.coef_[0]}")
 print(f"Intercept: {model.intercept_}")
-    </code>
-</pre>
+```
 
 ---
 
@@ -1417,8 +1315,7 @@ print(f"Intercept: {model.intercept_}")
 ANOVA tests whether there are statistically significant differences between the means of three or more independent groups. It’s useful for analyzing the impact of categorical variables on continuous data.
 
 **Example Code for ANOVA:**
-<pre>
-    <code class="python">
+```python
 from scipy.stats import f_oneway
 
 # Example data for three groups
@@ -1429,15 +1326,13 @@ group3 = [3.1, 3.5, 2.9, 3.6, 3.3]
 # Perform ANOVA
 f_stat, p_val = f_oneway(group1, group2, group3)
 print(f"F-statistic: {f_stat}, P-value: {p_val}")
-    </code>
-</pre>
+```
 
 **Practice Problem:**
 Group the `num` column in the BBBP dataset by the first digit of `num` (e.g., 1XX, 2XX, 3XX) and perform an ANOVA test to see if the mean values differ significantly among these groups.
 
 **Solution**
-<pre>
-    <code class="python">
+```python
 from scipy.stats import f_oneway
 import pandas as pd
 
@@ -1452,8 +1347,7 @@ group3 = df[df['num'].between(300, 399)]['num']
 # Perform ANOVA
 f_stat, p_val = f_oneway(group1, group2, group3)
 print(f"F-statistic: {f_stat}, P-value: {p_val}")
-    </code>
-</pre>
+```
 
 ## 2.3 Representation
 
