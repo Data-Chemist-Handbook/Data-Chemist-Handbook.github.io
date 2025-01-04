@@ -413,3 +413,42 @@ This example demonstrates how a reinforcement learning agent can learn to maximi
 ## 5.3 Genetic Algorithms
 
 ## 5.4 Generative models with conditions
+### 5.4.1 Introduction to Generative Models with Conditions
+
+Generative models are a class of machine learning models designed to create new data samples that resemble a given dataset. Unlike traditional models used for classification or regression, generative models aim to model the underlying data distribution, enabling them to generate realistic, novel examples. This makes them highly valuable for applications such as image synthesis, natural language generation, and molecule design.
+
+In molecular property optimization, generative models play a crucial role by generating novel molecular structures that meet specific criteria, such as high binding affinity or low toxicity. These models can be conditioned on desired molecular properties, allowing efficient exploration of chemical space.
+
+Conditioning generative models involves incorporating property-specific information into the model to ensure generated molecules meet predefined criteria. For example, in variational autoencoders (VAEs), the desired property values are added as inputs to the encoder and decoder networks, facilitating the generation of property-conditioned molecules. Similarly, generative adversarial networks (GANs) can incorporate property constraints either in the generator input or through a modified loss function.
+
+Reinforcement learning (RL) is also commonly used with generative models. Here, an RL agent evaluates candidate molecules proposed by the generative model, guiding the process toward optimal molecular regions based on predicted properties. This approach has been effective in optimizing characteristics like drug-likeness and bioactivity.
+
+Sequence-based models such as conditional recurrent neural networks (RNNs) and transformer architectures have further enhanced molecular generation by capturing complex structural dependencies. These models generate diverse molecular structures tailored to specific design criteria when conditioned on relevant features.
+
+In summary, generative models with conditions offer a powerful framework for accelerating molecular discovery. By enabling the targeted design of novel molecules, they reduce experimental costs and open new avenues in drug development and materials science.
+
+### 5.4.2 What are Conditional Generative Models?
+
+Conditional generative models extend the concept of generative modeling by incorporating additional information—known as conditions—to guide the generation process. These conditions act as constraints or directives that steer the model toward creating samples with specific characteristics or properties. For instance, while a standard generative model for molecules might generate chemically valid compounds randomly, a conditional generative model can be directed to generate molecules with high solubility, low toxicity, or a specific structural feature.
+
+The addition of conditions allows for greater control and precision in the generative process. This is particularly valuable in applications like molecular property optimization, where the goal is not just to create valid molecules but to ensure they meet predefined requirements for properties like binding affinity, pharmacokinetics, or synthetic accessibility.
+
+### 5.4.3 Why are Generative Models with Conditions Important
+
+In the field of molecular design, the chemical space—comprising all theoretically possible molecules—is vast and largely unexplored. Traditional trial-and-error methods of exploring this space are slow, resource-intensive, and often limited in their ability to optimize multiple properties simultaneously. Generative models, and specifically conditional generative models, address this challenge by:
+
+
+- Guided Exploration: Allowing researchers to specify desired molecular properties, thus narrowing the search space.
+- Accelerated Discovery: Rapidly generating candidate molecules with high probability of success in real-world applications.
+- Multi-Objective Optimization: Balancing trade-offs between competing molecular properties, such as efficacy and safety.
+
+For example, in drug discovery, a conditional generative model might be tasked with generating molecules that are not only effective against a particular target protein but are also non-toxic and metabolically stable. Similarly, in materials science, conditional models can help design polymers with specific mechanical or thermal properties.
+
+**Applications Across Domains**
+
+
+- Conditional generative models have proven their utility across various domains:
+- Drug Discovery: Generating molecules with tailored ADMET (absorption, distribution, metabolism, excretion, and toxicity) profiles.
+- Materials Science: Designing compounds with specific physical or chemical properties, such as conductivity or strength.
+- Synthetic Chemistry: Optimizing molecules for ease of synthesis or compatibility with specific reaction pathways.
+
