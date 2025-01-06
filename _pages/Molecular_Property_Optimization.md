@@ -451,4 +451,31 @@ For example, in drug discovery, a conditional generative model might be tasked w
 - Drug Discovery: Generating molecules with tailored ADMET (absorption, distribution, metabolism, excretion, and toxicity) profiles.
 - Materials Science: Designing compounds with specific physical or chemical properties, such as conductivity or strength.
 - Synthetic Chemistry: Optimizing molecules for ease of synthesis or compatibility with specific reaction pathways.
+  
+### 5.4.4 Incorporating Conditions in Generative Models
+
+To generate data that satisfies specific requirements, generative models need a mechanism to include the desired conditions as part of the generation process. This is achieved in several ways, depending on the model architecture:
+
+**Input Embedding and Concatenation**
+
+
+- Conditions are treated as additional inputs, often concatenated with the primary data representation. For example:
+    - In a molecular model using SMILES (Simplified Molecular Input Line Entry System) strings, conditions such as desired solubility can be concatenated as numerical features.
+    - In graph-based models, properties like binding affinity may be embedded alongside the graph node and edge features.
+- This method works well with architectures like neural networks, where inputs can be treated as feature vectors.
+
+**Latent Space Conditioning**
+
+
+- In models like Variational Autoencoders (VAEs), conditions are embedded into the latent space—a compressed representation of the data.
+- By augmenting the latent space with property-specific information, the model learns to decode latent vectors into outputs that reflect both the data distribution and the specified conditions.
+- Example: A VAE trained on molecules can be conditioned to generate molecules with a specific melting point by embedding the desired melting point in the latent vector.
+**Adversarial Conditioning**
+- Generative Adversarial Networks (GANs) achieve conditioning by incorporating the desired properties into both the generator and discriminator networks.
+- The generator produces samples that aim to satisfy the conditions, while the discriminator evaluates both the sample validity and whether the conditions are met.
+- Example: In a cGAN (Conditional GAN), the generator might create molecules with a given molecular weight, and the discriminator ensures that the generated molecules align with this condition.
+
+**Attention-Based Conditioning**
+- Attention mechanisms, commonly used in transformer models, can focus on specific parts of the input data or property representations, allowing fine-grained control over the generated output.
+- Example: In a transformer trained on molecular graphs, the attention mechanism can emphasize functional groups that align with a desired chemical property.
 
