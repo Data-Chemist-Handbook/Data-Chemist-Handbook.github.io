@@ -479,3 +479,47 @@ To generate data that satisfies specific requirements, generative models need a 
 - Attention mechanisms, commonly used in transformer models, can focus on specific parts of the input data or property representations, allowing fine-grained control over the generated output.
 - Example: In a transformer trained on molecular graphs, the attention mechanism can emphasize functional groups that align with a desired chemical property.
 
+### 5.4.5 Types of Conditional Generative Models
+
+Several types of generative models have been adapted for conditional use in molecular property optimization. Each has distinct strengths and weaknesses, depending on the complexity of the task and the nature of the conditions:
+- cVAEs are computationally efficient and ideal for tasks requiring smooth latent space interpolation.
+- cGANs excel at generating high-quality and diverse outputs.
+- Transformers are powerful for handling complex molecular representations and large datasets.
+- Reinforcement learning approaches are well-suited for optimizing challenging or non-differentiable objectives.
+By leveraging these models, researchers can efficiently explore chemical space while ensuring that generated molecules meet specified requirements. The section below illustrates specific breakdowns for each type of model.
+
+**Conditional Variational Autoencoders (cVAEs)**
+- Architecture:
+    - A cVAE consists of an encoder-decoder framework where conditions are introduced into the latent space.
+- How It Works:
+    - The encoder compresses molecular representations into a latent vector while embedding the conditions.
+    - The decoder generates new molecules from the latent vector, ensuring they align with the conditions.
+- Application Example:
+    - Generating drug-like molecules with high solubility and low toxicity.
+      
+**Conditional Generative Adversarial Networks (cGANs)**
+- Architecture:
+    - A cGAN consists of a generator-discriminator pair, with conditions embedded into both networks.
+- How It Works:
+    - The generator creates samples aimed at satisfying the conditions, and the discriminator evaluates their validity and adherence to the specified properties.
+- Application Example:
+    - Designing polymers with specific thermal or mechanical properties.
+
+**Transformer-Based Conditional Models**
+- Architecture:
+    - Transformer models use self-attention mechanisms to handle sequence or graph data.
+- How It Works:
+    - Conditions are integrated as input embeddings or used to modulate attention weights, allowing precise control over generated structures.
+- Application Example:
+    - Generating molecular graphs with desired binding affinity to a target protein.
+
+**Reinforcement Learning-Augmented Generative Models**
+- Architecture:
+    - Generative models are combined with reinforcement learning to optimize for conditions during the generation process.
+- How It Works:
+    - A reward function evaluates the generated molecules for property adherence, and the model updates its parameters to maximize this reward.
+- Application Example:
+    - Designing molecules with high binding affinity and low synthetic complexity.
+ 
+  
+
