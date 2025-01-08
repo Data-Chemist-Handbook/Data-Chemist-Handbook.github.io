@@ -575,7 +575,7 @@ The conditions used to guide generative models can be scalar (numerical) or cate
         - Use one-hot encoding, where each category is represented as a binary vector.
         - Alternatively, embed categorical data as dense vectors using an embedding layer.
     - Application: Generate molecules that belong to a specific class (e.g., benzene derivatives) or contain certain functional groups (e.g., hydroxyl groups).
-    - 
+
 #### 5.4.6.3 Trade-Offs Between Representation Complexity and Model Performance
 - Simpler Representations (e.g., SMILES):
     - Easier to preprocess and faster to train.
@@ -584,4 +584,36 @@ The conditions used to guide generative models can be scalar (numerical) or cate
     - Provide richer information about the molecule.
     - Require more computational resources and specialized architectures.
 The choice of representation and encoding depends on the task's requirements, the computational budget, and the complexity of the target properties.
+
+### 5.4.7 Applications in Molecular Property Optimization
+
+Conditional generative models have demonstrated transformative potential across various domains in molecular property optimization. This section highlights key applications, emphasizing their role in accelerating discovery and improving the efficiency of molecular design.
+
+#### 5.4.7.1 Drug Discovery
+
+- Generating Molecules with Specific ADMET Properties:
+    - ADMET (Absorption, Distribution, Metabolism, Excretion, and Toxicity) properties are crucial in drug development. Conditional generative models can produce molecules that satisfy these requirements, ensuring better pharmacokinetics and reduced side effects.
+    - Example: A cVAE can be trained to generate molecules with high bioavailability and low toxicity.
+- Ligand-Based and Structure-Based Drug Design:
+    - Ligand-based models generate molecules based on known active compounds, optimizing specific properties like binding affinity.
+    - Structure-based models use 3D information about the target protein to generate molecules that fit its binding pocket.
+    - Example: A conditional GAN could generate ligands with optimal binding to a specific enzyme, improving the lead optimization process.
+#### 5.4.7.2 Materials Science
+
+- Designing Polymers with Target Mechanical Properties:
+    - Polymers with specific mechanical properties, such as high elasticity, strength, or thermal stability, are crucial in materials design.
+    - Conditional models allow the generation of polymer candidates that meet predefined criteria, reducing the time required for experimental testing.
+    - Example: A transformer-based model can generate polymer structures optimized for tensile strength while maintaining low production costs.
+- Thermal Properties Optimization:
+    - Generate materials with specific thermal conductivity or resistance to heat, which are essential in electronics or aerospace industries.
+    - Example: Use a graph-based conditional model to design materials for heat sinks with high thermal conductivity.
+
+#### 5.4.7.3 Synthetic Chemistry
+
+- Optimizing Molecules for Synthesis Feasibility:
+    - Molecules designed through generative models can sometimes be difficult or expensive to synthesize. Conditional models can optimize for synthetic accessibility, ensuring that generated molecules can be produced using available chemical pathways.
+    - Example: A cGAN could generate molecules that minimize the number of synthetic steps while maintaining desired properties like high yield.
+- Designing Molecules for Specific Reaction Pathways:
+    - Conditional models can generate molecules that align with specific reaction mechanisms or catalytic conditions, aiding in reaction design and optimization.
+    - Example: Generate precursors for a specific polymerization reaction to produce biodegradable plastics.
 
