@@ -598,6 +598,7 @@ Conditional generative models have demonstrated transformative potential across 
     - Ligand-based models generate molecules based on known active compounds, optimizing specific properties like binding affinity.
     - Structure-based models use 3D information about the target protein to generate molecules that fit its binding pocket.
     - Example: A conditional GAN could generate ligands with optimal binding to a specific enzyme, improving the lead optimization process.
+
 #### 5.4.7.2 Materials Science
 
 - Designing Polymers with Target Mechanical Properties:
@@ -616,4 +617,363 @@ Conditional generative models have demonstrated transformative potential across 
 - Designing Molecules for Specific Reaction Pathways:
     - Conditional models can generate molecules that align with specific reaction mechanisms or catalytic conditions, aiding in reaction design and optimization.
     - Example: Generate precursors for a specific polymerization reaction to produce biodegradable plastics.
+
+### 5.4.8 Generative Models with Conditions Full Manual Process
+
+google colab: [https://colab.research.google.com/drive/1uXjcu_bzygtia9xgEHN76xMmQtcV0sY-?usp=sharing](https://colab.research.google.com/drive/18EQfIEUt72nzruy4_2rb0aAXwglOT5C_?usp=sharing)
+
+**Step 1: Install Required Libraries**
+<pre>
+    <code class="python">
+!pip install rdkit-pypi
+!pip install tensorflow
+!pip install numpy pandas
+import tensorflow as tf
+from tensorflow.keras import layers, models, Model
+import tensorflow.keras.backend as K
+import numpy as np
+import pandas as pd
+from rdkit import Chem
+from rdkit.Chem import Descriptors, Draw
+from sklearn.model_selection import train_test_split
+    </code>
+</pre>
+
+**Step 2: Download and Upload the ESOL Dataset from Deepchemdata**
+
+The **ESOL Dataset** is available on Github: https://github.com/deepchem/deepchem/blob/master/datasets/delaney-processed.csv
+
+<pre>
+    <code class="python">
+# Load the ESOL dataset (direct source: https://github.com/deepchem/deepchem/blob/master/datasets/delaney-processed.csv)
+url = 'https://deepchemdata.s3-us-west-1.amazonaws.com/datasets/delaney-processed.csv'
+data = pd.read_csv(url)
+
+# Display the first few rows of the dataset
+data.head()
+    </code>
+</pre>
+
+**Step 3: Data Preprocessing and Encoding**
+
+
+<pre>
+    <code class="python">
+# Tokenize SMILES strings
+data['tokenized_smiles'] = data['smiles'].apply(lambda x: list(x))
+
+# Create a vocabulary of unique characters
+vocab = sorted(set(''.join(data['smiles'].values)))
+vocab.append(' ')  # Add a padding character
+char_to_idx = {char: idx for idx, char in enumerate(vocab)}
+idx_to_char = {idx: char for char, idx in char_to_idx.items()}
+
+# Encode SMILES strings
+max_length = max(data['tokenized_smiles'].apply(len))
+data['encoded_smiles'] = data['tokenized_smiles'].apply(
+    lambda x: [char_to_idx[char] for char in x] + [char_to_idx[' ']] * (max_length - len(x))
+)
+
+# Normalize solubility values
+data['normalized_solubility'] = (data['measured log solubility in mols per litre'] - data['measured log solubility in mols per litre'].mean()) / data['measured log solubility in mols per litre'].std()
+
+# Prepare input arrays
+X = np.array(data['encoded_smiles'].tolist())
+y = data['normalized_solubility'].values.reshape(-1, 1)
+
+# Split into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+    </code>
+</pre>
+
+
+**Step 4: Conditional Variational Autoencoder (cVAE) Architecture**
+
+
+<pre>
+   <code class = "python">
+# Set parameters
+latent_dim = 50  # Dimensionality of the latent space
+input_dim = X_train.shape[1]  # Length of the input sequences
+vocab_size = len(vocab)  # Size of the vocabulary
+
+# Encoder
+smiles_input = layers.Input(shape=(input_dim,), name='SMILES_Input')
+condition_input = layers.Input(shape=(1,), name='Condition_Input')
+
+# Embed the SMILES input
+x = layers.Embedding(input_dim=vocab_size, output_dim=64, input_length=input_dim)(smiles_input)
+x = layers.Concatenate()([x, layers.RepeatVector(input_dim)(condition_input)])
+x = layers.LSTM(128, return_sequences=False)(x)
+
+# Latent space
+z_mean = layers.Dense(latent_dim, name='z_mean')(x)
+z_log_var = layers.Dense(latent_dim, name='z_log_var')(x)
+
+# Sampling function
+def sampling(args):
+    z_mean, z_log_var = args
+    epsilon = tf.keras.backend.random_normal(shape=(tf.keras.backend.shape(z_mean)[0], latent_dim))
+    return z_mean + tf.exp(0.5 * z_log_var) * epsilon
+
+z = layers.Lambda(sampling, name='z')([z_mean, z_log_var])
+
+# Decoder
+latent_inputs = layers.Input(shape=(latent_dim,), name='Latent_Input')
+x = layers.Concatenate()([latent_inputs, condition_input])
+x = layers.RepeatVector(input_dim)(x)
+x = layers.LSTM(128, return_sequences=True)(x)
+decoded = layers.TimeDistributed(layers.Dense(vocab_size, activation='softmax'))(x)
+
+# Define models
+encoder = models.Model([smiles_input, condition_input], [z_mean, z_log_var, z], name='Encoder')
+decoder = models.Model([latent_inputs, condition_input], decoded, name='Decoder')
+
+# cVAE model
+outputs = decoder([encoder([smiles_input, condition_input])[2], condition_input])
+cvae = models.Model([smiles_input, condition_input], outputs, name='cVAE')
+   </code>
+</pre>
+
+**Step 5: Custom cVAE Model Implementation and Training**
+<pre>
+   <code class = "python">
+# Custom VAE class with integrated loss
+class CVAE(Model):
+    def __init__(self, encoder, decoder, **kwargs):
+        super(CVAE, self).__init__(**kwargs)
+        self.encoder = encoder
+        self.decoder = decoder
+
+    def call(self, inputs):
+        smiles_input, condition_input = inputs
+        z_mean, z_log_var, z = self.encoder([smiles_input, condition_input])
+        reconstructed = self.decoder([z, condition_input])
+
+        # Reconstruction loss
+        reconstruction_loss = tf.keras.losses.sparse_categorical_crossentropy(smiles_input, reconstructed)
+        reconstruction_loss = tf.reduce_mean(reconstruction_loss)
+
+        # KL divergence loss
+        kl_loss = -0.5 * tf.reduce_sum(1 + z_log_var - tf.square(z_mean) - tf.exp(z_log_var), axis=-1)
+        kl_loss = tf.reduce_mean(kl_loss)
+
+        # Add the total loss
+        total_loss = reconstruction_loss + kl_loss
+        self.add_loss(total_loss)
+
+        return reconstructed
+
+# Compile the cVAE model
+cvae = CVAE(encoder, decoder)
+cvae.compile(optimizer="adam")
+
+# Train the model
+cvae.fit([X_train, y_train], epochs=50, batch_size=32, validation_data=([X_test, y_test], None))
+
+# code may take a bit of time to run as we are training 50 epochs
+   </code>
+</pre>
+
+**Step 6: Molecule Generation, Evaluation, and Visualization**
+<pre>
+   <code class = "python">
+# Improved decoding using probability sampling instead of argmax
+def decode_smiles_probabilistic(encoded_output, idx_to_char):
+    smiles = ''
+    for timestep in encoded_output:
+        # Sample from the probability distribution to introduce diversity
+        sampled_index = np.random.choice(len(timestep), p=timestep / np.sum(timestep))
+        char = idx_to_char[sampled_index]
+        if char != ' ':  # Skip padding
+            smiles += char
+    return smiles
+
+# Generate diverse molecules based on desired solubility
+def generate_molecules(desired_solubility, num_samples=10):
+    generated_smiles_list = []
+    
+    for _ in range(num_samples):
+        # Sample a random point from the latent space (standard normal distribution)
+        latent_sample = np.random.normal(size=(1, 50))  # 50 is the latent_dim
+        condition = np.array([[desired_solubility]])    # Desired solubility condition
+        
+        # Generate SMILES using the decoder
+        generated_output = decoder.predict([latent_sample, condition])
+        
+        # Decode using probabilistic sampling
+        generated_smiles = decode_smiles_probabilistic(generated_output[0], idx_to_char)
+        generated_smiles_list.append(generated_smiles)
+    
+    return generated_smiles_list
+
+# Evaluate and validate the generated molecules
+def evaluate_molecules(smiles_list):
+    valid_molecules = []
+    for smiles in smiles_list:
+        try:
+            mol = Chem.MolFromSmiles(smiles)
+            if mol:  # Check for chemical validity
+                mol_weight = Descriptors.MolWt(mol)
+                logP = Descriptors.MolLogP(mol)
+                print(f"✅ Valid SMILES: {smiles} | MolWt: {mol_weight:.2f}, LogP: {logP:.2f}")
+                valid_molecules.append(smiles)
+            else:
+                print(f"Invalid SMILES: {smiles}")
+        except:
+            print(f"Error processing SMILES: {smiles}")
+    return valid_molecules
+
+# Optional: Visualize valid molecules
+def visualize_molecules(smiles_list):
+    mols = [Chem.MolFromSmiles(smiles) for smiles in smiles_list if Chem.MolFromSmiles(smiles)]
+    return Draw.MolsToGridImage(mols, molsPerRow=5, subImgSize=(200, 200))
+
+# Example: Generate 10 molecules with high solubility (normalized around 0.9)
+generated_molecules = generate_molecules(desired_solubility=0.9, num_samples=10)
+
+# Display generated molecules
+print("\nGenerated Molecules:")
+for idx, smiles in enumerate(generated_molecules):
+    print(f"Molecule {idx + 1}: {smiles}")
+
+# Evaluate generated molecules for chemical validity
+valid_molecules = evaluate_molecules(generated_molecules)
+
+# Visualize valid molecules
+if valid_molecules:
+    display(visualize_molecules(valid_molecules))
+else:
+    print("No valid molecules generated.")
+   </code>
+</pre>
+
+**Step 7: Latent Space Visualization Using PCA**
+<pre>
+   <code class = "python">
+# Step 1: Inverse PCA to get the original latent vector
+# Ensure 'pca' is the same PCA object used for dimensionality reduction
+high_solubility_latent_2d = np.array([[ -0.01, 0.006 ]])  # Example coordinates from PCA plot
+high_solubility_latent = pca.inverse_transform(high_solubility_latent_2d)  # Convert back to original latent space (50 dimensions)
+
+# Step 2: Generate molecule
+condition = np.array([[0.9]])  # High solubility condition
+
+# Step 3: Decode
+generated_output = decoder.predict([high_solubility_latent.reshape(1, -1), condition])
+generated_smiles = decode_smiles_probabilistic(generated_output[0], idx_to_char)
+
+# Step 4: Display the generated molecule
+print(f"Generated molecule for high solubility region: {generated_smiles}")
+
+# Generate molecules from both ends of the solubility spectrum
+solubility_points = [(-0.01, 0.006), (0.015, 0.002)]  # Example: High and low solubility regions
+
+for coords in solubility_points:
+    latent_vector = pca.inverse_transform(np.array([coords]))
+    condition = np.array([[0.9]])  # Adjust solubility condition as needed
+    
+    generated_output = decoder.predict([latent_vector.reshape(1, -1), condition])
+    generated_smiles = decode_smiles_probabilistic(generated_output[0], idx_to_char)
+    
+    print(f"Generated molecule from latent space coordinates {coords}: {generated_smiles}")
+   </code>
+</pre>
+
+**Step 8: Latent Space Exploration and Molecule Generation Based on Solubility**
+<pre>
+   <code class = "python">
+# Step 1: Inverse PCA to get the original latent vector
+# Ensure 'pca' is the same PCA object used for dimensionality reduction
+high_solubility_latent_2d = np.array([[ -0.01, 0.006 ]])  # Example coordinates from PCA plot
+high_solubility_latent = pca.inverse_transform(high_solubility_latent_2d)  # Convert back to original latent space (50 dimensions)
+
+# Step 2: Generate molecule
+condition = np.array([[0.9]])  # High solubility condition
+
+# Step 3: Decode
+generated_output = decoder.predict([high_solubility_latent.reshape(1, -1), condition])
+generated_smiles = decode_smiles_probabilistic(generated_output[0], idx_to_char)
+
+# Step 4: Display the generated molecule
+print(f"Generated molecule for high solubility region: {generated_smiles}")
+
+# Generate molecules from both ends of the solubility spectrum
+solubility_points = [(-0.01, 0.006), (0.015, 0.002)]  # Example: High and low solubility regions
+
+for coords in solubility_points:
+    latent_vector = pca.inverse_transform(np.array([coords]))
+    condition = np.array([[0.9]])  # Adjust solubility condition as needed
+    
+    generated_output = decoder.predict([latent_vector.reshape(1, -1), condition])
+    generated_smiles = decode_smiles_probabilistic(generated_output[0], idx_to_char)
+    
+    print(f"Generated molecule from latent space coordinates {coords}: {generated_smiles}")
+   </code>
+</pre>
+
+**Step 9: Latent Space Targeting for Property-Driven Molecule Generation and Visualization**
+<pre>
+   <code class = "python">
+# Step 1: Encode the test data to obtain the latent representations
+z_mean, _, _ = encoder.predict([X_test, y_test])  # Encoder outputs for PCA
+pca = PCA(n_components=2)                         # PCA for dimensionality reduction
+z_pca = pca.fit_transform(z_mean)                 # Apply PCA
+
+# Step 2: Define points of interest (for high and low solubility regions)
+solubility_points = [(-0.01, 0.006), (0.015, 0.002)]  # Example points from the PCA plot
+labels = ["High Solubility", "Low Solubility"]
+
+# Step 3: Visualize the latent space with solubility gradient
+plt.figure(figsize=(10, 6))
+scatter = plt.scatter(z_pca[:, 0], z_pca[:, 1], c=y_test.flatten(), cmap='viridis', alpha=0.7)
+plt.colorbar(scatter, label='Normalized Solubility')
+
+# Pinpoint the selected regions
+for (x, y), label in zip(solubility_points, labels):
+    plt.scatter(x, y, color='red', marker='X', s=100, label=label)
+    plt.text(x + 0.0005, y, label, fontsize=9, verticalalignment='bottom')
+
+plt.title('Latent Space Visualization with Target Points')
+plt.xlabel('Principal Component 1')
+plt.ylabel('Principal Component 2')
+plt.legend(loc='best')
+plt.show()
+
+# Step 4: Generate molecules from selected points
+def decode_smiles_probabilistic(encoded_output, idx_to_char):
+    smiles = ''
+    for timestep in encoded_output:
+        sampled_index = np.random.choice(len(timestep), p=timestep / np.sum(timestep))
+        char = idx_to_char[sampled_index]
+        if char != ' ':
+            smiles += char
+    return smiles
+
+def generate_molecules_from_latent(pca_coords, condition_value=0.9):
+    latent_vector = pca.inverse_transform(np.array([pca_coords]))
+    condition = np.array([[condition_value]])  # Desired solubility condition
+    generated_output = decoder.predict([latent_vector.reshape(1, -1), condition])
+    generated_smiles = decode_smiles_probabilistic(generated_output[0], idx_to_char)
+    return generated_smiles
+
+# Step 5: Generate and visualize molecules
+generated_molecules = []
+for coords, label in zip(solubility_points, labels):
+    smiles = generate_molecules_from_latent(coords, condition_value=0.9)
+    generated_molecules.append((label, smiles))
+    print(f"{label} Region → Generated SMILES: {smiles}")
+
+# Step 6: Visualize generated molecules
+def visualize_generated_molecules(smiles_list):
+    mols = []
+    for _, smiles in smiles_list:
+        mol = Chem.MolFromSmiles(smiles)
+        mols.append(mol if mol else Chem.MolFromSmiles('C'))  # Placeholder for invalid SMILES
+    return Draw.MolsToGridImage(mols, molsPerRow=2, subImgSize=(200, 200))
+
+# Display generated molecules
+visualize_generated_molecules(generated_molecules)
+   </code>
+</pre>
 
