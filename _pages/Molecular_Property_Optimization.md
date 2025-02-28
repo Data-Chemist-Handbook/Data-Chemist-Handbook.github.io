@@ -60,7 +60,7 @@ In summary, acquisition functions help us choose the next steps in our optimizat
 
 ### 5.1.3 Bayesian Optimization for Molecular Property Optimization Shortcut
 
-The EDBOplus library presents an easy shortcut option without having to understand the full process of Bayesian Optimization: https://github.com/doyle-lab-ucla/edboplus/blob/main/examples/tutorials/1_CLI_example.ipynb
+The EDBOplus library presents an easy shortcut option without having to understand the full process of Bayesian Optimization: [https://github.com/doyle-lab-ucla/edboplus/blob/main/examples/tutorials/1_CLI_example.ipynb](https://github.com/doyle-lab-ucla/edboplus/blob/main/examples/tutorials/1_CLI_example.ipynb)
 
 ### 5.1.4 Bayesian Optimization for Molecular Property Optimization Full Manual Process
 
