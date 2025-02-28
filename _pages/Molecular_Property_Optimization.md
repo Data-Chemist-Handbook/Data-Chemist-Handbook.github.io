@@ -66,7 +66,7 @@ The EDBOplus library presents an easy shortcut option without having to understa
 
 In the event where we may want to do something more complex, here is the full process laid out in an example looking to optimize logP values:
 
-google colab: https://colab.research.google.com/drive/1uXjcu_bzygtia9xgEHN76xMmQtcV0sY-?usp=sharing
+google colab: [https://colab.research.google.com/drive/1uXjcu_bzygtia9xgEHN76xMmQtcV0sY-?usp=sharing](https://colab.research.google.com/drive/1uXjcu_bzygtia9xgEHN76xMmQtcV0sY-?usp=sharing)
 
 **Step 1: Install RDKit and Other Required Libraries**
 <pre>
