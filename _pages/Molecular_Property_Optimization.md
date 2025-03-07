@@ -413,7 +413,6 @@ This example demonstrates how a reinforcement learning agent can learn to maximi
 ## 5.3 Genetic Algorithms
 
 ## 5.4 Generative models with conditions
-### 5.4.1 Introduction to Generative Models with Conditions
 
 Generative models are a class of machine learning models designed to create new data samples that resemble a given dataset. Unlike traditional models used for classification or regression, generative models aim to model the underlying data distribution, enabling them to generate realistic, novel examples. This makes them highly valuable for applications such as image synthesis, natural language generation, and molecule design.
 
@@ -427,13 +426,13 @@ Sequence-based models such as conditional recurrent neural networks (RNNs) and t
 
 In summary, generative models with conditions offer a powerful framework for accelerating molecular discovery. By enabling the targeted design of novel molecules, they reduce experimental costs and open new avenues in drug development and materials science.
 
-### 5.4.2 What are Conditional Generative Models?
+### 5.4.1 What are Conditional Generative Models?
 
 Conditional generative models extend the concept of generative modeling by incorporating additional information—known as conditions—to guide the generation process. These conditions act as constraints or directives that steer the model toward creating samples with specific characteristics or properties. For instance, while a standard generative model for molecules might generate chemically valid compounds randomly, a conditional generative model can be directed to generate molecules with high solubility, low toxicity, or a specific structural feature.
 
 The addition of conditions allows for greater control and precision in the generative process. This is particularly valuable in applications like molecular property optimization, where the goal is not just to create valid molecules but to ensure they meet predefined requirements for properties like binding affinity, pharmacokinetics, or synthetic accessibility.
 
-### 5.4.3 Why are Generative Models with Conditions Important
+### 5.4.2 Why are Generative Models with Conditions Important
 
 In the field of molecular design, the chemical space—comprising all theoretically possible molecules—is vast and largely unexplored. Traditional trial-and-error methods of exploring this space are slow, resource-intensive, and often limited in their ability to optimize multiple properties simultaneously. Generative models, and specifically conditional generative models, address this challenge by:
 
@@ -452,7 +451,7 @@ For example, in drug discovery, a conditional generative model might be tasked w
 - Materials Science: Designing compounds with specific physical or chemical properties, such as conductivity or strength.
 - Synthetic Chemistry: Optimizing molecules for ease of synthesis or compatibility with specific reaction pathways.
   
-### 5.4.4 Incorporating Conditions in Generative Models
+### 5.4.3 Incorporating Conditions in Generative Models
 
 To generate data that satisfies specific requirements, generative models need a mechanism to include the desired conditions as part of the generation process. This is achieved in several ways, depending on the model architecture:
 
@@ -479,7 +478,7 @@ To generate data that satisfies specific requirements, generative models need a 
 - Attention mechanisms, commonly used in transformer models, can focus on specific parts of the input data or property representations, allowing fine-grained control over the generated output.
 - Example: In a transformer trained on molecular graphs, the attention mechanism can emphasize functional groups that align with a desired chemical property.
 
-### 5.4.5 Types of Conditional Generative Models
+### 5.4.4 Types of Conditional Generative Models
 
 Several types of generative models have been adapted for conditional use in molecular property optimization. Each has distinct strengths and weaknesses, depending on the complexity of the task and the nature of the conditions:
 - cVAEs are computationally efficient and ideal for tasks requiring smooth latent space interpolation.
@@ -522,11 +521,11 @@ By leveraging these models, researchers can efficiently explore chemical space w
     - Designing molecules with high binding affinity and low synthetic complexity.
  
   
-### 5.4.6 Representations and Conditioning Strategies
+### 5.4.5 Representations and Conditioning Strategies
 
 Effective molecular property optimization using conditional generative models depends heavily on the choice of molecular representation and the encoding of property conditions. This section explores the key strategies for representing molecules and encoding conditions, along with the trade-offs between representation complexity and model performance.
 
-#### 5.4.6.1 Representing Molecules for Generative Models
+#### 5.4.5.1 Representing Molecules for Generative Models
 
 Different molecular representations influence the performance and efficiency of generative models. The most commonly used representations are:
 
@@ -560,7 +559,7 @@ Different molecular representations influence the performance and efficiency of 
         - Computationally intensive to handle and process.
     - Requires additional data (e.g., X-ray crystallography or simulations).
 
-#### 5.4.6.2 Encoding Conditions
+#### 5.4.5.2 Encoding Conditions
 
 The conditions used to guide generative models can be scalar (numerical) or categorical, depending on the property to be optimized.
 - Scalar Properties:
@@ -576,7 +575,7 @@ The conditions used to guide generative models can be scalar (numerical) or cate
         - Alternatively, embed categorical data as dense vectors using an embedding layer.
     - Application: Generate molecules that belong to a specific class (e.g., benzene derivatives) or contain certain functional groups (e.g., hydroxyl groups).
 
-#### 5.4.6.3 Trade-Offs Between Representation Complexity and Model Performance
+#### 5.4.5.3 Trade-Offs Between Representation Complexity and Model Performance
 - Simpler Representations (e.g., SMILES):
     - Easier to preprocess and faster to train.
     - Risk of losing critical structural or spatial information.
@@ -585,11 +584,11 @@ The conditions used to guide generative models can be scalar (numerical) or cate
     - Require more computational resources and specialized architectures.
 The choice of representation and encoding depends on the task's requirements, the computational budget, and the complexity of the target properties.
 
-### 5.4.7 Applications in Molecular Property Optimization
+### 5.4.6 Applications in Molecular Property Optimization
 
 Conditional generative models have demonstrated transformative potential across various domains in molecular property optimization. This section highlights key applications, emphasizing their role in accelerating discovery and improving the efficiency of molecular design.
 
-#### 5.4.7.1 Drug Discovery
+#### 5.4.6.1 Drug Discovery
 
 - Generating Molecules with Specific ADMET Properties:
     - ADMET (Absorption, Distribution, Metabolism, Excretion, and Toxicity) properties are crucial in drug development. Conditional generative models can produce molecules that satisfy these requirements, ensuring better pharmacokinetics and reduced side effects.
@@ -599,7 +598,7 @@ Conditional generative models have demonstrated transformative potential across 
     - Structure-based models use 3D information about the target protein to generate molecules that fit its binding pocket.
     - Example: A conditional GAN could generate ligands with optimal binding to a specific enzyme, improving the lead optimization process.
 
-#### 5.4.7.2 Materials Science
+#### 5.4.6.2 Materials Science
 
 - Designing Polymers with Target Mechanical Properties:
     - Polymers with specific mechanical properties, such as high elasticity, strength, or thermal stability, are crucial in materials design.
@@ -609,7 +608,7 @@ Conditional generative models have demonstrated transformative potential across 
     - Generate materials with specific thermal conductivity or resistance to heat, which are essential in electronics or aerospace industries.
     - Example: Use a graph-based conditional model to design materials for heat sinks with high thermal conductivity.
 
-#### 5.4.7.3 Synthetic Chemistry
+#### 5.4.6.3 Synthetic Chemistry
 
 - Optimizing Molecules for Synthesis Feasibility:
     - Molecules designed through generative models can sometimes be difficult or expensive to synthesize. Conditional models can optimize for synthetic accessibility, ensuring that generated molecules can be produced using available chemical pathways.
@@ -618,7 +617,7 @@ Conditional generative models have demonstrated transformative potential across 
     - Conditional models can generate molecules that align with specific reaction mechanisms or catalytic conditions, aiding in reaction design and optimization.
     - Example: Generate precursors for a specific polymerization reaction to produce biodegradable plastics.
 
-### 5.4.8 Generative Models with Conditions Full Manual Process
+### 5.4.7 Generative Models with Conditions Full Manual Process
 
 google colab: [https://colab.research.google.com/drive/1uXjcu_bzygtia9xgEHN76xMmQtcV0sY-?usp=sharing](https://colab.research.google.com/drive/18EQfIEUt72nzruy4_2rb0aAXwglOT5C_?usp=sharing)
 
