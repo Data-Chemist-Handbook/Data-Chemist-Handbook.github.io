@@ -411,6 +411,87 @@ print(q_table)
 This example demonstrates how a reinforcement learning agent can learn to maximize yield based on the temperature settings of a chemical reaction.
 
 ## 5.3 Genetic Algorithms
+Genetic algorithms (GAs) are a class of evolutionary algorithms inspired by Charles Darwin’s theory of natural selection. They operate by iteratively evolving a population of candidate solutions through processes that mimic biological evolution—selection, crossover (recombination), and mutation. These algorithms have found extensive applications in various scientific disciplines, particularly in molecular design and drug discovery, where they help in searching the vast chemical space for molecules with optimized properties.
+
+Traditional brute-force methods for molecular optimization are computationally expensive due to the enormous number of possible molecular structures. In contrast, genetic algorithms provide an efficient heuristic approach by learning from previous generations and guiding the search towards more promising molecules.
+
+In this chapter, we will explore the mechanisms, applications, advantages, limitations, and implementation of genetic algorithms in molecular property optimization.
+
+### 5.3.1 Principles of Genetic Algorithms
+
+A genetic algorithm follows a structured evolutionary cycle, consisting of the following main steps:
+1. **Initialization:** The algorithm begins with a random population of candidate solutions (molecules), each encoded in a structured format such as SMILES strings, molecular graphs, or fingerprints.
+2. **Fitness Evaluation:** Each molecule is evaluated using a fitness function that quantifies its desirability based on specific molecular properties (e.g., solubility, binding affinity).
+3. **Selection:** Molecules with the best properties are more likely to be chosen as parents for reproduction.
+4. **Crossover (Recombination):** Fragments from two parent molecules are combined to form offspring with new chemical structures.
+5. **Mutation:** Small modifications are applied to offspring molecules, introducing diversity and allowing exploration of novel structures.
+6. **Survivor Selection:** The best molecules from the population (parents and offspring) are retained for the next generation.
+7. **Termination Condition:** The process is repeated until a stopping criterion is met (e.g., reaching a set number of generations or achieving an optimal fitness score).
+
+Over successive generations, genetic algorithms refine molecular candidates toward optimal properties, effectively searching the chemical space for molecules that satisfy predefined criteria.
+
+### 5.3.2 Applications of Genetic Algorithms in Molecular Design
+
+Genetic algorithms have been widely used in computational chemistry and drug discovery. Some key applications include:
+
+#### 5.3.2.1 De Novo Molecular Generation
+
+GAs can evolve new molecular structures from scratch, optimizing for drug-likeness, bioavailability, or docking affinity with biological targets.
+#### 5.3.2.2 Lead Optimization
+
+In drug development, GAs refine existing molecular candidates by improving their efficacy, solubility, or toxicity profiles while maintaining their structural integrity.
+
+#### 5.3.2.3 Multi-Objective Optimization
+
+GAs can handle multiple conflicting objectives, such as maximizing biological activity while minimizing toxicity and ensuring synthetic accessibility.
+
+#### 5.3.2.4 Reaction Optimization
+
+GAs can help design reaction pathways to synthesize specific target molecules while optimizing for yield, cost, and environmental impact.
+
+These applications make GAs a valuable tool for rational drug design and materials science.
+
+### 5.3.3 Implementing Genetic Algorithms for Molecular Optimization
+
+#### 5.3.3.1 Encoding Molecular Structures
+
+A crucial step in applying GAs to molecular design is choosing a suitable molecular representation. Some common encodings include:
+
+- **SMILES Representation:** Molecules are treated as strings of characters. Crossover and mutation involve modifying these strings.
+- **Graph Representation:** Molecules are represented as graphs where nodes correspond to atoms and edges to chemical bonds. Mutations involve modifying nodes or edges.
+- **Fingerprint-Based Representation:** Molecules are represented as binary feature vectors encoding molecular properties (e.g., MACCS, Morgan fingerprints).
+
+The choice of representation impacts how genetic operations are applied.
+
+#### 5.3.3.2 Defining the Fitness Function
+
+The fitness function evaluates each molecule’s desirability based on specific molecular properties. Some commonly used objectives include:
+- **Lipophilicity (LogP):** Determines how well a drug dissolves in fats versus water.
+- **Molecular Weight (MW):** Drugs must have an appropriate MW for absorption and distribution in the body.
+- **Synthetic Feasibility:** Ensures that generated molecules can be synthesized in a lab.
+- **Drug-Likeness:** Uses metrics such as Lipinski’s Rule of Five to assess whether a molecule is suitable as a drug candidate.
+
+The fitness function is crucial because it guides the evolutionary process toward the desired molecular properties.
+
+#### 5.3.3.3 Selection, Crossover, and Mutation Strategies
+
+Once the molecules are evaluated, the GA applies selection, crossover, and mutation to generate the next generation of molecules.
+
+**Selection Strategies**
+- **Roulette Wheel Selection:** Molecules are chosen probabilistically based on their fitness.
+- **Tournament Selection:** A subset of molecules competes, and the best are selected.
+
+**Crossover Strategies**
+- **One-Point Crossover:** A single cut is made in the molecule, and fragments from two parents are swapped.
+- **Two-Point Crossover:** Two cut points are used for recombination.
+- **Graph-Based Crossover:** Molecular substructures are exchanged between parents.
+
+**Mutation Strategies**
+- **SMILES-Based Mutation:** Randomly changing characters in the SMILES string.
+- **Graph-Based Mutation:** Randomly adding or deleting atoms/bonds.
+- **Fingerprint Mutation:** Flipping bits in the molecular fingerprint vector.
+
+Tuning these genetic operators balances exploration (diversity) and exploitation (optimization).
 
 ## 5.4 Generative models with conditions
 
