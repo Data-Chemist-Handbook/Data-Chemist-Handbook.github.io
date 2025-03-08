@@ -493,6 +493,191 @@ Once the molecules are evaluated, the GA applies selection, crossover, and mutat
 
 Tuning these genetic operators balances exploration (diversity) and exploitation (optimization).
 
+#### 5.3.3.4 Genetic Algorithms Example
+
+google colab: [https://colab.research.google.com/drive/1uXjcu_bzygtia9xgEHN76xMmQtcV0sY-?usp=sharing](https://colab.research.google.com/drive/18EQfIEUt72nzruy4_2rb0aAXwglOT5C_?usp=sharing)
+
+**Step 1: Install and Import Required Dependencies**
+<pre>
+    <code class="python">
+# Install necessary libraries in Google Colab
+!pip install rdkit-pypi deap
+import random
+import numpy as np
+import matplotlib.pyplot as plt
+from rdkit import Chem
+from rdkit.Chem import Descriptors, Draw
+from deap import base, creator, tools, algorithms
+import pandas as pd
+    </code>
+</pre>
+
+**Step 2: Load and Process the Dataset**
+
+<pre>
+    <code class="python">
+# Load the ESOL dataset (water solubility dataset)
+url = "https://raw.githubusercontent.com/deepchem/deepchem/master/datasets/delaney-processed.csv"
+data = pd.read_csv(url)
+
+# Select SMILES and solubility columns
+data = data[['smiles', 'measured log solubility in mols per litre']]
+data.columns = ['SMILES', 'Solubility']
+
+# Filter out invalid SMILES before starting
+valid_smiles_list = [s for s in data["SMILES"].tolist() if Chem.MolFromSmiles(s)]
+if not valid_smiles_list:
+    raise ValueError("No valid SMILES found in the dataset.")
+
+print(f"Loaded {len(valid_smiles_list)} valid molecules.")
+    </code>
+</pre>
+
+**Step 3: Define the Genetic Algorithm Compounds**
+
+<pre>
+    <code class="python">
+def fitness_function(individual):
+    """
+    Evaluates the fitness of a molecule based on LogP.
+    Higher LogP means higher lipophilicity.
+    """
+    if isinstance(individual, list) and len(individual) > 0:
+        smiles = individual[0]  # Extract SMILES string
+        mol = Chem.MolFromSmiles(smiles)
+        if mol:
+            logP = Descriptors.MolLogP(mol)
+            return logP,  # Fitness must be returned as a tuple
+    return -1000,  # Assign very low fitness for invalid molecules
+        
+creator.create("FitnessMax", base.Fitness, weights=(1.0,))  # Maximize LogP
+creator.create("Individual", list, fitness=creator.FitnessMax)
+
+toolbox = base.Toolbox()
+toolbox.register("attr_smiles", lambda: random.choice(valid_smiles_list))
+toolbox.register("individual", tools.initRepeat, creator.Individual, toolbox.attr_smiles, n=1)
+toolbox.register("population", tools.initRepeat, list, toolbox.individual)
+
+def crossover_smiles(ind1, ind2):
+    """
+    Performs crossover between two SMILES strings by swapping halves.
+    """
+    if isinstance(ind1, list) and isinstance(ind2, list) and len(ind1[0]) > 1 and len(ind2[0]) > 1:
+        cut = random.randint(1, min(len(ind1[0]), len(ind2[0])) - 1)
+        ind1[0], ind2[0] = ind1[0][:cut] + ind2[0][cut:], ind2[0][:cut] + ind1[0][cut:]
+    return ind1, ind2
+
+def mutate_smiles(individual, max_attempts=10):
+    """
+    Attempts to mutate the SMILES string while ensuring validity.
+    Retries up to max_attempts times if the mutation creates an invalid molecule.
+    """
+    for _ in range(max_attempts):
+        if isinstance(individual, list) and len(individual[0]) > 0:
+            idx = random.randint(0, len(individual[0]) - 1)
+            new_char = random.choice("CHON")  # Common organic elements
+            mutated_smiles = individual[0][:idx] + new_char + individual[0][idx+1:]
+
+            if Chem.MolFromSmiles(mutated_smiles):  # Ensure valid mutation
+                individual[0] = mutated_smiles
+                return individual,
+
+    return individual,  # Return the original molecule if no valid mutation found
+
+toolbox.register("mate", crossover_smiles)
+toolbox.register("mutate", mutate_smiles)
+toolbox.register("select", tools.selTournament, tournsize=3)
+toolbox.register("evaluate", fitness_function)
+
+    </code>
+</pre>
+
+
+**Step 4: Run the Genetic Algorithm**
+
+
+<pre>
+   <code class = "python">
+# Genetic Algorithm Parameters
+POP_SIZE = 100
+GENS = 50
+MUTATION_RATE = 0.2
+CROSSOVER_RATE = 0.7
+
+# Initialize population
+population = toolbox.population(n=POP_SIZE)
+
+# Run the genetic algorithm
+algorithms.eaSimple(population, toolbox, cxpb=CROSSOVER_RATE, mutpb=MUTATION_RATE, ngen=GENS, verbose=True)
+
+       
+   </code>
+</pre>
+
+**Step 5: Select and Validate the Best Molecule**
+<pre>
+   <code class = "python">
+# Filter out invalid molecules before selecting the best one
+valid_population = [ind for ind in population if Chem.MolFromSmiles(ind[0])]
+if not valid_population:
+    print("No valid molecules were generated. Re-initializing population.")
+    population = toolbox.population(n=POP_SIZE)
+    valid_population = [ind for ind in population if Chem.MolFromSmiles(ind[0])]
+
+
+best_individual = tools.selBest(valid_population, k=1)[0]
+print("Best Valid Molecule:", best_individual[0], "LogP:", fitness_function(best_individual)[0])
+   </code>
+</pre>
+
+**Step 6: Visualize the Best Model**
+<pre>
+   <code class = "python">
+def visualize_molecule(smiles):
+    """
+    Converts a SMILES string to an RDKit molecular image.
+    If the SMILES is invalid, it returns an error message.
+    """
+    mol = Chem.MolFromSmiles(smiles)
+    if mol is None:
+        print(f"Invalid SMILES: {smiles}")
+        return None
+    return Draw.MolToImage(mol, size=(200, 200))
+
+if best_individual:
+    best_smiles = best_individual[0]
+    image = visualize_molecule(best_smiles)
+    if image:
+        display(image)
+    else:
+        print("Could not generate a valid molecule for visualization.")
+   </code>
+</pre>
+
+**Step 7: Track Optimization Progress**
+<pre>
+   <code class = "python">
+# Ensure only valid fitness scores are plotted
+fitness_scores = []
+for ind in population:
+    if isinstance(ind, list) and len(ind) > 0:
+        smiles = ind[0]  # Extract SMILES
+        if Chem.MolFromSmiles(smiles):  # Validate molecule
+            fitness_scores.append(ind.fitness.values[0])
+
+if fitness_scores:
+    plt.plot(range(len(fitness_scores)), fitness_scores, marker='o', linestyle='-', color='b')
+    plt.xlabel("Generation")
+    plt.ylabel("Best LogP Score")
+    plt.title("Genetic Algorithm Optimization Progress")
+    plt.grid()
+    plt.show()
+else:
+    print("No valid fitness scores to plot.")
+   </code>
+</pre>
+
+
 ## 5.4 Generative models with conditions
 
 Generative models are a class of machine learning models designed to create new data samples that resemble a given dataset. Unlike traditional models used for classification or regression, generative models aim to model the underlying data distribution, enabling them to generate realistic, novel examples. This makes them highly valuable for applications such as image synthesis, natural language generation, and molecule design.
