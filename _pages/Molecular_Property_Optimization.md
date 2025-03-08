@@ -493,6 +493,7 @@ Once the molecules are evaluated, the GA applies selection, crossover, and mutat
 
 Tuning these genetic operators balances exploration (diversity) and exploitation (optimization).
 
+
 #### 5.3.3.4 Genetic Algorithms Example
 
 google colab: [https://colab.research.google.com/drive/1uXjcu_bzygtia9xgEHN76xMmQtcV0sY-?usp=sharing](https://colab.research.google.com/drive/18EQfIEUt72nzruy4_2rb0aAXwglOT5C_?usp=sharing)
