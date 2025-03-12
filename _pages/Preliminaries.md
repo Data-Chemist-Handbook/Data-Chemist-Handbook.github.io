@@ -479,6 +479,7 @@ json_data = pd.read_json('reaction_conditions.json')
 **Practice Problem:**
 
 [comment]: <> (#TODO explain the dataset further and suggest opening it with excel to familiarize with it)
+
 You have been provided with a CSV file named BBBP.csv, which contains information about various compounds and their blood-brain barrier permeability. Write Python code to:
 
 Read the CSV file into a DataFrame named df using pd.read_csv().
@@ -543,6 +544,7 @@ Given a DataFrame with missing values:
 
 
 [comment]: <> (#TODO write solution)
+
 ---
 
 **Data Type Conversions**
@@ -897,7 +899,7 @@ NumPy is a library for numerical computing in Python, allowing for efficient arr
 
 **Practice Problem:**
 
-[comment]: <> (#TODO change this example to use one of the columns added to the dataset that would make more sense to average. 'num' is the indices and does not make sense to average)
+[comment]: <> (#TODO change this example to use one of the columns added to the dataset that would make more sense to average because num is the indices and does not make sense to average)
 
 1. Create a NumPy array from the `num` column in the **BBBP** dataset.
 2. Perform basic statistical operations like `sum`, `mean`, and `median` on the `num` array.
@@ -951,7 +953,7 @@ NumPy arrays can be sliced to access subsets of data.
 2. Slice the array to extract every second element.
 3. Reverse the array using slicing.
 
-[comment]: <> (#TODO explain what reversing an array as and use a better column than the 'num' column which is indices and not a relevant example)
+[comment]: <> (#TODO explain what reversing an array as and use a better column than the num column which is indices and not a relevant example)
 
 **Solution**
 ```python
@@ -1004,7 +1006,7 @@ Reshaping changes the shape of an array, and broadcasting applies operations acr
 
 **Practice Problem:**
 
-[comment]: <> (#TODO have the reader use data that makes more sense than the 'num' column which is not a relevant metric and explain why you might want to reshape an array or do an operation with broadcasting)
+[comment]: <> (#TODO have the reader use data that makes more sense than the num column which is not a relevant metric and explain why you might want to reshape an array or do an operation with broadcasting)
 
 1. Reshape a NumPy array created from the `num` column of the **BBBP** dataset to a shape of `(5, 20)` (or similar based on the array length).
 2. Use broadcasting to add 100 to all elements in the reshaped array.
@@ -1399,7 +1401,7 @@ plt.show()
 - **Error Analysis**: Model and visualize experimental errors, assuming they follow a normal distribution.
 - **Kinetic Studies**: Analyze reaction times or rates for processes that exhibit natural variability.
 
-[comment]: <> (#TODO change the practice problem. the issues with the 'num' column are well documented above. Look for examples of log-normal distributions in chemistry data)
+[comment]: <> (#TODO change the practice problem. the issues with the num column are well documented above. Look for examples of log-normal distributions in chemistry data)
 
 **Practice Problem:**
 Generate a normally distributed dataset based on the mean and standard deviation of the `num` column in the BBBP dataset. Plot a histogram of the generated data.
