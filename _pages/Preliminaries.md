@@ -30,11 +30,12 @@ Here's a detailed guide on installing Anaconda on different operating systems. E
 ##### Download Anaconda
 
 1. **Go to the Anaconda Download Page**:
-   - Visit the [Anaconda download page](https://www.anaconda.com/products/distribution).
+   - Visit the [Anaconda download page](https://www.anaconda.com/download/success).
 
 2. **Select Your Operating System**:
    - Choose the appropriate installer for your OS: Windows, macOS, or Linux.
    - Select the Python 3.x version (e.g., Python 3.9 or 3.10) for the latest stable release.
+   - Anaconda may detect your operating system and only give one option to download.
 
 ---
 
@@ -199,7 +200,7 @@ Here's a detailed guide on installing Anaconda on different operating systems. E
    ```
    
 2. **Load Local Files**:
-   - Use Colab’s file upload feature by clicking the **Files** icon on the left sidebar, then selecting **Upload**.
+   - Use Colab’s file upload feature by clicking the **File** icon on the left sidebar, then selecting **Upload Notebook**.
 
 ##### Step 6: Adding and Executing Markdown Cells
 
@@ -247,9 +248,42 @@ def molecular_weight_ratio(compound_weight, standard_weight=100):
 print(molecular_weight_ratio(molecular_weight))
 ```
 
+#### Data Types and Mathematical Operations
+
+**Data Types**: How data such as a variable is represented to and stored in the computer.
+
+   - ***string*** type: Data meant to be interpreted literally 
+   - ***integer*** type: Data meant to be stored as an integer
+   - ***float*** type: Data meant to be stored as a floating point number with decimal precision
+
+```python
+# Display the data type of variables
+my_string = "10"
+my_int = 10
+my_float = 10.0
+
+print(type(my_string))
+print(type(my_int))
+print(type(my_float))
+```
+
+**Mathematical Operations**: The four regular mathematical operations can be used on integer and float type variables and order of operations is followed.
+
+   - Addition with the "+" character
+   - Substraction with the "-" character
+   - Multiplication with the "*" character
+   - Division with the "/" character
+
+```python
+# Use the mathematical operators
+my_int = 10
+
+print(my_int * 3 / 2 + 1 - 3)
+```
+
 #### Basic Printing Techniques in Python
 
-Printing output is essential for checking code functionality, displaying calculations, and formatting data. Here are a few common ways to print in Python, along with examples that can help navigate real-world coding scenarios.
+Print commands are used in most programming languages to display the output of code that has been run. Printing is essential for checking code functionality, displaying calculations, and formatting data. Here are a few common ways to print in Python, along with examples that can help navigate real-world coding scenarios.
 
 ---
 
@@ -270,7 +304,7 @@ print("Compound:", compound_name)
 
 ##### Using f-strings for Formatted Output
 
-**Explanation:** Python’s f-strings (formatted string literals) make it easy to embed variable values in text, which simplifies displaying complex data clearly.
+**Explanation:** Python’s formatted strings known as f-strings make it easy to display the value of a variable along with or embedded in other text, which simplifies displaying complex data clearly.
 
 ```python
 molecular_weight = 180.16
@@ -281,7 +315,7 @@ print(f"The molecular weight of {compound_name} is {molecular_weight}")
 
 ##### Concatenating Strings and Variables
 
-**Explanation:** You can also combine strings and variables using the `+` operator, though it requires converting numbers to strings explicitly.
+**Explanation:** Concatenating, or combining strings and variables is possible using the `+` operator, but the variable must first be converted to a string.
 
 ```python
 print("The molecular weight of " + compound_name + " is " + str(molecular_weight))
@@ -302,7 +336,7 @@ print(f"Molecular weight: {molecular_weight:.2f}")
 
 **Practice Problem**
 
-Write a program to define variables for a compound’s name and molecular weight. Display the information using each print method above.
+Write a program to define variables for the name and molecular weight of the active compound in Ibuprofen. Display the information using each print method above.
 
 **Solution**
 
@@ -331,9 +365,9 @@ Python packages are pre-built libraries that simplify data analysis. Here, we’
 
 #### Key Packages
 
-1. **NumPy**: Used for numerical computing, especially helpful for handling arrays and performing mathematical operations.
-2. **Pandas**: A popular library for data manipulation, ideal for handling tabular data structures.
-3. **Matplotlib** and **Seaborn**: Libraries for data visualization.
+1. **NumPy**: A popular package for numerical computing, especially helpful for handling arrays and performing mathematical operations.
+2. **Pandas**: A popular library for data manipulation, ideal for handling tabular data structures like the contents of a spreadsheet.
+3. **Matplotlib** and **Seaborn**: Libraries for data visualization in plots and figures.
 
 #### Example Code to Install and Import Packages
 
@@ -348,24 +382,50 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 ```
 
-#### Working with JSON Data
+#### Working with Data from Files
 
-**JSON (JavaScript Object Notation)** is a common data format for sharing data between systems, especially in APIs. JSON files are lightweight and easy to parse.
+[comment]: <> (#TODO should be discussed, but I don't see any reason most chemists should learn to use a JSON file. But if we are including it, it should definitely be last. This format is not already known to most chemists and will immediately confuse. Start with importing data from an excel file first, then csv, then JSON.)
 
-```python
-import json
+To load data from any file into your program, the program needs to know where to find the file. This can be accomplished in one of two ways. In the following example, we will load a tye of file called JSON that we will explore next.
 
-# Loading data from a JSON file
-with open('data.json') as f:
-   data = json.load(f)
+   1. Place the file inside the same folder as your program and open the file by its name:
 
-# Accessing data in JSON format
-print(data['compound_name'])
-```
+   ```python
+   import json
+
+   # Loading data from a JSON file in the same location as your program
+   with open('data.json') as f:
+      data = json.load(f)
+   ```
+
+   2. Find the full directory path to your file and provide this as the file name. In Windows, you can right click a file in File Explorer and click on "Copy as path" to copy the full directory path to your file. For example, if user coolchemist has the file 'example.json' in their Desktop folder, the code to load this file might look like this:
+
+   ```python
+   import json
+
+   # Loading data from a JSON file in the Desktop folder of user coolchemist
+   with open('C:\Users\coolchemist\Desktop\example.json') as f:
+      data = json.load(f)
+   ``` 
+
+   #### Accessing data in JSON format
+
+   **JSON (JavaScript Object Notation)** is a common data format for sharing data between systems. JSON files are lightweight and easy to parse. Properties can be easily accessed with the headers from the table.
+ 
+   ```python
+   import json
+
+   # Loading data from a JSON file in the same location as your program
+   with open('data.json') as f:
+      data = json.load(f)
+
+   print(data['compound_name'])
+   ```
+
 
 **Practice Problem:**
 
-**Problem**: Write Python code to create a variable for a compound’s molecular weight, set it to 180.16, and then create a function that doubles the molecular weight.
+**Problem**: Write Python code to create a variable for a compound’s molecular weight and set it to 180.16. Then create a function that doubles the molecular weight.
 
 **Solution**
 
@@ -391,20 +451,22 @@ In this chapter, we'll explore how to use Python for data analysis, focusing on 
 
 **Explanation:**
 
-CSV (Comma-Separated Values), Excel, and JSON (JavaScript Object Notation) are common file formats for storing tabular data. Python's `pandas` library provides straightforward methods to read these files into DataFrames, which are powerful data structures for data manipulation.
+CSV (Comma-Separated Values), Excel, and JSON (JavaScript Object Notation) are common file formats for storing tabular data. Python's `pandas` library provides straightforward methods to read these files into DataFrames, which are powerful data structures for data manipulation. A DataFrame is what is known in programming as an object. Objects contain data organized in specific defined structures and have properties that can be changed and used by the programmer. Think of it as a variable that can store more complex information than a few words or a number. In this instance, we will store data tables as a DataFrame object. When the data table is read into a `pandas` DataFrame, the resulting data frame object will have properties and functions built into it. For example, a substrate scope table can be read into a DataFrame and statistical analysis can be performed on the yield column with only a few lines of code.
+
+[comment]: <> (#TODO source a substrate scope table from a paper and put it in all 3 formats, then modify example code for statistical analysis of yield column. cite paper.)
 
 **Example Code:**
 
 ```python
 import pandas as pd
 
-# Reading a CSV file
+# Reading a CSV file into a DataFrame called "csv_data"
 csv_data = pd.read_csv('experimental_data.csv')
 
-# Reading an Excel file
+# Reading an Excel file into a DataFrame called "excel_data"
 excel_data = pd.read_excel('compound_properties.xlsx', sheet_name='Sheet1')
 
-# Reading a JSON file
+# Reading a JSON file into a DataFrame called "json_data"
 json_data = pd.read_json('reaction_conditions.json')
 ```
 
@@ -416,12 +478,15 @@ json_data = pd.read_json('reaction_conditions.json')
 
 **Practice Problem:**
 
+[comment]: <> (#TODO explain the dataset further and suggest opening it with excel to familiarize with it)
 You have been provided with a CSV file named BBBP.csv, which contains information about various compounds and their blood-brain barrier permeability. Write Python code to:
 
-Read the CSV file into a DataFrame using pd.read_csv().
+Read the CSV file into a DataFrame named df using pd.read_csv().
 Display the first five rows of the DataFrame using df.head().
 Calculate the proportion of permeable compounds, i.e., those for which the p_np column is 1.
 
+
+[comment]: <> (#TODO give examples of all of the relevant functions for dataframes)
 
 **Answer:**
 <pre> 
@@ -476,6 +541,8 @@ Given a DataFrame with missing values:
 1. Fill missing values in the `name` column with `'Unknown'` and in the `smiles` column with an empty string.
 2. Remove any duplicate rows based on the `smiles` column.
 
+
+[comment]: <> (#TODO write solution)
 ---
 
 **Data Type Conversions**
@@ -732,6 +799,8 @@ Grouping organizes data based on specific columns, and aggregation provides summ
 
 **Practice Problem:**
 
+[comment]: <> (#TODO add an additional column to BBBP.csv with data that makes sense to average (such as molecular weight, number of carbonyl groups, number of aromatic rings, etc.))
+
 1. Group the BBBP dataset by `p_np` and compute the average `num` for each group (permeable and non-permeable compounds).
 2. Use multiple aggregation functions (e.g., count and mean) on the `num` column.
 
@@ -807,6 +876,8 @@ Pivot tables help reorganize data to make it easier to analyze by converting row
 
 **Explanation:**
 
+[comment]: <> (#TODO This explanation is not clear or simple enough)
+
 NumPy is a library for numerical computing in Python, allowing for efficient array operations, including mathematical functions like summing or averaging.
 
 **Example Code:**
@@ -825,6 +896,8 @@ NumPy is a library for numerical computing in Python, allowing for efficient arr
 ```
 
 **Practice Problem:**
+
+[comment]: <> (#TODO change this example to use one of the columns added to the dataset that would make more sense to average. 'num' is the indices and does not make sense to average)
 
 1. Create a NumPy array from the `num` column in the **BBBP** dataset.
 2. Perform basic statistical operations like `sum`, `mean`, and `median` on the `num` array.
@@ -854,6 +927,8 @@ NumPy is a library for numerical computing in Python, allowing for efficient arr
 
 **Explanation:**
 
+[comment]: <> (#TODO explain what indexing and slicing are in simple terms and why they are useful in simple terms)
+
 NumPy arrays can be sliced to access subsets of data.
 
 **Example Code:**
@@ -875,6 +950,8 @@ NumPy arrays can be sliced to access subsets of data.
 1. Create a NumPy array from the `num` column in the **BBBP** dataset.
 2. Slice the array to extract every second element.
 3. Reverse the array using slicing.
+
+[comment]: <> (#TODO explain what reversing an array as and use a better column than the 'num' column which is indices and not a relevant example)
 
 **Solution**
 ```python
@@ -903,6 +980,8 @@ NumPy arrays can be sliced to access subsets of data.
 
 **Explanation:**
 
+[comment]: <> (#TODO explain what the shape of an array is and give a better, more understandable explanation of broadcasting)
+
 Reshaping changes the shape of an array, and broadcasting applies operations across arrays of different shapes.
 
 **Example Code:**
@@ -924,6 +1003,8 @@ Reshaping changes the shape of an array, and broadcasting applies operations acr
 ```
 
 **Practice Problem:**
+
+[comment]: <> (#TODO have the reader use data that makes more sense than the 'num' column which is not a relevant metric and explain why you might want to reshape an array or do an operation with broadcasting)
 
 1. Reshape a NumPy array created from the `num` column of the **BBBP** dataset to a shape of `(5, 20)` (or similar based on the array length).
 2. Use broadcasting to add 100 to all elements in the reshaped array.
@@ -960,7 +1041,9 @@ Python has several powerful libraries for data visualization, including **Matplo
 
 - **Matplotlib**: A foundational library for static, animated, and interactive visualizations.
 - **Seaborn**: Built on top of Matplotlib, Seaborn simplifies creating informative and attractive statistical graphics.
-- **Plotly**: Allows for creating interactive, web-ready plots.
+- **Plotly**: Allows for creating interactive plots such as those you might use on a website.
+
+[comment]: <> (#TODO plotly is not going to be needed by most chemists, remove it)
 
 **Example Code:**
 ```python
@@ -975,6 +1058,8 @@ import plotly.express as px
 
 **Explanation:**
 Line and scatter plots are used to display relationships between variables. Line plots are commonly used for trend analysis, while scatter plots are useful for examining the correlation between two numerical variables.
+
+[comment]: <> (#TODO Include units for concentration and time. also make it relevant by mentioning that this graph can be used to determine the reaction kinetics and this reaction would be 0th order)
 
 **Example Code for Line Plot:**
 ```python
@@ -1018,6 +1103,9 @@ plt.show()
 #### Histograms and Density Plots
 
 **Explanation:**
+
+[comment]: <> (#TODO this definition of histogram is too abstract. Explain it in terms of a relevant example. For example, a substrate scope table in an organic synthesis paper has a list of yields for each substrate. A histogram could be used to show how many compounds are between 0-10, 10-20, 20-30, etc up to 90-100 percent yield. then use a real dataset in the example from a paper. probably use the same synthetic paper as used earlier.)
+
 Histograms display the distribution of a single variable by dividing it into bins, while density plots are smoothed versions of histograms that show the probability density.
 
 **Example Code for Histogram:**
@@ -1040,6 +1128,9 @@ plt.show()
 *Figure: Histogram Demonstrating Data Distribution*
 
 **Example Code for Density Plot:**
+
+[comment]: <> (#TODO use the same new dataset as above)
+
 ```python
 import seaborn as sns
 
@@ -1059,6 +1150,8 @@ plt.show()
 ---
 
 #### Box Plots and Violin Plots
+
+[comment]: <> (#TODO use a relevant chemistry dataset such as number of aromatic rings in each compound in a set of molecules)
 
 **Explanation:**
 Box plots show the distribution of data based on quartiles and are useful for spotting outliers. Violin plots combine box plots and density plots to provide more detail on the distribution’s shape.
@@ -1081,6 +1174,8 @@ plt.show()
 
 *Figure: Box Plot Showing Value Distribution Across Categories*
 
+[comment]: <> (#TODO use the same new dataset as above)
+
 **Example Code for Violin Plot:**
 ```python
 import seaborn as sns
@@ -1101,6 +1196,8 @@ plt.show()
 ---
 
 #### Heatmaps and Correlation Matrices
+
+[comment]: <> (#TODO explain the use of a heat map in simple and clear language and provide a chemistry relevant situational exmaple of when you'd use it. need to come back to this to provide a suggestion.)
 
 **Explanation:**
 Heatmaps display data as a color-coded matrix. They are often used to show correlations between variables or visualize patterns within data.
@@ -1123,6 +1220,8 @@ plt.show()
 ![Heatmap Example](../../resource/img/preliminaries/pre_2-2/2.2.5-7.png)
 
 *Figure: Heatmap Depicting Data as a Color-Coded Matrix*
+
+[comment]: <> (#TODO use the same new dataset as above)
 
 **Example Code for Correlation Matrix:**
 ```python
@@ -1149,6 +1248,8 @@ plt.show()
 ---
 
 #### Interactive Plots with Plotly
+
+[comment]: <> (#TODO remove this section because chemists aren't going to use this type of graph)
 
 **Explanation:**
 Plotly provides a range of interactive charts that can be easily embedded in web applications. Interactive plots allow users to hover over data points and zoom in on sections of the plot.
@@ -1181,6 +1282,8 @@ Statistical analysis is essential for interpreting data and making informed conc
 **Explanation:**
 Descriptive statistics summarize and describe the main features of a dataset. Common descriptive statistics include the mean, median, mode, variance, and standard deviation.
 
+[comment]: <> (#TODO are these values real? Change them to be real)
+
 **Example Code:**
 ```python
 import pandas as pd
@@ -1205,6 +1308,8 @@ Mean Molecular Weight: 182.0
 Median Boiling Point: 105.0
 Standard Deviation of Molecular Weight: 23.874672772626646
 ```
+
+[comment]: <> (#TODO use a chemistry relevant metric from one of the data columns that will be added to BBBP.csv)
 
 **Practice Problem:**
 Calculate the mean, median, and variance for the `num` column in the BBBP dataset.
@@ -1287,9 +1392,14 @@ plt.show()
 *Figure: Histogram Depicting a Normal Distribution with Mean 0 and Standard Deviation 1*
 
 **Applications in Chemistry:**
+
+[comment]: <> (#TODO change these examples. Currently looking for literature relevant examples of normal distribution usage in chemistry.)
+
 - **Molecular Property Analysis**: Understand the variation in molecular weights or boiling points for a compound set.
 - **Error Analysis**: Model and visualize experimental errors, assuming they follow a normal distribution.
 - **Kinetic Studies**: Analyze reaction times or rates for processes that exhibit natural variability.
+
+[comment]: <> (#TODO change the practice problem. the issues with the 'num' column are well documented above. Look for examples of log-normal distributions in chemistry data)
 
 **Practice Problem:**
 Generate a normally distributed dataset based on the mean and standard deviation of the `num` column in the BBBP dataset. Plot a histogram of the generated data.
@@ -1315,6 +1425,8 @@ plt.ylabel('Density')
 plt.title('Normal Distribution of num')
 plt.show()
 ```
+
+[comment]: <> (#TODO change this figure for the new practice problem)
 
 ![Normal Distribution Example](../../resource/img/preliminaries/pre_2-2/2.2.6-4.png)
 
@@ -1403,6 +1515,9 @@ T-statistic: -1.6285130624347315, P-value: 0.14206565386214137
 - For multiple group comparisons, consider using ANOVA instead of a t-test.
 
 By using hypothesis testing, chemists can make statistically supported decisions about experimental results and conditions.
+
+
+[comment]: <> (#TODO change this practice problem, use real data)
 
 **Practice Problem:**
 In the BBBP dataset, compare the mean `num` values between permeable (p_np=1) and non-permeable (p_np=0) compounds using a t-test.
@@ -1508,6 +1623,9 @@ Intercept: 38.947368421052616
    - Use regression to model how structural features influence chemical properties like solubility or reactivity.
 3. **Experimental Design**:
    - Understand relationships between variables to guide targeted experiments.
+
+
+[comment]: <> (#TODO change this practice problem, use real data)
 
 **Practice Problem:**
 Calculate the correlation between `num` and `p_np` in the BBBP dataset. Then, perform a linear regression to predict `num` based on `p_np`.
@@ -1622,6 +1740,8 @@ F-statistic: 3.151036525172754, P-value: 0.07944851235243751
    - Assess variability in product quality across batches.
 
 By using ANOVA, chemists can draw statistically sound conclusions about the effects of categorical variables on continuous properties, guiding decision-making in experimental designs.
+
+[comment]: <> (#TODO change this practice problem, use real data)
 
 **Practice Problem:**
 Group the `num` column in the BBBP dataset by the first digit of `num` (e.g., 1XX, 2XX, 3XX) and perform an ANOVA test to see if the mean values differ significantly among these groups.
