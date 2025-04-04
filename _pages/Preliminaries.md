@@ -383,7 +383,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 ```
-
+<!-- (Alex) I agree this JSON files information is pretty useless so I'm going to tab it out
 #### Working with Data from Files
 
 [comment]: <> (#TODO should be discussed, but I don't see any reason most chemists should learn to use a JSON file. But if we are including it, it should definitely be last. This format is not already known to most chemists and will immediately confuse. Start with importing data from an excel file first, then csv, then JSON.)
@@ -442,7 +442,7 @@ def double_weight(weight):
 # Test the function
 print(f"Double molecular weight: {double_weight(molecular_weight)}")
 ```
-
+-->
 ## 2.2 Data Analysis with Python
 
 In this chapter, we'll explore how to use Python for data analysis, focusing on importing and managing datasets commonly encountered in chemistry. Data analysis is a crucial skill for chemists, allowing you to extract meaningful insights from experimental data, predict outcomes, and make informed decisions in your research. Effective data analysis begins with properly importing and managing your datasets. This section will guide you through loading data from various file formats, including those specific to chemistry, and handling data from databases.
