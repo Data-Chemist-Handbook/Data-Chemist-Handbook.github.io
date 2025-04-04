@@ -449,11 +449,13 @@ In this chapter, we'll explore how to use Python for data analysis, focusing on 
 
 ### 2.2.1 Loading Data from Various File Formats
 
-**Reading Data from CSV, Excel, and JSON Files**
+**Reading Data from CSV**
 
 **Explanation:**
 
-CSV (Comma-Separated Values), Excel, and JSON (JavaScript Object Notation) are common file formats for storing tabular data. Python's `pandas` library provides straightforward methods to read these files into DataFrames, which are powerful data structures for data manipulation. A DataFrame is what is known in programming as an object. Objects contain data organized in specific defined structures and have properties that can be changed and used by the programmer. Think of it as a variable that can store more complex information than a few words or a number. In this instance, we will store data tables as a DataFrame object. When the data table is read into a `pandas` DataFrame, the resulting data frame object will have properties and functions built into it. For example, a substrate scope table can be read into a DataFrame and statistical analysis can be performed on the yield column with only a few lines of code.
+CSV (Comma-Separated Values) and Excel files are common formats for storing tabular data. Python’s pandas library provides straightforward methods to read these files into DataFrames, which are powerful data structures for working with tabular data. A DataFrame is what is known in programming as an object. Objects contain data organized in specific defined structures and have properties that can be changed and used by the programmer.
+
+Think of it as a variable that can store more complex information than a few words or a number. In this instance, we will store data tables as a DataFrame object. When the data table is read into a pandas DataFrame, the resulting object will have properties and functions built into it. For example, a substrate scope table can be read into a DataFrame and statistical analysis can be performed on the yield column with only a few lines of code.
 
 [comment]: <> (#TODO source a substrate scope table from a paper and put it in all 3 formats, then modify example code for statistical analysis of yield column. cite paper.)
 
