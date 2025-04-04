@@ -495,9 +495,9 @@ Calculate the proportion of permeable compounds, i.e., those for which the p_np 
 <pre> 
    <code class="python"> 
    import pandas as pd 
-   # 1. Read the CSV file into a DataFrame 
+   # 1. Read the CSV file into a DataFrame (df)
    df = pd.read_csv('BBBP.csv') 
-   # 2. Display the first five rows 
+   # 2. Display the first five rows using the "head function"
    print(df.head()) 
    # 3. Calculate the proportion of permeable compounds 
    permeable_ratio = df['p_np'].mean() 
