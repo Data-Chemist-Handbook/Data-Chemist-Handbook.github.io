@@ -13,7 +13,81 @@ In the Preliminaries character, we will introduce some base coding still and dat
 This section covers essential Python skills, including setting up your environment, understanding basic syntax, and using packages to aid data analysis. This foundational knowledge is valuable for beginners and will support more advanced data analysis in later sections.
 
 ### 2.1.1 Setting up Python Environment
-#### Option 1: Installing Anaconda and Jupyter Notebook
+
+#### Option 1: Using Google Colab
+
+**Google Colab** is a cloud-based platform for running Python code in Jupyter-like notebooks, ideal for data science and machine learning. Follow these steps to get started. Using Google Colab allows you to run Python code in a flexible, collaborative environment without any local setup. It's particularly useful for working with large datasets or sharing notebooks with others.
+
+##### Step 1: Access Google Colab
+
+1. **Open Google Colab**: Go to [Google Colab](https://colab.research.google.com).
+2. **Sign in with Google**: Log in with your Google account to access and save notebooks in Google Drive.
+
+##### Step 2: Create or Open a Notebook
+
+1. **Create a New Notebook**:
+   - Click on **File > New notebook** to open a blank notebook.
+   
+2. **Open an Existing Notebook**:
+   - Choose **File > Open notebook**. You can load notebooks from Google Drive, GitHub, or your computer.
+
+##### Step 3: Set Up and Run Code
+
+1. **Using Code Cells**:
+   - Colab organizes code into **cells**. To run a cell, click on it and press **Shift + Enter** or click the **Play** button.
+   
+2. **Installing Packages**:
+   - Colab has many libraries installed by default. You can install additional packages if needed using `pip` commands within a cell.
+   
+   ```python
+   # Install additional libraries
+   !pip install some_package
+   ```
+| **Library**       | **Purpose**                                                                                              | **Pip Install Command**            |
+|--------------------|----------------------------------------------------------------------------------------------------------|------------------------------------|
+| `rdkit`           | Used for cheminformatics tasks such as working with SMILES, molecular fingerprints, 3D coordinates, etc. | `pip install rdkit-pypi`          |
+| `pandas`          | Used for data manipulation and analysis.                                                                | `pip install pandas`              |
+| `numpy`           | Provides support for numerical computing.                                                               | `pip install numpy`               |
+| `matplotlib`      | Used for data visualization, including creating histograms and plots.                                   | `pip install matplotlib`          |
+| `seaborn`         | Provides advanced statistical plotting capabilities.                                                    | `pip install seaborn`             |
+| `scikit-learn`    | Used for machine learning tasks, including regression, clustering, and model evaluation.                 | `pip install scikit-learn`        |
+| `scipy`           | Provides scientific computing tools, including statistical analysis functions like `f_oneway`.          | `pip install scipy`               |
+| `plotly`          | Enables the creation of interactive plots and dashboards.                                               | `pip install plotly`              |
+##### Step 4: Save and Export Your Work
+
+1. **Saving to Google Drive**:
+   - Your Colab notebooks will automatically save to Google Drive. You can access them later under **Colab Notebooks** in Drive.
+   
+2. **Downloading Notebooks**:
+   - To keep a copy on your computer, go to **File > Download > Download .ipynb**.
+
+##### Step 5: Loading Files and Datasets in Colab
+
+1. **Mount Google Drive**: 
+   - Run the following code to access your files on Google Drive. After running, authorize access to your Drive.
+   
+   ```python
+   from google.colab import drive
+   drive.mount('/content/drive')
+   ```
+   
+2. **Load Local Files**:
+   - Use Colab’s file upload feature by clicking the **File** icon on the left sidebar, then selecting **Upload Notebook**.
+
+##### Step 6: Adding and Executing Markdown Cells
+
+1. **Adding Markdown for Documentation**:
+   - To add notes, explanations, or instructions in text, you can insert a **Markdown cell** by clicking **+ Text** in the toolbar.
+
+#### Tips for Chemists Using Colab
+
+- **Managing Data Files**: Store datasets in Google Drive to access them easily across multiple sessions.
+- **Running Long Calculations**: Colab may disconnect if idle. To prevent data loss, make sure to save work frequently.
+- **Collaborative Editing**: Share Colab notebooks with colleagues for real-time collaboration by clicking **Share** in the top-right corner.
+  
+---
+
+#### Option 2: Installing Anaconda and Jupyter Notebook
 
 To get started with Python, we’ll set up a development environment using **Anaconda** and **Jupyter Notebook**.
 
@@ -140,78 +214,6 @@ Here's a detailed guide on installing Anaconda on different operating systems. E
    - Type `jupyter notebook` and press **Enter**.
    - Jupyter Notebook will open in your default web browser, allowing you to create and run Python code interactively.
 
----
-
-#### Option 2: Using Google Colab
-
-**Google Colab** is a cloud-based platform for running Python code in Jupyter-like notebooks, ideal for data science and machine learning. Follow these steps to get started. Using Google Colab allows you to run Python code in a flexible, collaborative environment without any local setup. It's particularly useful for working with large datasets or sharing notebooks with others.
-
-##### Step 1: Access Google Colab
-
-1. **Open Google Colab**: Go to [Google Colab](https://colab.research.google.com).
-2. **Sign in with Google**: Log in with your Google account to access and save notebooks in Google Drive.
-
-##### Step 2: Create or Open a Notebook
-
-1. **Create a New Notebook**:
-   - Click on **File > New notebook** to open a blank notebook.
-   
-2. **Open an Existing Notebook**:
-   - Choose **File > Open notebook**. You can load notebooks from Google Drive, GitHub, or your computer.
-
-##### Step 3: Set Up and Run Code
-
-1. **Using Code Cells**:
-   - Colab organizes code into **cells**. To run a cell, click on it and press **Shift + Enter** or click the **Play** button.
-   
-2. **Installing Packages**:
-   - Colab has many libraries installed by default. You can install additional packages if needed using `pip` commands within a cell.
-   
-   ```python
-   # Install additional libraries
-   !pip install some_package
-   ```
-| **Library**       | **Purpose**                                                                                              | **Pip Install Command**            |
-|--------------------|----------------------------------------------------------------------------------------------------------|------------------------------------|
-| `rdkit`           | Used for cheminformatics tasks such as working with SMILES, molecular fingerprints, 3D coordinates, etc. | `pip install rdkit-pypi`          |
-| `pandas`          | Used for data manipulation and analysis.                                                                | `pip install pandas`              |
-| `numpy`           | Provides support for numerical computing.                                                               | `pip install numpy`               |
-| `matplotlib`      | Used for data visualization, including creating histograms and plots.                                   | `pip install matplotlib`          |
-| `seaborn`         | Provides advanced statistical plotting capabilities.                                                    | `pip install seaborn`             |
-| `scikit-learn`    | Used for machine learning tasks, including regression, clustering, and model evaluation.                 | `pip install scikit-learn`        |
-| `scipy`           | Provides scientific computing tools, including statistical analysis functions like `f_oneway`.          | `pip install scipy`               |
-| `plotly`          | Enables the creation of interactive plots and dashboards.                                               | `pip install plotly`              |
-##### Step 4: Save and Export Your Work
-
-1. **Saving to Google Drive**:
-   - Your Colab notebooks will automatically save to Google Drive. You can access them later under **Colab Notebooks** in Drive.
-   
-2. **Downloading Notebooks**:
-   - To keep a copy on your computer, go to **File > Download > Download .ipynb**.
-
-##### Step 5: Loading Files and Datasets in Colab
-
-1. **Mount Google Drive**: 
-   - Run the following code to access your files on Google Drive. After running, authorize access to your Drive.
-   
-   ```python
-   from google.colab import drive
-   drive.mount('/content/drive')
-   ```
-   
-2. **Load Local Files**:
-   - Use Colab’s file upload feature by clicking the **File** icon on the left sidebar, then selecting **Upload Notebook**.
-
-##### Step 6: Adding and Executing Markdown Cells
-
-1. **Adding Markdown for Documentation**:
-   - To add notes, explanations, or instructions in text, you can insert a **Markdown cell** by clicking **+ Text** in the toolbar.
-
-#### Tips for Chemists Using Colab
-
-- **Managing Data Files**: Store datasets in Google Drive to access them easily across multiple sessions.
-- **Running Long Calculations**: Colab may disconnect if idle. To prevent data loss, make sure to save work frequently.
-- **Collaborative Editing**: Share Colab notebooks with colleagues for real-time collaboration by clicking **Share** in the top-right corner.
 
 ---
 
