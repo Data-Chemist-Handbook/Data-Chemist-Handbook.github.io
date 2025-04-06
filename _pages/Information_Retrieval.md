@@ -1,7 +1,7 @@
 ---
 title: 10. LLMs for Chemistry
-author: Haomin
-date: 2024-08-20
+author: Quang Dao
+date: 2025-04-06
 category: Jekyll
 layout: post
 ---
@@ -9,7 +9,7 @@ dataset:(https://github.com/ChemFoundationModels/ChemLLMBench?tab=readme-ov-file
 
 # Section 10. LLMs for Chemistry
 
-- **Brief Introduction ✅**
+- **Brief Introduction**
     
     Large Language Models, or LLMs, are advanced machine learning models capable of understanding and generating human-like text and answering QA questions based on extensive training data from diverse sources.
     
@@ -17,7 +17,7 @@ dataset:(https://github.com/ChemFoundationModels/ChemLLMBench?tab=readme-ov-file
     
     So what exactly are LLMs and why are they so powerful?  We will dive into this in this section.
     
-- **10.1 Introduction of LLMs✅**
+- **10.1 Introduction of LLMs**
     
     **What are LLMs?**
     
@@ -81,38 +81,6 @@ dataset:(https://github.com/ChemFoundationModels/ChemLLMBench?tab=readme-ov-file
         - **Context:** Provide important details like chemical names, reaction conditions, or experimental setup.
         - **Structured Requests:** Clearly state what kind of response you expect (e.g., chemical structure, explanation, prediction).
         - **Examples:** Sometimes providing examples (known as few-shot prompting) can help the model understand the desired answer format better.
-- **10.3 LLMs Call for Tools⌛**
-    
-    → organize later  →  Could be an agent to acquire external information
-    
-    ### **Definition**
-    
-    In addition to text-based interactions, LLMs can call and integrate specialized chemistry databases and computational chemistry tools. Chemists can configure LLMs to directly interact with these external resources to achieve more precise and sophisticated analyses, such as:
-    
-    - **Chemical data extraction:** Utilizing ChemSpider, PubChem, or Chemical Abstracts Service (CAS) to retrieve precise compound details.
-    - **Molecular property predictions:** Leveraging computational chemistry tools like RDKit or Cheminformatics software for predicting physical and chemical properties.
-    - **Reaction prediction and retrosynthesis:** Employing retrosynthesis tools and computational chemistry simulations to predict feasible reaction pathways or syntheses.
-    
-    ⇒ This integration reduces human error, accelerates research, and increases the depth of chemical insights generated.
-    
-    ### **Chemistry-specific Tools**
-    
-    - **RDKit:** Comprehensive description, capabilities (visualization, molecular validation, structure prediction), and practical installation and usage instructions.
-    - **Chemical Databases (PubChem, ChemSpider):** Guide on querying chemical data through APIs.
-    - **ChemBench:** A platform for benchmarking LLMs in chemistry.
-    
-    ### Example Code:  **Validating Generated Molecule**
-    
-    ```python
-    from rdkit import Chem
-    smiles = "C1=CC=CC=C1"  # Benzene SMILES
-    molecule = Chem.MolFromSmiles(smiles)
-    if molecule:
-        print("Valid molecule!")
-    else:
-        print("Invalid molecule.")
-    
-    ```
     
 - **10.4 Usage of LLM APIs⌛**
     
