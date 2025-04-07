@@ -88,10 +88,8 @@ dataset:(https://github.com/ChemFoundationModels/ChemLLMBench?tab=readme-ov-file
         - **Structured Requests:** Clearly state what kind of response you expect (e.g., chemical structure, explanation, prediction).
         - **Examples:** Sometimes providing examples (known as few-shot prompting) can help the model understand the desired answer format better.
     
-- **10.4 Usage of LLM APIs⌛**
-    
-    → How to evaluate performance, calculate the matrix of the dataset → how well can it done. Ask for user input 0 or 1  
-    
+- **10.3 Usage of LLM APIs**
+     
     Chemists can utilize APIs provided by popular LLM platforms such as OpenAI, Google, and other AI providers. Using APIs, chemists can:
     
     - Embed intelligent text-based query capabilities directly into their chemical informatics software or laboratory information management systems.
@@ -101,55 +99,95 @@ dataset:(https://github.com/ChemFoundationModels/ChemLLMBench?tab=readme-ov-file
     For example, OpenAI provides straightforward documentation to help developers and chemists implement their APIs into software, facilitating rapid adoption.
     
     ### **Setting Up OpenAI API**
-    
-    1. Install the OpenAI Python library:
-        
-        pip install openai
-        
-        Add API to the environment file or secret book if you are using google colab
-        
-    2. Python Example: Basic Chemical Information Query
-    
+    This guide walks you through using the OpenAI API in **Google Colab**.
+
+    ## 🔧 1. Setting Up in Google Colab
+    Open [https://colab.research.google.com](https://colab.research.google.com) and start a new notebook.
+    ## 📦 2. Install the Required Libraries
+    Run the following cell to install the OpenAI package:
+    ```python
+    pip install openai
+    !pip install pandas numpy
+    !pip install kagglehub
+    ```        
+    ## 🔑 3. Authenticate with the OpenAI API
+
+    ```python
+    import openai
+    import os
+    os.environ['OPENAI_API_KEY'] = "YOUR_OPENAI_API"
+    openai.api_key = os.getenv("OPENAI_API_KEY")
+    ```
+    ##  4. Load Input File from Online Source
+    ### Use the `kagglehub` library to download datasets directly from Kaggle and read them into a DataFrame:
+
+    ```python
+    import kagglehub
+    path = kagglehub.dataset_download("priyanagda/bbbp-smiles")
+    print("Path to dataset files:", path)
+    # 1. Read the CSV file into a DataFrame
+    df = pd.read_csv(path+'/BBBP.csv')
+    df.head()
+    ```
+    ### If the data is not in the kaggle hub
+    ```python 
+    import requests
+    import os
+
+    # Create a folder to store the file
+    os.makedirs("data", exist_ok=True)
+
+    # URL to the file (example: CSV file hosted online)
+    url = "URL_TO_THE_FILE"
+    file_path = "Path_To_The_File" #Where you want to store the file to
+
+    # Download the file
+    response = requests.get(url)
+    with open(file_path, "wb") as f:
+        f.write(response.content)
+
+    import pandas as pd
+    df = pd.read_csv(file_path)
+    df.head()
+
+    ```
+    ##  5. Make an OpenAI API Call
     ```python
     from openai import OpenAI
     # Creat model
     client = OpenAI()
+    sample_data = df.to_csv(index=False)
+    prompt = f"""PUT YOUR QUESTION AND PROMPT AT HERE. Here is the data File that you
+    can reference {sample_data}"""
     # Function to call when you want to ask something
     completion = client.chat.completions.create(
         model="gpt-4o-mini",
         messages=[
-            {"role": "system", "content": "You are a helpful assistant. Response in Markdown format"},
+            {"role": "system", "content": "You are an expert chemist. Response in Markdown format"},
             {
                 "role": "user",
-                "content": [{"type":"text","text": "What is the element silver in the chemistry"}]
+                "content": [{"type":"text","text": prompt}]
             }
         ],
+        temperature=1,
+        max_tokens=1000,
+        top_p =1,
     )
     ```
     
-    ### Loading the dataset
-    
-    First import the file of dataset into the environment 
-    
-    Then run this code
+    ###  6. Evaluate the Model's Output
     
     ```python
-    import pandas as pd
-    
-    # Load CSV file
-    df = pd.read_csv("dataset.csv")
-    
-    # Display first few rows
-    print(df.head())
+    def similarity_score(expected, answer):
+        expected_lower = expected.lower()
+        answer_lower = answer.lower()
+        return 1 if expected_lower == answer_lower else 0
     
     ```
     
-- **10.5 Interactive Programming⌛**
+- **10.4 Interactive Programming**
     
-    →introduce code more effectively like copilot
-    
-    → using llms to code effectively and better. Use it to debug, help with code
-    
+        
     ### Definition
     
     Interactive programming involves developing code incrementally, with immediate feedback, typically using environments like Jupyter Notebooks or Google Colab.
@@ -170,35 +208,34 @@ dataset:(https://github.com/ChemFoundationModels/ChemLLMBench?tab=readme-ov-file
     ```python
     from openai import OpenAI
     import pandas as pd
-    
+
     # Creat model
     client = OpenAI()
     # Function to call when you want to ask something
     def gpt_set_up(prompt, file_path=None):
-      data_info = ""
-      if file_path:
-        if file_path.endswith(".csv"):
-            df = pd.read_csv(file_path)
-            data_info = f"\nHere is a summary of the provided dataset:\n{df.head().to_string()}\n"
-      message = [
-              {"role": "system", "content": "You are a helpful assistant. Response in Markdown format"},
-              {
-                  "role": "user",
-                  "content": [{"type":"text","text": prompt}]
-              }
-      ]
-      if data_info:
-          message.append({"role": "user", "content": [{"type": "text", "text": data_info}]})
-      completion = client.chat.completions.create(
-          model="gpt-4o-mini",
-          messages= message,
-          #Control the length of the answer and get the top answer
-          temperature=1,
-          max_tokens=1000,
-          top_p =1,
-      )
-      return completion.choices[0].message.content.strip()
-    
+    data_info = ""
+    if file_path:
+    if file_path.endswith(".csv"):
+        df = pd.read_csv(file_path)
+        data_info = f"\nHere is a summary of the provided dataset:\n{df.head().to_string()}\n"
+    if data_info:
+    prompt += f"""Here is the data File that you can reference {data_info}"""
+    message = [
+            {"role": "system", "content": "You are a helpful assistant. Response in Markdown format and just answer what are being asked no more no less"},
+            {
+                "role": "user",
+                "content": [{"type":"text","text": prompt}]
+            }
+    ]
+    completion = client.chat.completions.create(
+        model="gpt-4o-mini",
+        messages= message,
+        #Control the length of the answer and get the top answer
+        temperature=1,
+        max_tokens=1000,
+        top_p =1,
+    )
+    return completion.choices[0].message.content.strip()
     ```
     
     ```python
