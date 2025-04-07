@@ -194,7 +194,7 @@ dataset:(https://github.com/ChemFoundationModels/ChemLLMBench?tab=readme-ov-file
     
     ### Set up the environment using Google Colab
     
-    1. Add the API to the ***Secret :***
+    1. Do as seciton 10.3 or add the API to the ***Secret :***
         1. Look over to the left bar → choose the key icon (secrets)
         2. Choosing Add new secrets → fill in the name of the API (we might call this in the future so an intuitive name would be easier for future handling) and the value with the API
         3. Tick notebook access 
@@ -203,8 +203,14 @@ dataset:(https://github.com/ChemFoundationModels/ChemLLMBench?tab=readme-ov-file
     ```python
     # Install OpenAI library
     !pip install --q openai
+    !pip install pandas
     ```
-    
+    ```python
+    import os
+    from google.colab import userdata
+    os.environ["OPENAI_API_KEY"] =  userdata.get("OPENAI_API_KEY")
+
+    ```
     ```python
     from openai import OpenAI
     import pandas as pd
@@ -247,9 +253,4 @@ dataset:(https://github.com/ChemFoundationModels/ChemLLMBench?tab=readme-ov-file
     ```
     
     Example Link: [https://colab.research.google.com/drive/1B8qFtN_mkEzX3BGaznvXIstn0P1w6yRP?usp=sharing](https://colab.research.google.com/drive/1B8qFtN_mkEzX3BGaznvXIstn0P1w6yRP?usp=sharing)
-    
-    ⇒By understanding and applying these concepts effectively, chemistry students and researchers can fully harness the transformative potential of LLMs, pushing the boundaries of chemical research and innovation. 
-    
-    ⇒Moreover, future advancements could involve autonomous AI agents capable of independently exploring, studying, and retrieving chemical information in real time. Such autonomous systems, which learn dynamically and gather relevant data on demand rather than relying solely on static pre-trained datasets, could significantly enhance the accuracy, timeliness, and adaptability of chemical research. 
-    
-    ⇒Enabling AI to autonomously explore databases, perform analyses, and synthesize new knowledge dynamically would represent a substantial step forward, empowering chemists to tackle increasingly complex scientific challenges with unprecedented efficiency and innovation.
+
