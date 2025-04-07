@@ -98,19 +98,18 @@ dataset:(https://github.com/ChemFoundationModels/ChemLLMBench?tab=readme-ov-file
     
     For example, OpenAI provides straightforward documentation to help developers and chemists implement their APIs into software, facilitating rapid adoption.
     
-    ### **Setting Up OpenAI API**
+  ### **Setting Up OpenAI API**
     This guide walks you through using the OpenAI API in **Google Colab**.
-
-    ###  1. Setting Up in Google Colab
+###  1. Setting Up in Google Colab
     Open [https://colab.research.google.com](https://colab.research.google.com) and start a new notebook.
-    ###  2. Install the Required Libraries
+###  2. Install the Required Libraries
     Run the following cell to install the OpenAI package:
     ```python
     pip install openai
     !pip install pandas numpy
     !pip install kagglehub
     ```        
-    ###  3. Authenticate with the OpenAI API
+###  3. Authenticate with the OpenAI API
 
     ```python
     import openai
