@@ -37,7 +37,7 @@ dataset:(https://github.com/ChemFoundationModels/ChemLLMBench?tab=readme-ov-file
     
     → Such applications can substantially speed up research processes, improve accuracy, and open new avenues for innovative scientific discoveries.
     
-- **10.2 Prompt Engineering⌛**
+- **10.2 Prompt Engineering**
     
     **Definition:**
     Prompt engineering involves carefully writing instructions (prompts) to guide Large Language Models (LLMs) to give accurate and useful answers. In simpler terms, it's how you ask questions or provide information to an AI system clearly and specifically.
@@ -48,19 +48,19 @@ dataset:(https://github.com/ChemFoundationModels/ChemLLMBench?tab=readme-ov-file
     - **Format of a Good Prompt:**
     A well-structured prompt typically contains these key parts:
         - **General Instruction:** Briefly describes the task context or role the model is expected to perform.
-            - Example: *"You are an expert chemist. Given the [***Specific Task***], your task it to predict [***Specific Task***] using your chemical knowledge [of the specific task] to get the correct answer.[***Input Explanation** *].[***Output Explanation and Restriction***].[***Few shot prompt***]"*
-        - **Specific Task:** Clearly states exactly what you want the model to do.
-            - Example: *"Predict the product of a chemical reaction. "*
-        - **Input Explanation:** Specifies the data or information provided.
-            - Example: *"Given the reactants aspirin and hydrochloric acid..."*
-        - **Output Explanation and Restrictions:** Clearly describes the format and type of response desired, with any limitations.
-            - Example: *"Provide the reaction products in SMILES notation only, without additional explanations."*
-        - **Few shot prompt:** Few-shot prompting involves providing examples of similar problems and solutions within your prompt. This helps the model understand precisely what is expected by learning from these given examples.
-            - **Example of Few-shot Prompt:**
-                - Input: *"Reactants: aspirin + hydrochloric acid. Products (SMILES): xxxx"*
-                - Output: *"[Exact product SMILES]"*
-                - Input: *"Reactants: benzene + nitric acid. Products (SMILES): xxxx"*
-                - Output: *"[Exact product SMILES]"*
+            - Example: *"You are an expert chemist. Given the [Input Representation]: [Input Data], predict the [Target Output] using your expert-level knowledge in [Relevant Domain].[***Input Explanation** *].[***Output Explanation and Restriction***].[***Few shot prompt***]"*
+            - **Specific Task:** Clearly states exactly what you want the model to do.
+                - Example: *"Predict the product of a chemical reaction. "*
+            - **Input Explanation:** Specifies the data or information provided.
+                - Example: *"Given the reactants aspirin and hydrochloric acid..."*
+            - **Output Explanation and Restrictions:** Clearly describes the format and type of response desired, with any limitations.
+                - Example: *"Provide the reaction products in SMILES notation only, without additional explanations."*
+            - **Few shot prompt:** Few-shot prompting involves providing examples of similar problems and solutions within your prompt. This helps the model understand precisely what is expected by learning from these given examples.
+                - **Example of Few-shot Prompt:**
+                    - Input: *"Reactants: aspirin + hydrochloric acid. Products (SMILES): xxxx"*
+                    - Output: *"[Exact product SMILES]"*
+                    - Input: *"Reactants: benzene + nitric acid. Products (SMILES): xxxx"*
+                    - Output: *"[Exact product SMILES]"*
     
     **Example of Prompt Engineering:**
     
