@@ -491,8 +491,6 @@ uploaded = files.upload()
 import pandas as pd
 df = pd.read_csv('BBBP.csv')
 print(df.head())
-   </code> 
-</pre>
 ```
 
 **Method 2: Load the file directly from a GitHub raw link**
