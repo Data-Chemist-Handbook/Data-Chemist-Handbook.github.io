@@ -483,8 +483,8 @@ You can read CSV files in two ways:
 **Method 1: Upload the file manually (e.g., in Jupyter or Google Colab)**
 
 Download the BBBP.csv File: [https://github.com/Data-Chemist-Handbook/Data-Chemist-Handbook.github.io/blob/master/_pages/BBBP.csv](url)
-<pre> 
-   <code class="python"> 
+
+```python
 from google.colab import files
 uploaded = files.upload()
    
@@ -493,18 +493,21 @@ df = pd.read_csv('BBBP.csv')
 print(df.head())
    </code> 
 </pre>
+```
+
 **Method 2: Load the file directly from a GitHub raw link**
 
 This method allows your code to be instantly runnable without needing to manually upload files.
-<pre> 
-   <code class="python"> 
+
+```python
 import pandas as pd
 
+#loading the dataset
 url = 'https://raw.githubusercontent.com/Data-Chemist-Handbook/Data-Chemist-Handbook.github.io/refs/heads/master/_pages/BBBP.csv'
 df = pd.read_csv(url)
 print(df.head())
-   </code> 
-</pre>
+```
+
 ### 2.2.2 Data Cleaning and Preprocessing
 
 #### Handling Missing Values and Duplicates
@@ -515,11 +518,6 @@ Data cleaning involves dealing with missing or incorrect data entries to improve
 **Example Code:**
 
 ```python
-import pandas as pd
-
-# Loading the BBBP dataset
-df = pd.read_csv('BBBP.csv')
-
 # Handling missing values: fill missing names with 'Unknown' and smiles with an empty string
 df_filled = df.fillna({'name': 'Unknown', 'smiles': ''})
 
@@ -557,8 +555,6 @@ Converting data types ensures consistency and prevents errors, especially when p
 **Example Code:**
 
 ```python
-import pandas as pd
-
 # Example DataFrame with mixed types
 data = {'Compound': ['A', 'B', 'C'],
       'Quantity': ['10', '20', '30'],
@@ -581,17 +577,16 @@ In the BBBP dataset, the `num` column (compound number) should be treated as an 
 
 **Solution**
 ```python
-   import pandas as pd
+# Loading the dataset again
+url = 'https://raw.githubusercontent.com/Data-Chemist-Handbook/Data-Chemist-Handbook.github.io/refs/heads/master/_pages/BBBP.csv'
+df = pd.read_csv(url)
 
-   # Loading the BBBP dataset
-   df = pd.read_csv('BBBP.csv')
+# Convert 'num' to integer and 'p_np' to categorical
+df['num'] = df['num'].astype(int)
+df['p_np'] = df['p_np'].astype('category')
 
-   # Convert 'num' to integer and 'p_np' to categorical
-   df['num'] = df['num'].astype(int)
-   df['p_np'] = df['p_np'].astype('category')
-
-   # Print the data types of the columns
-   print(df.dtypes)
+# Print the data types of the columns
+print(df.dtypes)
 ```
 ---
 
@@ -626,18 +621,19 @@ We’ll normalize the `num` column using Min-Max scaling, which adjusts values t
 
 **Solution**
 ```python
-      import pandas as pd
-      from sklearn.preprocessing import MinMaxScaler
+import pandas as pd
+from sklearn.preprocessing import MinMaxScaler
 
-      # Loading the BBBP dataset
-      df = pd.read_csv('BBBP.csv')
+# Loading the BBBP dataset
+url = 'https://raw.githubusercontent.com/Data-Chemist-Handbook/Data-Chemist-Handbook.github.io/refs/heads/master/_pages/BBBP.csv'
+df = pd.read_csv(url)
 
-      # Normalizing the 'num' column (compound number)
-      scaler = MinMaxScaler()
-      df[['num']] = scaler.fit_transform(df[['num']])
+# Normalizing the 'num' column (compound number)
+scaler = MinMaxScaler()
+df[['num']] = scaler.fit_transform(df[['num']])
 
-      # Print the first few rows of the normalized dataset
-      print(df.head())
+# Print the first few rows of the normalized dataset
+print(df.head())
 ```
 ---
 
@@ -650,8 +646,6 @@ Encoding converts non-numeric data (like categories) into numeric values so that
 **Example Code:**
 
 ```python
-import pandas as pd
-
 # Example DataFrame with categorical data
 data = {'Compound': ['A', 'B', 'C'],
       'State': ['solid', 'liquid', 'gas']}
@@ -670,16 +664,15 @@ The `p_np` column is a binary classification of permeability (1 or 0). We will a
 
 **Solution**
 ```python
-      import pandas as pd
+# Loading the BBBP dataset
+url = 'https://raw.githubusercontent.com/Data-Chemist-Handbook/Data-Chemist-Handbook.github.io/refs/heads/master/_pages/BBBP.csv'
+df = pd.read_csv(url)
 
-      # Loading the BBBP dataset
-      df = pd.read_csv('BBBP.csv')
+# Apply one-hot encoding to the 'p_np' column
+df_encoded = pd.get_dummies(df, columns=['p_np'], prefix='permeability')
 
-      # Apply one-hot encoding to the 'p_np' column
-      df_encoded = pd.get_dummies(df, columns=['p_np'], prefix='permeability')
-
-      # Print the first few rows of the encoded DataFrame
-      print(df_encoded.head())
+# Print the first few rows of the encoded DataFrame
+print(df_encoded.head())
 ```
 ---
 ### 2.2.3 Data Manipulation with Pandas
@@ -693,17 +686,17 @@ Filtering allows you to select specific rows or columns from a DataFrame that me
 **Example Code:**
 
 ```python
-      import pandas as pd
+import pandas as pd
 
-      # Example DataFrame
-      data = {'Compound': ['A', 'B', 'C'],
-               'MolecularWeight': [180.16, 250.23, 320.45]}
-      df = pd.DataFrame(data)
+# Example DataFrame
+data = {'Compound': ['A', 'B', 'C'],
+         'MolecularWeight': [180.16, 250.23, 320.45]}
+df = pd.DataFrame(data)
 
-      # Filtering rows where MolecularWeight is greater than 200
-      filtered_df = df[df['MolecularWeight'] > 200]
+# Filtering rows where MolecularWeight is greater than 200
+filtered_df = df[df['MolecularWeight'] > 200]
 
-      print(filtered_df)
+print(filtered_df)
 ```
 
 **Practice Problem:**
@@ -713,19 +706,18 @@ Filtering allows you to select specific rows or columns from a DataFrame that me
 
 **Solution**
 ```python
-      import pandas as pd
+# Loading the BBBP dataset
+url = 'https://raw.githubusercontent.com/Data-Chemist-Handbook/Data-Chemist-Handbook.github.io/refs/heads/master/_pages/BBBP.csv'
+df = pd.read_csv(url)
 
-      # Loading the BBBP dataset
-      df = pd.read_csv('BBBP.csv')
+# Filtering rows where the 'num' column is greater than 500
+filtered_df = df[df['num'] > 500]
 
-      # Filtering rows where the 'num' column is greater than 500
-      filtered_df = df[df['num'] > 500]
+# Selecting a subset of columns: 'name' and 'smiles'
+subset_df = df[['name', 'smiles']]
 
-      # Selecting a subset of columns: 'name' and 'smiles'
-      subset_df = df[['name', 'smiles']]
-
-      print(filtered_df.head())
-      print(subset_df.head())
+print(filtered_df.head())
+print(subset_df.head())
 ```
 
 ---
@@ -739,19 +731,17 @@ Merging allows for combining data from multiple DataFrames based on a common col
 **Example Code:**
 
 ```python
-      import pandas as pd
+# Example DataFrames
+df1 = pd.DataFrame({'Compound': ['A', 'B'],
+                     'MolecularWeight': [180.16, 250.23]})
 
-      # Example DataFrames
-      df1 = pd.DataFrame({'Compound': ['A', 'B'],
-                           'MolecularWeight': [180.16, 250.23]})
+df2 = pd.DataFrame({'Compound': ['A', 'B'],
+                     'MeltingPoint': [120, 150]})
 
-      df2 = pd.DataFrame({'Compound': ['A', 'B'],
-                           'MeltingPoint': [120, 150]})
+# Merging DataFrames on the 'Compound' column
+merged_df = pd.merge(df1, df2, on='Compound')
 
-      # Merging DataFrames on the 'Compound' column
-      merged_df = pd.merge(df1, df2, on='Compound')
-
-      print(merged_df)
+print(merged_df)
 ```
 
 **Practice Problem:**
@@ -761,20 +751,19 @@ Merging allows for combining data from multiple DataFrames based on a common col
 
 **Solution**
 ```python
-      import pandas as pd
+# Loading the BBBP dataset
+url = 'https://raw.githubusercontent.com/Data-Chemist-Handbook/Data-Chemist-Handbook.github.io/refs/heads/master/_pages/BBBP.csv'
+df = pd.read_csv(url)
 
-      # Loading the BBBP dataset
-      df = pd.read_csv('BBBP.csv')
+# Create two DataFrames
+df1 = df[['name', 'smiles']]
+df2 = df[['name', 'num', 'p_np']]
 
-      # Create two DataFrames
-      df1 = df[['name', 'smiles']]
-      df2 = df[['name', 'num', 'p_np']]
+# Perform a left join on the 'name' column
+merged_df = pd.merge(df1, df2, on='name', how='left')
 
-      # Perform a left join on the 'name' column
-      merged_df = pd.merge(df1, df2, on='name', how='left')
-
-      # Print the merged DataFrame
-      print(merged_df.head())
+# Print the merged DataFrame
+print(merged_df.head())
 ```
 
 ---
@@ -788,41 +777,41 @@ Grouping organizes data based on specific columns, and aggregation provides summ
 **Example Code:**
 
 ```python
-      import pandas as pd
+# Example DataFrame
+data = {'Compound': ['A', 'A', 'B', 'B'],
+         'Measurement': [1, 2, 3, 4]}
+df = pd.DataFrame(data)
 
-      # Example DataFrame
-      data = {'Compound': ['A', 'A', 'B', 'B'],
-               'Measurement': [1, 2, 3, 4]}
-      df = pd.DataFrame(data)
+# Grouping by 'Compound' and calculating the sum
+grouped_df = df.groupby('Compound').sum()
 
-      # Grouping by 'Compound' and calculating the sum
-      grouped_df = df.groupby('Compound').sum()
-
-      print(grouped_df)
+print(grouped_df)
 ```
 
 **Practice Problem:**
 
 [comment]: <> (#TODO add an additional column to BBBP.csv with data that makes sense to average (such as molecular weight, number of carbonyl groups, number of aromatic rings, etc.))
 
-1. Group the BBBP dataset by `p_np` and compute the average `num` for each group (permeable and non-permeable compounds).
-2. Use multiple aggregation functions (e.g., count and mean) on the `num` column.
+1. Group the BBBP dataset by `p_np` and compute the average `carbon count` for each group (permeable and non-permeable compounds).
+2. Use multiple aggregation functions (e.g., count and mean) on the `carbon count` column.
 
 **Solution**
 ```python
-      import pandas as pd
+# Load dataset
+url = 'https://raw.githubusercontent.com/Data-Chemist-Handbook/Data-Chemist-Handbook.github.io/refs/heads/master/_pages/BBBP.csv'
+df = pd.read_csv(url)
 
-      # Loading the BBBP dataset
-      df = pd.read_csv('BBBP.csv')
+# Add estimated carbon count from SMILES
+df['carbon_count'] = df['smiles'].apply(lambda s: s.count('C'))
 
-      # Grouping by 'p_np' and calculating the average 'num'
-      grouped_df = df.groupby('p_np')['num'].mean()
+# Group by 'p_np' and calculate average carbon count
+grouped_df = df.groupby('p_np')['carbon_count'].mean()
 
-      # Applying multiple aggregation functions
-      aggregated_df = df.groupby('p_np')['num'].agg(['count', 'mean'])
+# Apply multiple aggregation functions
+aggregated_df = df.groupby('p_np')['carbon_count'].agg(['count', 'mean'])
 
-      print(grouped_df)
-      print(aggregated_df)
+print(grouped_df)
+print(aggregated_df)
 ```
 
 ---
@@ -836,40 +825,40 @@ Pivot tables help reorganize data to make it easier to analyze by converting row
 **Example Code:**
 
 ```python
-      import pandas as pd
+# Example DataFrame
+data = {'Compound': ['A', 'B', 'A', 'B'],
+         'Property': ['MeltingPoint', 'MeltingPoint', 'BoilingPoint', 'BoilingPoint'],
+         'Value': [120, 150, 300, 350]}
+df = pd.DataFrame(data)
 
-      # Example DataFrame
-      data = {'Compound': ['A', 'B', 'A', 'B'],
-               'Property': ['MeltingPoint', 'MeltingPoint', 'BoilingPoint', 'BoilingPoint'],
-               'Value': [120, 150, 300, 350]}
-      df = pd.DataFrame(data)
+# Creating a pivot table
+pivot_df = df.pivot_table(values='Value', index='Compound', columns='Property')
 
-      # Creating a pivot table
-      pivot_df = df.pivot_table(values='Value', index='Compound', columns='Property')
-
-      print(pivot_df)
+print(pivot_df)
 ```
 
 **Practice Problem:**
 
-1. Create a pivot table from the BBBP dataset to summarize the average `num` for each `p_np` group (permeable and non-permeable).
+1. Create a pivot table from the BBBP dataset to summarize the average `carbon count` for each `p_np` group (permeable and non-permeable).
 2. Use the `melt()` function to reshape the DataFrame, converting columns back into rows.
 
 **Solution**
 ```python
-      import pandas as pd
+# Load the BBBP dataset
+url = 'https://raw.githubusercontent.com/Data-Chemist-Handbook/Data-Chemist-Handbook.github.io/refs/heads/master/_pages/BBBP.csv'
+df = pd.read_csv(url)
 
-      # Loading the BBBP dataset
-      df = pd.read_csv('BBBP.csv')
+# Add carbon count derived from SMILES
+df['carbon_count'] = df['smiles'].apply(lambda s: s.count('C'))
 
-      # Creating a pivot table for 'num' grouped by 'p_np'
-      pivot_df = df.pivot_table(values='num', index='p_np', aggfunc='mean')
+# Creating a pivot table for 'carbon_count' grouped by 'p_np'
+pivot_df = df.pivot_table(values='carbon_count', index='p_np', aggfunc='mean')
 
-      # Reshaping the DataFrame using melt
-      melted_df = df.melt(id_vars=['name'], value_vars=['num', 'p_np'])
+# Reshaping the DataFrame using melt
+melted_df = df.melt(id_vars=['name'], value_vars=['carbon_count', 'p_np'])
 
-      print(pivot_df)
-      print(melted_df.head())
+print(pivot_df)
+print(melted_df.head())
 ```
 
 ### 2.2.4 Working with NumPy Arrays
