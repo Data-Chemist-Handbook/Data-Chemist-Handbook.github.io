@@ -469,41 +469,44 @@ csv_data = pd.read_csv('experimental_data.csv')
 
 # Reading an Excel file into a DataFrame called "excel_data"
 excel_data = pd.read_excel('compound_properties.xlsx', sheet_name='Sheet1')
-
-# Reading a JSON file into a DataFrame called "json_data"
-json_data = pd.read_json('reaction_conditions.json')
 ```
 
 **Explanation of the Code:**
 
 - `pd.read_csv()` reads data from a CSV file into a DataFrame.
 - `pd.read_excel()` reads data from an Excel file. The `sheet_name` parameter specifies which sheet to read.
-- `pd.read_json()` reads data from a JSON file.
 
-**Practice Problem:**
+**Reading CSVs via File Upload or Link**
 
-[comment]: <> (#TODO explain the dataset further and suggest opening it with excel to familiarize with it)
+You can read CSV files in two ways:
 
-You have been provided with a CSV file named BBBP.csv, which contains information about various compounds and their blood-brain barrier permeability. Write Python code to:
+**Method 1: Upload the file manually (e.g., in Jupyter or Google Colab)**
 
-Read the CSV file into a DataFrame named df using pd.read_csv().
-Display the first five rows of the DataFrame using df.head().
-Calculate the proportion of permeable compounds, i.e., those for which the p_np column is 1.
+Download the BBBP.csv File: [https://github.com/Data-Chemist-Handbook/Data-Chemist-Handbook.github.io/blob/master/_pages/BBBP.csv](url)
 
-
-[comment]: <> (#TODO give examples of all of the relevant functions for dataframes)
-
-**Answer:**
 <pre> 
    <code class="python"> 
-   import pandas as pd 
-   # 1. Read the CSV file into a DataFrame (df)
-   df = pd.read_csv('BBBP.csv') 
-   # 2. Display the first five rows using the "head function"
-   print(df.head()) 
-   # 3. Calculate the proportion of permeable compounds 
-   permeable_ratio = df['p_np'].mean() 
-   print(f"Proportion of permeable compounds: {permeable_ratio:.2f}") 
+   from google.colab import files
+   uploaded = files.upload()
+   
+   import pandas as pd
+   df = pd.read_csv('BBBP.csv')
+   print(df.head())
+   </code> 
+</pre>
+
+
+**Method 2: Load the file directly from a GitHub raw link**
+
+This method allows your code to be instantly runnable without needing to manually upload files.
+
+<pre> 
+   <code class="python"> 
+   import pandas as pd
+
+   url = 'https://github.com/Data-Chemist-Handbook/Data-Chemist-Handbook.github.io/blob/master/_pages/BBBP.csv'
+   df = pd.read_csv(url)
+   print(df.head())
    </code> 
 </pre>
 
