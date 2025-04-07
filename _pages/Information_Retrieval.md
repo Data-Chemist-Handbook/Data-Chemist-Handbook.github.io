@@ -49,8 +49,14 @@ dataset:(https://github.com/ChemFoundationModels/ChemLLMBench?tab=readme-ov-file
     A well-structured prompt typically contains these key parts:
         - **General Instruction:** Briefly describes the task context or role the model is expected to perform.
             - Example: *"You are an expert chemist. Given the [**Input Representation**]: [**Input Data**], predict the [**Target Output**] using your expert-level knowledge in [**Relevant Domain**].[**Input Explanation** ].[**Output Explanation and Restriction**].[**Few shot prompt**]"*
-            - **Specific Task:** Clearly states exactly what you want the model to do.
-                - Example: *"Predict the product of a chemical reaction. "*
+            - **Input Representation:**  The form or type of input being provided to the model (e.g., SMILES, molecular description, text, structure image).
+                - Example: *" “SMILES string”, “molecular structure”, “chemical formula”, “compound name” "*
+            - **Input Data:**  The actual instance of input that the model will work with — this is the specific data for the task.
+                - Example: *" “CC(=O)OC1=CC=CC=C1C(=O)O” (Aspirin), or “benzene + nitric acid"*
+            - **Target Output:**  The expected prediction or result that the model should generate based on the input.
+                - Example: *" “product SMILES”, “reaction outcome”, “generated molecule”*
+            - **Relevant Domain:** The specific area of chemical expertise the model should rely on to solve the task.
+                - Example: *" “organic chemistry”, “reaction prediction”, “molecular design”, “drug discovery”*
             - **Input Explanation:** Specifies the data or information provided.
                 - Example: *"Given the reactants aspirin and hydrochloric acid..."*
             - **Output Explanation and Restrictions:** Clearly describes the format and type of response desired, with any limitations.
