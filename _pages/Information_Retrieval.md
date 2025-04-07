@@ -48,7 +48,7 @@ dataset:(https://github.com/ChemFoundationModels/ChemLLMBench?tab=readme-ov-file
     - **Format of a Good Prompt:**
     A well-structured prompt typically contains these key parts:
         - **General Instruction:** Briefly describes the task context or role the model is expected to perform.
-            - Example: *"You are an expert chemist. Given the [Input Representation]: [Input Data], predict the [Target Output] using your expert-level knowledge in [Relevant Domain].[***Input Explanation** *].[***Output Explanation and Restriction***].[***Few shot prompt***]"*
+            - Example: *"You are an expert chemist. Given the [**Input Representation**]: [**Input Data**], predict the [**Target Output**] using your expert-level knowledge in [**Relevant Domain**].[**Input Explanation** ].[**Output Explanation and Restriction**].[**Few shot prompt**]"*
             - **Specific Task:** Clearly states exactly what you want the model to do.
                 - Example: *"Predict the product of a chemical reaction. "*
             - **Input Explanation:** Specifies the data or information provided.
