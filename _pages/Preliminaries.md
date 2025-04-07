@@ -485,12 +485,12 @@ You can read CSV files in two ways:
 Download the BBBP.csv File: [https://github.com/Data-Chemist-Handbook/Data-Chemist-Handbook.github.io/blob/master/_pages/BBBP.csv](url)
 <pre> 
    <code class="python"> 
-   from google.colab import files
-   uploaded = files.upload()
+from google.colab import files
+uploaded = files.upload()
    
-   import pandas as pd
-   df = pd.read_csv('BBBP.csv')
-   print(df.head())
+import pandas as pd
+df = pd.read_csv('BBBP.csv')
+print(df.head())
    </code> 
 </pre>
 **Method 2: Load the file directly from a GitHub raw link**
@@ -498,11 +498,11 @@ Download the BBBP.csv File: [https://github.com/Data-Chemist-Handbook/Data-Chemi
 This method allows your code to be instantly runnable without needing to manually upload files.
 <pre> 
    <code class="python"> 
-   import pandas as pd
+import pandas as pd
 
-   url = 'https://github.com/Data-Chemist-Handbook/Data-Chemist-Handbook.github.io/blob/master/_pages/BBBP.csv'
-   df = pd.read_csv(url)
-   print(df.head())
+url = 'https://raw.githubusercontent.com/Data-Chemist-Handbook/Data-Chemist-Handbook.github.io/refs/heads/master/_pages/BBBP.csv'
+df = pd.read_csv(url)
+print(df.head())
    </code> 
 </pre>
 ### 2.2.2 Data Cleaning and Preprocessing
