@@ -1773,6 +1773,123 @@ print(f"F-statistic: {f_stat}, P-value: {p_val}")
 ```python
 F-statistic: 1188.118811881188, P-value: 1.946499706613343e-142
 ```
+## Section 2.2 – Quiz Questions
+
+### Factual Questions
+
+---
+
+Question 1  
+If you are dealing with a large dataset with over 50 different metrics (or columns) for molecules based on their toxicity, what function would you use to convert rows and columns into meaningful information?
+
+**A.** Merge the dataset  
+**B.** Normalize the dataset  
+**C.** Remove duplicates  
+**D.** Create a pivot table to reshape the dataset  
+
+<details>
+<summary> Show Answer</summary>
+
+**Correct Answer:** D  
+**Explanation:**  
+A pivot table allows you to restructure the data by aggregating, summarizing, or reorganizing it in a more meaningful way. This helps in analyzing trends and making comparisons efficiently.
+</details>
+
+---
+
+Question 2  
+Why is encoding necessary when working with categorical data in machine learning?
+
+**A.** It removes unnecessary data from the dataset.  
+**B.** Machine learning models require numerical inputs to process categorical data effectively.  
+**C.** Encoding increases the number of categorical variables in a dataset.  
+**D.** It automatically improves model accuracy without additional preprocessing.  
+
+<details>
+<summary> Show Answer</summary>
+
+**Correct Answer:** B  
+**Explanation:**  
+Encoding converts non-numeric data (e.g., categories) into numerical values so that machine learning models can process them. Common methods include one-hot encoding and label encoding.
+</details>
+
+---
+
+Question 3  
+Which of the following statements is true regarding pivot tables and reshaping data using Pandas in Python?
+
+**A.** Pivot tables are used to remove missing values from a dataset.  
+**B.** The `pivot_table()` function is used to summarize and reorganize data by converting rows into columns.  
+**C.** The `melt()` function is used to create a summary table by aggregating numerical data.  
+**D.** A pivot table can only be created using categorical data as values.  
+
+<details>
+<summary> Show Answer</summary>
+
+**Correct Answer:** B  
+**Explanation:**  
+The `pivot_table()` function in Pandas helps summarize and reorganize data efficiently by turning row-level data into columnar formats.
+</details>
+
+---
+
+###  Comprehension / Application Questions
+
+---
+
+Question 4  
+You have just received a dataset regarding the toxicity of commonly used compounds (**TOX21**) and would like to get an idea of the metrics in the dataset.  
+
+ **Task:** Read the `TOX21.csv` dataset into a DataFrame and print the first five rows.  
+Which of the following matches your output?
+
+```python
+import pandas as pd
+df = pd.read_csv("TOX21.csv")
+print(df.head())
+```
+
+> _Note: You may need to include screenshots or a code output comparison for this multiple-choice question._
+
+---
+
+Question 5  
+After looking at the TOX21 dataset, you realize that there are missing values in rows and duplicate rows.  
+To fix this problem, you should handle the missing values by using _____ and get rid of duplicate rows by _____.
+
+**A.** `df.fillna('unknown', inplace=True)`, `df.drop_duplicates()`  
+**B.** `df.fillna(0, inplace=False)`, `df.drop_duplicates(inplace=True)`  
+**C.** `df.dropna(inplace=True)`, `df.drop_duplicates()`  
+**D.** `df.fillna('missing', inplace=True)`, `df.drop_duplicates(inplace=True)`  
+
+<details>
+<summary> Show Answer</summary>
+
+**Correct Answer:** A  
+**Explanation:**  
+`fillna('unknown')` fills missing values with a placeholder, maintaining the dataset’s size. `drop_duplicates()` removes any repeated rows to ensure clean data.
+</details>
+
+---
+
+Question 6  
+Which function and code would allow you to create a new column that represents the average of the boiling points `'bp'` in your dataset?
+
+**A.** Grouping; `df['avg_bp'] = df['bp'].mean()`  
+**B.** Grouping; `df['avg_bp'] = df['bp'].sum() / len(df)`  
+**C.** Merging; `df['avg_bp'] = df['bp'].apply(lambda x: sum(x) / len(x))`  
+**D.** Merging; `df['avg_bp'] = df.apply(lambda row: row['bp'].mean(), axis=1)`  
+
+<details>
+<summary> Show Answer</summary>
+
+**Correct Answer:** A  
+**Explanation:**  
+The `.mean()` method calculates the column-wise average, and assigning it to a new column applies that single value across all rows.
+</details>
+
+---
+
 ## 2.3 Representation
 
 In the realm of cheminformatics and computational chemistry, the representation of chemical compounds is a fundamental aspect that enables the analysis, simulation, and prediction of chemical properties and behaviors. This chapter delves into various methods of representing chemical structures, each with its unique advantages and applications.
@@ -2341,6 +2458,104 @@ img.save("ibuprofen.png")
 ```
 
 This section provides a comprehensive overview of molecular visualization using PyMOL and RDKit, highlighting their capabilities and applications in cheminformatics. The example code, practice problem, and solution demonstrate how to visualize molecular structures effectively, leveraging real data and tools.
+
+
+# Questions for Section 2.3
+
+## 1) Factual Questions:
+
+### Question 1:
+In cheminformatics, SMILES (Simplified Molecular Input Line Entry System) plays a crucial role in computational chemistry and drug discovery. Which of the following best describes its significance in the intersection of chemistry and computer science?
+
+- A) SMILES enables the direct simulation of molecular interactions in biological systems without additional processing.
+- B) SMILES provides a standardized text-based format for representing molecular structures, making it easier to store, search, and analyze large chemical databases using computational tools.
+- C) SMILES replaces the need for molecular visualization software, as text-based representations are sufficient for all cheminformatics applications.
+- D) SMILES only works with small molecules, and cannot be used in large-scale machine-learning applications for drug discovery.
+
+<details>
+  <summary>Answer</summary>
+  **Correct Answer: B)** SMILES provides a standardized text-based format for representing molecular structures, making it easier to store, search, and analyze large chemical databases using computational tools.
+</details>
+
+---
+
+### Question 2:
+Which of the following statements about SMILES (Simplified Molecular Input Line Entry System) is true?
+
+- A) SMILES represents molecular structures using three-dimensional coordinates.
+- B) The Chem.MolFromSmiles() function in RDKit is used to convert a SMILES string into a molecule object.
+- C) Aromatic rings in a molecule can only be identified manually by visual inspection.
+- D) The GetNumAtoms() function in RDKit counts only the carbon atoms in a molecule.
+
+<details>
+  <summary>Answer</summary>
+  **Correct Answer: B)** The Chem.MolFromSmiles() function in RDKit is used to convert a SMILES string into a molecule object.
+</details>
+
+---
+
+### Question 3:
+**Multiple Choice Question**: Distinguishing SMILES and SMARTS in Cheminformatics  
+Which of the following best describes the key difference between SMILES and SMARTS in cheminformatics?
+
+- A) SMILES is used to represent complete molecular structures, while SMARTS is used to define and search for molecular substructures.
+- B) SMARTS is a simplified version of SMILES that only represents common functional groups.
+- C) SMILES allows for substructure searching in chemical databases, while SMARTS is only used for visualizing molecules.
+- D) SMARTS and SMILES are interchangeable and can always be used in the same cheminformatics applications without modification.
+
+<details>
+  <summary>Answer</summary>
+  **Correct Answer: A)** SMILES is used to represent complete molecular structures, while SMARTS is used to define and search for molecular substructures.
+</details>
+
+---
+
+## 2) Conceptual/Application Questions:
+
+### Question 4:
+**SMILES, SMARTS, and Fingerprints in the Tox21 Dataset**  
+A pharmaceutical company is working with the Tox21 dataset, which contains chemical information on thousands of compounds and their biological activities. The dataset includes SMILES (Simplified Molecular Input Line Entry System) representations of the molecules, as well as SMARTS (substructural patterns) that highlight specific functional groups, and molecular fingerprints that represent the presence or absence of substructures. The chemists need to identify drug candidates that are effective in treating diseases, have low toxicity, and are structurally similar to known safe and effective drugs.  
+Given the large size of the dataset and the need to focus on drug discovery, the team is considering which method to use for identifying the most promising drug candidates. The goal is to select drugs that are biologically active but also safe, ensuring that they have desirable molecular properties.
+
+Which of the following methods should the chemists use to efficiently find drug candidates with the most practical medical uses in the Tox21 dataset?
+
+- A) Use SMILES representations to manually check each compound for toxicity and activity, and then visually compare their structures with known drugs.
+- B) Generate SMARTS patterns to identify specific functional groups in the compounds and use them to filter out potentially toxic compounds based on their chemical features.
+- C) Use molecular fingerprints to perform similarity searching and clustering, identifying compounds that are structurally similar to known effective drugs, and then rank them based on their bioactivity and toxicity.
+- D) Create a new SMILES string for each compound and use it to generate a 3D structure, comparing the compounds based on their spatial arrangement to select the most effective drugs.
+
+<details>
+  <summary>Answer</summary>
+  **Correct Answer: C)** Use molecular fingerprints to perform similarity searching and clustering, identifying compounds that are structurally similar to known effective drugs, and then rank them based on their bioactivity and toxicity.
+  **Explanation**: This method leverages the power of molecular fingerprints for fast similarity searching, allowing chemists to find drugs with structural similarities to known active compounds. By clustering the data and ranking the compounds based on both bioactivity and toxicity, chemists can efficiently identify the most promising candidates for medical use.
+</details>
+
+---
+
+### Question 5:
+You are working with the compound oxycodone and would like to convert its SMILES notation into a fingerprint. The SMILES notation of oxycodone is:  
+`COc1ccc2C[C@H]3N(C)CC[C@@]45[C@@H](Oc1c24)C(=O)CC[C@@]35O.`  
+In this notation, the @ symbols represent stereochemistry, where @ is the R configuration, and @@ is the S configuration.
+
+**Hint:**  
+First, generate the SMILES code for oxycodone.  
+Convert the SMILES notation into a molecule object.  
+Generate the Morgan fingerprint with a radius of 2 and nBits = 1024.  
+Print the fingerprint as a bit string.
+
+**Question:** What is the position of the first 1 in the fingerprint (i.e., the index of the first set bit)?
+
+- A) 12
+- B) 14
+- C) 7
+- D) 3
+
+<details>
+  <summary>Answer</summary>
+  **Correct Answer: C)** 7
+</details>
+
+---
 
 ## 2.4 Calculation on Representation
 ### 2.4.1 Statistical Analysis on Molecular Representations
@@ -3036,3 +3251,71 @@ for i, features in enumerate(feature_arrays):
 - **Practical Application**: These methods enable the development of robust machine learning models for cheminformatics.
 
 ---
+## Questions for Section 2.4
+
+### 1) Factual Questions:
+
+#### Question 1: In cheminformatics, the Tanimoto similarity is commonly used to compare molecular structures based on their fingerprints. Which of the following statements correctly explains the relationship between Tanimoto similarity and fingerprints?
+- A) The Tanimoto similarity measures the similarity between two fingerprints by comparing the number of atoms in each molecule.
+- B) The Tanimoto similarity compares the number of common substructures between two fingerprints relative to the total number of substructures, indicating their structural similarity.
+- C) Tanimoto similarity is not applicable to fingerprints, as it is only used for comparing the molecular weights of compounds.
+- D) The Tanimoto similarity calculates the exact difference between two fingerprints, allowing for precise structural dissimilarity measurement.
+
+<details>
+  <summary>Answer</summary>
+  **Correct Answer: B)** The Tanimoto similarity compares the number of common substructures between two fingerprints relative to the total number of substructures, indicating their structural similarity.
+
+  **Explanation:**  
+  Option B is correct because Tanimoto similarity evaluates the overlap (common substructures) between two fingerprints and normalizes it by the total number of substructures present in both fingerprints.
+</details>
+
+#### Question 2: Which of the following statements about regression models in cheminformatics is TRUE?
+- A) Linear regression can be used to predict molecular properties, but only if the relationship between the property and descriptors is non-linear.
+- B) Multiple regression models assume that there is no relationship between the dependent and independent variables.
+- C) The Mean Squared Error (MSE) and R-squared (R²) metrics are used to evaluate the predictive performance of regression models.
+- D) In regression models, the dependent variable (property being predicted) is always the same as the independent variables (descriptors).
+
+<details>
+  <summary>Answer</summary>
+  **Correct Answer: C)** The Mean Squared Error (MSE) and R-squared (R²) metrics are used to evaluate the predictive performance of regression models.
+
+  **Explanation:**  
+  Option C is correct because the Mean Squared Error (MSE) quantifies the difference between predicted and actual values, while R-squared (R²) measures how much variance in the dependent variable is explained by the independent variables.
+</details>
+
+#### Question 3: Why is a correlation matrix useful when analyzing molecular properties?
+- A) It helps visualize the relationships between different molecular properties, identifying strong positive or negative correlations.
+- B) It replaces missing data in the dataset to ensure accurate predictions.
+- C) It generates new molecular properties by averaging existing ones.
+- D) It classifies molecules into different categories based on their chemical structure.
+
+<details>
+  <summary>Answer</summary>
+  **Correct Answer: A)** It helps visualize the relationships between different molecular properties, identifying strong positive or negative correlations.
+</details>
+
+---
+
+### 2) Conceptual/Application Questions:
+
+#### Question 4: Create a scatter plot with the following data with molecular weight on the x-axis and logP on the y-axis. Make sure to label the axes appropriately.
+
+**Data:**
+- Molecular weight: [50, 90, 134, 239, 252]
+- LogP: [0.7, 0.94, 1.24, 2.89, 3.21]
+
+Which scatter plot below looks like the scatter plot you produced?
+
+- A) 
+- B) 
+- C) 
+- D) 
+
+<details>
+  <summary>Answer</summary>
+  **Correct Answer:** [You can add the correct plot once the options are available.]
+
+  **Explanation:**  
+  [You can provide a brief explanation of the relationship between molecular weight and logP once the plots are available.]
+</details>
+
