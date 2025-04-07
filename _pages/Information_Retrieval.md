@@ -17,7 +17,7 @@ dataset:(https://github.com/ChemFoundationModels/ChemLLMBench?tab=readme-ov-file
     
     So what exactly are LLMs and why are they so powerful?  We will dive into this in this section.
     
-- **10.1 Introduction of LLMs**
+- ## 10.1 Introduction of LLMs
     
     **What are LLMs?**
     
@@ -37,7 +37,7 @@ dataset:(https://github.com/ChemFoundationModels/ChemLLMBench?tab=readme-ov-file
     
     → Such applications can substantially speed up research processes, improve accuracy, and open new avenues for innovative scientific discoveries.
     
-- **10.2 Prompt Engineering**
+-  ## 10.2 Prompt Engineering
     
     **Definition:**
     Prompt engineering involves carefully writing instructions (prompts) to guide Large Language Models (LLMs) to give accurate and useful answers. In simpler terms, it's how you ask questions or provide information to an AI system clearly and specifically.
@@ -88,7 +88,7 @@ dataset:(https://github.com/ChemFoundationModels/ChemLLMBench?tab=readme-ov-file
         - **Structured Requests:** Clearly state what kind of response you expect (e.g., chemical structure, explanation, prediction).
         - **Examples:** Sometimes providing examples (known as few-shot prompting) can help the model understand the desired answer format better.
     
-- **10.3 Usage of LLM APIs**
+-  ## 10.3 Usage of LLM APIs
      
     Chemists can utilize APIs provided by popular LLM platforms such as OpenAI, Google, and other AI providers. Using APIs, chemists can:
     
@@ -101,16 +101,16 @@ dataset:(https://github.com/ChemFoundationModels/ChemLLMBench?tab=readme-ov-file
     ### **Setting Up OpenAI API**
     This guide walks you through using the OpenAI API in **Google Colab**.
 
-    ## 🔧 1. Setting Up in Google Colab
+    ### 🔧 1. Setting Up in Google Colab
     Open [https://colab.research.google.com](https://colab.research.google.com) and start a new notebook.
-    ## 📦 2. Install the Required Libraries
+    ### 📦 2. Install the Required Libraries
     Run the following cell to install the OpenAI package:
     ```python
     pip install openai
     !pip install pandas numpy
     !pip install kagglehub
     ```        
-    ## 🔑 3. Authenticate with the OpenAI API
+    ### 🔑 3. Authenticate with the OpenAI API
 
     ```python
     import openai
@@ -118,8 +118,8 @@ dataset:(https://github.com/ChemFoundationModels/ChemLLMBench?tab=readme-ov-file
     os.environ['OPENAI_API_KEY'] = "YOUR_OPENAI_API"
     openai.api_key = os.getenv("OPENAI_API_KEY")
     ```
-    ##  4. Load Input File from Online Source
-    ### Use the `kagglehub` library to download datasets directly from Kaggle and read them into a DataFrame:
+    ###  4. Load Input File from Online Source
+     Use the `kagglehub` library to download datasets directly from Kaggle and read them into a DataFrame:
 
     ```python
     import kagglehub
@@ -129,7 +129,7 @@ dataset:(https://github.com/ChemFoundationModels/ChemLLMBench?tab=readme-ov-file
     df = pd.read_csv(path+'/BBBP.csv')
     df.head()
     ```
-    ### If the data is not in the kaggle hub
+     If the data is not in the kaggle hub
     ```python 
     import requests
     import os
@@ -151,7 +151,7 @@ dataset:(https://github.com/ChemFoundationModels/ChemLLMBench?tab=readme-ov-file
     df.head()
 
     ```
-    ##  5. Make an OpenAI API Call
+    ###  5. Make an OpenAI API Call
     ```python
     from openai import OpenAI
     # Creat model
@@ -185,7 +185,7 @@ dataset:(https://github.com/ChemFoundationModels/ChemLLMBench?tab=readme-ov-file
     
     ```
     
-- **10.4 Interactive Programming**
+-  ## 10.4 Interactive Programming
     
         
     ### Definition
