@@ -483,7 +483,6 @@ You can read CSV files in two ways:
 **Method 1: Upload the file manually (e.g., in Jupyter or Google Colab)**
 
 Download the BBBP.csv File: [https://github.com/Data-Chemist-Handbook/Data-Chemist-Handbook.github.io/blob/master/_pages/BBBP.csv](url)
-
 <pre> 
    <code class="python"> 
    from google.colab import files
@@ -494,12 +493,9 @@ Download the BBBP.csv File: [https://github.com/Data-Chemist-Handbook/Data-Chemi
    print(df.head())
    </code> 
 </pre>
-
-
 **Method 2: Load the file directly from a GitHub raw link**
 
 This method allows your code to be instantly runnable without needing to manually upload files.
-
 <pre> 
    <code class="python"> 
    import pandas as pd
@@ -509,7 +505,6 @@ This method allows your code to be instantly runnable without needing to manuall
    print(df.head())
    </code> 
 </pre>
-
 ### 2.2.2 Data Cleaning and Preprocessing
 
 #### Handling Missing Values and Duplicates
