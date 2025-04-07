@@ -874,16 +874,16 @@ NumPy is a library for numerical computing in Python, allowing for efficient arr
 **Example Code:**
 
 ```python
-      import numpy as np
+import numpy as np
 
-      # Example array
-      arr = np.array([1, 2, 3, 4, 5])
+# Example array
+arr = np.array([1, 2, 3, 4, 5])
 
-      # Basic operations
-      arr_sum = np.sum(arr)
-      arr_mean = np.mean(arr)
+# Basic operations
+arr_sum = np.sum(arr)
+arr_mean = np.mean(arr)
 
-      print(f"Sum: {arr_sum}, Mean: {arr_mean}")
+print(f"Sum: {arr_sum}, Mean: {arr_mean}")
 ```
 
 **Practice Problem:**
@@ -895,21 +895,21 @@ NumPy is a library for numerical computing in Python, allowing for efficient arr
 
 **Solution**
 ```python
-      import pandas as pd
-      import numpy as np
+import pandas as pd
 
-      # Load the BBBP dataset
-      df = pd.read_csv('BBBP.csv')
+# Load the BBBP dataset
+url = 'https://raw.githubusercontent.com/Data-Chemist-Handbook/Data-Chemist-Handbook.github.io/refs/heads/master/_pages/BBBP.csv'
+df = pd.read_csv(url)
 
-      # Create a NumPy array from the 'num' column
-      num_array = np.array(df['num'])
+# Create a NumPy array from the 'num' column
+num_array = np.array(df['num'])
 
-      # Perform basic statistical operations
-      num_sum = np.sum(num_array)
-      num_mean = np.mean(num_array)
-      num_median = np.median(num_array)
+# Perform basic statistical operations
+num_sum = np.sum(num_array)
+num_mean = np.mean(num_array)
+num_median = np.median(num_array)
 
-      print(f"Sum: {num_sum}, Mean: {num_mean}, Median: {num_median}")
+print(f"Sum: {num_sum}, Mean: {num_mean}, Median: {num_median}")
 ```
 
 ---
@@ -925,15 +925,13 @@ NumPy arrays can be sliced to access subsets of data.
 **Example Code:**
 
 ```python
-      import numpy as np
+# Example array
+arr = np.array([10, 20, 30, 40, 50])
 
-      # Example array
-      arr = np.array([10, 20, 30, 40, 50])
+# Slicing the array
+slice_arr = arr[1:4]
 
-      # Slicing the array
-      slice_arr = arr[1:4]
-
-      print(slice_arr)
+print(slice_arr)
 ```
 
 **Practice Problem:**
@@ -946,23 +944,25 @@ NumPy arrays can be sliced to access subsets of data.
 
 **Solution**
 ```python
-      import pandas as pd
-      import numpy as np
+# Load the BBBP dataset
+url = 'https://raw.githubusercontent.com/Data-Chemist-Handbook/Data-Chemist-Handbook.github.io/refs/heads/master/_pages/BBBP.csv'
+df = pd.read_csv(url)
 
-      # Load the BBBP dataset
-      df = pd.read_csv('BBBP.csv')
+# Add carbon count derived from SMILES
+df['carbon_count'] = df['smiles'].apply(lambda s: s.count('C'))
 
-      # Create a NumPy array from the 'num' column
-      num_array = np.array(df['num'])
+# Create a NumPy array from the 'carbon_count' column
+carbon_array = np.array(df['carbon_count'])
 
-      # Slice the array to extract every second element
-      sliced_array = num_array[::2]
+# Slice the array to extract every second element
+sliced_array = carbon_array[::2]
 
-      # Reverse the array using slicing
-      reversed_array = num_array[::-1]
+# Reverse the array's contents using slicing
+reversed_array = carbon_array[::-1]
 
-      print(f"Sliced Array (every second element): {sliced_array}")
-      print(f"Reversed Array: {reversed_array}")
+print(f"Sliced Array (every second element): {sliced_array}")
+print(f"Reversed Array: {reversed_array}")
+
 ```
 
 ---
@@ -973,24 +973,22 @@ NumPy arrays can be sliced to access subsets of data.
 
 [comment]: <> (#TODO explain what the shape of an array is and give a better, more understandable explanation of broadcasting)
 
-Reshaping changes the shape of an array, and broadcasting applies operations across arrays of different shapes.
+Reshaping changes the shape of an array (essentially the dimensions, and broadcasting applies operations across arrays of different shapes.
 
 **Example Code:**
 
 ```python
-      import numpy as np
+# Example array
+arr = np.array([[1, 2, 3], [4, 5, 6]])
 
-      # Example array
-      arr = np.array([[1, 2, 3], [4, 5, 6]])
+# Reshaping the array
+reshaped_arr = arr.reshape(3, 2)
 
-      # Reshaping the array
-      reshaped_arr = arr.reshape(3, 2)
+# Broadcasting: adding a scalar to the array
+broadcast_arr = arr + 10
 
-      # Broadcasting: adding a scalar to the array
-      broadcast_arr = arr + 10
-
-      print(reshaped_arr)
-      print(broadcast_arr)
+print(reshaped_arr)
+print(broadcast_arr)
 ```
 
 **Practice Problem:**
@@ -1002,26 +1000,24 @@ Reshaping changes the shape of an array, and broadcasting applies operations acr
 
 **Solution**
 ```python
-      import pandas as pd
-      import numpy as np
+# Load the BBBP dataset
+url = 'https://raw.githubusercontent.com/Data-Chemist-Handbook/Data-Chemist-Handbook.github.io/refs/heads/master/_pages/BBBP.csv'
+df = pd.read_csv(url)
 
-      # Load the BBBP dataset
-      df = pd.read_csv('BBBP.csv')
+# Create a NumPy array from the 'num' column
+num_array = np.array(df['num'])
 
-      # Create a NumPy array from the 'num' column
-      num_array = np.array(df['num'])
+# Reshaping the array to a (5, 20) shape (or adjust based on dataset length)
+reshaped_array = num_array[:100].reshape(5, 20)
 
-      # Reshaping the array to a (5, 20) shape (or adjust based on dataset length)
-      reshaped_array = num_array[:100].reshape(5, 20)
+# Broadcasting: adding 100 to all elements in the reshaped array
+broadcasted_array = reshaped_array + 100
 
-      # Broadcasting: adding 100 to all elements in the reshaped array
-      broadcasted_array = reshaped_array + 100
+print("Reshaped Array:")
+print(reshaped_array)
 
-      print("Reshaped Array:")
-      print(reshaped_array)
-
-      print("\nBroadcasted Array (after adding 100):")
-      print(broadcasted_array)
+print("\nBroadcasted Array (after adding 100):")
+print(broadcasted_array)
 ```
 
 ### 2.2.5 Introduction to Visualization Libraries
