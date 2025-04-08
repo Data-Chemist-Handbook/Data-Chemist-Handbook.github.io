@@ -1769,7 +1769,7 @@ If you are dealing with a large dataset with over 50 different metrics (or colum
 **D.** Create a pivot table to reshape the dataset  
 
 <details>
-<summary> Show Answer</summary>
+<summary>▶ Click to show answer</summary>
 
 **Correct Answer:** D  
 **Explanation:**  
@@ -1787,7 +1787,7 @@ Why is encoding necessary when working with categorical data in machine learning
 **D.** It automatically improves model accuracy without additional preprocessing.  
 
 <details>
-<summary> Show Answer</summary>
+<summary>▶ Click to show answer</summary>
 
 **Correct Answer:** B  
 **Explanation:**  
@@ -1805,7 +1805,7 @@ Which of the following statements is true regarding pivot tables and reshaping d
 **D.** A pivot table can only be created using categorical data as values.  
 
 <details>
-<summary> Show Answer</summary>
+<summary>▶ Click to show answer</summary>
 
 **Correct Answer:** B  
 **Explanation:**  
@@ -1819,18 +1819,35 @@ The `pivot_table()` function in Pandas helps summarize and reorganize data effic
 ---
 
 Question 4  
-You have just received a dataset regarding the toxicity of commonly used compounds (**TOX21**) and would like to get an idea of the metrics in the dataset.  
+You have just received a dataset regarding the toxicity of commonly used compounds (**TOX21**) and would like to get an idea of the metrics in the dataset.
 
- **Task:** Read the `TOX21.csv` dataset into a DataFrame and print the first five rows.  
-Which of the following matches your output?
+Task: Read the `TOX21.csv` dataset into a DataFrame and print the first five rows. Which of the following matches your third compound in the output?
+
+**A.** Diethyl oxalate  
+**B.** Dimethyl dihydrogen diphosphate  
+**C.** Dimethylglyoxime  
+**D.** 4'-Methoxyacetophenone  
+
+<details>
+<summary>▶ Click to show answer</summary>
+
+**Correct Answer:** C  
+**Explanation:**  
+The third row of the dataset contains Dimethylglyoxime, based on the output of `df.head()`.
+
+</details>
+
+<details>
+<summary>▶ Show Solution Code</summary>
 
 ```python
 import pandas as pd
-df = pd.read_csv("TOX21.csv")
-print(df.head())
-```
 
-> _Note: You may need to include screenshots or a code output comparison for this multiple-choice question._
+url = "https://raw.githubusercontent.com/Data-Chemist-Handbook/Data-Chemist-Handbook.github.io/refs/heads/master/_pages/Chemical%20List%20tox21sl-2025-02-20.csv"
+df = pd.read_csv(url)
+print(df.head())
+ ```
+</details>
 
 ---
 
@@ -1844,7 +1861,7 @@ To fix this problem, you should handle the missing values by using _____ and get
 **D.** `df.fillna('missing', inplace=True)`, `df.drop_duplicates(inplace=True)`  
 
 <details>
-<summary> Show Answer</summary>
+<summary>▶ Click to show answer</summary>
 
 **Correct Answer:** A  
 **Explanation:**  
@@ -1862,13 +1879,70 @@ Which function and code would allow you to create a new column that represents t
 **D.** Merging; `df['avg_bp'] = df.apply(lambda row: row['bp'].mean(), axis=1)`  
 
 <details>
-<summary> Show Answer</summary>
+<summary>▶ Click to show answer</summary>
 
 **Correct Answer:** A  
 **Explanation:**  
 The `.mean()` method calculates the column-wise average, and assigning it to a new column applies that single value across all rows.
 </details>
 
+---
+
+Question 7:
+You want to perform an ANOVA statistical analysis to evaluate the activity of the compounds listed in the TOX21 dataset.
+
+Task:  
+Determine whether the average molecular mass of compounds with ToxCast Active Ratio above 20% is statistically different** from those below 20%.
+
+- Use a 95% confidence level (α = 0.05).
+- Calculate the F-statistic and P-value to assess significance.
+
+Are these two groups statistically significant at the 95% confidence level? What are the F-statistic and P-value?
+
+**A.** Yes, F-Statistic: 203.89, P-Value: 0.03  
+**B.** Yes, F-Statistic: 476.96, P-Value: 0.00  
+**C.** No, F-Statistic: 78.09, P-Value: 0.09  
+**D.** No, F-Statistic: 548.06, P-Value: 0.10  
+
+<details>
+<summary>▶ Click to show answer</summary>
+
+**Correct Answer:** B  
+F-Statistic: 476.96  
+P-Value: 0.0000  
+
+**Explanation:**  
+Since the P-value < 0.05, the result is statistically significant at the 95% confidence level.  
+This means the difference in average molecular mass between compounds with high and low ToxCast activity is unlikely due to random chance.
+</details>
+
+<details>
+<summary>▶ Show Solution Code</summary>
+
+```python
+import pandas as pd
+from scipy.stats import f_oneway
+
+# Load dataset
+url = "https://raw.githubusercontent.com/Data-Chemist-Handbook/Data-Chemist-Handbook.github.io/refs/heads/master/_pages/Chemical%20List%20tox21sl-2025-02-20.csv"
+df = pd.read_csv(url)
+
+# Clean and prepare data
+df = df[['% ToxCast Active', 'AVERAGE MASS']].dropna()
+df['toxcast_active_ratio'] = df['% ToxCast Active'] / 100
+df['mass'] = df['AVERAGE MASS']
+
+# Define two groups based on active ratio threshold
+group_low = df[df['toxcast_active_ratio'] <= 0.2]['mass']
+group_high = df[df['toxcast_active_ratio'] > 0.2]['mass']
+
+# Perform ANOVA
+f_stat, p_val = f_oneway(group_low, group_high)
+
+print(f"F-statistic: {f_stat:.2f}")
+print(f"P-value: {p_val:.4f}")
+```
+</details>
 ---
 
 ## 2.3 Representation
@@ -2445,7 +2519,7 @@ This section provides a comprehensive overview of molecular visualization using 
 
 ## 1) Factual Questions:
 
-### Question 1:
+Question 1:
 In cheminformatics, SMILES (Simplified Molecular Input Line Entry System) plays a crucial role in computational chemistry and drug discovery. Which of the following best describes its significance in the intersection of chemistry and computer science?
 
 - A) SMILES enables the direct simulation of molecular interactions in biological systems without additional processing.
@@ -2454,13 +2528,13 @@ In cheminformatics, SMILES (Simplified Molecular Input Line Entry System) plays 
 - D) SMILES only works with small molecules, and cannot be used in large-scale machine-learning applications for drug discovery.
 
 <details>
-  <summary>Answer</summary>
+  <summary>▶ Click to show answer</summary>
   **Correct Answer: B)** SMILES provides a standardized text-based format for representing molecular structures, making it easier to store, search, and analyze large chemical databases using computational tools.
 </details>
 
 ---
 
-### Question 2:
+Question 2:
 Which of the following statements about SMILES (Simplified Molecular Input Line Entry System) is true?
 
 - A) SMILES represents molecular structures using three-dimensional coordinates.
@@ -2469,14 +2543,14 @@ Which of the following statements about SMILES (Simplified Molecular Input Line 
 - D) The GetNumAtoms() function in RDKit counts only the carbon atoms in a molecule.
 
 <details>
-  <summary>Answer</summary>
+  <summary>▶ Click to show answer</summary>
   **Correct Answer: B)** The Chem.MolFromSmiles() function in RDKit is used to convert a SMILES string into a molecule object.
 </details>
 
 ---
 
-### Question 3:
-**Multiple Choice Question**: Distinguishing SMILES and SMARTS in Cheminformatics  
+Question 3:
+**Distinguishing SMILES and SMARTS in Cheminformatics:**
 Which of the following best describes the key difference between SMILES and SMARTS in cheminformatics?
 
 - A) SMILES is used to represent complete molecular structures, while SMARTS is used to define and search for molecular substructures.
@@ -2485,7 +2559,7 @@ Which of the following best describes the key difference between SMILES and SMAR
 - D) SMARTS and SMILES are interchangeable and can always be used in the same cheminformatics applications without modification.
 
 <details>
-  <summary>Answer</summary>
+  <summary>▶ Click to show answer</summary>
   **Correct Answer: A)** SMILES is used to represent complete molecular structures, while SMARTS is used to define and search for molecular substructures.
 </details>
 
@@ -2493,7 +2567,7 @@ Which of the following best describes the key difference between SMILES and SMAR
 
 ## 2) Conceptual/Application Questions:
 
-### Question 4:
+Question 4:
 **SMILES, SMARTS, and Fingerprints in the Tox21 Dataset**  
 A pharmaceutical company is working with the Tox21 dataset, which contains chemical information on thousands of compounds and their biological activities. The dataset includes SMILES (Simplified Molecular Input Line Entry System) representations of the molecules, as well as SMARTS (substructural patterns) that highlight specific functional groups, and molecular fingerprints that represent the presence or absence of substructures. The chemists need to identify drug candidates that are effective in treating diseases, have low toxicity, and are structurally similar to known safe and effective drugs.  
 Given the large size of the dataset and the need to focus on drug discovery, the team is considering which method to use for identifying the most promising drug candidates. The goal is to select drugs that are biologically active but also safe, ensuring that they have desirable molecular properties.
@@ -2506,14 +2580,14 @@ Which of the following methods should the chemists use to efficiently find drug 
 - D) Create a new SMILES string for each compound and use it to generate a 3D structure, comparing the compounds based on their spatial arrangement to select the most effective drugs.
 
 <details>
-  <summary>Answer</summary>
+  <summary>▶ Click to show answer</summary>
   **Correct Answer: C)** Use molecular fingerprints to perform similarity searching and clustering, identifying compounds that are structurally similar to known effective drugs, and then rank them based on their bioactivity and toxicity.
   **Explanation**: This method leverages the power of molecular fingerprints for fast similarity searching, allowing chemists to find drugs with structural similarities to known active compounds. By clustering the data and ranking the compounds based on both bioactivity and toxicity, chemists can efficiently identify the most promising candidates for medical use.
 </details>
 
 ---
 
-### Question 5:
+Question 5:
 You are working with the compound oxycodone and would like to convert its SMILES notation into a fingerprint. The SMILES notation of oxycodone is:  
 `COc1ccc2C[C@H]3N(C)CC[C@@]45[C@@H](Oc1c24)C(=O)CC[C@@]35O.`  
 In this notation, the @ symbols represent stereochemistry, where @ is the R configuration, and @@ is the S configuration.
@@ -2532,8 +2606,52 @@ Print the fingerprint as a bit string.
 - D) 3
 
 <details>
-  <summary>Answer</summary>
+  <summary>▶ Click to show answer</summary>
   **Correct Answer: C)** 7
+</details>
+
+---
+Question 6:
+You are trying to create a 3D coordinate of the compound oxycodone  
+(SMILES: `COc1ccc2C[C@H]3N(C)CC[C@@]45[C@@H](Oc1c24)C(=O)CC[C@@]35O`).
+
+The list below shows the steps you take to generate the 3D coordinates of the molecule.  
+How should you order the steps to successfully complete the process?
+
+```python
+smiles = 'COc1ccc2C[C@H]3N(C)CC[C@@]45[C@@H](Oc1c24)C(=O)CC[C@@]35O'
+from rdkit import Chem
+from rdkit.Chem import AllChem
+
+for atom in molecule.GetAtoms():
+    pos = molecule.GetConformer().GetAtomPosition(atom.GetIdx())
+    print(f"Atom {atom.GetSymbol()} - x: {pos.x}, y: {pos.y}, z: {pos.z}")
+
+AllChem.EmbedMolecule(molecule)
+AllChem.UFFOptimizeMolecule(molecule)
+molecule = Chem.MolFromSmiles(smiles)
+```
+
+What is the correct order of operations?
+
+- A) I, II, V, IV, III  
+- B) II, I, V, IV, III  
+- C) II, V, I, IV, III  
+- D) II, I, III, IV, V  
+
+<details>
+<summary>▶ Click to show answer</summary>
+
+**Correct Answer: B) II, I, V, IV, III**
+
+**Explanation:**  
+The correct sequence to generate 3D coordinates is:
+
+1. **II** – `from rdkit import Chem` (import necessary RDKit modules)  
+2. **I** – `smiles = '...'` and `molecule = Chem.MolFromSmiles(smiles)` (generate molecule from SMILES)  
+3. **V** – `AllChem.EmbedMolecule(molecule)` (generate 3D conformation)  
+4. **IV** – `AllChem.UFFOptimizeMolecule(molecule)` (optimize the 3D geometry)  
+5. **III** – Loop over atoms to print 3D coordinates  
 </details>
 
 ---
