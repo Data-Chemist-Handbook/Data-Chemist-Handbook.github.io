@@ -3409,8 +3409,10 @@ Create a scatter plot with the following data with molecular weight on the x-axi
 
 Which scatter plot below looks like the scatter plot you produced?
 
-- A) ![Answer A - Scatter Plot](../_pages/Quiz_2.4_Question_4_Answer_A.png)
-- B) 
+- A)
+![Answer A - Scatter Plot](../_pages/Quiz_2.4_Question_4_Answer_A.png)
+- B)
+
 - C) 
 - D) 
 
