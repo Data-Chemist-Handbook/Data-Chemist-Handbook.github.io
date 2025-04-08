@@ -3412,9 +3412,12 @@ Which scatter plot below looks like the scatter plot you produced?
 - A)
 ![Answer A - Scatter Plot](../_pages/Quiz_2.4_Question_4_Answer_A.png)
 - B)
+![Answer B - Scatter Plot](../_pages/Quiz_2.4_Question_4_Answer_B.png)
+- C)
+![Answer C - Scatter Plot](../_pages/Quiz_2.4_Question_4_Answer_C.png)
+- D)
+![Answer D - Scatter Plot](../_pages/Quiz_2.4_Question_4_Answer_D.png)
 
-- C) 
-- D) 
 
 <details>
   <summary>Answer</summary>
