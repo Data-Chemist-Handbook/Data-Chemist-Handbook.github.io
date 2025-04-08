@@ -3409,7 +3409,7 @@ Create a scatter plot with the following data with molecular weight on the x-axi
 
 Which scatter plot below looks like the scatter plot you produced?
 
-- A) 
+- A) ![Scatter plot of LogP vs. Molecular Weight](images/Screenshot_2025-04-08_164317.png)
 - B) 
 - C) 
 - D) 
