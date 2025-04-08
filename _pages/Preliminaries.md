@@ -2515,11 +2515,11 @@ img.save("ibuprofen.png")
 This section provides a comprehensive overview of molecular visualization using PyMOL and RDKit, highlighting their capabilities and applications in cheminformatics. The example code, practice problem, and solution demonstrate how to visualize molecular structures effectively, leveraging real data and tools.
 
 
-# Questions for Section 2.3
+# Section 2.3 -- Quiz Questions
 
 ## 1) Factual Questions:
 
-Question 1:
+### Question 1:
 In cheminformatics, SMILES (Simplified Molecular Input Line Entry System) plays a crucial role in computational chemistry and drug discovery. Which of the following best describes its significance in the intersection of chemistry and computer science?
 
 - A) SMILES enables the direct simulation of molecular interactions in biological systems without additional processing.
@@ -2534,7 +2534,7 @@ In cheminformatics, SMILES (Simplified Molecular Input Line Entry System) plays 
 
 ---
 
-Question 2:
+### Question 2:
 Which of the following statements about SMILES (Simplified Molecular Input Line Entry System) is true?
 
 - A) SMILES represents molecular structures using three-dimensional coordinates.
@@ -2549,7 +2549,7 @@ Which of the following statements about SMILES (Simplified Molecular Input Line 
 
 ---
 
-Question 3:
+### Question 3:
 **Distinguishing SMILES and SMARTS in Cheminformatics:**
 Which of the following best describes the key difference between SMILES and SMARTS in cheminformatics?
 
@@ -2567,7 +2567,7 @@ Which of the following best describes the key difference between SMILES and SMAR
 
 ## 2) Conceptual/Application Questions:
 
-Question 4:
+### Question 4:
 **SMILES, SMARTS, and Fingerprints in the Tox21 Dataset**  
 A pharmaceutical company is working with the Tox21 dataset, which contains chemical information on thousands of compounds and their biological activities. The dataset includes SMILES (Simplified Molecular Input Line Entry System) representations of the molecules, as well as SMARTS (substructural patterns) that highlight specific functional groups, and molecular fingerprints that represent the presence or absence of substructures. The chemists need to identify drug candidates that are effective in treating diseases, have low toxicity, and are structurally similar to known safe and effective drugs.  
 Given the large size of the dataset and the need to focus on drug discovery, the team is considering which method to use for identifying the most promising drug candidates. The goal is to select drugs that are biologically active but also safe, ensuring that they have desirable molecular properties.
@@ -2581,13 +2581,13 @@ Which of the following methods should the chemists use to efficiently find drug 
 
 <details>
   <summary>▶ Click to show answer</summary>
-  **Correct Answer: C)** Use molecular fingerprints to perform similarity searching and clustering, identifying compounds that are structurally similar to known effective drugs, and then rank them based on their bioactivity and toxicity.
-  **Explanation**: This method leverages the power of molecular fingerprints for fast similarity searching, allowing chemists to find drugs with structural similarities to known active compounds. By clustering the data and ranking the compounds based on both bioactivity and toxicity, chemists can efficiently identify the most promising candidates for medical use.
+**Correct Answer: C)** Use molecular fingerprints to perform similarity searching and clustering, identifying compounds that are structurally similar to known effective drugs, and then rank them based on their bioactivity and toxicity.
+**Explanation** This method leverages the power of molecular fingerprints for fast similarity searching, allowing chemists to find drugs with structural similarities to known active compounds. By clustering the data and ranking the compounds based on both bioactivity and toxicity, chemists can efficiently identify the most promising candidates for medical use.
 </details>
 
 ---
 
-Question 5:
+### Question 5:
 You are working with the compound oxycodone and would like to convert its SMILES notation into a fingerprint. The SMILES notation of oxycodone is:  
 `COc1ccc2C[C@H]3N(C)CC[C@@]45[C@@H](Oc1c24)C(=O)CC[C@@]35O.`  
 In this notation, the @ symbols represent stereochemistry, where @ is the R configuration, and @@ is the S configuration.
@@ -2611,7 +2611,7 @@ Print the fingerprint as a bit string.
 </details>
 
 ---
-Question 6:
+### Question 6:
 You are trying to create a 3D coordinate of the compound oxycodone  
 (SMILES: `COc1ccc2C[C@H]3N(C)CC[C@@]45[C@@H](Oc1c24)C(=O)CC[C@@]35O`).
 
@@ -3350,11 +3350,12 @@ for i, features in enumerate(feature_arrays):
 - **Practical Application**: These methods enable the development of robust machine learning models for cheminformatics.
 
 ---
-## Questions for Section 2.4
+# Questions for Section 2.4
 
-### 1) Factual Questions:
+## 1) Factual Questions:
 
-#### Question 1: In cheminformatics, the Tanimoto similarity is commonly used to compare molecular structures based on their fingerprints. Which of the following statements correctly explains the relationship between Tanimoto similarity and fingerprints?
+### Question 1: 
+In cheminformatics, the Tanimoto similarity is commonly used to compare molecular structures based on their fingerprints. Which of the following statements correctly explains the relationship between Tanimoto similarity and fingerprints?
 - A) The Tanimoto similarity measures the similarity between two fingerprints by comparing the number of atoms in each molecule.
 - B) The Tanimoto similarity compares the number of common substructures between two fingerprints relative to the total number of substructures, indicating their structural similarity.
 - C) Tanimoto similarity is not applicable to fingerprints, as it is only used for comparing the molecular weights of compounds.
@@ -3368,7 +3369,8 @@ for i, features in enumerate(feature_arrays):
   Option B is correct because Tanimoto similarity evaluates the overlap (common substructures) between two fingerprints and normalizes it by the total number of substructures present in both fingerprints.
 </details>
 
-#### Question 2: Which of the following statements about regression models in cheminformatics is TRUE?
+### Question 2: 
+Which of the following statements about regression models in cheminformatics is TRUE?
 - A) Linear regression can be used to predict molecular properties, but only if the relationship between the property and descriptors is non-linear.
 - B) Multiple regression models assume that there is no relationship between the dependent and independent variables.
 - C) The Mean Squared Error (MSE) and R-squared (R²) metrics are used to evaluate the predictive performance of regression models.
@@ -3382,7 +3384,8 @@ for i, features in enumerate(feature_arrays):
   Option C is correct because the Mean Squared Error (MSE) quantifies the difference between predicted and actual values, while R-squared (R²) measures how much variance in the dependent variable is explained by the independent variables.
 </details>
 
-#### Question 3: Why is a correlation matrix useful when analyzing molecular properties?
+### Question 3: 
+Why is a correlation matrix useful when analyzing molecular properties?
 - A) It helps visualize the relationships between different molecular properties, identifying strong positive or negative correlations.
 - B) It replaces missing data in the dataset to ensure accurate predictions.
 - C) It generates new molecular properties by averaging existing ones.
@@ -3395,9 +3398,10 @@ for i, features in enumerate(feature_arrays):
 
 ---
 
-### 2) Conceptual/Application Questions:
+## 2) Conceptual/Application Questions:
 
-#### Question 4: Create a scatter plot with the following data with molecular weight on the x-axis and logP on the y-axis. Make sure to label the axes appropriately.
+### Question 4: 
+Create a scatter plot with the following data with molecular weight on the x-axis and logP on the y-axis. Make sure to label the axes appropriately.
 
 **Data:**
 - Molecular weight: [50, 90, 134, 239, 252]
