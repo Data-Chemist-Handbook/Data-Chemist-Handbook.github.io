@@ -1754,13 +1754,13 @@ print(f"F-statistic: {f_stat}, P-value: {p_val}")
 ```python
 F-statistic: 1188.118811881188, P-value: 1.946499706613343e-142
 ```
-## Section 2.2 – Quiz Questions
+# Section 2.2 – Quiz Questions
 
-### Factual Questions
+## 1) Factual Questions
 
 ---
 
-Question 1  
+### Question 1  
 If you are dealing with a large dataset with over 50 different metrics (or columns) for molecules based on their toxicity, what function would you use to convert rows and columns into meaningful information?
 
 **A.** Merge the dataset  
@@ -1778,7 +1778,7 @@ A pivot table allows you to restructure the data by aggregating, summarizing, or
 
 ---
 
-Question 2  
+### Question 2  
 Why is encoding necessary when working with categorical data in machine learning?
 
 **A.** It removes unnecessary data from the dataset.  
@@ -1796,7 +1796,7 @@ Encoding converts non-numeric data (e.g., categories) into numerical values so t
 
 ---
 
-Question 3  
+### Question 3  
 Which of the following statements is true regarding pivot tables and reshaping data using Pandas in Python?
 
 **A.** Pivot tables are used to remove missing values from a dataset.  
@@ -1814,11 +1814,11 @@ The `pivot_table()` function in Pandas helps summarize and reorganize data effic
 
 ---
 
-###  Comprehension / Application Questions
+## 2) Comprehension / Application Questions
 
 ---
 
-Question 4  
+### Question 4  
 You have just received a dataset regarding the toxicity of commonly used compounds (**TOX21**) and would like to get an idea of the metrics in the dataset.
 
 Task: Read the `TOX21.csv` dataset into a DataFrame and print the first five rows. Which of the following matches your third compound in the output?
@@ -1851,7 +1851,7 @@ print(df.head())
 
 ---
 
-Question 5  
+### Question 5  
 After looking at the TOX21 dataset, you realize that there are missing values in rows and duplicate rows.  
 To fix this problem, you should handle the missing values by using _____ and get rid of duplicate rows by _____.
 
@@ -1870,7 +1870,7 @@ To fix this problem, you should handle the missing values by using _____ and get
 
 ---
 
-Question 6  
+### Question 6  
 Which function and code would allow you to create a new column that represents the average of the boiling points `'bp'` in your dataset?
 
 **A.** Grouping; `df['avg_bp'] = df['bp'].mean()`  
@@ -1888,7 +1888,7 @@ The `.mean()` method calculates the column-wise average, and assigning it to a n
 
 ---
 
-Question 7:
+### Question 7:
 You want to perform an ANOVA statistical analysis to evaluate the activity of the compounds listed in the TOX21 dataset.
 
 Task:  
