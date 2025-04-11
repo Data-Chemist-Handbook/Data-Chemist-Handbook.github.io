@@ -1814,11 +1814,47 @@ The `pivot_table()` function in Pandas helps summarize and reorganize data effic
 
 ---
 
+### Question 4  
+You are comparing solubility data of compounds measured in different units (mg/mL, g/L, ppm). To ensure fair comparison across all compounds, you decide to use Min-Max normalization. What is the primary reason for doing this?
+
+**A.** To standardize solvent types across experiments  
+**B.** To rescale numerical values into a common range (e.g., 0 to 1)  
+**C.** To eliminate duplicate solubility measurements  
+**D.** To convert string units into numerical ones  
+
+<details>
+<summary>▶ Click to show answer</summary>
+
+**Correct Answer:** B  
+**Explanation:**  
+Min-Max normalization rescales values to a fixed range (often 0 to 1), making it easier to compare across features with different units or scales.
+</details>
+
+---
+
+### Question 5  
+You are working with a dataset of reaction yields, but the yield values are stored as strings (e.g., `'85'`, `'90'`). You need to compute averages for reporting. What function should you use?
+
+**A.** `df.rename()`  
+**B.** `df.agg()`  
+**C.** `df.astype()`  
+**D.** `df.to_csv()`  
+
+<details>
+<summary>▶ Click to show answer</summary>
+
+**Correct Answer:** C  
+**Explanation:**  
+`astype()` is used to convert a column's data type, such as from string to float or integer, so mathematical operations can be performed.
+</details>
+
+---
+
 ## 2) Comprehension / Application Questions
 
 ---
 
-### Question 4  
+### Question 6  
 You have just received a dataset regarding the toxicity of commonly used compounds (**TOX21**) and would like to get an idea of the metrics in the dataset.
 
 Task: Read the `TOX21.csv` dataset into a DataFrame and print the first five rows. Which of the following matches your third compound in the output?
@@ -1851,7 +1887,7 @@ print(df.head())
 
 ---
 
-### Question 5  
+### Question 7  
 After looking at the TOX21 dataset, you realize that there are missing values in rows and duplicate rows.  
 To fix this problem, you should handle the missing values by using _____ and get rid of duplicate rows by _____.
 
@@ -1870,7 +1906,7 @@ To fix this problem, you should handle the missing values by using _____ and get
 
 ---
 
-### Question 6  
+### Question 8  
 Which function and code would allow you to create a new column that represents the average of the boiling points `'bp'` in your dataset?
 
 **A.** Grouping; `df['avg_bp'] = df['bp'].mean()`  
@@ -1888,7 +1924,7 @@ The `.mean()` method calculates the column-wise average, and assigning it to a n
 
 ---
 
-### Question 7:
+### Question 9
 You want to perform an ANOVA statistical analysis to evaluate the activity of the compounds listed in the TOX21 dataset.
 
 Task:  
@@ -1904,8 +1940,6 @@ Are these two groups statistically significant at the 95% confidence level? What
 **C.** No, F-Statistic: 78.09, P-Value: 0.09  
 **D.** No, F-Statistic: 548.06, P-Value: 0.10  
 
-<details>
-<summary>▶ Click to show answer</summary>
 
 **Correct Answer:** B  
 F-Statistic: 476.96  
@@ -1914,10 +1948,7 @@ P-Value: 0.0000
 **Explanation:**  
 Since the P-value < 0.05, the result is statistically significant at the 95% confidence level.  
 This means the difference in average molecular mass between compounds with high and low ToxCast activity is unlikely due to random chance.
-</details>
 
-<details>
-<summary>▶ Show Solution Code</summary>
 
 ```python
 import pandas as pd
@@ -1942,7 +1973,61 @@ f_stat, p_val = f_oneway(group_low, group_high)
 print(f"F-statistic: {f_stat:.2f}")
 print(f"P-value: {p_val:.4f}")
 ```
+
+---
+
+### Question 10  
+You are analyzing a SMILES dataset of drug candidates and want to estimate the **carbon atom count** for each compound to study how size influences permeability. What code snippet would achieve this?
+
+**A.** `df['carbon_count'] = df['name'].count('C')`  
+**B.** `df['carbon_count'] = df['smiles'].apply(lambda x: x.count('C'))`  
+**C.** `df['carbon_count'] = df['smiles'].sum('C')`  
+**D.** `df['carbon_count'] = count(df['smiles'], 'C')`  
+
+<details>
+<summary>▶ Click to show answer</summary>
+
+**Correct Answer:** B  
+**Explanation:**  
+Using `apply()` with a lambda function allows you to count the number of carbon atoms (`'C'`) in each SMILES string.
 </details>
+
+---
+
+### Question 11  
+After calculating the carbon counts, you want to see if permeable compounds (p_np = 1) tend to have different carbon counts than non-permeable ones (p_np = 0). Which of the following code snippets best performs this comparison?
+
+**A.** `df.groupby('carbon_count')['p_np'].mean()`  
+**B.** `df.groupby('p_np')['carbon_count'].mean()`  
+**C.** `df.groupby('carbon_count')['p_np'].count()`  
+**D.** `df['carbon_count'].groupby(df['p_np']).sum()`  
+
+<details>
+<summary>▶ Click to show answer</summary>
+
+**Correct Answer:** B  
+**Explanation:**  
+Grouping by `'p_np'` and calculating the mean of `'carbon_count'` lets you compare average carbon counts between permeability classes.
+</details>
+
+---
+
+### Question 12  
+You want to build a simple model that predicts whether a compound is permeable based on its carbon count. Which two Python tools would best help you analyze the relationship and build a linear model?
+
+**A.** `groupby()` and `melt()`  
+**B.** `pearsonr()` and `LinearRegression()`  
+**C.** `pivot_table()` and `df.fillna()`  
+**D.** `apply()` and `get_dummies()`  
+
+<details>
+<summary>▶ Click to show answer</summary>
+
+**Correct Answer:** B  
+**Explanation:**  
+`pearsonr()` helps determine correlation, while `LinearRegression()` can fit a model to predict one variable based on another.
+</details>
+
 ---
 
 ## 2.3 Representation
