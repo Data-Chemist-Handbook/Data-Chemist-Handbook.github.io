@@ -105,7 +105,7 @@ Dataset: [ChemLLMBench – Tasks Overview](https://github.com/ChemFoundationMode
     - Automate literature reviews: find publications, extract data, summarize research.  
     - Build dashboards for interactive chemical data analysis with AI insights.
 
-    ### Setting Up OpenAI API (Google Colab)
+    **Setting Up OpenAI API (Google Colab)**
 
     1. **Open a notebook** at https://colab.research.google.com  
     2. **Install packages:**  
@@ -161,7 +161,7 @@ Dataset: [ChemLLMBench – Tasks Overview](https://github.com/ChemFoundationMode
 
     Interactive programming means writing code incrementally with immediate feedback, typically in Jupyter Notebooks or Colab.
 
-    ### Colab Setup
+    **Colab Setup**
 
     1. **Add secret:**  
        - Sidebar → Secrets → Add new:  
