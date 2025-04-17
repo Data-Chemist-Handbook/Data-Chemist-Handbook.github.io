@@ -208,5 +208,6 @@ Dataset: [ChemLLMBench – Tasks Overview](https://github.com/ChemFoundationMode
        display(Markdown(output))
        ```  
 
-    Example notebook:  
-    https://colab.research.google.com/drive/1B8qFtN_mkEzX3BGaznvXIstn0P1w6yRP?usp=sharing
+      
+    Example notebook: [Example notebook](https://colab.research.google.com/drive/1B8qFtN_mkEzX3BGaznvXIstn0P1w6yRP?usp=sharingw)
+
