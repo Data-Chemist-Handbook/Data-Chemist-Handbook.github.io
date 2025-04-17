@@ -80,19 +80,18 @@ Dataset: [ChemLLMBench – Tasks Overview](https://github.com/ChemFoundationMode
        ```
 
     **Example Task and Prompt:**
-
-    > **Task:** Analyze the interaction between hydrogen gas and water.  
-    > **Prompt:**  
+    
+     **Task:** Analyze the interaction between hydrogen gas and water.  
     > “You are an expert chemist. Explain what happens when hydrogen gas (H₂) is introduced to water (H₂O) under standard conditions. Include:
     > -Physical and chemical properties of hydrogen in water  
     > -Possible reactions or interactions  
     > -Conditions for reaction  
     > -Energy changes or hazards  
     > -Explanation of why the reaction proceeds or not under normal conditions  
-    > Provide relevant safety considerations".  
+    > Provide relevant safety considerations.  
     > **Example:** Analyze the interaction between chlorine gas and water.  
     > **Answer:**  
-    > Chlorine gas is a yellow‑green diatomic molecule with moderate solubility in water (≈0.7 g/L at 20 °C) and a strong oxidizing character. When Cl₂ dissolves, it undergoes a hydrolysis equilibrium:Cl₂(g) + H₂O(l) ⇌ HCl(aq) + HOCl(aq). Under ambient conditions this reaction is mildly exothermic, releasing enough heat to warm the solution but  not boil it. Hydrochloric acid and hypochlorous acid lower the pH, driving further Cl₂ uptake until equilibrium is reached. Hypochlorous acid is an effective disinfectant, owing to its oxidizing power. The reaction proceeds spontaneously because Cl₂ is a strong electrophile and water acts as a nucleophile, facilitating bond cleavage. Hazards include toxicity and corrosiveness of both gaseous Cl₂ and its acidic products; HOCl can bleach skin or materials. Always handle chlorine in a fume hood, wear acid‑resistant gloves, goggles, and respiratory protection, and neutralize any acidic effluent before disposal.”"
+    > Chlorine gas is a yellow‑green diatomic molecule with moderate solubility in water (≈0.7 g/L at 20 °C) and a strong oxidizing character. When Cl₂ dissolves, it undergoes a hydrolysis equilibrium:Cl₂(g) + H₂O(l) ⇌ HCl(aq) + HOCl(aq). Under ambient conditions this reaction is mildly exothermic, releasing enough heat to warm the solution but  not boil it. Hydrochloric acid and hypochlorous acid lower the pH, driving further Cl₂ uptake until equilibrium is reached. Hypochlorous acid is an effective disinfectant, owing to its oxidizing power. The reaction proceeds spontaneously because Cl₂ is a strong electrophile and water acts as a nucleophile, facilitating bond cleavage. Hazards include toxicity and corrosiveness of both gaseous Cl₂ and its acidic products; HOCl can bleach skin or materials. Always handle chlorine in a fume hood, wear acid‑resistant gloves, goggles, and respiratory protection, and neutralize any acidic effluent before disposal.”
     
     **Tips:**  
     - **Clarity:** Be specific.  
@@ -179,7 +178,8 @@ Dataset: [ChemLLMBench – Tasks Overview](https://github.com/ChemFoundationMode
 
     3. **Helper function:**  
        ```python
-       import os, pandas as pd
+       import os
+       import pandas as pd
        from google.colab import userdata
        from openai import OpenAI
 
