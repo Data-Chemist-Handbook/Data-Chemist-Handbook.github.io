@@ -5,251 +5,208 @@ date: 2025-04-06
 category: Jekyll
 layout: post
 ---
-dataset:(https://github.com/ChemFoundationModels/ChemLLMBench?tab=readme-ov-file#-tasks-overview)
+
+Dataset: [ChemLLMBench – Tasks Overview](https://github.com/ChemFoundationModels/ChemLLMBench#-tasks-overview)
 
 # Section 10. LLMs for Chemistry
 
 - **Brief Introduction**
-    
+
     Large Language Models, or LLMs, are advanced machine learning models capable of understanding and generating human-like text and answering QA questions based on extensive training data from diverse sources.
-    
+
     In chemistry, these models assist researchers and students by automating information retrieval, predicting chemical reactions, and supporting molecular design tasks. Benchmarks such as ChemLLMBench provide datasets to evaluate the accuracy and reliability of LLMs in chemical contexts.
-    
-    So what exactly are LLMs and why are they so powerful?  We will dive into this in this section.
-    
+
+    So what exactly are LLMs and why are they so powerful? We will dive into this in this section.
+
 - ## 10.1 Introduction of LLMs
-    
+
     **What are LLMs?**
-    
+
     - Large Language Models (LLMs) are smart computer systems like ChatGPT and Gemini. They learn from huge amounts of text data and can understand and generate human-like writing.
-    
+
     **What can they do?**
-    
+
     - These AI models can understand the meaning behind words, answer questions, and even come up with new ideas.
     - In chemistry, LLMs are helpful because they can:
         - Simplify complicated chemical information.
         - Make difficult tasks easier to handle.
         - Quickly find and organize important data.
         - Help automate tasks that might otherwise take scientists a long time to complete.
-        - Summarizing extensive research articles or reports succinctly.
-    
-    In short, LLMs help make complex information clearer and easier to work with, even if you don't have a chemistry background. 
-    
+        - Summarize extensive research articles or reports succinctly.
+
+    In short, LLMs help make complex information clearer and easier to work with, even if you don't have a chemistry background.
+
     → Such applications can substantially speed up research processes, improve accuracy, and open new avenues for innovative scientific discoveries.
-    
--  ## 10.2 Prompt Engineering
-    
-    **Definition:**
-    Prompt engineering involves carefully writing instructions (prompts) to guide Large Language Models (LLMs) to give accurate and useful answers. In simpler terms, it's how you ask questions or provide information to an AI system clearly and specifically.
-    
-    **Why is it important in chemistry?**
-    Chemists often ask AI models to help with complex tasks, such as predicting chemical reactions or interpreting experimental data. Clear and detailed prompts help the AI understand exactly what information you're looking for
-    
-    - **Format of a Good Prompt:**
-    A well-structured prompt typically contains these key parts:
-        - **General Instruction:** Briefly describes the task context or role the model is expected to perform.
-            - Example: *"You are an expert chemist. Given the [**Input Representation**]: [**Input Data**], predict the [**Target Output**] using your expert-level knowledge in [**Relevant Domain**].[**Input Explanation** ].[**Output Explanation and Restriction**].[**Few shot prompt**]"*
-            - **Input Representation:**  The form or type of input being provided to the model (e.g., SMILES, molecular description, text, structure image).
-                - Example: *" “SMILES string”, “molecular structure”, “chemical formula”, “compound name” "*
-            - **Input Data:**  The actual instance of input that the model will work with — this is the specific data for the task.
-                - Example: *" “CC(=O)OC1=CC=CC=C1C(=O)O” (Aspirin), or “benzene + nitric acid"*
-            - **Target Output:**  The expected prediction or result that the model should generate based on the input.
-                - Example: *" “product SMILES”, “reaction outcome”, “generated molecule”*
-            - **Relevant Domain:** The specific area of chemical expertise the model should rely on to solve the task.
-                - Example: *" “organic chemistry”, “reaction prediction”, “molecular design”, “drug discovery”*
-            - **Input Explanation:** Specifies the data or information provided.
-                - Example: *"Given the reactants aspirin and hydrochloric acid..."*
-            - **Output Explanation and Restrictions:** Clearly describes the format and type of response desired, with any limitations.
-                - Example: *"Provide the reaction products in SMILES notation only, without additional explanations."*
-            - **Few shot prompt:** Few-shot prompting involves providing examples of similar problems and solutions within your prompt. This helps the model understand precisely what is expected by learning from these given examples.
-                - **Example of Few-shot Prompt:**
-                    - Input: *"Reactants: aspirin + hydrochloric acid. Products (SMILES): xxxx"*
-                    - Output: *"[Exact product SMILES]"*
-                    - Input: *"Reactants: benzene + nitric acid. Products (SMILES): xxxx"*
-                    - Output: *"[Exact product SMILES]"*
-    
-    **Example of Prompt Engineering:**
-    
-    *Task: Analyze the interaction between hydrogen gas and water.*
-    
-    "You are an expert in chemist. I am exploring basic chemical interactions and need a detailed explanation of what happens when hydrogen gas (H₂) is introduced to water (H₂O) under standard conditions. Using your experienced chemical  knowledge please describe:
-    
-    - The physical and chemical properties of hydrogen in water,
-    - Any possible reactions or interactions (if any) between hydrogen and water,
-    - The conditions under which a reaction might occur,
-    - Potential energy changes or hazards involved, and
-    - Why the reaction does or does not proceed under normal conditions.
-    
-    Provide clear explanations and any relevant safety considerations."
-    
-    - **Tips for effective prompt engineering:**
-        - **Clarity:** Always be specific and clear.
-        - **Context:** Provide important details like chemical names, reaction conditions, or experimental setup.
-        - **Structured Requests:** Clearly state what kind of response you expect (e.g., chemical structure, explanation, prediction).
-        - **Examples:** Sometimes providing examples (known as few-shot prompting) can help the model understand the desired answer format better.
-    
--  ## 10.3 Usage of LLM APIs
-     
-    Chemists can utilize APIs provided by popular LLM platforms such as OpenAI, Google, and other AI providers. Using APIs, chemists can:
-    
-    - Embed intelligent text-based query capabilities directly into their chemical informatics software or laboratory information management systems.
-    - Automate literature review tasks, identifying relevant publications, extracting pertinent data, and summarizing extensive research quickly and accurately.
-    - Create custom interfaces or dashboards where chemical data can be analyzed interactively by leveraging AI-generated insights from LLM APIs.
-    
-    For example, OpenAI provides straightforward documentation to help developers and chemists implement their APIs into software, facilitating rapid adoption.
-    
-  ### **Setting Up OpenAI API**
-    This guide walks you through using the OpenAI API in **Google Colab**.
-###  1. Setting Up in Google Colab
-    Open [https://colab.research.google.com](https://colab.research.google.com) and start a new notebook.
-###  2. Install the Required Libraries
-    Run the following cell to install the OpenAI package:
-    ```python
-    pip install openai
-    !pip install pandas numpy
-    !pip install kagglehub
-    ```        
-###  3. Authenticate with the OpenAI API
 
-    ```python
-    import openai
-    import os
-    os.environ['OPENAI_API_KEY'] = "YOUR_OPENAI_API"
-    openai.api_key = os.getenv("OPENAI_API_KEY")
-    ```
-    ###  4. Load Input File from Online Source
-     Use the `kagglehub` library to download datasets directly from Kaggle and read them into a DataFrame:
+- ## 10.2 Prompt Engineering
 
-    ```python
-    import kagglehub
-    path = kagglehub.dataset_download("priyanagda/bbbp-smiles")
-    print("Path to dataset files:", path)
-    # 1. Read the CSV file into a DataFrame
-    df = pd.read_csv(path+'/BBBP.csv')
-    df.head()
-    ```
-     If the data is not in the kaggle hub
-    ```python 
-    import requests
-    import os
+    **Definition:**  
+    Prompt engineering involves carefully writing instructions (prompts) to guide LLMs to give accurate and useful answers. In simpler terms, it's how you ask questions or provide information to an AI system clearly and specifically.
 
-    # Create a folder to store the file
-    os.makedirs("data", exist_ok=True)
+    **Why is it important in chemistry?**  
+    Chemists often ask AI models to help with complex tasks, such as predicting chemical reactions or interpreting experimental data. Clear and detailed prompts help the AI understand exactly what information you're looking for.
 
-    # URL to the file (example: CSV file hosted online)
-    url = "URL_TO_THE_FILE"
-    file_path = "Path_To_The_File" #Where you want to store the file to
+    **Format of a Good Prompt:**
 
-    # Download the file
-    response = requests.get(url)
-    with open(file_path, "wb") as f:
-        f.write(response.content)
+    1. **General Instruction:** Briefly describes the task context or role the model is expected to perform.  
+       _Example:_  
+       > “You are an expert chemist. Given the **Input Representation**: **Input Data**, predict the **Target Output** using your domain knowledge. Provide **Input Explanation**, **Output Explanation & Restrictions**, and **Few-shot examples**.”
 
-    import pandas as pd
-    df = pd.read_csv(file_path)
-    df.head()
+    2. **Input Representation:** Type of input (e.g., SMILES, molecular description).  
+       _Example:_ “SMILES string”, “molecular structure”.
 
-    ```
-    ###  5. Make an OpenAI API Call
-    ```python
-    from openai import OpenAI
-    # Creat model
-    client = OpenAI()
-    sample_data = df.to_csv(index=False)
-    prompt = f"""PUT YOUR QUESTION AND PROMPT AT HERE. Here is the data File that you
-    can reference {sample_data}"""
-    # Function to call when you want to ask something
-    completion = client.chat.completions.create(
-        model="gpt-4o-mini",
-        messages=[
-            {"role": "system", "content": "You are an expert chemist. Response in Markdown format"},
-            {
-                "role": "user",
-                "content": [{"type":"text","text": prompt}]
-            }
-        ],
-        temperature=1,
-        max_tokens=1000,
-        top_p =1,
-    )
-    ```
-    
-    ###  6. Evaluate the Model's Output
-    
-    ```python
-    def similarity_score(expected, answer):
-        expected_lower = expected.lower()
-        answer_lower = answer.lower()
-        return 1 if expected_lower == answer_lower else 0
-    
-    ```
-    
--  ## 10.4 Interactive Programming
-    
-        
-    ### Definition
-    
-    Interactive programming involves developing code incrementally, with immediate feedback, typically using environments like Jupyter Notebooks or Google Colab.
-    
-    ### Set up the environment using Google Colab
-    
-    1. Do as seciton 10.3 or add the API to the ***Secret :***
-        1. Look over to the left bar → choose the key icon (secrets)
-        2. Choosing Add new secrets → fill in the name of the API (we might call this in the future so an intuitive name would be easier for future handling) and the value with the API
-        3. Tick notebook access 
-    2. Choosing the code on the top bar at the top
-    
-    ```python
-    # Install OpenAI library
-    !pip install --q openai
-    !pip install pandas
-    ```
-    ```python
-    import os
-    from google.colab import userdata
-    os.environ["OPENAI_API_KEY"] =  userdata.get("OPENAI_API_KEY")
+    3. **Input Data:** The specific data instance the model will work with.  
+       _Example:_ `CC(=O)OC1=CC=CC=C1C(=O)O` (Aspirin) or “benzene + nitric acid”.
 
-    ```
-    ```python
-    from openai import OpenAI
-    import pandas as pd
+    4. **Target Output:** Expected prediction/result.  
+       _Example:_ “product SMILES”.
 
-    # Creat model
-    client = OpenAI()
-    # Function to call when you want to ask something
-    def gpt_set_up(prompt, file_path=None):
-    data_info = ""
-    if file_path:
-    if file_path.endswith(".csv"):
-        df = pd.read_csv(file_path)
-        data_info = f"\nHere is a summary of the provided dataset:\n{df.head().to_string()}\n"
-    if data_info:
-    prompt += f"""Here is the data File that you can reference {data_info}"""
-    message = [
-            {"role": "system", "content": "You are a helpful assistant. Response in Markdown format and just answer what are being asked no more no less"},
-            {
-                "role": "user",
-                "content": [{"type":"text","text": prompt}]
-            }
-    ]
-    completion = client.chat.completions.create(
-        model="gpt-4o-mini",
-        messages= message,
-        #Control the length of the answer and get the top answer
-        temperature=1,
-        max_tokens=1000,
-        top_p =1,
-    )
-    return completion.choices[0].message.content.strip()
-    ```
-    
-    ```python
-    from IPython.display import Markdown, display
-    # Calling the function to ask question
-    output = gpt_set_up(prompt=input("Enter a prompt: "))
-    display(Markdown(output))
-    
-    ```
-    
-    Example Link: [https://colab.research.google.com/drive/1B8qFtN_mkEzX3BGaznvXIstn0P1w6yRP?usp=sharing](https://colab.research.google.com/drive/1B8qFtN_mkEzX3BGaznvXIstn0P1w6yRP?usp=sharing)
+    5. **Relevant Domain:** The chemical expertise area to use.  
+       _Example:_ “organic chemistry”.
 
+    6. **Input Explanation:** Clarifies provided data.  
+       _Example:_ “Given the reactants aspirin and hydrochloric acid...”
+
+    7. **Output Explanation & Restrictions:** Desired response format and limits.  
+       _Example:_ “Provide the reaction products in SMILES notation only.”
+
+    8. **Few-shot Examples:** Demonstrate the expected format.  
+       ```text
+       Input: Reactants: aspirin + hydrochloric acid  
+       Output (SMILES): <product_smiles>
+
+       Input: Reactants: benzene + nitric acid  
+       Output (SMILES): <product_smiles>
+       ```
+
+    **Example Task and Prompt:**
+
+    > **Task:** Analyze the interaction between hydrogen gas and water.  
+    > **Prompt:**  
+    > “You are an expert chemist. Explain what happens when hydrogen gas (H₂) is introduced to water (H₂O) under standard conditions. Include:
+    > - Physical and chemical properties of hydrogen in water  
+    > - Possible reactions or interactions  
+    > - Conditions for reaction  
+    > - Energy changes or hazards  
+    > - Explanation of why the reaction proceeds or not under normal conditions  
+    > Provide relevant safety considerations.”
+
+    **Tips:**  
+    - **Clarity:** Be specific.  
+    - **Context:** Include reaction conditions or setup.  
+    - **Structure:** State expected response format.  
+    - **Examples:** Use few-shot prompts when helpful.
+
+- ## 10.3 Usage of LLM APIs
+
+    Chemists can utilize APIs from OpenAI, Google, and others to:
+
+    - Embed intelligent text-based queries in chemical software or LIMS.  
+    - Automate literature reviews: find publications, extract data, summarize research.  
+    - Build dashboards for interactive chemical data analysis with AI insights.
+
+    ### Setting Up OpenAI API (Google Colab)
+
+    1. **Open a notebook** at https://colab.research.google.com  
+    2. **Install packages:**  
+       ```bash
+       !pip install openai pandas numpy kagglehub
+       ```  
+    3. **Authenticate:**  
+       ```python
+       import os, openai
+       os.environ["OPENAI_API_KEY"] = "YOUR_OPENAI_API_KEY"
+       openai.api_key = os.getenv("OPENAI_API_KEY")
+       ```  
+    4. **Load data:**  
+       ```python
+       import kagglehub, pandas as pd
+       path = kagglehub.dataset_download("priyanagda/bbbp-smiles")
+       df = pd.read_csv(f"{path}/BBBP.csv")
+       ```  
+       _Or, if not on Kaggle:_  
+       ```python
+       import requests, os, pandas as pd
+       url = "URL_TO_FILE"
+       os.makedirs("data", exist_ok=True)
+       file_path = "data/file.csv"
+       with open(file_path, "wb") as f:
+           f.write(requests.get(url).content)
+       df = pd.read_csv(file_path)
+       ```  
+    5. **Make an API call:**  
+       ```python
+       from openai import OpenAI
+       client = OpenAI()
+       sample_data = df.to_csv(index=False)
+       prompt = f"YOUR QUESTION HERE. Reference data:\n{sample_data}"
+       completion = client.chat.completions.create(
+           model="gpt-4o-mini",
+           messages=[
+               {"role": "system", "content": "You are an expert chemist. Respond in Markdown."},
+               {"role": "user",   "content": prompt}
+           ],
+           temperature=1,
+           max_tokens=1000,
+           top_p=1
+       )
+       ```  
+    6. **Evaluate:**  
+       ```python
+       def similarity_score(expected, answer):
+           return int(expected.lower() == answer.lower())
+       ```
+
+- ## 10.4 Interactive Programming
+
+    Interactive programming means writing code incrementally with immediate feedback, typically in Jupyter Notebooks or Colab.
+
+    ### Colab Setup
+
+    1. **Add secret:**  
+       - Sidebar → Secrets → Add new:  
+         - Name: `OPENAI_API_KEY`  
+         - Value: your key  
+         - Enable notebook access  
+
+    2. **Install libs:**  
+       ```bash
+       !pip install -q openai pandas
+       ```  
+
+    3. **Helper function:**  
+       ```python
+       import os, pandas as pd
+       from google.colab import userdata
+       from openai import OpenAI
+
+       os.environ["OPENAI_API_KEY"] = userdata.get("OPENAI_API_KEY")
+       client = OpenAI()
+
+       def gpt_query(prompt, file_path=None):
+           data_info = ""
+           if file_path and file_path.endswith(".csv"):
+               df = pd.read_csv(file_path)
+               data_info = f"\nDataset sample:\n{df.head()}\n"
+           completion = client.chat.completions.create(
+               model="gpt-4o-mini",
+               messages=[
+                   {"role": "system", "content": "You are a helpful assistant. Respond in Markdown."},
+                   {"role": "user",   "content": prompt + data_info}
+               ],
+               temperature=1,
+               max_tokens=1000,
+               top_p=1
+           )
+           return completion.choices[0].message.content.strip()
+       ```
+
+    4. **Run query:**  
+       ```python
+       from IPython.display import Markdown, display
+       output = gpt_query(prompt=input("Enter a prompt: "))
+       display(Markdown(output))
+       ```  
+
+    Example notebook:  
+    https://colab.research.google.com/drive/1B8qFtN_mkEzX3BGaznvXIstn0P1w6yRP?usp=sharing
