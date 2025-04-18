@@ -2749,8 +2749,11 @@ VI. molecule = Chem.MolFromSmiles(smiles)
 What is the correct order of operations?
 
 **A.** I, II, V, IV, III, IV
+
 **B.** II, I, VI, V, IV, III
+
 **C.** II, V, I, IV, IV, III
+
 **D.** II, I, IV, III, IV, V
 
 <details>
