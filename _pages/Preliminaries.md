@@ -2682,6 +2682,57 @@ In SMILES, aromatic atoms are represented with lowercase letters. c1ccccc1 is th
 
 ---
 
+### Question 10
+Which of the following is not a reason for using 3D coordinates in cheminformatics?
+
+**A)** Simulating protein-ligand docking
+
+**B)** Exploring stereochemistry and geometry
+
+**C)** Predicting melting points from SMILES strings
+
+**D)** Visualizing spatial interactions between atoms
+
+<details> <summary>▶ Click to show answer</summary> **Correct Answer:** C) Predicting melting points from SMILES strings **Explanation:** Melting points are empirical properties. While molecular structure may correlate, they aren’t predicted directly from 3D coordinates. </details>
+
+---
+
+### Question 11
+Which RDKit function allows you to calculate the molecular weight of a molecule?
+
+**A)** Descriptors.MolWt()
+
+**B)** Chem.MolFromSmarts()
+
+**C)** AllChem.EmbedMolecule()
+
+**D)** Chem.GetNumAtoms()
+
+<details> <summary>▶ Click to show answer</summary> **Correct Answer:** A) `Descriptors.MolWt()` </details>
+
+---
+
+### Question 12
+In RDKit, what does the following line of code do?
+```python
+python
+Copy
+Edit
+molecule.HasSubstructMatch(Chem.MolFromSmarts('c1ccccc1'))
+```
+
+**A)** It checks if a molecule contains a primary amine.
+
+**B)** It generates a fingerprint for the molecule.
+
+**C)** It matches the molecule against an aromatic ring SMARTS pattern.
+
+**D)** It calculates the logP of the molecule.
+
+<details> <summary>▶ Click to show answer</summary> **Correct Answer:** C) It matches the molecule against an aromatic ring SMARTS pattern. </details>
+
+---
+
 ## 2) Conceptual/Application Questions:
 
 ### Question 4:
@@ -2771,6 +2822,22 @@ The correct sequence to generate 3D coordinates is:
 5. IV – Optimize geometry with UFFOptimizeMolecule()
 6. III – Loop through atoms to print 3D coordinates
 </details>
+
+---
+
+### Question 15
+You have a SMILES string for ibuprofen and want to visualize it using RDKit. What are the minimum steps required?
+
+**A)** Generate a molecule from SMILES and run MolToImage()
+
+**B)** Convert SMILES to SMARTS, generate 3D coordinates, and then visualize
+
+**C)** Convert SMILES to fingerprint and pass it to a plot function
+
+**D)** Save the SMILES to a file and open it in PyMOL
+
+<details> <summary>▶ Click to show answer</summary> Correct Answer: A) Generate a molecule from SMILES and run `MolToImage()` 
+   Explanation: RDKit’s `MolToImage()` creates a 2D visualization directly from a SMILES-derived molecule object. </details>
 
 ---
 
