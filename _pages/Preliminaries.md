@@ -2063,6 +2063,7 @@ SMILES is crucial for cheminformatics because it provides a **compact** and **ef
 
 **Example Code:**
 ```python
+!pip install rdkit-pypi
 import pandas as pd
 from rdkit import Chem
 
@@ -2099,7 +2100,8 @@ Number of aromatic rings: 1
 ### What the Code Does
 
 1. **SMILES Conversion to Molecule Object**:
-- The SMILES (Simplified Molecular Input Line Entry System) string `CC(=O)OC1=CC=CC=C1C(=O)O` represents Aspirin. 
+- The SMILES (Simplified Molecular Input Line Entry System) string `CC(=O)OC1=CC=CC=C1C(=O)O` represents Aspirin.
+<img src="https://as1.ftcdn.net/jpg/05/19/46/44/1000_F_519464485_pfJnDqtKGcaNbT9vNxhNvTnDtQPVBn71.jpg" alt="Aspirin molecule" width="400"/>
 - `Chem.MolFromSmiles(smiles)` converts the SMILES string into an RDKit molecule object, allowing further chemical analysis.
 
 2. **Basic Molecular Properties**:
@@ -2146,7 +2148,8 @@ import pandas as pd
 from rdkit import Chem
 
 # Load the BBBP dataset
-df = pd.read_csv('BBBP.csv')
+url = 'https://raw.githubusercontent.com/Data-Chemist-Handbook/Data-Chemist-Handbook.github.io/refs/heads/master/_pages/BBBP.csv'
+df = pd.read_csv(url)
 
 # Extract the first SMILES string
 first_smiles = df['smiles'].iloc[0]
@@ -2168,6 +2171,8 @@ Number of atoms: 20
 Number of bonds: 20
 Number of aromatic rings: 2
 ```
+**Explanation**: This code loads the BBBP dataset and analyzes the first molecule by extracting its SMILES (Simplified Molecular Input Line Entry System) string, which is a text-based representation of its structure. It then converts that string into an RDKit molecule object to examine its properties. The output — number of atoms, bonds, and aromatic rings — describes the first molecule in the dataset, without applying any additional filters or conditions. The line identifying aromatic rings uses a list comprehension to find all rings in the molecule where every atom is aromatic. In short, the code gives a basic structural overview of the very first compound in the BBBP dataset.
+
 
 ### 2.3.2 SMARTS (SMILES Arbitrary Target Specification)
 
