@@ -2665,7 +2665,7 @@ Which of the following best describes the key difference between SMILES and SMAR
 
 ---
 
-### Question 
+### Question 4:
 Which of the following correctly represents an aromatic ring in SMILES notation?
 
 A. C=C-C=C-C=C
@@ -2682,7 +2682,7 @@ In SMILES, aromatic atoms are represented with lowercase letters. c1ccccc1 is th
 
 ---
 
-### Question 10
+### Question 5:
 Which of the following is not a reason for using 3D coordinates in cheminformatics?
 
 **A)** Simulating protein-ligand docking
@@ -2698,7 +2698,7 @@ Which of the following is not a reason for using 3D coordinates in cheminformati
 
 ---
 
-### Question 11
+### Question 6:
 Which RDKit function allows you to calculate the molecular weight of a molecule?
 
 **A)** Descriptors.MolWt()
@@ -2713,7 +2713,7 @@ Which RDKit function allows you to calculate the molecular weight of a molecule?
 
 ---
 
-### Question 12
+### Question 7:
 In RDKit, what does the following line of code do?
 ```python
 python
@@ -2736,7 +2736,7 @@ molecule.HasSubstructMatch(Chem.MolFromSmarts('c1ccccc1'))
 
 ## 2) Conceptual/Application Questions:
 
-### Question 4:
+### Question 8:
 **SMILES, SMARTS, and Fingerprints in the Tox21 Dataset**  
 A pharmaceutical company is working with the Tox21 dataset, which contains chemical information on thousands of compounds and their biological activities. The dataset includes SMILES (Simplified Molecular Input Line Entry System) representations of the molecules, as well as SMARTS (substructural patterns) that highlight specific functional groups, and molecular fingerprints that represent the presence or absence of substructures. The chemists need to identify drug candidates that are effective in treating diseases, have low toxicity, and are structurally similar to known safe and effective drugs.  
 Given the large size of the dataset and the need to focus on drug discovery, the team is considering which method to use for identifying the most promising drug candidates. The goal is to select drugs that are biologically active but also safe, ensuring that they have desirable molecular properties.
@@ -2756,7 +2756,7 @@ Explanation This method leverages the power of molecular fingerprints for fast s
 
 ---
 
-### Question 5:
+### Question 9:
 You are working with the compound oxycodone and would like to convert its SMILES notation into a fingerprint. The SMILES notation of oxycodone is:  
 `COc1ccc2C[C@H]3N(C)CC[C@@]45[C@@H](Oc1c24)C(=O)CC[C@@]35O.`  
 In this notation, the @ symbols represent stereochemistry, where @ is the R configuration, and @@ is the S configuration.
@@ -2780,7 +2780,7 @@ Print the fingerprint as a bit string.
 </details>
 
 ---
-### Question 6:
+### Question 10:
 You are trying to create a 3D coordinate of the compound oxycodone  
 (SMILES: `COc1ccc2C[C@H]3N(C)CC[C@@]45[C@@H](Oc1c24)C(=O)CC[C@@]35O`).
 
@@ -2826,7 +2826,7 @@ The correct sequence to generate 3D coordinates is:
 
 ---
 
-### Question 15
+### Question 11:
 You have a SMILES string for ibuprofen and want to visualize it using RDKit. What are the minimum steps required?
 
 **A)** Generate a molecule from SMILES and run MolToImage()
@@ -2842,7 +2842,7 @@ You have a SMILES string for ibuprofen and want to visualize it using RDKit. Wha
 
 ---
 
-### Question 14
+### Question 12:
 You’ve generated a Morgan fingerprint for a compound using RDKit. How can this fingerprint be used in cheminformatics?
 
 **A)** To calculate 3D molecular coordinates
