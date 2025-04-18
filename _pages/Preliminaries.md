@@ -2665,6 +2665,22 @@ Which of the following best describes the key difference between SMILES and SMAR
 
 ---
 
+### Question 
+Which of the following correctly represents an aromatic ring in SMILES notation?
+
+A. C=C-C=C-C=C
+B. c1ccccc1
+C. C#C#C#C#C#C
+D. C(C)(C)C(C)C
+
+<details> <summary>▶ Click to show answer</summary>
+Correct Answer: B
+Explanation:
+In SMILES, aromatic atoms are represented with lowercase letters. c1ccccc1 is the SMILES notation for benzene, an aromatic ring.
+
+</details>
+---
+
 ## 2) Conceptual/Application Questions:
 
 ### Question 4:
