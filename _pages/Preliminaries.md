@@ -2629,7 +2629,7 @@ In cheminformatics, SMILES (Simplified Molecular Input Line Entry System) plays 
 
 <details>
   <summary>▶ Click to show answer</summary>
-  **Correct Answer: B)** SMILES provides a standardized text-based format for representing molecular structures, making it easier to store, search, and analyze large chemical databases using computational tools.
+  Correct Answer: B) SMILES provides a standardized text-based format for representing molecular structures, making it easier to store, search, and analyze large chemical databases using computational tools.
 </details>
 
 ---
@@ -2644,7 +2644,7 @@ Which of the following statements about SMILES (Simplified Molecular Input Line 
 
 <details>
   <summary>▶ Click to show answer</summary>
-  **Correct Answer: B)** The Chem.MolFromSmiles() function in RDKit is used to convert a SMILES string into a molecule object.
+  Correct Answer: B) The Chem.MolFromSmiles() function in RDKit is used to convert a SMILES string into a molecule object.
 </details>
 
 ---
@@ -2660,7 +2660,7 @@ Which of the following best describes the key difference between SMILES and SMAR
 
 <details>
   <summary>▶ Click to show answer</summary>
-  **Correct Answer: A)** SMILES is used to represent complete molecular structures, while SMARTS is used to define and search for molecular substructures.
+  Correct Answer: A) SMILES is used to represent complete molecular structures, while SMARTS is used to define and search for molecular substructures.
 </details>
 
 ---
@@ -2681,8 +2681,8 @@ Which of the following methods should the chemists use to efficiently find drug 
 
 <details>
   <summary>▶ Click to show answer</summary>
-**Correct Answer: C)** Use molecular fingerprints to perform similarity searching and clustering, identifying compounds that are structurally similar to known effective drugs, and then rank them based on their bioactivity and toxicity.
-**Explanation** This method leverages the power of molecular fingerprints for fast similarity searching, allowing chemists to find drugs with structural similarities to known active compounds. By clustering the data and ranking the compounds based on both bioactivity and toxicity, chemists can efficiently identify the most promising candidates for medical use.
+Correct Answer: C) Use molecular fingerprints to perform similarity searching and clustering, identifying compounds that are structurally similar to known effective drugs, and then rank them based on their bioactivity and toxicity.
+Explanation This method leverages the power of molecular fingerprints for fast similarity searching, allowing chemists to find drugs with structural similarities to known active compounds. By clustering the data and ranking the compounds based on both bioactivity and toxicity, chemists can efficiently identify the most promising candidates for medical use.
 </details>
 
 ---
@@ -2707,7 +2707,7 @@ Print the fingerprint as a bit string.
 
 <details>
   <summary>▶ Click to show answer</summary>
-  **Correct Answer: C)** 7
+  Correct Answer: C) 7
 </details>
 
 ---
