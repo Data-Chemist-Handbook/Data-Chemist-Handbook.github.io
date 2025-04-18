@@ -3620,13 +3620,11 @@ The .mean() method applied to a specific column in a pandas DataFrame calculates
 ---
 
 ### Question 9:
-You run the following code to generate a heatmap of a similarity matrix:
+You are working with a new dataset and would like to analyze it by making a heatmap.  If you ran the following code to generate a heatmap of a similarity matrix, what would this heatmap accomplish for you in cheminformatics?
 
 ```python
 sns.heatmap(similarity_matrix, annot=True, cmap='coolwarm', cbar=True)
 ```
-
-What does this heatmap typically help you analyze in cheminformatics?
 
 **A)** The melting point of unknown molecules.
 
@@ -3647,7 +3645,7 @@ A similarity matrix shows pairwise comparisons, often based on Tanimoto similari
 ## 2) Conceptual/Application Questions:
 
 ### Question 4: 
-Create a scatter plot with the following data with molecular weight on the x-axis and logP on the y-axis. Make sure to label the axes appropriately.
+In chemistry and datascience, it may be helpful to visualize the data and understand trends within the data by creating scatter plots.  In this example, imagine you want to observe the relationship between molecular weight and logP in the BBBP dataset file.  Create a scatter plot with the data below to generate a scatter plot with molecular weight on the x-axis and logP on the y-axis. Make sure to label the axes appropriately.
 
 **Data:**
 - Molecular weight: [50, 90, 134, 239, 252]
