@@ -2693,7 +2693,8 @@ Which of the following is not a reason for using 3D coordinates in cheminformati
 
 **D)** Visualizing spatial interactions between atoms
 
-<details> <summary>▶ Click to show answer</summary> **Correct Answer:** C) Predicting melting points from SMILES strings **Explanation:** Melting points are empirical properties. While molecular structure may correlate, they aren’t predicted directly from 3D coordinates. </details>
+<details> <summary>▶ Click to show answer</summary> Correct Answer: C) Predicting melting points from SMILES strings 
+   Explanation: Melting points are empirical properties. While molecular structure may correlate, they aren’t predicted directly from 3D coordinates. </details>
 
 ---
 
@@ -2708,7 +2709,7 @@ Which RDKit function allows you to calculate the molecular weight of a molecule?
 
 **D)** Chem.GetNumAtoms()
 
-<details> <summary>▶ Click to show answer</summary> **Correct Answer:** A) `Descriptors.MolWt()` </details>
+<details> <summary>▶ Click to show answer</summary> Correct Answer: A) `Descriptors.MolWt()` </details>
 
 ---
 
@@ -2729,7 +2730,7 @@ molecule.HasSubstructMatch(Chem.MolFromSmarts('c1ccccc1'))
 
 **D)** It calculates the logP of the molecule.
 
-<details> <summary>▶ Click to show answer</summary> **Correct Answer:** C) It matches the molecule against an aromatic ring SMARTS pattern. </details>
+<details> <summary>▶ Click to show answer</summary> Correct Answer: C) It matches the molecule against an aromatic ring SMARTS pattern. </details>
 
 ---
 
@@ -2838,6 +2839,22 @@ You have a SMILES string for ibuprofen and want to visualize it using RDKit. Wha
 
 <details> <summary>▶ Click to show answer</summary> Correct Answer: A) Generate a molecule from SMILES and run `MolToImage()` 
    Explanation: RDKit’s `MolToImage()` creates a 2D visualization directly from a SMILES-derived molecule object. </details>
+
+---
+
+### Question 14
+You’ve generated a Morgan fingerprint for a compound using RDKit. How can this fingerprint be used in cheminformatics?
+
+**A)** To calculate 3D molecular coordinates
+
+**B)** To identify specific functional groups using pattern matching
+
+**C)** To compare structural similarity between compounds
+
+**D)** To visualize a molecule in PyMOL
+
+<details> <summary>▶ Click to show answer</summary> Correct Answer: C) To compare structural similarity between compounds 
+   Explanation: Morgan fingerprints are hashed representations used in similarity searching and clustering, not visualization or pattern matching. </details>
 
 ---
 
