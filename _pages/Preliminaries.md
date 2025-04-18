@@ -2197,6 +2197,8 @@ SMARTS is essential for cheminformatics because it enables the identification an
 **Example Code:**
 
 ```python
+!pip install rdkit-pypi
+import pandas as pd
 from rdkit import Chem
 
 # Example SMARTS pattern for an aromatic ring
@@ -2248,9 +2250,8 @@ First SMILES string: C1=CC=CC=C1
 - `iloc[0]` accesses the first SMILES string in the `smiles` column.
 
 6. **Output Results**:
-- The code outputs:
-   - Whether the benzene molecule matches the SMARTS pattern.
-   - The first SMILES string from the DataFrame.
+- Whether the benzene molecule matches the SMARTS pattern.
+- The first SMILES string from the DataFrame.
 
 **Practice Problem:**
 
@@ -2266,24 +2267,31 @@ First SMILES string: C1=CC=CC=C1
 ```python
 import pandas as pd
 from rdkit import Chem
+from rdkit import RDLogger
+
+# Suppress RDKit warnings
+RDLogger.DisableLog('rdApp.*')
 
 # Load the BBBP dataset
-df = pd.read_csv('BBBP.csv')
+url = 'https://raw.githubusercontent.com/Data-Chemist-Handbook/Data-Chemist-Handbook.github.io/refs/heads/master/_pages/BBBP.csv'
+df = pd.read_csv(url)
 
 # Define a SMARTS pattern for an amine group
 amine_smarts = '[NX3;H2,H1;!$(NC=O)]'
-
-# Convert SMARTS to a molecule pattern
 amine_pattern = Chem.MolFromSmarts(amine_smarts)
 
 # Count molecules with an amine group
 amine_count = 0
 for smiles in df['smiles']:
-   molecule = Chem.MolFromSmiles(smiles)
-   if molecule.HasSubstructMatch(amine_pattern):
-      amine_count += 1
+    molecule = Chem.MolFromSmiles(smiles)
+    if molecule is not None and molecule.HasSubstructMatch(amine_pattern):
+        amine_count += 1
 
 print("Number of molecules with an amine group:", amine_count)
+```
+**Example Output**
+```python
+Number of molecules with an amine group: 555
 ```
 
 This section provides a comprehensive overview of SMARTS, including its syntax, advantages, and practical applications in cheminformatics. The example code, practice problem, and solution demonstrate how to work with SMARTS using RDKit, a popular cheminformatics toolkit, and leverage real data from the BBBP dataset.
