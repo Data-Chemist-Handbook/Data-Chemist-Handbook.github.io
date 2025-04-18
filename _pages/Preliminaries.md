@@ -1773,8 +1773,8 @@ If you are dealing with a large dataset with over 50 different metrics (or colum
 <details>
 <summary>▶ Click to show answer</summary>
 
-**Correct Answer:** D  
-**Explanation:**  
+Correct Answer: D  
+Explanation:  
 A pivot table allows you to restructure the data by aggregating, summarizing, or reorganizing it in a more meaningful way. This helps in analyzing trends and making comparisons efficiently.
 </details>
 
@@ -1791,8 +1791,8 @@ Why is encoding necessary when working with categorical data in machine learning
 <details>
 <summary>▶ Click to show answer</summary>
 
-**Correct Answer:** B  
-**Explanation:**  
+Correct Answer: B  
+Explanation:  
 Encoding converts non-numeric data (e.g., categories) into numerical values so that machine learning models can process them. Common methods include one-hot encoding and label encoding.
 </details>
 
@@ -1809,8 +1809,8 @@ Which of the following statements is true regarding pivot tables and reshaping d
 <details>
 <summary>▶ Click to show answer</summary>
 
-**Correct Answer:** B  
-**Explanation:**  
+Correct Answer: B  
+Explanation:
 The `pivot_table()` function in Pandas helps summarize and reorganize data efficiently by turning row-level data into columnar formats.
 </details>
 
@@ -1827,8 +1827,8 @@ You are comparing solubility data of compounds measured in different units (mg/m
 <details>
 <summary>▶ Click to show answer</summary>
 
-**Correct Answer:** B  
-**Explanation:**  
+Correct Answer: B  
+Explanation:  
 Min-Max normalization rescales values to a fixed range (often 0 to 1), making it easier to compare across features with different units or scales.
 </details>
 
@@ -1845,8 +1845,8 @@ You are working with a dataset of reaction yields, but the yield values are stor
 <details>
 <summary>▶ Click to show answer</summary>
 
-**Correct Answer:** C  
-**Explanation:**  
+Correct Answer: C  
+Explanation: 
 `astype()` is used to convert a column's data type, such as from string to float or integer, so mathematical operations can be performed.
 </details>
 
@@ -1869,8 +1869,8 @@ Task: Read the `TOX21.csv` dataset into a DataFrame and print the first five row
 <details>
 <summary>▶ Click to show answer</summary>
 
-**Correct Answer:** C  
-**Explanation:**  
+Correct Answer: C  
+Explanation:  
 The third row of the dataset contains Dimethylglyoxime, based on the output of `df.head()`.
 
 </details>
@@ -1901,8 +1901,8 @@ To fix this problem, you should handle the missing values by using _____ and get
 <details>
 <summary>▶ Click to show answer</summary>
 
-**Correct Answer:** A  
-**Explanation:**  
+Correct Answer: A  
+Explanation:  
 `fillna('unknown')` fills missing values with a placeholder, maintaining the dataset’s size. `drop_duplicates()` removes any repeated rows to ensure clean data.
 </details>
 
@@ -1919,8 +1919,8 @@ Which function and code would allow you to create a new column that represents t
 <details>
 <summary>▶ Click to show answer</summary>
 
-**Correct Answer:** A  
-**Explanation:**  
+Correct Answer: A  
+Explanation:  
 The `.mean()` method calculates the column-wise average, and assigning it to a new column applies that single value across all rows.
 </details>
 
@@ -1943,11 +1943,11 @@ Are these two groups statistically significant at the 95% confidence level? What
 **D.** No, F-Statistic: 548.06, P-Value: 0.10  
 
 
-**Correct Answer:** B  
+Correct Answer: B  
 F-Statistic: 476.96  
 P-Value: 0.0000  
 
-**Explanation:**  
+Explanation:  
 Since the P-value < 0.05, the result is statistically significant at the 95% confidence level.  
 This means the difference in average molecular mass between compounds with high and low ToxCast activity is unlikely due to random chance.
 
@@ -1989,8 +1989,8 @@ You are analyzing a SMILES dataset of drug candidates and want to estimate the *
 <details>
 <summary>▶ Click to show answer</summary>
 
-**Correct Answer:** B  
-**Explanation:**  
+Correct Answer: B  
+Explanation:  
 Using `apply()` with a lambda function allows you to count the number of carbon atoms (`'C'`) in each SMILES string.
 </details>
 
@@ -2007,8 +2007,8 @@ After calculating the carbon counts, you want to see if permeable compounds (p_n
 <details>
 <summary>▶ Click to show answer</summary>
 
-**Correct Answer:** B  
-**Explanation:**  
+Correct Answer: B  
+Explanation:  
 Grouping by `'p_np'` and calculating the mean of `'carbon_count'` lets you compare average carbon counts between permeability classes.
 </details>
 
@@ -2025,8 +2025,8 @@ You want to build a simple model that predicts whether a compound is permeable b
 <details>
 <summary>▶ Click to show answer</summary>
 
-**Correct Answer:** B  
-**Explanation:**  
+Correct Answer: B  
+Explanation:  
 `pearsonr()` helps determine correlation, while `LinearRegression()` can fit a model to predict one variable based on another.
 </details>
 
@@ -2742,9 +2742,9 @@ What is the correct order of operations?
 <details>
 <summary>▶ Click to show answer</summary>
 
-**Correct Answer: B) II, I, V, IV, III**
+Correct Answer: B) II, I, V, IV, III
 
-**Explanation:**  
+Explanation:  
 The correct sequence to generate 3D coordinates is:
 
 1. **II** – `from rdkit import Chem` (import necessary RDKit modules)  
@@ -3463,9 +3463,9 @@ In cheminformatics, the Tanimoto similarity is commonly used to compare molecula
 
 <details>
   <summary>Answer</summary>
-  **Correct Answer: B)** The Tanimoto similarity compares the number of common substructures between two fingerprints relative to the total number of substructures, indicating their structural similarity.
+  Correct Answer: B) The Tanimoto similarity compares the number of common substructures between two fingerprints relative to the total number of substructures, indicating their structural similarity.
 
-  **Explanation:**  
+  Explanation:  
   Option B is correct because Tanimoto similarity evaluates the overlap (common substructures) between two fingerprints and normalizes it by the total number of substructures present in both fingerprints.
 </details>
 
@@ -3478,9 +3478,9 @@ Which of the following statements about regression models in cheminformatics is 
 
 <details>
   <summary>Answer</summary>
-  **Correct Answer: C)** The Mean Squared Error (MSE) and R-squared (R²) metrics are used to evaluate the predictive performance of regression models.
+  Correct Answer: C) The Mean Squared Error (MSE) and R-squared (R²) metrics are used to evaluate the predictive performance of regression models.
 
-  **Explanation:**  
+  Explanation:  
   Option C is correct because the Mean Squared Error (MSE) quantifies the difference between predicted and actual values, while R-squared (R²) measures how much variance in the dependent variable is explained by the independent variables.
 </details>
 
@@ -3493,7 +3493,7 @@ Why is a correlation matrix useful when analyzing molecular properties?
 
 <details>
   <summary>Answer</summary>
-  **Correct Answer: A)** It helps visualize the relationships between different molecular properties, identifying strong positive or negative correlations.
+  Correct Answer: A) It helps visualize the relationships between different molecular properties, identifying strong positive or negative correlations.
 </details>
 
 ---
@@ -3521,7 +3521,7 @@ Which scatter plot below looks like the scatter plot you produced?
 
 <details>
   <summary>Answer</summary>
-  **Correct Answer:** [You can add the correct plot once the options are available.]
+  Correct Answer: [You can add the correct plot once the options are available.]
 
   **Explanation:**  
   [You can provide a brief explanation of the relationship between molecular weight and logP once the plots are available.]
