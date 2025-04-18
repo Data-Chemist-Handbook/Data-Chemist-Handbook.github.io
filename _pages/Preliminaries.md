@@ -3600,6 +3600,50 @@ Why is a correlation matrix useful when analyzing molecular properties?
 
 ---
 
+### Question 6:
+You are given a dataset of molecules and their properties. Which Python method would you use to calculate the average boiling point of these molecules using pandas?
+
+**A)** df['BoilingPoint'].average()
+
+**B)** mean(df.BoilingPoint)
+
+**C)** df.mean('BoilingPoint')
+
+**D)** df['BoilingPoint'].mean()
+
+<details> <summary>Answer</summary> Correct Answer: D) `df['BoilingPoint'].mean()`
+Explanation:
+The .mean() method applied to a specific column in a pandas DataFrame calculates the average value for that column.
+
+</details>
+
+---
+
+### Question 9:
+You run the following code to generate a heatmap of a similarity matrix:
+
+```python
+sns.heatmap(similarity_matrix, annot=True, cmap='coolwarm', cbar=True)
+```
+
+What does this heatmap typically help you analyze in cheminformatics?
+
+**A)** The melting point of unknown molecules.
+
+**B)** The relationships between SMILES strings and IUPAC names.
+
+**C)** The structural similarity between molecules based on their fingerprints.
+
+**D)** The error rate in a regression model.
+
+<details> <summary>Answer</summary> Correct Answer: C) The structural similarity between molecules based on their fingerprints.
+Explanation:
+A similarity matrix shows pairwise comparisons, often based on Tanimoto similarity, to help identify structurally similar or distinct molecules.
+
+</details>
+
+---
+
 ## 2) Conceptual/Application Questions:
 
 ### Question 4: 
