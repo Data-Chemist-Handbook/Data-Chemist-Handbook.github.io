@@ -1763,7 +1763,7 @@ F-statistic: 1188.118811881188, P-value: 1.946499706613343e-142
 ---
 
 ### Question 1  
-If you are dealing with a large dataset with over 50 different metrics (or columns) for molecules based on their toxicity, what function would you use to convert rows and columns into meaningful information?
+You're analyzing a large toxicity dataset with over 50 different biological and chemical metrics (columns) for each compound. To summarize complex information, such as average assay scores grouped by molecular weight range or chemical class, which of the following functions would be most useful?
 
 **A.** Merge the dataset  
 **B.** Normalize the dataset  
@@ -1775,13 +1775,13 @@ If you are dealing with a large dataset with over 50 different metrics (or colum
 
 Correct Answer: D  
 Explanation:  
-A pivot table allows you to restructure the data by aggregating, summarizing, or reorganizing it in a more meaningful way. This helps in analyzing trends and making comparisons efficiently.
+Pivot tables help chemists aggregate results (e.g., toxicity scores by chemical class or molecular descriptor bins), making it easier to spot trends, compare subgroups, and prepare the data for downstream modeling or visualization.
 </details>
 
 ---
 
 ### Question 2  
-Why is encoding necessary when working with categorical data in machine learning?
+You're training a machine learning model to predict compound toxicity. Your dataset includes a categorical feature called "TargetClass" that describes the biological target type (e.g., enzyme, receptor, transporter). Why is encoding this categorical column necessary before model training?
 
 **A.** It removes unnecessary data from the dataset.  
 **B.** Machine learning models require numerical inputs to process categorical data effectively.  
@@ -1793,13 +1793,14 @@ Why is encoding necessary when working with categorical data in machine learning
 
 Correct Answer: B  
 Explanation:  
-Encoding converts non-numeric data (e.g., categories) into numerical values so that machine learning models can process them. Common methods include one-hot encoding and label encoding.
+Encoding converts non-numeric data (e.g., categories) into numerical values so that machine learning models can process them. Common methods include one-hot encoding and label encoding.  Explanation:
+Most machine learning algorithms can’t handle raw text or labels as inputs. Encoding (e.g., one-hot or label encoding) translates categories into numeric form, allowing the model to interpret class differences and make predictions based on them — a common step when working with descriptors like compound type, target family, or assay outcome.
 </details>
 
 ---
 
 ### Question 3  
-Which of the following statements is true regarding pivot tables and reshaping data using Pandas in Python?
+You’re working with a dataset containing results from multiple bioassays for various compounds. Each row contains a compound ID, assay name, and response value. You want to summarize this dataset so that each compound has one row, and the assay names become columns.
 
 **A.** Pivot tables are used to remove missing values from a dataset.  
 **B.** The `pivot_table()` function is used to summarize and reorganize data by converting rows into columns.  
@@ -1811,7 +1812,7 @@ Which of the following statements is true regarding pivot tables and reshaping d
 
 Correct Answer: B  
 Explanation:
-The `pivot_table()` function in Pandas helps summarize and reorganize data efficiently by turning row-level data into columnar formats.
+In cheminformatics, pivot_table() is especially useful for converting assay results from long to wide format, where each assay becomes a separate column. This transformation is common before merging descriptor data or building a machine learning dataset.
 </details>
 
 ---
