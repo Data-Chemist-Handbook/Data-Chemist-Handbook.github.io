@@ -3535,7 +3535,6 @@ Which scatter plot below looks like the scatter plot you produced?
 - D)
 ![Answer D - Scatter Plot](../_pages/Quiz_2.4_Question_4_Answer_D.png)
 
-
 <details>
   <summary>Answer</summary>
   Correct Answer: [You can add the correct plot once the options are available.]
