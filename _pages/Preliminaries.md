@@ -2679,6 +2679,7 @@ Explanation:
 In SMILES, aromatic atoms are represented with lowercase letters. c1ccccc1 is the SMILES notation for benzene, an aromatic ring.
 
 </details>
+
 ---
 
 ## 2) Conceptual/Application Questions:
