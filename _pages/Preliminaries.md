@@ -2736,25 +2736,22 @@ The list below shows the steps you take to generate the 3D coordinates of the mo
 How should you order the steps to successfully complete the process?
 
 ```python
-smiles = 'COc1ccc2C[C@H]3N(C)CC[C@@]45[C@@H](Oc1c24)C(=O)CC[C@@]35O'
-from rdkit import Chem
-from rdkit.Chem import AllChem
-
-for atom in molecule.GetAtoms():
-    pos = molecule.GetConformer().GetAtomPosition(atom.GetIdx())
-    print(f"Atom {atom.GetSymbol()} - x: {pos.x}, y: {pos.y}, z: {pos.z}")
-
-AllChem.EmbedMolecule(molecule)
-AllChem.UFFOptimizeMolecule(molecule)
-molecule = Chem.MolFromSmiles(smiles)
+I. smiles = 'COc1ccc2C[C@H]3N(C)CC[C@@]45[C@@H](Oc1c24)C(=O)CC[C@@]35O'
+II. from rdkit import Chem
+III. for atom in molecule.GetAtoms():
+         pos = molecule.GetConformer().GetAtomPosition(atom.GetIdx())
+         print(f"Atom {atom.GetSymbol()} - x: {pos.x}, y: {pos.y}, z: {pos.z}")
+IV. AllChem.UFFOptimizeMolecule(molecule)
+V. AllChem.EmbedMolecule(molecule)
+VI. molecule = Chem.MolFromSmiles(smiles)
 ```
 
 What is the correct order of operations?
 
-- A) I, II, V, IV, III  
-- B) II, I, V, IV, III  
-- C) II, V, I, IV, III  
-- D) II, I, III, IV, V  
+**A.** I, II, V, IV, III, IV
+**B.** II, I, VI, V, IV, III
+**C.** II, V, I, IV, IV, III
+**D.** II, I, IV, III, IV, V
 
 <details>
 <summary>▶ Click to show answer</summary>
@@ -2764,11 +2761,12 @@ Correct Answer: B) II, I, V, IV, III
 Explanation:  
 The correct sequence to generate 3D coordinates is:
 
-1. **II** – `from rdkit import Chem` (import necessary RDKit modules)  
-2. **I** – `smiles = '...'` and `molecule = Chem.MolFromSmiles(smiles)` (generate molecule from SMILES)  
-3. **V** – `AllChem.EmbedMolecule(molecule)` (generate 3D conformation)  
-4. **IV** – `AllChem.UFFOptimizeMolecule(molecule)` (optimize the 3D geometry)  
-5. **III** – Loop over atoms to print 3D coordinates  
+1. II – Import RDKit modules
+2. I – Define the SMILES string
+3. VI – Convert the SMILES to a molecule object
+4. V – Generate 3D coordinates with EmbedMolecule()
+5. IV – Optimize geometry with UFFOptimizeMolecule()
+6. III – Loop through atoms to print 3D coordinates
 </details>
 
 ---
