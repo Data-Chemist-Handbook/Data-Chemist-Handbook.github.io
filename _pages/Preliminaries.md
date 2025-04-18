@@ -1306,14 +1306,15 @@ Calculate the mean, median, and variance for the `num` column in the BBBP datase
 import pandas as pd
 
 # Load the BBBP dataset
-df = pd.read_csv('BBBP.csv')
+url = 'https://raw.githubusercontent.com/Data-Chemist-Handbook/Data-Chemist-Handbook.github.io/refs/heads/master/_pages/BBBP.csv'
+df = pd.read_csv(url)
 
-# Calculate mean, median, and variance
+# Calculate the mean, median, and variance
 mean_num = df['num'].mean()
 median_num = df['num'].median()
 variance_num = df['num'].var()
 
-print(f"Mean: {mean_num}, Median: {median_num}, Variance: {variance_num}")
+print(f'Mean: {mean_num}, Median: {median_num}, Variance: {variance_num}')
 ```
 
 **Result**
@@ -1548,9 +1549,9 @@ Correlation and regression are statistical tools used to analyze relationships b
 - **Definition**: Regression predicts the value of a dependent variable based on one or more independent variables.
 - **Types**: Simple linear regression (one independent variable) and multiple linear regression (two or more independent variables).
 - **Output**:
-- **Regression Coefficient (\beta )**: Indicates the magnitude and direction of the relationship between the independent variable and the dependent variable.
-- **Intercept (\alpha )**: Represents the predicted value of the dependent variable when the independent variable is zero.
-- **Use in Chemistry**: Regression can predict molecular properties, such as boiling point, based on easily measurable features like molecular weight.
+   - **Regression Coefficient (\beta )**: Indicates the magnitude and direction of the relationship between the independent variable and the dependent variable.
+   - **Intercept (\alpha )**: Represents the predicted value of the dependent variable when the independent variable is zero.
+   - **Use in Chemistry**: Regression can predict molecular properties, such as boiling point, based on easily measurable features like molecular weight.
 
 **Example Code for Correlation and Linear Regression:**
 
@@ -1596,8 +1597,8 @@ Intercept: 38.947368421052616
 3. **Regression**:
    - The `LinearRegression` class models the relationship between molecular weight (independent variable) and boiling point (dependent variable).
    - **Key Outputs**:
-   - **Regression Coefficient**: Shows how much the boiling point changes for a one-unit increase in molecular weight.
-   - **Intercept**: Indicates the boiling point when the molecular weight is zero.
+      - **Regression Coefficient**: Shows how much the boiling point changes for a one-unit increase in molecular weight.
+      - **Intercept**: Indicates the boiling point when the molecular weight is zero.
 
 **Interpretation:**
 - If the correlation coefficient is high (close to 1 or -1), it suggests a strong linear relationship.
@@ -1624,7 +1625,8 @@ from scipy.stats import pearsonr
 from sklearn.linear_model import LinearRegression
 
 # Load the BBBP dataset
-df = pd.read_csv('BBBP.csv')
+url = 'https://raw.githubusercontent.com/Data-Chemist-Handbook/Data-Chemist-Handbook.github.io/refs/heads/master/_pages/BBBP.csv'
+df = pd.read_csv(url)
 
 # Calculate correlation
 corr, _ = pearsonr(df['num'], df['p_np'])
@@ -1707,8 +1709,8 @@ F-statistic: 3.151036525172754, P-value: 0.07944851235243751
 
 
 **Interpretation**:
-- The p-value (0.008) is less than 0.05, so we reject the null hypothesis.
-- This indicates that at least one group has a significantly different mean from the others.
+- The p-value (0.08) is greater than 0.05, so we cannot reject the null hypothesis.
+- This indicates that it isn't statistically significant from the others.
 
 ---
 
