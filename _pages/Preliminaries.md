@@ -3600,7 +3600,7 @@ Why is a correlation matrix useful when analyzing molecular properties?
 
 ---
 
-### Question 6:
+### Question 4:
 You are given a dataset of molecules and their properties. Which Python method would you use to calculate the average boiling point of these molecules using pandas?
 
 **A)** df['BoilingPoint'].average()
@@ -3619,7 +3619,7 @@ The .mean() method applied to a specific column in a pandas DataFrame calculates
 
 ---
 
-### Question 9:
+### Question 5:
 You are working with a new dataset and would like to analyze it by making a heatmap.  If you ran the following code to generate a heatmap of a similarity matrix, what would this heatmap accomplish for you in cheminformatics?
 
 ```python
@@ -3644,7 +3644,7 @@ A similarity matrix shows pairwise comparisons, often based on Tanimoto similari
 
 ## 2) Conceptual/Application Questions:
 
-### Question 4: 
+### Question 6: 
 In chemistry and datascience, it may be helpful to visualize the data and understand trends within the data by creating scatter plots.  In this example, imagine you want to observe the relationship between molecular weight and logP in the BBBP dataset file.  Create a scatter plot with the data below to generate a scatter plot with molecular weight on the x-axis and logP on the y-axis. Make sure to label the axes appropriately.
 
 **Data:**
@@ -3669,4 +3669,45 @@ Which scatter plot below looks like the scatter plot you produced?
   **Explanation:**  
   [You can provide a brief explanation of the relationship between molecular weight and logP once the plots are available.]
 </details>
+
+---
+
+### Question 7:
+As a chemist analyzing a compound library, you're interested in understanding whether larger molecules tend to be more lipophilic, which could affect their ability to cross biological membranes. You decide to use a scatter plot to explore the relationship between molecular weight and logP (a measure of lipophilicity).
+
+Given the following code snippet:
+
+```python
+import pandas as pd
+import matplotlib.pyplot as plt
+
+df = pd.DataFrame({
+    'MolecularWeight': [180.16, 150.12, 250.23, 320.45, 200.34],
+    'LogP': [2.1, 1.9, 3.5, 4.0, 2.8]
+})
+
+plt.scatter(df['MolecularWeight'], df['LogP'])
+plt.xlabel('Molecular Weight')
+plt.ylabel('LogP')
+plt.title('Scatter Plot of Molecular Weight vs LogP')
+plt.show()
+```
+
+What chemical insight should you expect to gain from this plot?
+
+**A)** LogP decreases linearly as molecular weight increases.
+
+**B)** There is no observable trend — the data is completely random.
+
+**C)** LogP increases with molecular weight, suggesting a positive relationship between size and lipophilicity.
+
+**D)** Molecular weight and LogP both remain constant, so no conclusion can be drawn.
+
+<details> <summary>Answer</summary> Correct Answer: C) LogP increases with molecular weight, suggesting a positive relationship between size and lipophilicity.
+Explanation:
+In this example, both molecular weight and logP increase together, suggesting that larger compounds may be more lipophilic. This kind of trend can guide medicinal chemists in optimizing drug candidates for permeability and bioavailability by balancing molecular size with lipophilicity.
+
+</details>
+
+---
 
