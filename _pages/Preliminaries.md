@@ -3572,7 +3572,7 @@ In cheminformatics, the Tanimoto similarity is commonly used to compare molecula
 </details>
 
 ### Question 2: 
-Which of the following statements about regression models in cheminformatics is TRUE?
+Cheminformatics and molecular data enable researchers to apply statistical models to discover relationships between structure and function, often accelerating tasks like drug design and toxicity prediction. Which of the following statements about regression models in cheminformatics is TRUE?
 - A) Linear regression can be used to predict molecular properties, but only if the relationship between the property and descriptors is non-linear.
 - B) Multiple regression models assume that there is no relationship between the dependent and independent variables.
 - C) The Mean Squared Error (MSE) and R-squared (R²) metrics are used to evaluate the predictive performance of regression models.
