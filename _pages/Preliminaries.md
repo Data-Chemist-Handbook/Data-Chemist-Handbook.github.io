@@ -2666,7 +2666,7 @@ Which of the following best describes the key difference between SMILES and SMAR
 ---
 
 ### Question 4:
-Which of the following correctly represents an aromatic ring in SMILES notation?
+You are looking at a molecule written in SMIELS notation that has aromatic rings, and you must locate all of the locations of this functional group.  Which of the following correctly represents an aromatic ring in SMILES notation?
 
 A. C=C-C=C-C=C
 B. c1ccccc1
@@ -2699,7 +2699,7 @@ Which of the following is not a reason for using 3D coordinates in cheminformati
 ---
 
 ### Question 6:
-Which RDKit function allows you to calculate the molecular weight of a molecule?
+You are analyzing a set of drug candidates and want to ensure that their molecular weights fall within a range suitable for oral bioavailability. Which RDKit function allows you to calculate the molecular weight of a compound from its molecular structure?
 
 **A)** Descriptors.MolWt()
 
@@ -2709,18 +2709,20 @@ Which RDKit function allows you to calculate the molecular weight of a molecule?
 
 **D)** Chem.GetNumAtoms()
 
-<details> <summary>▶ Click to show answer</summary> Correct Answer: A) `Descriptors.MolWt()` </details>
+<details> <summary>▶ Click to show answer</summary> Correct Answer: A) `Descriptors.MolWt()` Explanation:
+The Descriptors.MolWt() function from RDKit is used to calculate the molecular weight of a molecule, which is an important parameter for filtering compounds based on drug-likeness and predicting pharmacokinetic properties. </details>
 
 ---
 
 ### Question 7:
-In RDKit, what does the following line of code do?
+You’re working with a chemical database and want to identify compounds that contain aromatic rings, such as benzene-like structures, which are often associated with stability and π-π interactions in drug design. You use the following RDKit code:
 ```python
 python
 Copy
 Edit
 molecule.HasSubstructMatch(Chem.MolFromSmarts('c1ccccc1'))
 ```
+What does this line of code do?
 
 **A)** It checks if a molecule contains a primary amine.
 
@@ -2730,7 +2732,8 @@ molecule.HasSubstructMatch(Chem.MolFromSmarts('c1ccccc1'))
 
 **D)** It calculates the logP of the molecule.
 
-<details> <summary>▶ Click to show answer</summary> Correct Answer: C) It matches the molecule against an aromatic ring SMARTS pattern. </details>
+<details> <summary>▶ Click to show answer</summary> Correct Answer: C) It matches the molecule against an aromatic ring SMARTS pattern. Explanation:
+The SMARTS string 'c1ccccc1' represents a six-membered aromatic ring (like benzene). This line checks whether the molecule contains that substructure — a key technique in substructure searching for SAR analysis, filtering, or building compound libraries with specific functional groups. </details>
 
 ---
 
@@ -2843,7 +2846,7 @@ You have a SMILES string for ibuprofen and want to visualize it using RDKit. Wha
 ---
 
 ### Question 12:
-You’ve generated a Morgan fingerprint for a compound using RDKit. How can this fingerprint be used in cheminformatics?
+You’ve generated a Morgan fingerprint for a compound using RDKit, which encodes the molecule’s structural features into a fixed-length bit vector. How is this fingerprint typically used in cheminformatics applications?
 
 **A)** To calculate 3D molecular coordinates
 
@@ -2854,7 +2857,7 @@ You’ve generated a Morgan fingerprint for a compound using RDKit. How can this
 **D)** To visualize a molecule in PyMOL
 
 <details> <summary>▶ Click to show answer</summary> Correct Answer: C) To compare structural similarity between compounds 
-   Explanation: Morgan fingerprints are hashed representations used in similarity searching and clustering, not visualization or pattern matching. </details>
+  Explanation: Morgan fingerprints capture circular substructures in a molecule and are commonly used for similarity searching and clustering. By comparing the overlap of fingerprints (e.g., using Tanimoto similarity), chemists can rapidly screen for structurally related compounds, aiding in lead optimization, scaffold hopping, or library design.</details>
 
 ---
 
