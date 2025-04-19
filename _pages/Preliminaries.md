@@ -2625,11 +2625,11 @@ img.save("ibuprofen.png")
 This section provides a comprehensive overview of molecular visualization using PyMOL and RDKit, highlighting their capabilities and applications in cheminformatics. The example code, practice problem, and solution demonstrate how to visualize molecular structures effectively, leveraging real data and tools.
 
 
-# Section 2.3 -- Quiz Questions
+### Section 2.3 -- Quiz Questions
 
-## 1) Factual Questions:
+### 1) Factual Questions:
 
-### Question 1:
+#### Question 1:
 In cheminformatics, SMILES (Simplified Molecular Input Line Entry System) plays a crucial role in computational chemistry and drug discovery. Which of the following best describes its significance in the intersection of chemistry and computer science?
 
 - A) SMILES enables the direct simulation of molecular interactions in biological systems without additional processing.
@@ -2644,7 +2644,7 @@ In cheminformatics, SMILES (Simplified Molecular Input Line Entry System) plays 
 
 ---
 
-### Question 2:
+#### Question 2:
 Which of the following statements about SMILES (Simplified Molecular Input Line Entry System) is true?
 
 - A) SMILES represents molecular structures using three-dimensional coordinates.
@@ -2659,7 +2659,7 @@ Which of the following statements about SMILES (Simplified Molecular Input Line 
 
 ---
 
-### Question 3:
+#### Question 3:
 **Distinguishing SMILES and SMARTS in Cheminformatics:**
 Which of the following best describes the key difference between SMILES and SMARTS in cheminformatics?
 
@@ -2675,7 +2675,7 @@ Which of the following best describes the key difference between SMILES and SMAR
 
 ---
 
-### Question 4:
+#### Question 4:
 You are looking at a molecule written in SMIELS notation that has aromatic rings, and you must locate all of the locations of this functional group.  Which of the following correctly represents an aromatic ring in SMILES notation?
 
 A. C=C-C=C-C=C
@@ -2692,7 +2692,7 @@ In SMILES, aromatic atoms are represented with lowercase letters. c1ccccc1 is th
 
 ---
 
-### Question 5:
+#### Question 5:
 Which of the following is not a reason for using 3D coordinates in cheminformatics?
 
 **A)** Simulating protein-ligand docking
@@ -2708,7 +2708,7 @@ Which of the following is not a reason for using 3D coordinates in cheminformati
 
 ---
 
-### Question 6:
+#### Question 6:
 You are analyzing a set of drug candidates and want to ensure that their molecular weights fall within a range suitable for oral bioavailability. Which RDKit function allows you to calculate the molecular weight of a compound from its molecular structure?
 
 **A)** Descriptors.MolWt()
@@ -2724,7 +2724,7 @@ The Descriptors.MolWt() function from RDKit is used to calculate the molecular w
 
 ---
 
-### Question 7:
+#### Question 7:
 You’re working with a chemical database and want to identify compounds that contain aromatic rings, such as benzene-like structures, which are often associated with stability and π-π interactions in drug design. You use the following RDKit code:
 ```python
 python
@@ -2747,9 +2747,9 @@ The SMARTS string 'c1ccccc1' represents a six-membered aromatic ring (like benze
 
 ---
 
-## 2) Conceptual/Application Questions:
+### 2) Conceptual/Application Questions:
 
-### Question 8:
+#### Question 8:
 **SMILES, SMARTS, and Fingerprints in the Tox21 Dataset**  
 A pharmaceutical company is working with the Tox21 dataset, which contains chemical information on thousands of compounds and their biological activities. The dataset includes SMILES (Simplified Molecular Input Line Entry System) representations of the molecules, as well as SMARTS (substructural patterns) that highlight specific functional groups, and molecular fingerprints that represent the presence or absence of substructures. The chemists need to identify drug candidates that are effective in treating diseases, have low toxicity, and are structurally similar to known safe and effective drugs.  
 Given the large size of the dataset and the need to focus on drug discovery, the team is considering which method to use for identifying the most promising drug candidates. The goal is to select drugs that are biologically active but also safe, ensuring that they have desirable molecular properties.
@@ -2769,7 +2769,7 @@ Explanation This method leverages the power of molecular fingerprints for fast s
 
 ---
 
-### Question 9:
+#### Question 9:
 You are working with the compound oxycodone and would like to convert its SMILES notation into a fingerprint. The SMILES notation of oxycodone is:  
 `COc1ccc2C[C@H]3N(C)CC[C@@]45[C@@H](Oc1c24)C(=O)CC[C@@]35O.`  
 In this notation, the @ symbols represent stereochemistry, where @ is the R configuration, and @@ is the S configuration.
@@ -2793,7 +2793,7 @@ Print the fingerprint as a bit string.
 </details>
 
 ---
-### Question 10:
+#### Question 10:
 You are trying to create a 3D coordinate of the compound oxycodone  
 (SMILES: `COc1ccc2C[C@H]3N(C)CC[C@@]45[C@@H](Oc1c24)C(=O)CC[C@@]35O`).
 
@@ -2839,7 +2839,7 @@ The correct sequence to generate 3D coordinates is:
 
 ---
 
-### Question 11:
+#### Question 11:
 You have a SMILES string for ibuprofen and want to visualize it using RDKit. What are the minimum steps required?
 
 **A)** Generate a molecule from SMILES and run MolToImage()
@@ -2855,7 +2855,7 @@ You have a SMILES string for ibuprofen and want to visualize it using RDKit. Wha
 
 ---
 
-### Question 12:
+#### Question 12:
 You’ve generated a Morgan fingerprint for a compound using RDKit, which encodes the molecule’s structural features into a fixed-length bit vector. How is this fingerprint typically used in cheminformatics applications?
 
 **A)** To calculate 3D molecular coordinates
@@ -3567,9 +3567,9 @@ for i, features in enumerate(feature_arrays):
 ---
 # Questions for Section 2.4
 
-## 1) Factual Questions:
+### 1) Factual Questions:
 
-### Question 1: 
+#### Question 1: 
 In cheminformatics, the Tanimoto similarity is commonly used to compare molecular structures based on their fingerprints. Which of the following statements correctly explains the relationship between Tanimoto similarity and fingerprints?
 - A) The Tanimoto similarity measures the similarity between two fingerprints by comparing the number of atoms in each molecule.
 - B) The Tanimoto similarity compares the number of common substructures between two fingerprints relative to the total number of substructures, indicating their structural similarity.
@@ -3584,7 +3584,7 @@ In cheminformatics, the Tanimoto similarity is commonly used to compare molecula
   Option B is correct because Tanimoto similarity evaluates the overlap (common substructures) between two fingerprints and normalizes it by the total number of substructures present in both fingerprints.
 </details>
 
-### Question 2: 
+#### Question 2: 
 Cheminformatics and molecular data enable researchers to apply statistical models to discover relationships between structure and function, often accelerating tasks like drug design and toxicity prediction. Which of the following statements about regression models in cheminformatics is TRUE?
 - A) Linear regression can be used to predict molecular properties, but only if the relationship between the property and descriptors is non-linear.
 - B) Multiple regression models assume that there is no relationship between the dependent and independent variables.
@@ -3599,7 +3599,7 @@ Cheminformatics and molecular data enable researchers to apply statistical model
   Option C is correct because the Mean Squared Error (MSE) quantifies the difference between predicted and actual values, while R-squared (R²) measures how much variance in the dependent variable is explained by the independent variables.
 </details>
 
-### Question 3: 
+#### Question 3: 
 Why is a correlation matrix useful when analyzing molecular properties?
 - A) It helps visualize the relationships between different molecular properties, identifying strong positive or negative correlations.
 - B) It replaces missing data in the dataset to ensure accurate predictions.
@@ -3613,7 +3613,7 @@ Why is a correlation matrix useful when analyzing molecular properties?
 
 ---
 
-### Question 4:
+#### Question 4:
 You are given a dataset of molecules and their properties. Which Python method would you use to calculate the average boiling point of these molecules using pandas?
 
 **A)** df['BoilingPoint'].average()
@@ -3632,7 +3632,7 @@ The .mean() method applied to a specific column in a pandas DataFrame calculates
 
 ---
 
-### Question 5:
+#### Question 5:
 You are working with a new dataset and would like to analyze it by making a heatmap.  If you ran the following code to generate a heatmap of a similarity matrix, what would this heatmap accomplish for you in cheminformatics?
 
 ```python
@@ -3655,9 +3655,9 @@ A similarity matrix shows pairwise comparisons, often based on Tanimoto similari
 
 ---
 
-## 2) Conceptual/Application Questions:
+### 2) Conceptual/Application Questions:
 
-### Question 6: 
+#### Question 6: 
 In chemistry and datascience, it may be helpful to visualize the data and understand trends within the data by creating scatter plots.  In this example, imagine you want to observe the relationship between molecular weight and logP in the BBBP dataset file.  Create a scatter plot with the data below to generate a scatter plot with molecular weight on the x-axis and logP on the y-axis. Make sure to label the axes appropriately.
 
 **Data:**
@@ -3685,7 +3685,7 @@ Which scatter plot below looks like the scatter plot you produced?
 
 ---
 
-### Question 7:
+#### Question 7:
 As a chemist analyzing a compound library, you're interested in understanding whether larger molecules tend to be more lipophilic, which could affect their ability to cross biological membranes. You decide to use a scatter plot to explore the relationship between molecular weight and logP (a measure of lipophilicity).
 
 Given the following code snippet:
