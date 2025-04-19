@@ -508,7 +508,7 @@ print(df.head())
 ```
 
 ### 2.2.2 Data Cleaning and Preprocessing
-#### Completed and Compiled Code: [Click Here](https://colab.research.google.com/drive/1i_ZkFKIWSwC7oK8HPf-CodOUDchfe3qp#scrollTo=psVkqo4A-n7Z)
+#### Completed and Compiled Code: [Click Here](https://colab.research.google.com/drive/1i_ZkFKIWSwC7oK8HPf-CodOUDchfe3qp#scrollTo=OuIsqp8xsPeC)
 #### Handling Missing Values and Duplicates
 
 **Explanation:**
