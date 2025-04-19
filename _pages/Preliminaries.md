@@ -508,7 +508,7 @@ print(df.head())
 ```
 
 ### 2.2.2 Data Cleaning and Preprocessing
-#### Completed and Compiled Code: [Click Here](https://colab.research.google.com/drive/1i_ZkFKIWSwC7oK8HPf-CodOUDchfe3qp#scrollTo=QeWAWLaIsNpA)
+#### Completed and Compiled Code: [Click Here](https://colab.research.google.com/drive/1i_ZkFKIWSwC7oK8HPf-CodOUDchfe3qp?usp=sharing)
 #### Handling Missing Values and Duplicates
 
 **Explanation:**
@@ -675,7 +675,7 @@ print(df_encoded.head())
 ```
 ---
 ### 2.2.3 Data Manipulation with Pandas
-#### Completed and Compiled Code: [Click Here](https://colab.research.google.com/drive/1RroAuj838RoxrgHbG9KlsChaA61hscEA#scrollTo=ScMFDjIYu6oG)
+#### Completed and Compiled Code: [Click Here](https://colab.research.google.com/drive/1RroAuj838RoxrgHbG9KlsChaA61hscEA?usp=sharing)
 
 **Filtering and Selecting Data**
 
