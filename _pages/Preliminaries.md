@@ -2051,6 +2051,7 @@ Chemical representations serve as the bridge between the abstract world of chemi
 This chapter will explore each of these representation methods in detail, providing insights into their applications, strengths, and limitations. By understanding these representations, you will be equipped to leverage computational tools effectively in your chemical research and development endeavors.
 
 ### 2.3.1 SMILES (Simplified Molecular Input Line Entry System)
+#### Completed and Compiled Code: [Click Here](https://colab.research.google.com/drive/1H1pbYKAU0jswB6v5gMAWlzHUtPp3GvIR?usp=sharing)
 
 **Explanation:**
 
