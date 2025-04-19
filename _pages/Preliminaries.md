@@ -1023,6 +1023,8 @@ print(broadcasted_array)
 ```
 
 ### 2.2.5 Introduction to Visualization Libraries
+#### Completed and Compiled Code: [Click Here](https://colab.research.google.com/drive/1qrrTcrkGx8AHl6W2YVG_thzMbSYjV3Ep?usp=sharing)
+
 Data visualization is critical for interpreting data and uncovering insights. In this section, we’ll use Python’s visualization libraries to create various plots and charts.
 
 **Explanation:**
@@ -1067,7 +1069,7 @@ plt.show()
 ```
 ![Line Plot Example](../../resource/img/preliminaries/pre_2-2/2.2.5-1.png)
 
-*Figure: Line Plot of Time vs. Concentration*
+**Figure: Line Plot of Time vs. Concentration*
 
 **Example Code for Scatter Plot:**
 ```python
@@ -1085,7 +1087,7 @@ plt.show()
 ```
 ![Scatter Plot Example](../../resource/img/preliminaries/pre_2-2/2.2.5-2.png)
 
-*Figure: Scatter Plot of Molecular Weight vs. Boiling Point*
+**Figure: Scatter Plot of Molecular Weight vs. Boiling Point*
 
 ---
 
@@ -1114,7 +1116,7 @@ plt.show()
 ```
 ![Histogram Example](../../resource/img/preliminaries/pre_2-2/2.2.5-3.png)
 
-*Figure: Histogram Demonstrating Data Distribution*
+**Figure: Histogram Demonstrating Data Distribution*
 
 **Example Code for Density Plot:**
 
@@ -1135,7 +1137,7 @@ plt.show()
 ```
 ![Density Plot Example](../../resource/img/preliminaries/pre_2-2/2.2.5-4.png)
 
-*Figure: Density Plot Visualizing Data Distribution*
+**Figure: Density Plot Visualizing Data Distribution*
 ---
 
 #### Box Plots and Violin Plots
@@ -1161,7 +1163,7 @@ plt.show()
 ```
 ![Box Plot Example](../../resource/img/preliminaries/pre_2-2/2.2.5-5.png)
 
-*Figure: Box Plot Showing Value Distribution Across Categories*
+**Figure: Box Plot Showing Value Distribution Across Categories*
 
 [comment]: <> (#TODO use the same new dataset as above)
 
@@ -1181,7 +1183,7 @@ plt.show()
 ```
 ![Violin Plot Example](../../resource/img/preliminaries/pre_2-2/2.2.5-6.png)
 
-*Figure: Violin Plot Highlighting Value Distribution and Density Across Categories*
+**Figure: Violin Plot Highlighting Value Distribution and Density Across Categories*
 ---
 
 #### Heatmaps and Correlation Matrices
@@ -1208,7 +1210,7 @@ plt.show()
 ```
 ![Heatmap Example](../../resource/img/preliminaries/pre_2-2/2.2.5-7.png)
 
-*Figure: Heatmap Depicting Data as a Color-Coded Matrix*
+**Figure: Heatmap Depicting Data as a Color-Coded Matrix*
 
 [comment]: <> (#TODO use the same new dataset as above)
 
@@ -1232,7 +1234,7 @@ plt.show()
 ```
 ![Correlation Matrices Example](../../resource/img/preliminaries/pre_2-2/2.2.5-8.png)
 
-*Figure: Heatmap Visualizing the Correlation Matrix Across Variables*
+**Figure: Heatmap Visualizing the Correlation Matrix Across Variables*
 
 ---
 
@@ -1258,10 +1260,9 @@ fig.show()
 ```
 ![Correlation Matrices Example](../../resource/img/preliminaries/pre_2-2/2.2.5-9.png)
 
-*Figure: Interactive Scatter Plot Showing the Relationship Between Molecular Weight and Boiling Point*
+**Figure: Interactive Scatter Plot Showing the Relationship Between Molecular Weight and Boiling Point*
 
 ### 2.2.6 Statistical Analysis Basics
-
 Statistical analysis is essential for interpreting data and making informed conclusions. In this section, we’ll explore fundamental statistical techniques using Python, which are particularly useful in scientific research.
 
 ---
