@@ -656,7 +656,7 @@ df_encoded = pd.get_dummies(df, columns=['State'])
 print(df_encoded)
 ```
 
-**Practice Problem:**
+**Practice Problem 1:**
 The `p_np` column is a binary classification of permeability (1 or 0). We will apply one-hot encoding to this column.
 1. Apply one-hot encoding to the p_np column in the BBBP dataset.
 2. Print the first few rows of the encoded DataFrame to verify the result.
@@ -675,6 +675,7 @@ print(df_encoded.head())
 ```
 ---
 ### 2.2.3 Data Manipulation with Pandas
+#### Completed and Compiled Code: [Click Here](https://colab.research.google.com/drive/1RroAuj838RoxrgHbG9KlsChaA61hscEA#scrollTo=mgTf7Uezu-55)
 
 **Filtering and Selecting Data**
 
@@ -698,7 +699,7 @@ filtered_df = df[df['MolecularWeight'] > 200]
 print(filtered_df)
 ```
 
-**Practice Problem:**
+**Practice Problem 2:**
 
 1. Filter a DataFrame from the BBBP dataset to show only rows where the `num` (compound number) is greater than 500.
 2. Select a subset of columns from the dataset and display only the `name` and `smiles` columns.
@@ -743,7 +744,7 @@ merged_df = pd.merge(df1, df2, on='Compound')
 print(merged_df)
 ```
 
-**Practice Problem:**
+**Practice Problem 3:**
 
 1. Merge two DataFrames from the BBBP dataset: One containing the `name` and `smiles` columns and another containing the `num` and `p_np` columns.
 2. Perform a left join on the `name` column and display the result.
@@ -836,7 +837,7 @@ pivot_df = df.pivot_table(values='Value', index='Compound', columns='Property')
 print(pivot_df)
 ```
 
-**Practice Problem:**
+**Practice Problem 4:**
 
 1. Create a pivot table from the BBBP dataset to summarize the average `carbon count` for each `p_np` group (permeable and non-permeable).
 2. Use the `melt()` function to reshape the DataFrame, converting columns back into rows.
