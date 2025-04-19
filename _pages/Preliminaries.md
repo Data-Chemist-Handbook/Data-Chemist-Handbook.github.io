@@ -1,6 +1,7 @@
 ---
 title: 2. Preliminaries
 author: Dan Yoo, Haomin
+edited: Alex Liu
 date: 2024-08-12
 category: Jekyll
 layout: post
@@ -2190,6 +2191,7 @@ Number of aromatic rings: 2
 
 
 ### 2.3.2 SMARTS (SMILES Arbitrary Target Specification)
+#### Completed and Compiled Code: [Click Here](https://colab.research.google.com/drive/1KJXTt9fC7F_fREGmHEGgKEYPjK0SgErE?usp=sharing)
 
 **Explanation:**
 
@@ -2210,9 +2212,11 @@ SMARTS is essential for cheminformatics because it enables the identification an
 **Application**: The team uses SMARTS to define the substructural pattern of interest. By applying this SMARTS pattern to their chemical database, they can quickly identify and extract compounds that match the pattern. This targeted approach allows them to focus their experimental efforts on compounds with the highest likelihood of success, saving time and resources.
 
 **Example Code:**
-
 ```python
 !pip install rdkit-pypi
+```
+
+```python
 import pandas as pd
 from rdkit import Chem
 
@@ -2268,7 +2272,7 @@ First SMILES string: C1=CC=CC=C1
 - Whether the benzene molecule matches the SMARTS pattern.
 - The first SMILES string from the DataFrame.
 
-**Practice Problem:**
+**Practice Problem 1:**
 
 **Context**: SMARTS notation is a powerful tool for identifying specific substructures within molecules. Understanding how to use SMARTS to search for patterns is crucial for cheminformatics applications.
 
