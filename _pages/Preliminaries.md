@@ -2113,11 +2113,13 @@ Number of bonds: 13
 First SMILES string: CC(=O)OC1=CC=CC=C1C(=O)O
 Number of aromatic rings: 1
 ```
-### What the Code Does
+#### What the Code Does
 
 1. **SMILES Conversion to Molecule Object**:
 - The SMILES (Simplified Molecular Input Line Entry System) string `CC(=O)OC1=CC=CC=C1C(=O)O` represents Aspirin.
+  
 <img src="https://as1.ftcdn.net/jpg/05/19/46/44/1000_F_519464485_pfJnDqtKGcaNbT9vNxhNvTnDtQPVBn71.jpg" alt="Aspirin molecule" width="400"/>
+
 - `Chem.MolFromSmiles(smiles)` converts the SMILES string into an RDKit molecule object, allowing further chemical analysis.
 
 2. **Basic Molecular Properties**:
@@ -2138,7 +2140,7 @@ Number of aromatic rings: 1
    - The first SMILES string from the DataFrame.
    - The number of aromatic rings in the molecule.
 
-### Interpretation
+#### Interpretation
 
 - **Practical Application**:
 - This code is useful for chemical informatics tasks such as analyzing molecular structures, detecting aromaticity, and managing chemical data in tabular formats.
