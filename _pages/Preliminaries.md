@@ -508,7 +508,7 @@ print(df.head())
 ```
 
 ### 2.2.2 Data Cleaning and Preprocessing
-
+#### Completed and Compiled Code: [Click Here](https://colab.research.google.com/drive/1i_ZkFKIWSwC7oK8HPf-CodOUDchfe3qp#scrollTo=psVkqo4A-n7Z)
 #### Handling Missing Values and Duplicates
 
 **Explanation:**
@@ -569,7 +569,7 @@ df['Purity'] = df['Purity'].astype(str)
 print(df.dtypes)
 ```
 
-**Practice Problem:**
+**Practice Problem 1:**
 In the BBBP dataset, the `num` column (compound number) should be treated as an integer, and the `p_np` column (permeability label) should be converted to categorical data.
 1. Convert the num column to integer and the p_np column to a categorical type.
 2. Verify that the conversions are successful by printing the data types.
