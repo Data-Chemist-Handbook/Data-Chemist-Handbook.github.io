@@ -2073,7 +2073,11 @@ SMILES is crucial for cheminformatics because it provides a **compact** and **ef
 
 **Example Code:**
 ```python
+// you have to import the package in a separate code cell
 !pip install rdkit-pypi
+```
+
+```python
 import pandas as pd
 from rdkit import Chem
 
