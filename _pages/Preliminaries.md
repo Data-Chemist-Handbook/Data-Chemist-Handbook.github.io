@@ -1263,6 +1263,7 @@ fig.show()
 **Figure: Interactive Scatter Plot Showing the Relationship Between Molecular Weight and Boiling Point*
 
 ### 2.2.6 Statistical Analysis Basics
+#### Completed and Compiled Code: [Click Here](https://colab.research.google.com/drive/1XBZn9ZEY7a9cTSg41xel1kFN4P57BOPW?usp=sharing)
 Statistical analysis is essential for interpreting data and making informed conclusions. In this section, we’ll explore fundamental statistical techniques using Python, which are particularly useful in scientific research.
 
 ---
@@ -1301,7 +1302,7 @@ Standard Deviation of Molecular Weight: 23.874672772626646
 
 [comment]: <> (#TODO use a chemistry relevant metric from one of the data columns that will be added to BBBP.csv)
 
-**Practice Problem:**
+**Practice Problem 1:**
 Calculate the mean, median, and variance for the `num` column in the BBBP dataset.
 
 **Solution**
@@ -1392,7 +1393,7 @@ plt.show()
 
 [comment]: <> (#TODO change the practice problem. the issues with the num column are well documented above. Look for examples of log-normal distributions in chemistry data)
 
-**Practice Problem:**
+**Practice Problem 2:**
 Generate a normally distributed dataset based on the mean and standard deviation of the `num` column in the BBBP dataset. Plot a histogram of the generated data.
 
 **Solution**
@@ -1402,7 +1403,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # Load the BBBP dataset
-df = pd.read_csv('BBBP.csv')
+url = 'https://raw.githubusercontent.com/Data-Chemist-Handbook/Data-Chemist-Handbook.github.io/refs/heads/master/_pages/BBBP.csv'
+df = pd.read_csv(url)
 
 # Generate normally distributed data based on 'num' column
 mean_num = df['num'].mean()
@@ -1510,7 +1512,7 @@ By using hypothesis testing, chemists can make statistically supported decisions
 
 [comment]: <> (#TODO change this practice problem, use real data)
 
-**Practice Problem:**
+**Practice Problem 3:**
 In the BBBP dataset, compare the mean `num` values between permeable (p_np=1) and non-permeable (p_np=0) compounds using a t-test.
 
 **Solution**
@@ -1519,7 +1521,8 @@ from scipy.stats import ttest_ind
 import pandas as pd
 
 # Load the BBBP dataset
-df = pd.read_csv('BBBP.csv')
+url = 'https://raw.githubusercontent.com/Data-Chemist-Handbook/Data-Chemist-Handbook.github.io/refs/heads/master/_pages/BBBP.csv'
+df = pd.read_csv(url)
 
 # Separate data by permeability
 permeable = df[df['p_np'] == 1]['num']
@@ -1618,7 +1621,7 @@ Intercept: 38.947368421052616
 
 [comment]: <> (#TODO change this practice problem, use real data)
 
-**Practice Problem:**
+**Practice Problem 4:**
 Calculate the correlation between `num` and `p_np` in the BBBP dataset. Then, perform a linear regression to predict `num` based on `p_np`.
 
 **Solution**
@@ -1735,7 +1738,7 @@ By using ANOVA, chemists can draw statistically sound conclusions about the effe
 
 [comment]: <> (#TODO change this practice problem, use real data)
 
-**Practice Problem:**
+**Practice Problem 5:**
 Group the `num` column in the BBBP dataset by the first digit of `num` (e.g., 1XX, 2XX, 3XX) and perform an ANOVA test to see if the mean values differ significantly among these groups.
 
 **Solution**
@@ -1744,7 +1747,8 @@ from scipy.stats import f_oneway
 import pandas as pd
 
 # Load the BBBP dataset
-df = pd.read_csv('BBBP.csv')
+url = 'https://raw.githubusercontent.com/Data-Chemist-Handbook/Data-Chemist-Handbook.github.io/refs/heads/master/_pages/BBBP.csv'
+df = pd.read_csv(url)
 
 # Group 'num' by the first digit
 group1 = df[df['num'].between(100, 199)]['num']
