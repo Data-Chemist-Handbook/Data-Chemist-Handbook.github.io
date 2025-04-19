@@ -508,7 +508,7 @@ print(df.head())
 ```
 
 ### 2.2.2 Data Cleaning and Preprocessing
-#### Completed and Compiled Code: [Click Here](https://colab.research.google.com/drive/1i_ZkFKIWSwC7oK8HPf-CodOUDchfe3qp#scrollTo=OuIsqp8xsPeC)
+#### Completed and Compiled Code: [Click Here](https://colab.research.google.com/drive/1i_ZkFKIWSwC7oK8HPf-CodOUDchfe3qp#scrollTo=QeWAWLaIsNpA)
 #### Handling Missing Values and Duplicates
 
 **Explanation:**
@@ -675,7 +675,7 @@ print(df_encoded.head())
 ```
 ---
 ### 2.2.3 Data Manipulation with Pandas
-#### Completed and Compiled Code: [Click Here](https://colab.research.google.com/drive/1RroAuj838RoxrgHbG9KlsChaA61hscEA#scrollTo=mgTf7Uezu-55)
+#### Completed and Compiled Code: [Click Here](https://colab.research.google.com/drive/1RroAuj838RoxrgHbG9KlsChaA61hscEA#scrollTo=ScMFDjIYu6oG)
 
 **Filtering and Selecting Data**
 
@@ -699,7 +699,7 @@ filtered_df = df[df['MolecularWeight'] > 200]
 print(filtered_df)
 ```
 
-**Practice Problem 2:**
+**Practice Problem 1:**
 
 1. Filter a DataFrame from the BBBP dataset to show only rows where the `num` (compound number) is greater than 500.
 2. Select a subset of columns from the dataset and display only the `name` and `smiles` columns.
@@ -744,7 +744,7 @@ merged_df = pd.merge(df1, df2, on='Compound')
 print(merged_df)
 ```
 
-**Practice Problem 3:**
+**Practice Problem 2:**
 
 1. Merge two DataFrames from the BBBP dataset: One containing the `name` and `smiles` columns and another containing the `num` and `p_np` columns.
 2. Perform a left join on the `name` column and display the result.
@@ -837,7 +837,7 @@ pivot_df = df.pivot_table(values='Value', index='Compound', columns='Property')
 print(pivot_df)
 ```
 
-**Practice Problem 4:**
+**Practice Problem 3:**
 
 1. Create a pivot table from the BBBP dataset to summarize the average `carbon count` for each `p_np` group (permeable and non-permeable).
 2. Use the `melt()` function to reshape the DataFrame, converting columns back into rows.
@@ -862,8 +862,8 @@ print(melted_df.head())
 ```
 
 ### 2.2.4 Working with NumPy Arrays
+#### Completed and Compiled Code: [Click Here](https://colab.research.google.com/drive/1LDWWVJu2LRag47-rPnmTusqLmSzkuCAO?usp=sharing)
 
----
 
 **Basic Operations and Mathematical Functions**
 
@@ -888,7 +888,7 @@ arr_mean = np.mean(arr)
 print(f"Sum: {arr_sum}, Mean: {arr_mean}")
 ```
 
-**Practice Problem:**
+**Practice Problem 1:**
 
 [comment]: <> (#TODO change this example to use one of the columns added to the dataset that would make more sense to average because num is the indices and does not make sense to average)
 
@@ -936,7 +936,7 @@ slice_arr = arr[1:4]
 print(slice_arr)
 ```
 
-**Practice Problem:**
+**Practice Problem 2:**
 
 1. Create a NumPy array from the `num` column in the **BBBP** dataset.
 2. Slice the array to extract every second element.
@@ -993,7 +993,7 @@ print(reshaped_arr)
 print(broadcast_arr)
 ```
 
-**Practice Problem:**
+**Practice Problem 3:**
 
 [comment]: <> (#TODO have the reader use data that makes more sense than the num column which is not a relevant metric and explain why you might want to reshape an array or do an operation with broadcasting)
 
