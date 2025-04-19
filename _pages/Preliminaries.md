@@ -448,7 +448,10 @@ print(f"Double molecular weight: {double_weight(molecular_weight)}")
 In this chapter, we'll explore how to use Python for data analysis, focusing on importing and managing datasets commonly encountered in chemistry. Data analysis is a crucial skill for chemists, allowing you to extract meaningful insights from experimental data, predict outcomes, and make informed decisions in your research. Effective data analysis begins with properly importing and managing your datasets. This section will guide you through loading data from various file formats, including those specific to chemistry, and handling data from databases.
 
 ### 2.2.1 Loading Data from Various File Formats
+#### Completed and Compiled Code
+**[https://colab.research.google.com/drive/193oFwo4NRDWNl9lk8fu86gdS9SAsjcBs?usp=sharing](url)
 
+#### Detailed Instructions
 **Reading Data from CSV**
 
 **Explanation:**
