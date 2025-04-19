@@ -3266,7 +3266,9 @@ plt.show()
 - Regression models establish relationships between molecular descriptors and properties.
 - Linear regression is straightforward and interpretable, making it a useful first approach for property prediction.
 - Metrics like MSE and R² help evaluate the predictive performance of models.
+
 ---
+
 ### 2.4.5 Advanced Visualization of Representations
 
 #### Introduction to Advanced Visualization
@@ -3420,7 +3422,9 @@ plt.show()
 - **Heatmaps** provide a quick overview of similarity or correlation matrices, revealing patterns and clusters.
 - **Scatterplots** visually demonstrate relationships between two molecular properties, with options for color and size encoding.
 - **Correlation matrices** highlight pairwise relationships, aiding in feature selection and hypothesis generation.
+  
 ---
+
 ### 2.4.6 Integration of Representations with Machine Learning
 
 #### Introduction to Integration of Representations
