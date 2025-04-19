@@ -1138,6 +1138,7 @@ plt.show()
 ![Density Plot Example](../../resource/img/preliminaries/pre_2-2/2.2.5-4.png)
 
 *Figure: Density Plot Visualizing Data Distribution*
+
 ---
 
 #### Box Plots and Violin Plots
@@ -1184,6 +1185,7 @@ plt.show()
 ![Violin Plot Example](../../resource/img/preliminaries/pre_2-2/2.2.5-6.png)
 
 *Figure: Violin Plot Highlighting Value Distribution and Density Across Categories*
+
 ---
 
 #### Heatmaps and Correlation Matrices
