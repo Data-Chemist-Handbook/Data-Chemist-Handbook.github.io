@@ -2318,6 +2318,7 @@ Number of molecules with an amine group: 555
 This section provides a comprehensive overview of SMARTS, including its syntax, advantages, and practical applications in cheminformatics. The example code, practice problem, and solution demonstrate how to work with SMARTS using RDKit, a popular cheminformatics toolkit, and leverage real data from the BBBP dataset.
 
 ### 2.3.3 Fingerprint
+#### Completed and Compiled Code: [Click Here](https://colab.research.google.com/drive/1hrZAg-iJGHwxkosVV57Ju5VI9euxUCqh?usp=sharing)
 
 **Explanation:**
 
@@ -2357,7 +2358,7 @@ fingerprint = AllChem.GetMorganFingerprintAsBitVect(molecule, radius=2, nBits=10
 print("Fingerprint:", fingerprint.ToBitString())
 ```
 
-**Practice Problem:**
+**Practice Problem 1:**
 
 **Context**: Fingerprints are essential for comparing molecular structures and identifying similar compounds. Understanding how to generate and use fingerprints is crucial for cheminformatics applications.
 
@@ -2369,21 +2370,34 @@ print("Fingerprint:", fingerprint.ToBitString())
 **Solution:**
 
 ```python
-import pandas as pd
-from rdkit import Chem
-from rdkit.Chem import AllChem
-
 # Load the BBBP dataset
-df = pd.read_csv('BBBP.csv')
+url = 'https://raw.githubusercontent.com/Data-Chemist-Handbook/Data-Chemist-Handbook.github.io/refs/heads/master/_pages/BBBP.csv'
+df = pd.read_csv(url)
 
 # Generate Morgan fingerprints for the first five molecules
 for i in range(5):
    smiles = df['smiles'].iloc[i]
    molecule = Chem.MolFromSmiles(smiles)
-   fingerprint = AllChem.GetMorganFingerprintAsBitVect(molecule, radius=2, nBits=1024)
+   fingerprint = AllChem.GetMorganFingerprintAsBitVect(molecule, radius=2, nBits=20) # can inncrease the number of bits up to 1024
    print(f"Fingerprint for molecule {i+1}:", fingerprint.ToBitString())
 ```
+**Results and Interpretation**
 
+```
+Fingerprint for molecule 1: 11001111111111111111
+Fingerprint for molecule 2: 11111111111010111101
+Fingerprint for molecule 3: 11111111111111111111
+Fingerprint for molecule 4: 11111011111111111111
+Fingerprint for molecule 5: 01111111111111011111
+
+Morgan fingerprints encode substructures of a molecule based on atom neighborhoods and their connectivity. They’re widely used in chemoinformatics to compare molecule similarity.
+
+Each bit in the fingerprint represents the presence (1) or absence (0) of a specific molecular substructure.
+
+A 1 in position 500, for example, means a certain substructure exists in that molecule.
+
+The fingerprints show that all five molecules are highly similar, with each having at least 18 out of 20 bits set to 1, indicating a strong overlap in structural subfeatures. Molecule 3 has a perfect 20/20 bit presence, suggesting it shares all common substructures found in this bit space, while the others differ by only one or two bits. This close alignment implies that the molecules likely belong to the same chemical class or scaffold with only minor variations, which is consistent with typical datasets like BBBP that focus on drug-like compounds with similar biological properties.
+```
 This section provides a comprehensive overview of Fingerprints, including their types, advantages, and practical applications in cheminformatics. The example code, practice problem, and solution demonstrate how to work with Fingerprints using RDKit, a popular cheminformatics toolkit, and leverage real data from the BBBP dataset.
 
 ### 2.3.4 3D Coordinate
