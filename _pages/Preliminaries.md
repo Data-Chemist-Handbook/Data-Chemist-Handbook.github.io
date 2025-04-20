@@ -2401,6 +2401,7 @@ The fingerprints show that all five molecules are highly similar, with each havi
 This section provides a comprehensive overview of Fingerprints, including their types, advantages, and practical applications in cheminformatics. The example code, practice problem, and solution demonstrate how to work with Fingerprints using RDKit, a popular cheminformatics toolkit, and leverage real data from the BBBP dataset.
 
 ### 2.3.4 3D Coordinate
+#### Completed and Compiled Code: [Click Here](https://colab.research.google.com/drive/1HgH2X7SvDejjuZ8AqMY8VwH3kXWjvmU7?usp=sharing)
 
 **Explanation:**
 
@@ -2442,7 +2443,7 @@ for atom in molecule.GetAtoms():
    print(f"Atom {atom.GetSymbol()} - x: {pos.x}, y: {pos.y}, z: {pos.z}")
 ```
 
-**Practice Problem:**
+**Practice Problem 1:**
 
 **Context**: 3D coordinates are essential for understanding the spatial arrangement of molecules. Generating and analyzing 3D coordinates is crucial for applications in molecular modeling and drug design.
 
@@ -2480,6 +2481,7 @@ for atom in molecule.GetAtoms():
 This section provides a comprehensive overview of 3D Coordinates, including their importance, advantages, and practical applications in cheminformatics. The example code, practice problem, and solution demonstrate how to work with 3D coordinates using RDKit, a popular cheminformatics toolkit, and leverage real data from the BBBP dataset.
 
 ### 2.3.5 RDKit
+#### Completed and Compiled Code: [Click Here](https://colab.research.google.com/drive/1TZABqQY6q4IxO62bsWmc-OkDmg8aG3rD?usp=sharing)
 
 **Explanation:**
 
