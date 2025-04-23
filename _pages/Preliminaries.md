@@ -2562,7 +2562,7 @@ contains_benzene = molecule.HasSubstructMatch(benzene_pattern)
 
 # Display the results
 print(f"Molecular Weight: {molecular_weight}")
-print(f"logP: {logP}")
+print(f"logP: {logP}") # measures a molecule's lipophilicity, which describes how well it dissolves in lipophilic (fat-like) versus hydrophilic (water-like) environments.
 print(f"Contains Benzene Ring: {contains_benzene}")
 ```
 
