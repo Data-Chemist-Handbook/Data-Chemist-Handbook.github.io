@@ -3127,6 +3127,7 @@ plt.show()
 ---
 
 ### 2.4.3 Similarity and Clustering
+#### Completed and Compiled Code: [Click Here](https://colab.research.google.com/drive/1Hq5atbCqN_nH70x9xjiyxWBfUlVIPIAh?usp=sharing)
 
 #### Introduction to Molecular Similarity
 
@@ -3144,45 +3145,42 @@ Clustering is a technique for grouping molecules based on their similarity. It h
 #### Example: Fingerprints and Clustering
 
 Let’s analyze a dataset by generating fingerprints for molecules, calculating pairwise similarity, and performing clustering.
-
 ```python
+!pip install rdkit -q
+# Importing packages / might have to run it twice
 import pandas as pd
+import numpy as np
 from rdkit import Chem
-from rdkit.Chem import AllChem, DataStructs
-from sklearn.cluster import KMeans
-from scipy.cluster.hierarchy import dendrogram, linkage
-import matplotlib.pyplot as plt
-
-# Example dataset of SMILES strings
+from rdkit.Chem import AllChem
+from rdkit import DataStructs
+```
+```python
+# Sample data
 data = {
-   'Compound': ['Molecule1', 'Molecule2', 'Molecule3', 'Molecule4'],
-   'SMILES': ['CCO', 'CCC', 'CNC', 'COC']
+    'Compound': ['Mol1', 'Mol2', 'Mol3', 'Mol4'],
+    'SMILES': ['CCO', 'CCC', 'CNC', 'COC']
 }
 df = pd.DataFrame(data)
 
 # Generate fingerprints
-fingerprints = [AllChem.GetMorganFingerprintAsBitVect(Chem.MolFromSmiles(smiles), radius=2, nBits=1024)
-               for smiles in df['SMILES']]
+fps = []
+for smi in df['SMILES']:
+    mol = Chem.MolFromSmiles(smi)
+    if mol:
+        fp = AllChem.GetMorganFingerprintAsBitVect(mol, radius=2, nBits=256)
+        fps.append(fp)
 
-# Convert fingerprints to a NumPy array for clustering
-fingerprint_array = []
-for fp in fingerprints:
-   arr = []
-   DataStructs.ConvertToNumpyArray(fp, arr)
-   fingerprint_array.append(arr)
+# Compute similarity matrix (Tanimoto)
+n = len(fps)
+similarity_matrix = np.zeros((n, n))
+for i in range(n):
+    for j in range(n):
+        similarity_matrix[i, j] = DataStructs.TanimotoSimilarity(fps[i], fps[j])
 
-# Perform hierarchical clustering
-linked = linkage(fingerprint_array, method='ward')
-plt.figure(figsize=(8, 5))
-dendrogram(linked, labels=df['Compound'].values, leaf_rotation=90)
-plt.title('Hierarchical Clustering of Molecules')
-plt.show()
-
-# Perform k-means clustering
-kmeans = KMeans(n_clusters=2, random_state=42)
-df['Cluster'] = kmeans.fit_predict(fingerprint_array)
-
-print(df[['Compound', 'Cluster']])
+# Convert to DataFrame and print
+sim_df = pd.DataFrame(similarity_matrix, columns=df['Compound'], index=df['Compound'])
+print("Tanimoto Similarity Matrix:")
+print(sim_df)
 ```
 ---
 ### 2.4.4 Regression Models for Property Prediction
