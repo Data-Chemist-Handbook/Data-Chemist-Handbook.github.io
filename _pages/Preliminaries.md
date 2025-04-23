@@ -2896,7 +2896,9 @@ You’ve generated a Morgan fingerprint for a compound using RDKit, which encode
 ---
 
 ## 2.4 Calculation on Representation
-### 2.4.1 Statistical Analysis on Molecular Representations
+### 2.4.1 Statistical Analysis of Molecular Representations
+#### Completed and Compiled Code: [Click Here](https://colab.research.google.com/drive/11nh64K3pS5FOHrG9AvPfKAIkKGeX0dsg?usp=sharing)
+
 #### Introduction to Statistical Analysis in Cheminformatics
 
 Statistical analysis is a powerful tool in cheminformatics for uncovering patterns and relationships within molecular datasets. By analyzing the distributions, correlations, and variances of molecular properties, researchers can gain insights into the behavior and interactions of chemical compounds. This subchapter introduces statistical analysis techniques, focusing on simple yet effective methods to interpret molecular representations.
