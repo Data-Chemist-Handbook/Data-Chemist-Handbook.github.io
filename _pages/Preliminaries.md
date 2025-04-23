@@ -3471,7 +3471,7 @@ plt.show()
 ---
 
 ### 2.4.6 Integration of Representations with Machine Learning
-
+#### Completed and Compiled Code: [Click Here](https://colab.research.google.com/drive/1dj30FmmVAsCiR1g7hk6VuLyIHjwtIYsW?usp=sharing)
 #### Introduction to Integration of Representations
 
 In cheminformatics, combining molecular representations like **fingerprints**, **3D coordinates**, and **molecular descriptors** enhances the predictive power of machine learning models. These representations capture different aspects of molecular properties and behavior, providing a comprehensive dataset for prediction tasks.
@@ -3489,39 +3489,47 @@ This integration is critical for tasks such as property prediction, activity mod
 Combining fingerprints, 3D coordinates, and descriptors involves preprocessing each representation and concatenating them into a single feature array.
 
 ```python
-import numpy as np
+!pip install rdkit-pypi
 from rdkit import Chem
 from rdkit.Chem import AllChem, Descriptors
+import numpy as np
 
-# Example SMILES string for a molecule
+# Example SMILES string for aspirin
 smiles = 'CC(=O)OC1=CC=CC=C1C(=O)O'
-
-# Convert SMILES to a molecule object
 molecule = Chem.MolFromSmiles(smiles)
+molecule = Chem.AddHs(molecule)
 
-# Generate a Morgan fingerprint
+# Generate fingerprint
 fingerprint = AllChem.GetMorganFingerprintAsBitVect(molecule, radius=2, nBits=1024)
+fingerprint_array = np.array(fingerprint)
 
-# Calculate molecular descriptors
+# Molecular descriptors
 molecular_weight = Descriptors.MolWt(molecule)
 logP = Descriptors.MolLogP(molecule)
+descriptor_array = np.array([molecular_weight, logP])
 
 # Generate 3D coordinates
-AllChem.EmbedMolecule(molecule)
+AllChem.EmbedMolecule(molecule, randomSeed=42)
 AllChem.UFFOptimizeMolecule(molecule)
-atom_positions = [
-   [molecule.GetConformer().GetAtomPosition(atom.GetIdx()).x,
-   molecule.GetConformer().GetAtomPosition(atom.GetIdx()).y,
-   molecule.GetConformer().GetAtomPosition(atom.GetIdx()).z]
-   for atom in molecule.GetAtoms()
-]
 
-# Combine features into a single array
-fingerprint_array = np.array(fingerprint)
-descriptor_array = np.array([molecular_weight, logP])
-feature_array = np.concatenate((fingerprint_array, descriptor_array), axis=None)
+# Extract 3D coordinates
+conf = molecule.GetConformer()
+atom_positions = []
+for atom in molecule.GetAtoms():
+    pos = conf.GetAtomPosition(atom.GetIdx())
+    atom_positions.extend([pos.x, pos.y, pos.z])
+coords_array = np.array(atom_positions)
 
-print("Feature array shape:", feature_array.shape)
+# Combine all features
+feature_array = np.concatenate((fingerprint_array, descriptor_array, coords_array), axis=None)
+
+# Report
+print(f"Molecule SMILES: {smiles}")
+print(f"Number of atoms (including hydrogens): {molecule.GetNumAtoms()}")
+print(f"Fingerprint length: {fingerprint_array.shape[0]}")
+print(f"Number of descriptors: {descriptor_array.shape[0]}")
+print(f"3D coordinate array length (flattened): {coords_array.shape[0]}")
+print(f"Final feature vector shape: {feature_array.shape}")
 ```
 
 **Explanation**:
@@ -3567,6 +3575,10 @@ import numpy as np
 from rdkit import Chem
 from rdkit.Chem import AllChem, Descriptors
 
+from rdkit import Chem
+from rdkit.Chem import AllChem, Descriptors
+import numpy as np
+
 # Example SMILES strings for three molecules
 smiles_list = [
    'CC(=O)OC1=CC=CC=C1C(=O)O',  # Aspirin
@@ -3576,35 +3588,46 @@ smiles_list = [
 
 feature_arrays = []
 
-for smiles in smiles_list:
-   molecule = Chem.MolFromSmiles(smiles)
-   
-   # Generate fingerprint
-   fingerprint = AllChem.GetMorganFingerprintAsBitVect(molecule, radius=2, nBits=1024)
-   
-   # Calculate molecular descriptors
-   molecular_weight = Descriptors.MolWt(molecule)
-   logP = Descriptors.MolLogP(molecule)
-   
-   # Generate 3D coordinates
-   AllChem.EmbedMolecule(molecule)
-   AllChem.UFFOptimizeMolecule(molecule)
-   atom_positions = [
-      [molecule.GetConformer().GetAtomPosition(atom.GetIdx()).x,
-         molecule.GetConformer().GetAtomPosition(atom.GetIdx()).y,
-         molecule.GetConformer().GetAtomPosition(atom.GetIdx()).z]
-      for atom in molecule.GetAtoms()
-   ]
-   
-   # Combine features
-   fingerprint_array = np.array(fingerprint)
-   descriptor_array = np.array([molecular_weight, logP])
-   feature_array = np.concatenate((fingerprint_array, descriptor_array), axis=None)
-   feature_arrays.append(feature_array)
+for idx, smiles in enumerate(smiles_list):
+    molecule = Chem.MolFromSmiles(smiles)
+    molecule = Chem.AddHs(molecule)  # Add hydrogens
 
-# Print feature arrays
+    # Generate fingerprint
+    fingerprint = AllChem.GetMorganFingerprintAsBitVect(molecule, radius=2, nBits=1024)
+    fingerprint_array = np.array(fingerprint)
+
+    # Molecular descriptors
+    molecular_weight = Descriptors.MolWt(molecule)
+    logP = Descriptors.MolLogP(molecule)
+    descriptor_array = np.array([molecular_weight, logP])
+
+    # Generate 3D coordinates
+    AllChem.EmbedMolecule(molecule, randomSeed=42)
+    AllChem.UFFOptimizeMolecule(molecule)
+
+    # Extract 3D coordinates
+    conf = molecule.GetConformer()
+    atom_positions = []
+    for atom in molecule.GetAtoms():
+        pos = conf.GetAtomPosition(atom.GetIdx())
+        atom_positions.extend([pos.x, pos.y, pos.z])
+    coords_array = np.array(atom_positions)
+
+    # Combine all features
+    feature_array = np.concatenate((fingerprint_array, descriptor_array, coords_array), axis=None)
+    feature_arrays.append(feature_array)
+
+    # Print summary
+    print(f"Molecule {idx + 1}: {smiles}")
+    print(f"  Number of atoms (with Hs): {molecule.GetNumAtoms()}")
+    print(f"  Fingerprint length: {fingerprint_array.shape[0]}")
+    print(f"  Descriptor count: {descriptor_array.shape[0]}")
+    print(f"  3D coordinate length: {coords_array.shape[0]}")
+    print(f"  Final feature vector shape: {feature_array.shape}\n")
+
+# Optionally print first few values of each feature array
 for i, features in enumerate(feature_arrays):
-   print(f"Feature array for molecule {i + 1}: {features}")
+    print(f"Feature array for molecule {i + 1} (first 10 values): {features[:10]}")
 ```
 
 #### Key Takeaways
