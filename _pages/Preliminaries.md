@@ -2575,10 +2575,13 @@ This section provides a comprehensive overview of RDKit, including its capabilit
 **Molecular visualization** is a crucial aspect of cheminformatics and computational chemistry, enabling researchers to understand complex molecular structures and interactions. Visualization tools allow chemists to explore molecular conformations, study structural interactions, and communicate findings effectively. This section covers two popular molecular visualization libraries: PyMOL and RDKit.
 
 #### Using PyMOL for Visualization
+**WARNING**
+**PyMol** only runs on certain environments, and will not work on Google Colab. Instead, use an Anaconda Environment if you wish to test this section (2.1.1 Option 2).
 
 **Explanation:**
 
 **PyMOL** is a powerful molecular visualization system that allows users to view and analyze molecular structures in detail. It is particularly useful for studying structural interactions, visualizing conformations, and preparing publication-quality images. PyMOL supports a wide range of file formats, including PDB, and offers extensive customization options for rendering molecular structures.
+
 
 **Importance and Applications:**
 
@@ -2596,12 +2599,6 @@ with pymol2.PyMOL() as pymol:
    pymol.cmd.zoom("all")
    pymol.cmd.png("molecule_visualization.png")  # Save an image of the visualization
 ```
-
-**Case Study:**
-
-**Context**: A structural biology lab is studying the interaction between a protein and a small molecule inhibitor. They need to visualize the complex to understand the binding interactions.
-
-**Application**: The lab uses PyMOL to load the protein-inhibitor complex and visualize it in 3D. By examining the binding site, they can identify key interactions that stabilize the complex. This information guides the design of more potent inhibitors by highlighting areas for structural optimization.
 
 #### Visualizing with RDKit
 
