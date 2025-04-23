@@ -2997,6 +2997,7 @@ print(f"Correlation between LogP and Boiling Point: {correlation_lp_bp:.2f}")
 ---
 
 ### 2.4.2 Exploring Molecular Distributions
+#### Completed and Compiled Code: [Click Here](https://colab.research.google.com/drive/1BIr2XQi6KgCgxJaLvF7mvKGcQPrqQsh-?usp=sharing)
 
 Understanding the distribution of molecular properties is a key aspect of cheminformatics. Analyzing these distributions allows chemists to gain insights into the characteristics of molecular datasets and identify trends or anomalies. This section will focus on analyzing molecular properties, such as molecular weight and logP, using statistical plots like histograms and density plots.
 
@@ -3077,18 +3078,35 @@ plt.show()
 **Solution:**
 
 ```python
-# Load the BBBP dataset
-df = pd.read_csv('BBBP.csv')
+!pip install rdkit-pypi
 
-# Create a histogram of molecular weights
-plt.hist(df['MolecularWeight'], bins=10, edgecolor='black')
+# Importing packages / might have to run it twice
+from rdkit import Chem
+from rdkit.Chem import Descriptors
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Load the BBBP dataset
+url = 'https://raw.githubusercontent.com/Data-Chemist-Handbook/Data-Chemist-Handbook.github.io/refs/heads/master/_pages/BBBP.csv'
+df = pd.read_csv(url)
+
+# Convert SMILES to molecular weight
+def get_mol_weight(smile):
+    mol = Chem.MolFromSmiles(smile)
+    return Descriptors.MolWt(mol) if mol else None
+
+df['MolecularWeight'] = df['smiles'].apply(get_mol_weight)
+
+# Histogram of molecular weights
+plt.hist(df['MolecularWeight'].dropna(), bins=20, edgecolor='black')
 plt.title('Molecular Weight Distribution (BBBP Dataset)')
 plt.xlabel('Molecular Weight')
 plt.ylabel('Frequency')
 plt.show()
 
-# Create a density plot of molecular weights
-sns.kdeplot(df['MolecularWeight'], shade=True)
+# Density plot
+sns.kdeplot(df['MolecularWeight'].dropna(), shade=True)
 plt.title('Density Plot of Molecular Weight (BBBP Dataset)')
 plt.xlabel('Molecular Weight')
 plt.ylabel('Density')
