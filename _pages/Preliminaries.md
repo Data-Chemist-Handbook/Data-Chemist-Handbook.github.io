@@ -3184,6 +3184,7 @@ print(sim_df)
 ```
 ---
 ### 2.4.4 Regression Models for Property Prediction
+#### Completed and Compiled Code: [Click Here](https://colab.research.google.com/drive/1moXdjzT56OxQOD7Rr0YEc-60YtAcm-fj?usp=sharing)
 
 #### Introduction to Regression Models
 
@@ -3309,9 +3310,11 @@ plt.show()
 - Linear regression is straightforward and interpretable, making it a useful first approach for property prediction.
 - Metrics like MSE and R² help evaluate the predictive performance of models.
 
+
 ---
 
 ### 2.4.5 Advanced Visualization of Representations
+#### Completed and Compiled Code: [Click Here](https://colab.research.google.com/drive/1q6pZBiZkN2syVwTFq_cBtEZDOhIBaqPf?usp=sharing)
 
 #### Introduction to Advanced Visualization
 
@@ -3389,11 +3392,11 @@ Correlation matrices summarize pairwise relationships between molecular properti
 import pandas as pd
 import seaborn as sns
 
-# Example dataset (synthetic data)
+# Modified example dataset with less-than-perfect correlations
 data = {
-   'MolecularWeight': [100, 150, 200, 250, 300],
-   'LogP': [1.0, 1.5, 2.0, 2.5, 3.0],
-   'MeltingPoint': [50, 60, 70, 80, 90]
+    'MolecularWeight': [100, 150, 200, 250, 300],
+    'LogP': [0.8, 1.4, 2.1, 2.2, 2.9],             
+    'MeltingPoint': [55, 58, 72, 77, 91]            
 }
 df = pd.DataFrame(data)
 
@@ -3444,9 +3447,9 @@ plt.show()
 
 # Synthetic dataset of molecular properties
 data = {
-   'MolecularWeight': [100, 150, 200, 250, 300, 350],
-   'LogP': [1.0, 1.5, 2.0, 2.5, 3.0, 3.5],
-   'MeltingPoint': [50, 60, 70, 80, 90, 100]
+    'MolecularWeight': [100, 150, 200, 250, 300],
+    'LogP': [0.8, 1.4, 2.1, 2.2, 2.9],             
+    'MeltingPoint': [55, 58, 72, 77, 91]            
 }
 df = pd.DataFrame(data)
 
