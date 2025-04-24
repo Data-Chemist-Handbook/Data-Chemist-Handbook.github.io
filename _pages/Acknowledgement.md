@@ -15,6 +15,7 @@ We also wish to extend our heartfelt thanks to the many students who contributed
 - Karenna Kung, C-CAS SURF program student, undergraduate researcher from Smith College
 - Jordan Letu, C-CAS SURF program student, undergraduate researcher from California State University, Fullerton
 - Vivian Quach, C-CAS SURF program student, undergraduate researcher from California State University, Fullerton
+- AJ Jones, MINE Lab student, undergraduate student from University of Notre Dame
 
 Lastly, we welcome any feedback, collaboration, or suggestions from readers and colleagues. Your insights and perspectives are invaluable as we continue to improve and expand the resources available for data-driven chemistry.
 
