@@ -360,6 +360,44 @@ Functioning: Data is fed into the network, where each neuron applies an activati
 
 Learning Process: Neural networks learn through a process called training. During training, the network adjusts the weights of connections based on the error between its predictions and the actual values. This is achieved using algorithms like backpropagation and optimization techniques such as gradient descent, which iteratively updates the weights to minimize the prediction error.
 
+### 3.2.1 Biological and Conceptual Foundations of Neural Networks
+
+Neural networks are a class of machine learning models designed to learn patterns from data in order to make predictions or classifications. Their structure and behavior are loosely inspired by how the human brain processes information: through a large network of connected units that transmit signals to each other. Although artificial neural networks are mathematical rather than biological, this analogy provides a helpful starting point for understanding how they function.
+
+**The Neural Analogy**
+
+In a biological system, neurons receive input signals from other neurons, process those signals, and send output to downstream neurons. Similarly, an artificial neural network is composed of units called "neurons" or "nodes" that pass numerical values from one layer to the next. Each of these units receives inputs, processes them using a simple rule, and forwards the result.
+
+This structure allows the network to build up an understanding of the input data through multiple layers of transformations. As information flows forward through the network—layer by layer—it becomes increasingly abstract. Early layers may focus on basic patterns in the input, while deeper layers detect more complex or chemically meaningful relationships.
+
+**Layers of a Neural Network**
+
+Neural networks are organized into three main types of layers:
+- **Input Layer**: This is where the network receives the data. In chemistry applications, this might include molecular fingerprints, structural descriptors, or other numerical representations of a molecule.
+- **Hidden Layers**: These are the internal layers where computations happen. The network adjusts its internal parameters to best relate the input to the desired output.
+- **Output Layer**: This layer produces the final prediction. For example, it might output a predicted solubility value, a toxicity label, or the probability that a molecule is biologically active.
+
+The depth (number of layers) and width (number of neurons in each layer) of a network affect its capacity to learn complex relationships.
+
+**Why Chemists Use Neural Networks**
+
+Many molecular properties—such as solubility, lipophilicity, toxicity, and biological activity—are influenced by intricate, nonlinear combinations of atomic features and substructures. These relationships are often difficult to express with a simple equation or rule.
+
+Neural networks are especially useful in chemistry because:
+
+- They can learn from large, complex datasets without needing detailed prior knowledge about how different features should be weighted.
+- They can model nonlinear relationships, such as interactions between molecular substructures, electronic effects, and steric hindrance.
+- They are flexible and can be applied to a wide range of tasks, from predicting reaction outcomes to screening drug candidates.
+
+**How Learning Happens**
+
+Unlike hardcoded rules, neural networks improve through a process of learning:
+1. **Prediction**: The network uses its current understanding to make a guess about the output (e.g., predicting a molecule’s solubility).
+2. **Feedback**: It compares its prediction to the known, correct value.
+3. **Adjustment**: It updates its internal parameters to make better predictions next time.
+
+This process repeats over many examples, gradually improving the model’s accuracy. Over time, the network can generalize—making reliable predictions on molecules it has never seen before.
+
 ## 3.3 Graph Neural Network
 
 Graph Neural Networks (GNNs) are a class of neural networks designed to operate on graph-structured data. Unlike traditional neural networks, which work with data in grid-like structures (such as images or sequences), GNNs are specifically tailored to handle data represented as graphs, where entities are nodes and relationships are edges.
