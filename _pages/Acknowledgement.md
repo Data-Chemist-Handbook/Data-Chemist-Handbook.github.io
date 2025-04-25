@@ -28,6 +28,8 @@ We are also grateful to the following students for their assistance in collectin
 
   * AJ Jones, MINE Lab student, undergraduate student from University of Notre Dame
 
+  * Dan Yoo, MINE Lab student, undergraduate student from University of Notre Dame
+
 Lastly, we welcome any feedback, collaboration, or suggestions from readers and colleagues. Your insights and perspectives are invaluable as we continue to improve and expand the resources available for data-driven chemistry.
 
 Thank you to all who have supported this endeavor.
