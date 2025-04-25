@@ -373,9 +373,9 @@ This structure allows the network to build up an understanding of the input data
 **Layers of a Neural Network**
 
 Neural networks are organized into three main types of layers:
-- **Input Layer**: This is where the network receives the data. In chemistry applications, this might include molecular fingerprints, structural descriptors, or other numerical representations of a molecule.
-- **Hidden Layers**: These are the internal layers where computations happen. The network adjusts its internal parameters to best relate the input to the desired output.
-- **Output Layer**: This layer produces the final prediction. For example, it might output a predicted solubility value, a toxicity label, or the probability that a molecule is biologically active.
+- **Input Layer:** This is where the network receives the data. In chemistry applications, this might include molecular fingerprints, structural descriptors, or other numerical representations of a molecule.
+- **Hidden Layers:** These are the internal layers where computations happen. The network adjusts its internal parameters to best relate the input to the desired output.
+- **Output Layer:** This layer produces the final prediction. For example, it might output a predicted solubility value, a toxicity label, or the probability that a molecule is biologically active.
 
 The depth (number of layers) and width (number of neurons in each layer) of a network affect its capacity to learn complex relationships.
 
@@ -392,11 +392,147 @@ Neural networks are especially useful in chemistry because:
 **How Learning Happens**
 
 Unlike hardcoded rules, neural networks improve through a process of learning:
-1. **Prediction**: The network uses its current understanding to make a guess about the output (e.g., predicting a molecule’s solubility).
-2. **Feedback**: It compares its prediction to the known, correct value.
-3. **Adjustment**: It updates its internal parameters to make better predictions next time.
+1. **Prediction:** The network uses its current understanding to make a guess about the output (e.g., predicting a molecule’s solubility).
+2. **Feedback:** It compares its prediction to the known, correct value.
+3. **Adjustment:** It updates its internal parameters to make better predictions next time.
 
 This process repeats over many examples, gradually improving the model’s accuracy. Over time, the network can generalize—making reliable predictions on molecules it has never seen before.
+
+### 3.2.2 The Structure of a Neural Network
+#### Completed and Compiled Code: [Click Here](https://colab.research.google.com/drive/1xBQ6a24F6L45uOFkgML4E6z58jzsbRFe?usp=sharing)
+The structure of a neural network refers to how its components are organized and how information flows from the input to the output. Understanding this structure is essential for applying neural networks to chemical problems, where numerical data about molecules must be transformed into meaningful predictions—such as solubility, reactivity, toxicity, or classification into chemical groups.
+
+**Basic Building Blocks**
+A typical neural network consists of three types of layers:
+1. **Input Layer**
+This is the first layer and represents the data you give the model. In chemistry, this might include:
+- Molecular fingerprints (e.g., Morgan or ECFP4)
+- Descriptor vectors (e.g., molecular weight, number of rotatable bonds)
+- Graph embeddings (in more advanced architectures)
+
+Each input feature corresponds to one "neuron" in this layer. The network doesn't modify the data here; it simply passes it forward.
+
+2. **Hidden Layers**
+These are the core of the network. They are composed of interconnected neurons that process the input data through a series of transformations. Each neuron:
+- Multiplies each input by a weight (a learned importance factor)
+- Adds the results together, along with a bias term
+- Passes the result through an activation function to determine the output
+
+Multiple hidden layers can extract increasingly abstract features. For example:
+- First hidden layer: detects basic structural motifs (e.g., aromatic rings)
+- Later hidden layers: model higher-order relationships (e.g., presence of specific pharmacophores)
+
+The depth of a network (number of hidden layers) increases its capacity to model complex patterns, but also makes it more challenging to train.
+
+3. **Output Layer**
+This layer generates the final prediction. The number of output neurons depends on the type of task:
+- One neuron for regression (e.g., predicting solubility)
+- One neuron with a sigmoid function for binary classification (e.g., active vs. inactive)
+- Multiple neurons with softmax for multi-class classification (e.g., toxicity categories)
+
+**Activation Functions**
+The activation function introduces non-linearity to the model. Without it, the network would behave like a linear regression model, unable to capture complex relationships. Common activation functions include:
+- **ReLU (Rectified Linear Unit):** Returns 0 for negative inputs and the input itself for positive values. Efficient and widely used.
+- **Sigmoid:** Squeezes inputs into the range (0,1), useful for probabilities.
+- **Tanh:** Similar to sigmoid but outputs values between -1 and 1, often used in earlier layers.
+
+These functions allow neural networks to model subtle chemical relationships, such as how a substructure might enhance activity in one molecular context but reduce it in another.
+
+**Forward Pass: How Data Flows Through the Network**
+The process of making a prediction is known as the forward pass. Here’s what happens step-by-step:
+
+1. Each input feature (e.g., molecular weight = 300) is multiplied by a corresponding weight.
+2. The weighted inputs are summed and combined with a bias.
+3. The result is passed through the activation function.
+4. The output becomes the input to the next layer.
+
+This process repeats until the final output is produced.
+
+**Building a Simple Neural Network for Molecular Property Prediction**
+Let’s build a minimal neural network that takes molecular descriptors as input and predicts a continuous chemical property, such as aqueous solubility. We’ll use TensorFlow and Keras.
+```python
+import tensorflow as tf
+from tensorflow.keras import layers, models
+import numpy as np
+
+# Example molecular descriptors for 5 hypothetical molecules:
+# Features: [Molecular Weight, LogP, Number of Rotatable Bonds]
+X = np.array([
+    [180.1, 1.2, 3],
+    [310.5, 3.1, 5],
+    [150.3, 0.5, 2],
+    [420.8, 4.2, 8],
+    [275.0, 2.0, 4]
+])
+
+# Target values: Normalized aqueous solubility
+y = np.array([0.82, 0.35, 0.90, 0.20, 0.55])
+
+# Define a simple feedforward neural network
+model = models.Sequential([
+    layers.Input(shape=(3,)),              # 3 input features per molecule
+    layers.Dense(8, activation='relu'),    # First hidden layer
+    layers.Dense(4, activation='relu'),    # Second hidden layer
+    layers.Dense(1)                        # Output layer (regression)
+])
+
+# Compile the model
+model.compile(optimizer='adam', loss='mse')  # Mean Squared Error for regression
+
+# Train the model
+model.fit(X, y, epochs=100, verbose=0)
+
+# Predict on new data
+new_molecule = np.array([[300.0, 2.5, 6]])
+predicted_solubility = model.predict(new_molecule)
+print("Predicted Solubility:", predicted_solubility[0][0])
+```
+
+**What This Code Does:**
+- Inputs are numerical molecular descriptors (easy for chemists to relate to).
+- The model learns a pattern from these descriptors to predict solubility.
+- Layers are built exactly as explained: input → hidden (ReLU) → output.
+- The output is a single continuous number, suitable for regression tasks.
+
+**Practice Problem 3: Neural Network Warm-Up**
+Using the logic from the code above:
+1. Replace the input features with the following descriptors:
+    - [350.2, 3.3, 5], [275.4, 1.8, 4], [125.7, 0.2, 1]
+2. Create a new NumPy array called X_new with those values.
+3. Use the trained model to predict the solubility of each new molecule.
+4. Print the outputs with a message like:
+    "Predicted solubility for molecule 1: 0.67"
+   
+```python
+# Step 1: Create new molecular descriptors for prediction
+X_new = np.array([
+    [350.2, 3.3, 5],
+    [275.4, 1.8, 4],
+    [125.7, 0.2, 1]
+])
+
+# Step 2: Use the trained model to predict solubility
+predictions = model.predict(X_new)
+
+# Step 3: Print each result with a message
+for i, prediction in enumerate(predictions):
+    print(f"Predicted solubility for molecule {i + 1}: {prediction[0]:.2f}")
+```
+**Discussion: What Did We Just Do?**
+In this practice problem, we used a trained neural network to predict the solubility of three new chemical compounds based on simple molecular descriptors. Each molecule was described using three features:
+1. Molecular weight
+2. LogP (a measure of lipophilicity)
+3. Number of rotatable bonds
+The model, having already learned patterns from prior data during training, applied its internal weights and biases to compute a prediction for each molecule.
+
+```python
+Predicted solubility for molecule 1: 0.38  
+Predicted solubility for molecule 2: 0.55  
+Predicted solubility for molecule 3: 0.91
+```
+
+These values reflect the model’s confidence in how soluble each molecule is, with higher numbers generally indicating better solubility. While we don't yet know how the model arrived at these exact numbers (that comes in the next section), this exercise demonstrates a key advantage of neural networks:
+- Once trained, they can generalize to unseen data—making predictions for new molecules quickly and efficiently.
 
 ## 3.3 Graph Neural Network
 
