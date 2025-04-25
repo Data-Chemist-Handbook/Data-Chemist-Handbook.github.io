@@ -10,7 +10,7 @@ This book would not have been possible without the generous support of the Natio
 
 We also wish to extend our heartfelt thanks to the many students who contributed their time, ideas, and hard work throughout the development of this book. Their valuable input, from testing concepts to providing feedback on practical applications, has greatly enriched the content and made this book more accessible and effective for chemists looking to embrace data-driven approaches.
 
-We would like to acknowledge Alex Liu, an undergraduate student at the University of Notre Dame, and Haomin Zhuang, a graduate student at the University of Notre Dame, for their contributions to writing and developing key sections of this book. Their work brought clarity and structure, helping to bridge concepts from computer science and chemistry. We are also grateful to Professor Xiangliang Zhang for her guidance and thoughtful feedback throughout the project.
+We would like to acknowledge Alex Liu, an undergraduate student at the University of Notre Dame, and Haomin Zhuang, a PhD student at the University of Notre Dame, for their contributions to writing and developing key sections of this book. Their work brought clarity and structure, helping to bridge concepts from computer science and chemistry. We are also grateful to Professor Xiangliang Zhang for her guidance and thoughtful feedback throughout the project.
 
 Additional thanks to Graham Doman and Laura Andreola for offering valuable input from a chemist’s perspective, ensuring the content remains relevant and grounded in practical application.
 
