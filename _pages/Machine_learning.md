@@ -488,6 +488,11 @@ predicted_solubility = model.predict(new_molecule)
 print("Predicted Solubility:", predicted_solubility[0][0])
 ```
 
+**Results**
+```python
+Predicted Solubility: 13.366545
+```
+
 **What This Code Does:**
 - Inputs are numerical molecular descriptors (easy for chemists to relate to).
 - The model learns a pattern from these descriptors to predict solubility.
