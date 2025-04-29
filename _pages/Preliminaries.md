@@ -1813,6 +1813,7 @@ Explanation:
 Encoding converts non-numeric data (e.g., categories) into numerical values so that machine learning models can process them. Common methods include one-hot encoding and label encoding.  Explanation:
 Most machine learning algorithms can’t handle raw text or labels as inputs. Encoding (e.g., one-hot or label encoding) translates categories into numeric form, allowing the model to interpret class differences and make predictions based on them — a common step when working with descriptors like compound type, target family, or assay outcome.
 </details>
+
 ---
 
 #### Question 3  
@@ -1833,6 +1834,7 @@ Correct Answer: B
 Explanation:
 In cheminformatics, pivot_table() is especially useful for converting assay results from long to wide format, where each assay becomes a separate column. This transformation is common before merging descriptor data or building a machine learning dataset.
 </details>
+
 ---
 
 #### Question 4  
@@ -1853,6 +1855,7 @@ Correct Answer: B
 Explanation:  
 Min-Max normalization rescales values to a fixed range (often 0 to 1), making it easier to compare across features with different units or scales.
 </details>
+
 ---
 
 #### Question 5  
@@ -1873,6 +1876,7 @@ Correct Answer: C
 Explanation: 
 `astype()` is used to convert a column's data type, such as from string to float or integer, so mathematical operations can be performed.
 </details>
+
 ---
 
 ### 2) Comprehension / Application Questions
@@ -1935,6 +1939,7 @@ Correct Answer: A
 Explanation:  
 `fillna('unknown')` fills missing values with a placeholder, maintaining the dataset’s size. `drop_duplicates()` removes any repeated rows to ensure clean data.
 </details>
+
 ---
 
 #### Question 8  
@@ -1954,6 +1959,7 @@ Correct Answer: A
 Explanation:  
 The `.mean()` method calculates the column-wise average, and assigning it to a new column applies that single value across all rows.
 </details>
+
 ---
 
 #### Question 9
@@ -2048,6 +2054,7 @@ Correct Answer: B
 Explanation:  
 Grouping by `'p_np'` and calculating the mean of `'carbon_count'` lets you compare average carbon counts between permeability classes.
 </details>
+
 ---
 
 #### Question 12  
@@ -2068,6 +2075,7 @@ Correct Answer: B
 Explanation:  
 `pearsonr()` helps determine correlation, while `LinearRegression()` can fit a model to predict one variable based on another.
 </details>
+
 ---
 
 ## 2.3 Representation
@@ -2738,7 +2746,6 @@ D. C(C)(C)C(C)C
 Correct Answer: B
 Explanation:
 In SMILES, aromatic atoms are represented with lowercase letters. c1ccccc1 is the SMILES notation for benzene, an aromatic ring.
-
 </details>
 
 ---
@@ -2775,6 +2782,7 @@ You are analyzing a set of drug candidates and want to ensure that their molecul
 **D)** Chem.GetNumAtoms()
 
 <details> <summary>▶ Click to show answer</summary> Correct Answer: A) `Descriptors.MolWt()`  </details>
+
 <summary>▶ Click to show explanation</summary>
 Explanation:
 The Descriptors.MolWt() function from RDKit is used to calculate the molecular weight of a molecule, which is an important parameter for filtering compounds based on drug-likeness and predicting pharmacokinetic properties.
