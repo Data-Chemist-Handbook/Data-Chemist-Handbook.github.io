@@ -514,7 +514,7 @@ A, C, and D are wrong because...
 (C) mistakenly sets test_size=0.8 (which would leave only 20% for training — wrong).
 
 (D) messes up the return order (train features and labels must come first).
-
+```
 </details>
 
 --- 
