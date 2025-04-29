@@ -425,7 +425,7 @@ For classification problems, the Random Forest algorithm uses majority voting �
 
 ---
 
-## 🚀 Bonus Challenge Questions
+## Bonus Challenge Questions
 
 ---
 
@@ -449,9 +449,27 @@ Random Forests can handle categorical data after simple preprocessing, such as l
 ---
 
 ### Challenge 2: Coding Practice
+### Challenge 2: Coding Practice
 Suppose you have your molecule fingerprints stored in variables `X` and your labels (0 or 1 for BBBP) stored in `y`.  
-Write the Python code to split this data into **80% training** and **20% testing** sets.
+Which of the following correctly splits the data into **80% training** and **20% testing** sets?
 
+**A.**
+```python
+X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=0.2, random_state=42)
+```
+
+**B.**
+```python
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+```
+**C.**
+```python
+X_train, X_test = train_test_split(X, y, test_size=0.8, random_state=42)
+```
+**D.**
+```python
+X_train, y_train, X_test, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+```
 <details>
 <summary>▶ Click to show answer</summary>
 
@@ -462,6 +480,24 @@ from sklearn.model_selection import train_test_split
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 ```
+**Correct Answer:** B  
+**Explanation:**  
+In Random Forest modeling, we use train_test_split from sklearn.model_selection.
+
+test_size=0.2 reserves 20% of the data for testing, leaving 80% for training.
+
+The function returns train features, test features, train labels, and test labels — in that exact order:
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+A, C, and D are wrong because...
+
+(A) reverses train and test sizing.
+
+(C) mistakenly sets test_size=0.8 (which would leave only 20% for training — wrong).
+
+(D) messes up the return order (train features and labels must come first).
+
+</details> ```
 
 --- 
 
