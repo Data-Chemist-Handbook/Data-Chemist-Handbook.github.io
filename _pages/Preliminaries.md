@@ -1787,6 +1787,9 @@ Correct Answer: D
 Explanation:  
 Pivot tables help chemists aggregate results (e.g., toxicity scores by chemical class or molecular descriptor bins), making it easier to spot trends, compare subgroups, and prepare the data for downstream modeling or visualization.
 </details>
+<details>
+<summary>▶ Click to show explanation</summary>
+</details>
 
 ---
 
@@ -1806,7 +1809,8 @@ Explanation:
 Encoding converts non-numeric data (e.g., categories) into numerical values so that machine learning models can process them. Common methods include one-hot encoding and label encoding.  Explanation:
 Most machine learning algorithms can’t handle raw text or labels as inputs. Encoding (e.g., one-hot or label encoding) translates categories into numeric form, allowing the model to interpret class differences and make predictions based on them — a common step when working with descriptors like compound type, target family, or assay outcome.
 </details>
-
+<summary>▶ Click to show explanation</summary>
+</details>
 ---
 
 #### Question 3  
@@ -1824,7 +1828,8 @@ Correct Answer: B
 Explanation:
 In cheminformatics, pivot_table() is especially useful for converting assay results from long to wide format, where each assay becomes a separate column. This transformation is common before merging descriptor data or building a machine learning dataset.
 </details>
-
+<summary>▶ Click to show explanation</summary>
+</details>
 ---
 
 #### Question 4  
@@ -1842,7 +1847,8 @@ Correct Answer: B
 Explanation:  
 Min-Max normalization rescales values to a fixed range (often 0 to 1), making it easier to compare across features with different units or scales.
 </details>
-
+<summary>▶ Click to show explanation</summary>
+</details>
 ---
 
 #### Question 5  
@@ -1860,7 +1866,8 @@ Correct Answer: C
 Explanation: 
 `astype()` is used to convert a column's data type, such as from string to float or integer, so mathematical operations can be performed.
 </details>
-
+<summary>▶ Click to show explanation</summary>
+</details>
 ---
 
 ### 2) Comprehension / Application Questions
@@ -1885,7 +1892,8 @@ Explanation:
 The third row of the dataset contains Dimethylglyoxime, based on the output of `df.head()`.
 
 </details>
-
+<summary>▶ Click to show explanation</summary>
+</details>
 <details>
 <summary>▶ Show Solution Code</summary>
 
@@ -1916,7 +1924,8 @@ Correct Answer: A
 Explanation:  
 `fillna('unknown')` fills missing values with a placeholder, maintaining the dataset’s size. `drop_duplicates()` removes any repeated rows to ensure clean data.
 </details>
-
+<summary>▶ Click to show explanation</summary>
+</details>
 ---
 
 #### Question 8  
@@ -1934,7 +1943,8 @@ Correct Answer: A
 Explanation:  
 The `.mean()` method calculates the column-wise average, and assigning it to a new column applies that single value across all rows.
 </details>
-
+<summary>▶ Click to show explanation</summary>
+</details>
 ---
 
 #### Question 9
@@ -1953,16 +1963,19 @@ Are these two groups statistically significant at the 95% confidence level? What
 **C.** No, F-Statistic: 78.09, P-Value: 0.09  
 **D.** No, F-Statistic: 548.06, P-Value: 0.10  
 
-
+<summary>▶ Click to show explanation</summary>
+</details>
 Correct Answer: B  
 F-Statistic: 476.96  
 P-Value: 0.0000  
-
+<summary>▶ Click to show explanation</summary>
+</details>
 Explanation:  
 Since the P-value < 0.05, the result is statistically significant at the 95% confidence level.  
 This means the difference in average molecular mass between compounds with high and low ToxCast activity is unlikely due to random chance.
 
-
+<summary>▶ Click to show explanation</summary>
+</details>
 ```python
 import pandas as pd
 from scipy.stats import f_oneway
@@ -2004,7 +2017,8 @@ Correct Answer: B
 Explanation:  
 Using `apply()` with a lambda function allows you to count the number of carbon atoms (`'C'`) in each SMILES string.
 </details>
-
+<summary>▶ Click to show explanation</summary>
+</details>
 ---
 
 #### Question 11  
@@ -2022,7 +2036,8 @@ Correct Answer: B
 Explanation:  
 Grouping by `'p_np'` and calculating the mean of `'carbon_count'` lets you compare average carbon counts between permeability classes.
 </details>
-
+<summary>▶ Click to show explanation</summary>
+</details>
 ---
 
 #### Question 12  
@@ -2040,7 +2055,8 @@ Correct Answer: B
 Explanation:  
 `pearsonr()` helps determine correlation, while `LinearRegression()` can fit a model to predict one variable based on another.
 </details>
-
+<summary>▶ Click to show explanation</summary>
+</details>
 ---
 
 ## 2.3 Representation
@@ -2665,7 +2681,8 @@ In cheminformatics, SMILES (Simplified Molecular Input Line Entry System) plays 
   <summary>▶ Click to show answer</summary>
   Correct Answer: B) SMILES provides a standardized text-based format for representing molecular structures, making it easier to store, search, and analyze large chemical databases using computational tools.
 </details>
-
+<summary>▶ Click to show explanation</summary>
+</details>
 ---
 
 #### Question 2:
@@ -2680,7 +2697,8 @@ Which of the following statements about SMILES (Simplified Molecular Input Line 
   <summary>▶ Click to show answer</summary>
   Correct Answer: B) The Chem.MolFromSmiles() function in RDKit is used to convert a SMILES string into a molecule object.
 </details>
-
+<summary>▶ Click to show explanation</summary>
+</details>
 ---
 
 #### Question 3:
@@ -2696,7 +2714,8 @@ Which of the following best describes the key difference between SMILES and SMAR
   <summary>▶ Click to show answer</summary>
   Correct Answer: A) SMILES is used to represent complete molecular structures, while SMARTS is used to define and search for molecular substructures.
 </details>
-
+<summary>▶ Click to show explanation</summary>
+</details>
 ---
 
 #### Question 4:
@@ -2713,7 +2732,8 @@ Explanation:
 In SMILES, aromatic atoms are represented with lowercase letters. c1ccccc1 is the SMILES notation for benzene, an aromatic ring.
 
 </details>
-
+<summary>▶ Click to show explanation</summary>
+</details>
 ---
 
 #### Question 5:
@@ -2729,7 +2749,8 @@ Which of the following is not a reason for using 3D coordinates in cheminformati
 
 <details> <summary>▶ Click to show answer</summary> Correct Answer: C) Predicting melting points from SMILES strings 
    Explanation: Melting points are empirical properties. While molecular structure may correlate, they aren’t predicted directly from 3D coordinates. </details>
-
+<summary>▶ Click to show explanation</summary>
+</details>
 ---
 
 #### Question 6:
@@ -2745,7 +2766,8 @@ You are analyzing a set of drug candidates and want to ensure that their molecul
 
 <details> <summary>▶ Click to show answer</summary> Correct Answer: A) `Descriptors.MolWt()` Explanation:
 The Descriptors.MolWt() function from RDKit is used to calculate the molecular weight of a molecule, which is an important parameter for filtering compounds based on drug-likeness and predicting pharmacokinetic properties. </details>
-
+<summary>▶ Click to show explanation</summary>
+</details>
 ---
 
 #### Question 7:
@@ -2768,7 +2790,8 @@ What does this line of code do?
 
 <details> <summary>▶ Click to show answer</summary> Correct Answer: C) It matches the molecule against an aromatic ring SMARTS pattern. Explanation:
 The SMARTS string 'c1ccccc1' represents a six-membered aromatic ring (like benzene). This line checks whether the molecule contains that substructure — a key technique in substructure searching for SAR analysis, filtering, or building compound libraries with specific functional groups. </details>
-
+<summary>▶ Click to show explanation</summary>
+</details>
 ---
 
 ### 2) Conceptual/Application Questions:
@@ -2790,7 +2813,8 @@ Which of the following methods should the chemists use to efficiently find drug 
 Correct Answer: C) Use molecular fingerprints to perform similarity searching and clustering, identifying compounds that are structurally similar to known effective drugs, and then rank them based on their bioactivity and toxicity.
 Explanation This method leverages the power of molecular fingerprints for fast similarity searching, allowing chemists to find drugs with structural similarities to known active compounds. By clustering the data and ranking the compounds based on both bioactivity and toxicity, chemists can efficiently identify the most promising candidates for medical use.
 </details>
-
+<summary>▶ Click to show explanation</summary>
+</details>
 ---
 
 #### Question 9:
@@ -2860,7 +2884,8 @@ The correct sequence to generate 3D coordinates is:
 5. IV – Optimize geometry with UFFOptimizeMolecule()
 6. III – Loop through atoms to print 3D coordinates
 </details>
-
+<summary>▶ Click to show explanation</summary>
+</details>
 ---
 
 #### Question 11:
@@ -2876,7 +2901,8 @@ You have a SMILES string for ibuprofen and want to visualize it using RDKit. Wha
 
 <details> <summary>▶ Click to show answer</summary> Correct Answer: A) Generate a molecule from SMILES and run `MolToImage()` 
    Explanation: RDKit’s `MolToImage()` creates a 2D visualization directly from a SMILES-derived molecule object. </details>
-
+<summary>▶ Click to show explanation</summary>
+</details>
 ---
 
 #### Question 12:
@@ -2892,7 +2918,8 @@ You’ve generated a Morgan fingerprint for a compound using RDKit, which encode
 
 <details> <summary>▶ Click to show answer</summary> Correct Answer: C) To compare structural similarity between compounds 
   Explanation: Morgan fingerprints capture circular substructures in a molecule and are commonly used for similarity searching and clustering. By comparing the overlap of fingerprints (e.g., using Tanimoto similarity), chemists can rapidly screen for structurally related compounds, aiding in lead optimization, scaffold hopping, or library design.</details>
-
+<summary>▶ Click to show explanation</summary>
+</details>
 ---
 
 ## 2.4 Calculation on Representation
@@ -3655,7 +3682,8 @@ In cheminformatics, the Tanimoto similarity is commonly used to compare molecula
   Explanation:  
   Option B is correct because Tanimoto similarity evaluates the overlap (common substructures) between two fingerprints and normalizes it by the total number of substructures present in both fingerprints.
 </details>
-
+<summary>▶ Click to show explanation</summary>
+</details>
 #### Question 2: 
 Cheminformatics and molecular data enable researchers to apply statistical models to discover relationships between structure and function, often accelerating tasks like drug design and toxicity prediction. Which of the following statements about regression models in cheminformatics is TRUE?
 - A) Linear regression can be used to predict molecular properties, but only if the relationship between the property and descriptors is non-linear.
@@ -3670,7 +3698,8 @@ Cheminformatics and molecular data enable researchers to apply statistical model
   Explanation:  
   Option C is correct because the Mean Squared Error (MSE) quantifies the difference between predicted and actual values, while R-squared (R²) measures how much variance in the dependent variable is explained by the independent variables.
 </details>
-
+<summary>▶ Click to show explanation</summary>
+</details>
 #### Question 3: 
 Why is a correlation matrix useful when analyzing molecular properties?
 - A) It helps visualize the relationships between different molecular properties, identifying strong positive or negative correlations.
@@ -3682,7 +3711,8 @@ Why is a correlation matrix useful when analyzing molecular properties?
   <summary>Answer</summary>
   Correct Answer: A) It helps visualize the relationships between different molecular properties, identifying strong positive or negative correlations.
 </details>
-
+<summary>▶ Click to show explanation</summary>
+</details>
 ---
 
 #### Question 4:
@@ -3701,7 +3731,8 @@ Explanation:
 The .mean() method applied to a specific column in a pandas DataFrame calculates the average value for that column.
 
 </details>
-
+<summary>▶ Click to show explanation</summary>
+</details>
 ---
 
 #### Question 5:
@@ -3724,7 +3755,8 @@ Explanation:
 A similarity matrix shows pairwise comparisons, often based on Tanimoto similarity, to help identify structurally similar or distinct molecules.
 
 </details>
-
+<summary>▶ Click to show explanation</summary>
+</details>
 ---
 
 ### 2) Conceptual/Application Questions:
@@ -3754,7 +3786,8 @@ Which scatter plot below looks like the scatter plot you produced?
   **Explanation:**  
   [You can provide a brief explanation of the relationship between molecular weight and logP once the plots are available.]
 </details>
-
+<summary>▶ Click to show explanation</summary>
+</details>
 ---
 
 #### Question 7:
@@ -3793,6 +3826,7 @@ Explanation:
 In this example, both molecular weight and logP increase together, suggesting that larger compounds may be more lipophilic. This kind of trend can guide medicinal chemists in optimizing drug candidates for permeability and bioavailability by balancing molecular size with lipophilicity.
 
 </details>
-
+<summary>▶ Click to show explanation</summary>
+</details>
 ---
 
