@@ -1909,7 +1909,7 @@ Explanation:
 The third row of the dataset contains Dimethylglyoxime, based on the output of `df.head()`.
 </details>
 
-<details>
+
 <summary>▶ Show Solution Code</summary>
 
 ```python
@@ -1984,16 +1984,20 @@ Are these two groups statistically significant at the 95% confidence level? What
 **C.** No, F-Statistic: 78.09, P-Value: 0.09  
 **D.** No, F-Statistic: 548.06, P-Value: 0.10  
 
+<details>
 <summary>▶ Click to show explanation</summary>
 </details>
 Correct Answer: B  
 F-Statistic: 476.96  
 P-Value: 0.0000  
-<summary>▶ Click to show explanation</summary>
 </details>
+
+<details>
+<summary>▶ Click to show explanation</summary>
 Explanation:  
 Since the P-value < 0.05, the result is statistically significant at the 95% confidence level.  
 This means the difference in average molecular mass between compounds with high and low ToxCast activity is unlikely due to random chance.
+</details>
 
 <summary>▶ Click to show explanation</summary>
 </details>
@@ -2031,6 +2035,7 @@ You are analyzing a SMILES dataset of drug candidates and want to estimate the *
 **C.** `df['carbon_count'] = df['smiles'].sum('C')`  
 **D.** `df['carbon_count'] = count(df['smiles'], 'C')`  
 
+<details>
 <summary>▶ Click to show solution</summary>
 Correct Answer: B  
 <details>
