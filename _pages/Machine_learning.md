@@ -349,6 +349,121 @@ By following this structured approach, practitioners can effectively leverage th
 -   **Slower Predictions**: While individual trees are quick to
     predict, aggregating predictions from multiple trees can slow down
     the prediction process.
+## Quiz: Decision Trees and Random Forests
+
+---
+
+### Question 1
+What is the primary reason a Decision Tree might perform very well on training data but poorly on new, unseen data?
+
+**A.** Underfitting  
+**B.** Data leakage  
+**C.** Overfitting  
+**D.** Regularization  
+
+<details>
+<summary>▶ Click to show answer</summary>
+
+**Correct Answer:** C  
+**Explanation:**  
+Decision Trees can easily overfit the training data by creating very complex trees that capture noise instead of general patterns. This hurts their performance on unseen data.
+</details>
+
+---
+
+### Question 2
+In a Decision Tree, what do the internal nodes represent?
+
+**A.** Possible outcomes  
+**B.** Splitting based on a feature  
+**C.** Aggregation of multiple trees  
+**D.** Random subsets of data  
+
+<details>
+<summary>▶ Click to show answer</summary>
+
+**Correct Answer:** B  
+**Explanation:**  
+Internal nodes represent decision points where the dataset is split based on the value of a specific feature (e.g., "Is the fruit color red or orange?").
+</details>
+
+---
+
+### Question 3
+Which of the following best explains the Random Forest algorithm?
+
+**A.** A single complex decision tree trained on all the data  
+**B.** Many decision trees trained on identical data to improve depth  
+**C.** Many decision trees trained on random subsets of the data and features  
+**D.** A clustering algorithm that separates data into groups  
+
+<details>
+<summary>▶ Click to show answer</summary>
+
+**Correct Answer:** C  
+**Explanation:**  
+Random Forests use bagging to train multiple decision trees on different random subsets of the data and different random subsets of features, making the ensemble more robust.
+</details>
+
+---
+
+### Question 4
+When training a Random Forest for a **classification task**, how is the final prediction made?
+
+**A.** By taking the median of the outputs  
+**B.** By taking the average of probability outputs  
+**C.** By majority vote among trees' predictions  
+**D.** By selecting the tree with the best accuracy  
+
+<details>
+<summary>▶ Click to show answer</summary>
+
+**Correct Answer:** C  
+**Explanation:**  
+For classification problems, the Random Forest algorithm uses majority voting — the class most predicted by the individual trees becomes the final prediction.
+</details>
+
+---
+
+## 🚀 Bonus Challenge Questions
+
+---
+
+### Challenge 1: Case Study
+You are given a dataset containing information about chemical compounds, with many categorical features (such as "molecular class" or "bond type").  
+Would using a Random Forest model be appropriate for this dataset?
+
+**A.** No, Random Forests cannot handle categorical data.  
+**B.** Yes, Random Forests can naturally handle datasets with categorical variables after encoding.  
+**C.** No, Random Forests only work on images.  
+**D.** Yes, but only if the dataset has no missing values.
+
+<details>
+<summary>▶ Click to show answer</summary>
+
+**Correct Answer:** B  
+**Explanation:**  
+Random Forests can handle categorical data after simple preprocessing, such as label encoding or one-hot encoding. They are robust to different feature types, including numerical and categorical.
+</details>
+
+---
+
+### Challenge 2: Coding Practice
+Suppose you have your molecule fingerprints stored in variables `X` and your labels (0 or 1 for BBBP) stored in `y`.  
+Write the Python code to split this data into **80% training** and **20% testing** sets.
+
+<details>
+<summary>▶ Click to show answer</summary>
+
+**Solution Code:**
+
+```python
+from sklearn.model_selection import train_test_split
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+```
+
+--- 
 
 ## 3.2 Neural Network
 
