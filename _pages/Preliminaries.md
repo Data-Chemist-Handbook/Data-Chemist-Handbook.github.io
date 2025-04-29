@@ -1808,6 +1808,7 @@ You're training a machine learning model to predict compound toxicity. Your data
 Correct Answer: B  
 </details>
 
+<details>
 <summary>▶ Click to show explanation</summary>
 Explanation:  
 Encoding converts non-numeric data (e.g., categories) into numerical values so that machine learning models can process them. Common methods include one-hot encoding and label encoding.  Explanation:
@@ -1830,6 +1831,7 @@ You’re working with a dataset containing results from multiple bioassays for v
 Correct Answer: B  
 </details>
 
+<details>
 <summary>▶ Click to show explanation</summary>
 Explanation:
 In cheminformatics, pivot_table() is especially useful for converting assay results from long to wide format, where each assay becomes a separate column. This transformation is common before merging descriptor data or building a machine learning dataset.
@@ -1851,6 +1853,7 @@ You are comparing solubility data of compounds measured in different units (mg/m
 Correct Answer: B  
 </details>
 
+<details>
 <summary>▶ Click to show explanation</summary>
 Explanation:  
 Min-Max normalization rescales values to a fixed range (often 0 to 1), making it easier to compare across features with different units or scales.
@@ -1872,6 +1875,7 @@ You are working with a dataset of reaction yields, but the yield values are stor
 Correct Answer: C  
 </details>
 
+<details>
 <summary>▶ Click to show explanation</summary>
 Explanation: 
 `astype()` is used to convert a column's data type, such as from string to float or integer, so mathematical operations can be performed.
@@ -1897,16 +1901,15 @@ Task: Read the `TOX21.csv` dataset into a DataFrame and print the first five row
 <summary>▶ Click to show answer</summary>
 
 Correct Answer: C  
-Explanation:  
-The third row of the dataset contains Dimethylglyoxime, based on the output of `df.head()`.
-
 </details>
 
+<details>
 <summary>▶ Click to show explanation</summary>
 Explanation:  
 The third row of the dataset contains Dimethylglyoxime, based on the output of `df.head()`.
 </details>
 
+<details>
 <summary>▶ Show Solution Code</summary>
 
 ```python
@@ -1935,6 +1938,7 @@ To fix this problem, you should handle the missing values by using _____ and get
 Correct Answer: A  
 </details>
 
+<details>
 <summary>▶ Click to show explanation</summary>
 Explanation:  
 `fillna('unknown')` fills missing values with a placeholder, maintaining the dataset’s size. `drop_duplicates()` removes any repeated rows to ensure clean data.
@@ -1955,6 +1959,8 @@ Which function and code would allow you to create a new column that represents t
 
 Correct Answer: A  
 </details>
+
+<details>
 <summary>▶ Click to show explanation</summary>
 Explanation:  
 The `.mean()` method calculates the column-wise average, and assigning it to a new column applies that single value across all rows.
@@ -2029,6 +2035,7 @@ You are analyzing a SMILES dataset of drug candidates and want to estimate the *
 Correct Answer: B  
 <details>
 
+<details>
 <summary>▶ Click to show explanation</summary>
 Explanation:  
 Using `apply()` with a lambda function allows you to count the number of carbon atoms (`'C'`) in each SMILES string.
@@ -2050,6 +2057,7 @@ After calculating the carbon counts, you want to see if permeable compounds (p_n
 Correct Answer: B  
 </details>
 
+<details>
 <summary>▶ Click to show explanation</summary>
 Explanation:  
 Grouping by `'p_np'` and calculating the mean of `'carbon_count'` lets you compare average carbon counts between permeability classes.
@@ -2071,6 +2079,7 @@ You want to build a simple model that predicts whether a compound is permeable b
 Correct Answer: B  
 </details>
 
+<details>
 <summary>▶ Click to show explanation</summary>
 Explanation:  
 `pearsonr()` helps determine correlation, while `LinearRegression()` can fit a model to predict one variable based on another.
