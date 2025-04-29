@@ -364,8 +364,11 @@ What is the primary reason a Decision Tree might perform very well on training d
 <details>
 <summary>▶ Click to show answer</summary>
 
-**Correct Answer:** C  
-**Explanation:**  
+Correct Answer: C  
+</details>
+
+<summary>▶ Click to show explanation</summary>
+Explanation:  
 Decision Trees can easily overfit the training data by creating very complex trees that capture noise instead of general patterns. This hurts their performance on unseen data.
 </details>
 
@@ -382,8 +385,11 @@ In a Decision Tree, what do the internal nodes represent?
 <details>
 <summary>▶ Click to show answer</summary>
 
-**Correct Answer:** B  
-**Explanation:**  
+Correct Answer: B  
+</details>
+
+<summary>▶ Click to show explanation</summary>
+Explanation:  
 Internal nodes represent decision points where the dataset is split based on the value of a specific feature (e.g., "Is the fruit color red or orange?").
 </details>
 
@@ -400,8 +406,11 @@ Which of the following best explains the Random Forest algorithm?
 <details>
 <summary>▶ Click to show answer</summary>
 
-**Correct Answer:** C  
-**Explanation:**  
+Correct Answer: C  
+</details>
+
+<summary>▶ Click to show explanation</summary>
+Explanation:  
 Random Forests use bagging to train multiple decision trees on different random subsets of the data and different random subsets of features, making the ensemble more robust.
 </details>
 
@@ -418,8 +427,11 @@ When training a Random Forest for a **classification task**, how is the final pr
 <details>
 <summary>▶ Click to show answer</summary>
 
-**Correct Answer:** C  
-**Explanation:**  
+Correct Answer: C  
+</details>
+
+<summary>▶ Click to show explanation</summary>
+Explanation:  
 For classification problems, the Random Forest algorithm uses majority voting — the class most predicted by the individual trees becomes the final prediction.
 </details>
 
@@ -441,8 +453,11 @@ Would using a Random Forest model be appropriate for this dataset?
 <details>
 <summary>▶ Click to show answer</summary>
 
-**Correct Answer:** B  
-**Explanation:**  
+Correct Answer: B  
+</details>
+
+<summary>▶ Click to show explanation</summary>
+Explanation:  
 Random Forests can handle categorical data after simple preprocessing, such as label encoding or one-hot encoding. They are robust to different feature types, including numerical and categorical.
 </details>
 
@@ -480,8 +495,11 @@ from sklearn.model_selection import train_test_split
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 ```
-**Correct Answer:** B  
-**Explanation:**  
+Correct Answer: B  
+</details> ```
+
+<summary>▶ Click to show explanation</summary>
+Explanation:  
 In Random Forest modeling, we use train_test_split from sklearn.model_selection.
 
 test_size=0.2 reserves 20% of the data for testing, leaving 80% for training.
@@ -497,7 +515,7 @@ A, C, and D are wrong because...
 
 (D) messes up the return order (train features and labels must come first).
 
-</details> ```
+</details>
 
 --- 
 
