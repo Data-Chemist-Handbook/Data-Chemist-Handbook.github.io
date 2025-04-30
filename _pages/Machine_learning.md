@@ -713,6 +713,90 @@ Predicted solubility for molecule 3: 0.91
 These values reflect the model’s confidence in how soluble each molecule is, with higher numbers generally indicating better solubility. While we don't yet know how the model arrived at these exact numbers (that comes in the next section), this exercise demonstrates a key advantage of neural networks:
 - Once trained, they can generalize to unseen data—making predictions for new molecules quickly and efficiently.
 
+## 1) Factual Questions:
+
+### Question 1
+Which of the following best describes the role of the hidden layers in a neural network predicting chemical properties?
+
+A. They store the molecular structure for visualization.
+B. They transform input features into increasingly abstract representations.
+C. They calculate the final solubility or toxicity score directly.
+D. They normalize the input data before processing begins.
+
+<details> <summary>▶ Click to show answer</summary> Correct Answer: B </details> 
+
+<details> <summary>▶ Click to show explanation</summary> Explanation: Hidden layers apply weights, biases, and activation functions to extract increasingly complex patterns (e.g., substructures, steric hindrance) from the input molecular data. </details>
+
+---
+
+### Question 2
+Suppose you're predicting aqueous solubility using a neural network. Which activation function in the hidden layers would be most suitable to introduce non-linearity efficiently, especially with large chemical datasets?
+
+A. Softmax
+B. Linear
+C. ReLU
+D. Sigmoid
+
+<details> <summary>▶ Click to show answer</summary> Correct Answer: C </details> 
+<details> <summary>▶ Click to show explanation</summary> Explanation: ReLU is widely used in hidden layers for its computational efficiency and ability to handle vanishing gradient problems in large datasets. </details>
+
+---
+
+### Question 3
+In the context of molecular property prediction, which of the following sets of input features is most appropriate for the input layer of a neural network?
+
+A. IUPAC names and structural diagrams
+B. Raw SMILES strings and melting points as text
+C. Numerical descriptors like molecular weight, LogP, and rotatable bonds
+D. Hand-drawn chemical structures and reaction mechanisms
+
+<details> <summary>▶ Click to show answer</summary> Correct Answer: C </details> 
+<details> <summary>▶ Click to show explanation</summary> Explanation: Neural networks require numerical input. Molecular descriptors are quantifiable features that encode structural, electronic, and steric properties. </details>
+
+---
+
+### Question 4
+Your neural network performs poorly on new molecular data but does very well on training data. Which of the following is most likely the cause?
+
+A. The model lacks an output layer
+B. The training set contains irrelevant descriptors
+C. The network is overfitting due to too many parameters
+D. The input layer uses too few neurons
+
+<details> <summary>▶ Click to show answer</summary> Correct Answer: C </details> 
+<details> <summary>▶ Click to show explanation</summary> Explanation: Overfitting occurs when a model memorizes the training data but fails to generalize. This is common in deep networks with many parameters and not enough regularization or data diversity. </details>
+
+---
+
+## 2) Conceptual Questions
+
+### Question 5
+You are building a neural network to predict binary activity (active vs inactive) of molecules based on three features: [Molecular Weight, LogP, Rotatable Bonds].
+Which code correctly defines the output layer for this classification task?
+
+A. layers.Dense(1)
+B. layers.Dense(1, activation='sigmoid')
+C. layers.Dense(2, activation='relu')
+D. layers.Dense(3, activation='softmax')
+
+<details> <summary>▶ Click to show answer</summary> Correct Answer: B </details> 
+<details> <summary>▶ Click to show explanation</summary> Explanation: For binary classification, you need a single neuron with a sigmoid activation function to output a probability between 0 and 1. </details>
+
+---
+
+### Question 6 
+Why might a chemist prefer a neural network over a simple linear regression model for predicting molecular toxicity?
+
+A. Neural networks can run faster than linear models.
+B. Toxicity is not predictable using any mathematical model.
+C. Neural networks can model nonlinear interactions between substructures.
+D. Neural networks use fewer parameters and are easier to interpret.
+
+<details> <summary>▶ Click to show answer</summary> Correct Answer: C </details> 
+<details> <summary>▶ Click to show explanation</summary> Explanation: Chemical toxicity often arises from complex, nonlinear interactions among molecular features—something neural networks can capture but linear regression cannot. </details>
+
+---
+
 ## 3.3 Graph Neural Network
 
 Graph Neural Networks (GNNs) are a class of neural networks designed to operate on graph-structured data. Unlike traditional neural networks, which work with data in grid-like structures (such as images or sequences), GNNs are specifically tailored to handle data represented as graphs, where entities are nodes and relationships are edges.
