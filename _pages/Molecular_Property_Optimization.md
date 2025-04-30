@@ -267,6 +267,106 @@ plt.show()
    </code>
 </pre>
 
+---
+## 1) Factual Questions
+### Question 1
+What is the main advantage of Bayesian Optimization when applied to molecular property optimization?
+
+**A.** It runs simulations faster by parallelizing them across GPUs
+**B.** It avoids the need for molecular descriptors
+**C.** It balances exploring unknown molecules and exploiting promising candidates
+**D.** It guarantees the global optimum after one evaluation
+
+<details> <summary>▶ Click to show answer</summary>
+Correct Answer: C
+</details>
+
+<details> <summary>▶ Click to show explanation</summary> Explanation: Bayesian Optimization balances exploration of uncertain regions with exploitation of known good regions, making it efficient for expensive-to-evaluate molecular problems. </details>
+
+---
+
+### Question 2
+What role does the Gaussian Process play in Bayesian Optimization?
+
+**A.** It determines which chemical reactions are exothermic
+**B.** It predicts both expected values and uncertainty for new candidates
+**C.** It performs clustering to group similar molecules
+**D.** It selects which molecules to synthesize based on solubility alone
+
+<details> <summary>▶ Click to show answer</summary>
+Correct Answer: B
+</details> 
+
+<details> <summary>▶ Click to show explanation</summary> Explanation: A Gaussian Process is a surrogate model that estimates both the expected value (mean) and the uncertainty (standard deviation) of a molecule’s predicted property. </details>
+
+---
+
+### Question 3
+Which of the following is an acquisition function used in Bayesian Optimization?
+
+**A.** Mean Squared Error
+**B.** Pearson Correlation
+**C.** Upper Confidence Bound (UCB)
+**D.** ReLU Activation
+
+<details> <summary>▶ Click to show answer</summary>
+Correct Answer: C
+</details> 
+
+<details> <summary>▶ Click to show explanation</summary> Explanation: Upper Confidence Bound (UCB) is one of several acquisition functions that guides Bayesian Optimization by considering both predicted value and uncertainty. </details>
+
+---
+
+### Question 4
+In the context of molecular optimization, what is the main purpose of an acquisition function?
+
+**A.** To visualize molecular structures in 3D
+**B.** To convert SMILES to descriptors
+**C.** To determine the next molecule to evaluate
+**D.** To normalize the dataset
+
+<details> <summary>▶ Click to show answer</summary>
+Correct Answer: C
+</details> 
+
+<details> <summary>▶ Click to show explanation</summary> Explanation: Acquisition functions help choose the next point (molecule) to evaluate by balancing exploration and exploitation using the surrogate model’s predictions. </details>
+
+---
+
+## 2) Conceptual Questions
+
+### Question 5
+Why might a chemist choose Bayesian Optimization instead of grid search when optimizing molecular binding affinity?
+
+**A.** Grid search always converges to a suboptimal result
+**B.** Bayesian Optimization can suggest new experiments based on prior results
+**C.** Grid search cannot be used on numerical data
+**D.** Bayesian Optimization doesn't need labeled training data
+
+<details> <summary>▶ Click to show answer</summary>
+Correct Answer: B
+</details> 
+
+<details> <summary>▶ Click to show explanation</summary> Explanation: Bayesian Optimization uses Bayesian inference to update a surrogate model with each new result, allowing it to strategically propose new evaluations based on the evolving understanding of chemical space. </details>
+
+---
+
+### Question 6
+Which of the following best describes the exploration vs. exploitation trade-off in Bayesian Optimization?
+
+**A.** Exploration only occurs once before exploitation begins
+**B.** Exploitation selects high-uncertainty candidates; exploration picks low-uncertainty ones
+**C.** Exploration chooses unknown regions; exploitation uses known good regions
+**D.** They are interchangeable and used randomly
+
+<details> <summary>▶ Click to show answer</summary>
+Correct Answer: C
+</details> 
+
+<details> <summary>▶ Click to show explanation</summary> Explanation: Exploration focuses on high-uncertainty regions that could reveal new optimal molecules, while exploitation focuses on areas already known to perform well. </details>
+
+---
+
 ## 5.2 Reinforcement Learning
 
 ### 5.2.1: Overview of Reinforcement Learning
