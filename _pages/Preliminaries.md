@@ -387,7 +387,7 @@ import seaborn as sns
 <!-- (Alex) I agree this JSON files information is pretty useless so I'm going to tab it out
 #### Working with Data from Files
 
-[comment]: <> (#TODO should be discussed, but I don't see any reason most chemists should learn to use a JSON file. But if we are including it, it should definitely be last. This format is not already known to most chemists and will immediately confuse. Start with importing data from an excel file first, then csv, then JSON.)
+[comment]: <> ( RESOLVED should be discussed, but I don't see any reason most chemists should learn to use a JSON file. But if we are including it, it should definitely be last. This format is not already known to most chemists and will immediately confuse. Start with importing data from an excel file first, then csv, then JSON.)
 
 To load data from any file into your program, the program needs to know where to find the file. This can be accomplished in one of two ways. In the following example, we will load a tye of file called JSON that we will explore next.
 
@@ -870,7 +870,7 @@ print(melted_df.head())
 
 **Explanation:**
 
-[comment]: <> (#TODO This explanation is not clear or simple enough)
+[comment]: <> (#TODO for Alex This explanation is not clear or simple enough)
 
 NumPy is a library for numerical computing in Python, allowing for efficient array operations, including mathematical functions like summing or averaging.
 
@@ -921,7 +921,7 @@ print(f"Sum: {num_sum}, Mean: {num_mean}, Median: {num_median}")
 
 **Explanation:**
 
-[comment]: <> (#TODO explain what indexing and slicing are in simple terms and why they are useful in simple terms)
+[comment]: <> (#TODO for Alex explain what indexing and slicing are in simple terms and why they are useful in simple terms)
 
 NumPy arrays can be sliced to access subsets of data.
 
@@ -943,7 +943,7 @@ print(slice_arr)
 2. Slice the array to extract every second element.
 3. Reverse the array using slicing.
 
-[comment]: <> (#TODO explain what reversing an array as and use a better column than the num column which is indices and not a relevant example)
+[comment]: <> (#TODO for Alex explain what reversing an array as ; TODO for Laura use a better column than the num column which is indices and not a relevant example)
 
 **Solution**
 ```python
@@ -974,9 +974,7 @@ print(f"Reversed Array: {reversed_array}")
 
 **Explanation:**
 
-[comment]: <> (#TODO explain what the shape of an array is and give a better, more understandable explanation of broadcasting)
-
-Reshaping changes the shape of an array (essentially the dimensions, and broadcasting applies operations across arrays of different shapes.
+Reshaping changes the shape, or dimensions, of an array, and broadcasting applies operations across arrays of different shapes.
 
 **Example Code:**
 
@@ -1029,13 +1027,10 @@ print(broadcasted_array)
 Data visualization is critical for interpreting data and uncovering insights. In this section, we’ll use Python’s visualization libraries to create various plots and charts.
 
 **Explanation:**
-Python has several powerful libraries for data visualization, including **Matplotlib**, **Seaborn**, and **Plotly**.
+Python has several powerful libraries for data visualization, including **Matplotlib** and **Seaborn**.
 
 - **Matplotlib**: A foundational library for static, animated, and interactive visualizations.
 - **Seaborn**: Built on top of Matplotlib, Seaborn simplifies creating informative and attractive statistical graphics.
-- **Plotly**: Allows for creating interactive plots such as those you might use on a website.
-
-[comment]: <> (#TODO plotly is not going to be needed by most chemists, remove it)
 
 **Example Code:**
 ```python
@@ -1240,30 +1235,6 @@ plt.show()
 *Figure: Heatmap Visualizing the Correlation Matrix Across Variables*
 
 ---
-
-#### Interactive Plots with Plotly
-
-[comment]: <> (#TODO remove this section because chemists aren't going to use this type of graph)
-
-**Explanation:**
-Plotly provides a range of interactive charts that can be easily embedded in web applications. Interactive plots allow users to hover over data points and zoom in on sections of the plot.
-
-**Example Code for Interactive Scatter Plot:**
-```python
-import plotly.express as px
-
-# Sample data
-df = pd.DataFrame({'MolecularWeight': [180, 200, 150, 170, 210],
-                  'BoilingPoint': [100, 110, 95, 105, 120]})
-
-# Interactive scatter plot
-fig = px.scatter(df, x='MolecularWeight', y='BoilingPoint',
-               title='Molecular Weight vs Boiling Point')
-fig.show()
-```
-![Correlation Matrices Example](../../resource/img/preliminaries/pre_2-2/2.2.5-9.png)
-
-*Figure: Interactive Scatter Plot Showing the Relationship Between Molecular Weight and Boiling Point*
 
 ### 2.2.6 Statistical Analysis Basics
 #### Completed and Compiled Code: [Click Here](https://colab.research.google.com/drive/1XBZn9ZEY7a9cTSg41xel1kFN4P57BOPW?usp=sharing)
