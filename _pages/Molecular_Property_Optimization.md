@@ -37,40 +37,58 @@ Bayesian Optimization has become a cornerstone of modern computational chemistry
 
 ### 5.1.2 Key Concepts of Bayesian Optimization
 
+Bayesian Optimization may sound complex, but its power lies in just a few fundamental ideas. Together, these concepts enable chemists to prioritize which molecules to test next, all while minimizing wasted experiments. In this section, we’ll break down the three core components of BO—**Bayesian inference, surrogate models, and acquisition functions**—with examples grounded in molecular property prediction.
+
 #### 5.1.2.1 Bayesian Inference
 
-Bayesian optimization is grounded in Bayesian inference, which allows the model to update its predictions dynamically as new data becomes available. At the core of Bayesian inference is the concept of updating beliefs—that is, the model begins with a prior understanding of the objective function (in this case, a molecular property like solubility or binding affinity) and refines this understanding as each new molecule is evaluated. This is the main differentiator of Bayesian optimization from other algorithms, this highly adaptive and efficient method of exploring complex spaces.
+At the heart of Bayesian Optimization is Bayesian inference—a framework for updating beliefs based on new evidence. Chemists already do this intuitively. For example, if a compound with a certain functional group shows high solubility, you're more likely to try similar ones next. BO formalizes this process mathematically.
 
-For chemists, this means that as each molecular experiment or simulation is conducted, the surrogate model updates its predictions based on the new results. This continuous updating process enables informed decision-making: with each new piece of data, the model becomes better at distinguishing between promising and less promising regions of the molecular space. By incorporating prior knowledge and new data, Bayesian inference helps Bayesian optimization efficiently navigate complex and high-dimensional molecular landscapes.
+In BO, we start with a prior belief about how molecules behave (e.g., which structures are likely to have high LogP or low toxicity). As we evaluate each molecule—whether through lab testing or simulation—we collect data and update our model to form a posterior belief: a more informed estimate of which molecules might perform best.
+
+**Chemist’s Insight:** Bayesian inference is like refining your mental model after each experiment—except here, the computer does it quantitatively and consistently.
+
+This constant updating is what makes BO highly efficient. It ensures that each new test is more informed than the last, helping chemists navigate complex chemical spaces with fewer missteps.
 
 #### 5.1.2.2 Surrogate Models
 
-In Bayesian optimization, a surrogate model serves as a stand-in for the actual objective function, which might be costly or time-consuming to evaluate directly. This model approximates the molecular property of interest by constructing a mathematical representation based on the available data. The most commonly used surrogate model in BO is the Gaussian Process (GP), though other models like random forests or Bayesian neural networks can also be used.
+When synthesizing a molecule or running a simulation takes hours or days, we can't afford to try every candidate blindly. That’s where surrogate models come in. They act as fast approximations of your real experiments.
 
-Gaussian Processes are particularly valuable in molecular optimization due to their ability to not only predict the expected value of a molecular property but also provide an estimate of the uncertainty associated with that prediction. In Layman’s terms, GP essentially communicates whether or not it's confident if a molecule will perform well, or if it believes that it should continue exploring. This dual capability allows chemists to understand not only what is likely (the mean) but also how confident the model is in those predictions. The uncertainty helps balance exploration (sampling molecules with high uncertainty) and exploitation (sampling molecules likely to have desirable properties), as it identifies regions of the chemical space that are underexplored and potentially fruitful.
+In Bayesian Optimization, the most popular surrogate model is the Gaussian Process (GP). You can think of it like a “smart guesser” that:
+
+   * Predicts how well a molecule might perform (e.g., expected solubility)
+   * Tells you how confident it is in that prediction (e.g., uncertainty in underexplored regions)
+
+This is especially helpful in chemistry, where relationships between structure and property are often non-linear and hard to generalize.
+
+**Example:** A GP might estimate that a new compound has a predicted LogP of 2.1 ± 0.8. That wide margin tells us the model isn’t very confident—maybe because similar molecules haven’t been tested yet.
+
+This built-in uncertainty allows the optimizer to identify gaps in knowledge and target them strategically. By modeling both what we know and what we don’t, surrogate models help prioritize molecules that either have strong potential or will teach us something new.
 
 #### 5.1.2.3 Acquisition Functions
 
-In Bayesian optimization, after we have our surrogate model (like the Gaussian Process), we need a strategy to decide which molecule to test next. This is where acquisition functions come into play.
+Once the surrogate model is built, we still need a way to decide which molecule to evaluate next. That’s the job of the acquisition function—a mathematical tool that scores all potential candidates based on their predicted value and uncertainty.
 
-You can think of acquisition functions as decision-making tools that help us choose the next candidate based on what we know so far. They evaluate the trade-off between two main ideas:
+In simple terms, acquisition functions help balance two goals:
+   * **Exploration:** Try something new to learn more about chemical space.
+   * **Exploitation:** Focus on known regions that already show promising results.
+**Analogy:** It’s like choosing between trying a new restaurant or going back to one you already love. Exploration may lead to a hidden gem, while exploitation gives you a reliable experience.
 
-**Exploration:** This means looking at new, untested molecules that might give us useful information. It’s like exploring a new neighborhood; you might find hidden gems, but you also might find nothing exciting.
+Here are three commonly used acquisition functions in chemistry applications:
+   * **Expected Improvement (EI):** Estimates how much better a new candidate could be compared to the best one tested so far. It balances optimism and realism.
+   * **Probability of Improvement (PI):** Prioritizes candidates that are likely to beat the current best, even if the improvement is small.
+   * **Upper Confidence Bound (UCB):** Favors candidates with high uncertainty and high predicted value. It’s bold and curious, often uncovering new “hot spots” in unexplored regions.
 
-**Exploitation:** This means focusing on molecules that we already think will perform well based on our current knowledge. It’s like revisiting a favorite restaurant because you know you love the food.
+Each acquisition function has its strengths, and the best choice often depends on how cautious or adventurous you want the search to be.
 
-The acquisition function helps find a balance between these two ideas. Here are a few common types of acquisition functions explained simply:
+**Chemist’s Tip:** UCB is especially useful when you're unsure about the landscape—like optimizing a new reaction with limited precedent. EI is better once you have solid leads and want to fine-tune results.
 
-**Expected Improvement (EI):** This function looks at how much better we might expect a new molecule to perform compared to our current best result. It helps us find candidates that could give us the best improvements.
+**In Summary**
+Bayesian Optimization works because it combines:
+   * A Bayesian mindset that updates knowledge as experiments are run
+   * A surrogate model that predicts both value and uncertainty
+   * An acquisition function that strategically guides what to test next
 
-**Probability of Improvement (PI):** This function focuses on the chance that a new molecule will outperform our current best one. It’s all about finding candidates that have a high likelihood of being better.
-
-**Upper Confidence Bound (UCB):** This function looks at both the predicted value of a molecule and the uncertainty around that prediction. It tends to favor molecules that are uncertain but could potentially have a high reward, encouraging exploration.
-
-Acquisition functions are essential because they guide the optimization process. Instead of randomly picking the next molecule to test, they help us make smart decisions based on our current understanding. This way, we can efficiently search through a complex space, testing fewer molecules while still maximizing our chances of finding the best ones.
-
-In summary, acquisition functions help us choose the next steps in our optimization journey by balancing the need to explore new possibilities and the desire to make the most of what we already know.
-
+Together, these tools allow chemists to move through chemical space more intelligently—testing fewer molecules, making better decisions, and accelerating discovery.
 
 ### 5.1.3 Bayesian Optimization for Molecular Property Optimization Shortcut
 
