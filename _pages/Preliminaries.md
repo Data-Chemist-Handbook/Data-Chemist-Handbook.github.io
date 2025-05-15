@@ -7,7 +7,7 @@ category: Jekyll
 layout: post
 ---
 
-In the Preliminaries character, we will introduce some base coding still and data analysis still for the beginners.
+In the Preliminaries chapter, we will introduce some base coding and data analysis.
 
 ## 2.1 Introduction to Python
 
@@ -17,7 +17,7 @@ This section covers essential Python skills, including setting up your environme
 
 #### Option 1: Using Google Colab
 
-**Google Colab** is a cloud-based platform for running Python code in Jupyter-like notebooks, ideal for data science and machine learning. Follow these steps to get started. Using Google Colab allows you to run Python code in a flexible, collaborative environment without any local setup. It's particularly useful for working with large datasets or sharing notebooks with others.
+**Google Colab** is a cloud-based platform for running Python code in what are called notebooks, which section code in to small chunks that can be run independently. Dividing a program into small sections is helpful for data science and machine learning. Follow these steps to get started. Using Google Colab allows you to run Python code in a flexible, collaborative environment without any local setup. It's particularly useful for working with large datasets or sharing notebooks with others.
 
 ##### Step 1: Access Google Colab
 
@@ -177,14 +177,14 @@ Here's a detailed guide on installing Anaconda on different operating systems. E
 
 2. **Navigate to the Download Directory**:
    - Use `cd` to navigate to where you downloaded the Anaconda installer.
-   
+
    ```bash
    cd ~/Downloads
    ```
 
 3. **Run the Installer**:
    - Run the installer script. Replace `Anaconda3-202X.X.X-Linux-x86_64.sh` with your specific file name.
-   
+
    ```bash
    bash Anaconda3-202X.X.X-Linux-x86_64.sh
    ```
@@ -215,9 +215,7 @@ Here's a detailed guide on installing Anaconda on different operating systems. E
    - Type `jupyter notebook` and press **Enter**.
    - Jupyter Notebook will open in your default web browser, allowing you to create and run Python code interactively.
 
-
 ---
-
 
 ### 2.1.2 Basic Syntax and Structure
 
@@ -255,9 +253,9 @@ print(molecular_weight_ratio(molecular_weight))
 
 **Data Types**: How data such as a variable is represented to and stored in the computer.
 
-   - ***string*** type: Data meant to be interpreted literally 
-   - ***integer*** type: Data meant to be stored as an integer
-   - ***float*** type: Data meant to be stored as a floating point number with decimal precision
+  - ***string*** type: Data meant to be interpreted literally 
+  - ***integer*** type: Data meant to be stored as an integer
+  - ***float*** type: Data meant to be stored as a floating point number with decimal precision
 
 ```python
 # Display the data type of variables
@@ -272,10 +270,10 @@ print(type(my_float))
 
 **Mathematical Operations**: The four regular mathematical operations can be used on integer and float type variables and order of operations is followed.
 
-   - Addition with the "+" character
-   - Substraction with the "-" character
-   - Multiplication with the "*" character
-   - Division with the "/" character
+  - Addition with the "+" character
+  - Substraction with the "-" character
+  - Multiplication with the "*" character
+  - Division with the "/" character
 
 ```python
 # Use the mathematical operators
@@ -384,47 +382,26 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 ```
-<!-- (Alex) I agree this JSON files information is pretty useless so I'm going to tab it out
-#### Working with Data from Files
 
-[comment]: <> ( RESOLVED should be discussed, but I don't see any reason most chemists should learn to use a JSON file. But if we are including it, it should definitely be last. This format is not already known to most chemists and will immediately confuse. Start with importing data from an excel file first, then csv, then JSON.)
-
-To load data from any file into your program, the program needs to know where to find the file. This can be accomplished in one of two ways. In the following example, we will load a tye of file called JSON that we will explore next.
+To load data from any file into your program, the program needs to know where to find the file. This can be accomplished in one of two ways. In the following example, we will load a text file.
 
    1. Place the file inside the same folder as your program and open the file by its name:
 
    ```python
-   import json
 
-   # Loading data from a JSON file in the same location as your program
-   with open('data.json') as f:
-      data = json.load(f)
+   # Loading data from a text file in the same location as your program
+   with open('data.txt') as f:
+      data = f.read()
    ```
 
-   2. Find the full directory path to your file and provide this as the file name. In Windows, you can right click a file in File Explorer and click on "Copy as path" to copy the full directory path to your file. For example, if user coolchemist has the file 'example.json' in their Desktop folder, the code to load this file might look like this:
+   2. Find the full directory path to your file and provide this as the file name. In Windows, you can right click a file in File Explorer and click on "Copy as path" to copy the full directory path to your file. For example, if user coolchemist has the file 'data.txt' in their Desktop folder, the code to load this file might look like this:
 
    ```python
-   import json
 
-   # Loading data from a JSON file in the Desktop folder of user coolchemist
-   with open('C:\Users\coolchemist\Desktop\example.json') as f:
-      data = json.load(f)
-   ``` 
-
-   #### Accessing data in JSON format
-
-   **JSON (JavaScript Object Notation)** is a common data format for sharing data between systems. JSON files are lightweight and easy to parse. Properties can be easily accessed with the headers from the table.
- 
-   ```python
-   import json
-
-   # Loading data from a JSON file in the same location as your program
-   with open('data.json') as f:
-      data = json.load(f)
-
-   print(data['compound_name'])
+   # Loading data from a text file in the Desktop folder of user coolchemist
+   with open('C:\Users\coolchemist\Desktop\data.txt') as f:
+      data = f.read()
    ```
-
 
 **Practice Problem:**
 
@@ -443,23 +420,24 @@ def double_weight(weight):
 # Test the function
 print(f"Double molecular weight: {double_weight(molecular_weight)}")
 ```
--->
 ## 2.2 Data Analysis with Python
 
 In this chapter, we'll explore how to use Python for data analysis, focusing on importing and managing datasets commonly encountered in chemistry. Data analysis is a crucial skill for chemists, allowing you to extract meaningful insights from experimental data, predict outcomes, and make informed decisions in your research. Effective data analysis begins with properly importing and managing your datasets. This section will guide you through loading data from various file formats, including those specific to chemistry, and handling data from databases.
 
 ### 2.2.1 Loading Data from Various File Formats
+
 #### Completed and Compiled Code: [Click Here](https://colab.research.google.com/drive/193oFwo4NRDWNl9lk8fu86gdS9SAsjcBs?usp=sharing)
 
 **Reading Data from CSV**
 
 **Explanation:**
 
-CSV (Comma-Separated Values) and Excel files are common formats for storing tabular data. Python’s pandas library provides straightforward methods to read these files into DataFrames, which are powerful data structures for working with tabular data. A DataFrame is what is known in programming as an object. Objects contain data organized in specific defined structures and have properties that can be changed and used by the programmer.
+CSV (Comma-Separated Values) and Excel files are common formats for storing tabular data. Python’s `pandas` library provides straightforward methods to read these files into DataFrames, which are powerful data structures for working with tabular data. A DataFrame is what is known in programming as an object. Objects contain data organized in specific defined structures and have properties that can be changed and used by the programmer.
 
-Think of it as a variable that can store more complex information than a few words or a number. In this instance, we will store data tables as a DataFrame object. When the data table is read into a pandas DataFrame, the resulting object will have properties and functions built into it. For example, a substrate scope table can be read into a DataFrame and statistical analysis can be performed on the yield column with only a few lines of code.
+Think of it as a variable that can store more complex information than a few words or a number. In this instance, we will store data tables as a DataFrame object. When the data table is read into a `pandas` DataFrame, the resulting object will have properties and functions built into it. For example, a substrate scope table can be read into a DataFrame and statistical analysis can be performed on the yield column with only a few lines of code.
 
-[comment]: <> (#TODO source a substrate scope table from a paper and put it in all 3 formats, then modify example code for statistical analysis of yield column. cite paper.)
+<!-- #TODO for Laura find some example data to make this section complete and make sense)
+-->
 
 **Example Code:**
 
@@ -475,14 +453,14 @@ excel_data = pd.read_excel('compound_properties.xlsx', sheet_name='Sheet1')
 
 **Explanation of the Code:**
 
-- `pd.read_csv()` reads data from a CSV file into a DataFrame.
-- `pd.read_excel()` reads data from an Excel file. The `sheet_name` parameter specifies which sheet to read.
+  - `pd.read_csv()` reads data from a CSV file into a DataFrame.
+  - `pd.read_excel()` reads data from an Excel file. The `sheet_name` parameter specifies which sheet to read.
 
-**Reading CSVs via File Upload or Link**
+#### Reading CSVs via File Upload or Link
 
 You can read CSV files in two ways:
 
-**Method 1: Upload the file manually (e.g., in Jupyter or Google Colab)**
+#### Method 1: Upload the file manually (e.g., in Jupyter or Google Colab)
 
 Download the BBBP.csv File: [Click Here](https://github.com/Data-Chemist-Handbook/Data-Chemist-Handbook.github.io/blob/master/_pages/BBBP.csv)
 
@@ -495,7 +473,7 @@ df = pd.read_csv('BBBP.csv')
 print(df.head())
 ```
 
-**Method 2: Load the file directly from a GitHub raw link**
+#### Method 2: Load the file directly from a GitHub raw link
 
 This method allows your code to be instantly runnable without needing to manually upload files.
 
@@ -509,11 +487,15 @@ print(df.head())
 ```
 
 ### 2.2.2 Data Cleaning and Preprocessing
-#### Completed and Compiled Code: [Click Here](https://colab.research.google.com/drive/1i_ZkFKIWSwC7oK8HPf-CodOUDchfe3qp?usp=sharing)
+
+***Completed and Compiled Code: [Click Here](https://colab.research.google.com/drive/1i_ZkFKIWSwC7oK8HPf-CodOUDchfe3qp?usp=sharing)***
+
 #### Handling Missing Values and Duplicates
 
+Because datasets often combine data from multiple sources or are taken from large databases, they need to be processed before being analyzed to prevent using incomplete or incorrect data. The processing is called cleaning and can be done with the help of built in functions rather than through manual fixing.
+
 **Explanation:**
-Data cleaning involves dealing with missing or incorrect data entries to improve the quality of the dataset. Handling missing values and removing duplicates ensures that analyses are accurate and reliable.
+Data cleaning can be done with built in functions of the DataFrame object. This example uses `fillna()` to fill missing values with specified values and `drop_duplicates()` to remove duplicate rows from the DataFrame.
 
 **Example Code:**
 
@@ -531,52 +513,62 @@ print(df_filled.head())
 print(f"Number of rows after removing duplicates: {len(df_no_duplicates)}")
 ```
 
-- `fillna()` is used to fill missing values with specified values.
-- `drop_duplicates()` removes duplicate rows from the DataFrame.
-
 **Practice Problem:**
 
-We will clean the dataset by filling missing `name` and `smiles` values and removing any duplicate entries based on `smiles`.
+We will clean the dataset by filling missing `name` values with `'Unknown'`, removing rows without `smiles` values, and removing any duplicate entries based on `smiles`.
 
 Given a DataFrame with missing values:
 1. Fill missing values in the `name` column with `'Unknown'` and in the `smiles` column with an empty string.
 2. Remove any duplicate rows based on the `smiles` column.
 
+##### Considerations
 
-[comment]: <> (#TODO write solution)
+In this practice problem, we removed data rows that did not contain `smiles` info, but what if we wanted to attempt to fill in the data based on the name? There are ways to do this through other python packages, such as pubchempy.
 
+<!-- TODO for Laura: write solution to considerations -->
+
+<!-- TODO for Alex: write solution to practice problem
+-->
 ---
 
 **Data Type Conversions**
 
 **Explanation:**
-Converting data types ensures consistency and prevents errors, especially when performing mathematical calculations or comparisons. This is necessary when data is imported with incorrect types (e.g., numbers stored as strings).
+Converting data types to the desired type for a given data category enables proper representation of the data for performing mathematical calculations or comparisons. This is necessary when data is imported with incorrect types (e.g., numbers stored as strings).
 
 **Example Code:**
 
 ```python
 # Example DataFrame with mixed types
-data = {'Compound': ['A', 'B', 'C'],
-      'Quantity': ['10', '20', '30'],
-      'Purity': [99.5, 98.7, 97.8]}
+data = {'product': [1, 2, 3],
+      'milligrams': ['10.31', '8.04', '3.19'],
+      'yield': ['75', '46', '32']}
 df = pd.DataFrame(data)
 
-# Converting 'Quantity' to integer
-df['Quantity'] = df['Quantity'].astype(int)
+print("the data types before conversion are " + df.types)
 
-# Converting 'Purity' to string
-df['Purity'] = df['Purity'].astype(str)
+# Converting 'product' to string
+df['product'] = df['product'].astype(str)
 
-print(df.dtypes)
+# Converting 'milligrams' to float
+df['milligrams'] = df['milligrams'].astype(float)
+
+# Converting 'yield' to integer
+df['yield'] = df['yield'].astype(int)
+
+print("the data types after conversion are " + df.dtypes)
 ```
 
 **Practice Problem 1:**
 In the BBBP dataset, the `num` column (compound number) should be treated as an integer, and the `p_np` column (permeability label) should be converted to categorical data.
+
 1. Convert the num column to integer and the p_np column to a categorical type.
 2. Verify that the conversions are successful by printing the data types.
 
 **Solution**
+
 ```python
+
 # Loading the dataset again
 url = 'https://raw.githubusercontent.com/Data-Chemist-Handbook/Data-Chemist-Handbook.github.io/refs/heads/master/_pages/BBBP.csv'
 df = pd.read_csv(url)
@@ -588,6 +580,7 @@ df['p_np'] = df['p_np'].astype('category')
 # Print the data types of the columns
 print(df.dtypes)
 ```
+
 ---
 
 **Normalizing and Scaling Data**
@@ -596,8 +589,8 @@ print(df.dtypes)
 Normalization adjusts the values of numerical columns to a common scale without distorting differences in ranges. This is often used in machine learning algorithms to improve model performance by making data more comparable.
 
 **Example Code:**
-
-```python
+<!-- TODO for anyone: use data that can be scaled. pH and concentration are not linearly related -->
+<!-- ```python
 import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
 
@@ -612,14 +605,16 @@ scaler = MinMaxScaler()
 df[['Concentration', 'pH']] = scaler.fit_transform(df[['Concentration', 'pH']])
 
 print(df)
-```
+``` -->
 
 **Practice Problem:**
 We’ll normalize the `num` column using Min-Max scaling, which adjusts values to a common scale between 0 and 1.
+
 1. Normalize the num column in the BBBP dataset using Min-Max scaling.
 2. Print the first few rows to verify the normalization.
 
 **Solution**
+
 ```python
 import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
@@ -659,10 +654,12 @@ print(df_encoded)
 
 **Practice Problem 1:**
 The `p_np` column is a binary classification of permeability (1 or 0). We will apply one-hot encoding to this column.
+
 1. Apply one-hot encoding to the p_np column in the BBBP dataset.
 2. Print the first few rows of the encoded DataFrame to verify the result.
 
 **Solution**
+
 ```python
 # Loading the BBBP dataset
 url = 'https://raw.githubusercontent.com/Data-Chemist-Handbook/Data-Chemist-Handbook.github.io/refs/heads/master/_pages/BBBP.csv'
@@ -674,8 +671,11 @@ df_encoded = pd.get_dummies(df, columns=['p_np'], prefix='permeability')
 # Print the first few rows of the encoded DataFrame
 print(df_encoded.head())
 ```
+
 ---
+
 ### 2.2.3 Data Manipulation with Pandas
+
 #### Completed and Compiled Code: [Click Here](https://colab.research.google.com/drive/1RroAuj838RoxrgHbG9KlsChaA61hscEA?usp=sharing)
 
 **Filtering and Selecting Data**
@@ -706,6 +706,7 @@ print(filtered_df)
 2. Select a subset of columns from the dataset and display only the `name` and `smiles` columns.
 
 **Solution**
+
 ```python
 # Loading the BBBP dataset
 url = 'https://raw.githubusercontent.com/Data-Chemist-Handbook/Data-Chemist-Handbook.github.io/refs/heads/master/_pages/BBBP.csv'
@@ -791,7 +792,8 @@ print(grouped_df)
 
 **Practice Problem:**
 
-[comment]: <> (#TODO add an additional column to BBBP.csv with data that makes sense to average (such as molecular weight, number of carbonyl groups, number of aromatic rings, etc.))
+<!-- TODO for Laura use the B3DB subset csv for this example
+-->
 
 1. Group the BBBP dataset by `p_np` and compute the average `carbon count` for each group (permeable and non-permeable compounds).
 2. Use multiple aggregation functions (e.g., count and mean) on the `carbon count` column.
@@ -870,8 +872,8 @@ print(melted_df.head())
 
 **Explanation:**
 
-[comment]: <> (#TODO for Alex This explanation is not clear or simple enough)
-
+<!-- #TODO for Alex This explanation is insufficient, elaborate on numpy's utility and its widespread use. try to stick to terms that are less jargon heavy. for example, instead of "numerical computing" say something like "mathematical operations")
+-->
 NumPy is a library for numerical computing in Python, allowing for efficient array operations, including mathematical functions like summing or averaging.
 
 **Example Code:**
@@ -891,8 +893,8 @@ print(f"Sum: {arr_sum}, Mean: {arr_mean}")
 
 **Practice Problem 1:**
 
-[comment]: <> (#TODO change this example to use one of the columns added to the dataset that would make more sense to average because num is the indices and does not make sense to average)
-
+<!-- TODO for Laura: change this example to use one of the columns added to the dataset that would make more sense to average because num is the indices and does not make sense to average
+-->
 1. Create a NumPy array from the `num` column in the **BBBP** dataset.
 2. Perform basic statistical operations like `sum`, `mean`, and `median` on the `num` array.
 
@@ -921,8 +923,8 @@ print(f"Sum: {num_sum}, Mean: {num_mean}, Median: {num_median}")
 
 **Explanation:**
 
-[comment]: <> (#TODO for Alex explain what indexing and slicing are in simple terms and why they are useful in simple terms)
-
+<!-- TODO for Alex explain what indexing and slicing are in simple terms and why they are useful in simple terms)
+-->
 NumPy arrays can be sliced to access subsets of data.
 
 **Example Code:**
@@ -943,8 +945,8 @@ print(slice_arr)
 2. Slice the array to extract every second element.
 3. Reverse the array using slicing.
 
-[comment]: <> (#TODO for Alex explain what reversing an array as ; TODO for Laura use a better column than the num column which is indices and not a relevant example)
-
+<!-- TODO for Alex explain what reversing an array as ; TODO for Laura use a better column than the num column which is indices and not a relevant example)
+-->
 **Solution**
 ```python
 # Load the BBBP dataset
@@ -994,7 +996,8 @@ print(broadcast_arr)
 
 **Practice Problem 3:**
 
-[comment]: <> (#TODO have the reader use data that makes more sense than the num column which is not a relevant metric and explain why you might want to reshape an array or do an operation with broadcasting)
+<!-- TODO for Laura have the reader use data that makes more sense than the num column which is not a relevant metric and explain why you might want to reshape an array or do an operation with broadcasting)
+-->
 
 1. Reshape a NumPy array created from the `num` column of the **BBBP** dataset to a shape of `(5, 20)` (or similar based on the array length).
 2. Use broadcasting to add 100 to all elements in the reshaped array.
@@ -1046,8 +1049,8 @@ import plotly.express as px
 **Explanation:**
 Line and scatter plots are used to display relationships between variables. Line plots are commonly used for trend analysis, while scatter plots are useful for examining the correlation between two numerical variables.
 
-[comment]: <> (#TODO Include units for concentration and time. also make it relevant by mentioning that this graph can be used to determine the reaction kinetics and this reaction would be 0th order)
-
+<!-- TODO for Laura Include units for concentration and time. also make it relevant by mentioning that this graph can be used to determine the reaction kinetics and this reaction would be 0th order)
+-->
 **Example Code for Line Plot:**
 ```python
 import matplotlib.pyplot as plt
@@ -1091,8 +1094,8 @@ plt.show()
 
 **Explanation:**
 
-[comment]: <> (#TODO this definition of histogram is too abstract. Explain it in terms of a relevant example. For example, a substrate scope table in an organic synthesis paper has a list of yields for each substrate. A histogram could be used to show how many compounds are between 0-10, 10-20, 20-30, etc up to 90-100 percent yield. then use a real dataset in the example from a paper. probably use the same synthetic paper as used earlier.)
-
+<!-- TODO for Laura this definition of histogram is too abstract. Explain it in terms of a relevant example. For example, a substrate scope table in an organic synthesis paper has a list of yields for each substrate. A histogram could be used to show how many compounds are between 0-10, 10-20, 20-30, etc up to 90-100 percent yield. then use a real dataset in the example from a paper. probably use the same synthetic paper as used earlier.)
+-->
 Histograms display the distribution of a single variable by dividing it into bins, while density plots are smoothed versions of histograms that show the probability density.
 
 **Example Code for Histogram:**
@@ -1116,7 +1119,8 @@ plt.show()
 
 **Example Code for Density Plot:**
 
-[comment]: <> (#TODO use the same new dataset as above)
+<!-- TODO for Laura use the same new dataset as above
+-->
 
 ```python
 import seaborn as sns
@@ -1139,7 +1143,8 @@ plt.show()
 
 #### Box Plots and Violin Plots
 
-[comment]: <> (#TODO use a relevant chemistry dataset such as number of aromatic rings in each compound in a set of molecules)
+<!-- TODO for Laura use a relevant chemistry dataset such as number of aromatic rings in each compound in a set of molecules
+-->
 
 **Explanation:**
 Box plots show the distribution of data based on quartiles and are useful for spotting outliers. Violin plots combine box plots and density plots to provide more detail on the distribution’s shape.
@@ -1162,7 +1167,8 @@ plt.show()
 
 *Figure: Box Plot Showing Value Distribution Across Categories*
 
-[comment]: <> (#TODO use the same new dataset as above)
+<!-- TODO for Laura use the same new dataset as above
+-->
 
 **Example Code for Violin Plot:**
 ```python
@@ -1186,7 +1192,8 @@ plt.show()
 
 #### Heatmaps and Correlation Matrices
 
-[comment]: <> (#TODO explain the use of a heat map in simple and clear language and provide a chemistry relevant situational exmaple of when you'd use it. need to come back to this to provide a suggestion.)
+<!-- TODO for Laura explain the use of a heat map in simple and clear language and provide a chemistry relevant situational exmaple of when you'd use it. need to come back to this to provide a suggestion
+-->
 
 **Explanation:**
 Heatmaps display data as a color-coded matrix. They are often used to show correlations between variables or visualize patterns within data.
@@ -1210,8 +1217,8 @@ plt.show()
 
 *Figure: Heatmap Depicting Data as a Color-Coded Matrix*
 
-[comment]: <> (#TODO use the same new dataset as above)
-
+<!-- TODO for Laura use the same new dataset as above)
+-->
 **Example Code for Correlation Matrix:**
 ```python
 import seaborn as sns
@@ -1247,7 +1254,8 @@ Statistical analysis is essential for interpreting data and making informed conc
 **Explanation:**
 Descriptive statistics summarize and describe the main features of a dataset. Common descriptive statistics include the mean, median, mode, variance, and standard deviation.
 
-[comment]: <> (#TODO are these values real? Change them to be real)
+<!-- TODO for Laura are these values real? Change them to be real
+-->
 
 **Example Code:**
 ```python
@@ -1274,7 +1282,8 @@ Median Boiling Point: 105.0
 Standard Deviation of Molecular Weight: 23.874672772626646
 ```
 
-[comment]: <> (#TODO use a chemistry relevant metric from one of the data columns that will be added to BBBP.csv)
+<!-- TODO for Laura use a chemistry relevant metric from one of the data columns that will be added to BBBP.csv
+-->
 
 **Practice Problem 1:**
 Calculate the mean, median, and variance for the `num` column in the BBBP dataset.
