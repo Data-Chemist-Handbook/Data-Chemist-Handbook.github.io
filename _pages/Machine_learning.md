@@ -713,6 +713,147 @@ Predicted solubility for molecule 3: 0.91
 These values reflect the model’s confidence in how soluble each molecule is, with higher numbers generally indicating better solubility. While we don't yet know how the model arrived at these exact numbers (that comes in the next section), this exercise demonstrates a key advantage of neural networks:
 - Once trained, they can generalize to unseen data—making predictions for new molecules quickly and efficiently.
 
+### 3.2.3 How Neural Networks Learn: Backpropagation and Loss Functions
+#### Completed and Compiled Code: [Click Here](https://colab.research.google.com/drive/1xBQ6a24F6L45uOFkgML4E6z58jzsbRFe?usp=sharing)
+
+In the previous section, we saw how a neural network can take molecular descriptors as input and generate predictions, such as aqueous solubility. However, this raises an important question: **how does the network learn to make accurate predictions in the first place?** The answer lies in two fundamental concepts: the **loss function** and **backpropagation**.
+
+---
+
+#### Loss Function: Measuring the Error
+
+The **loss function** is a mathematical expression that quantifies how far off the model’s predictions are from the actual values. It acts as a feedback mechanism—telling the network how well or poorly it's performing.
+
+In regression tasks like solubility prediction, a common loss function is **Mean Squared Error (MSE)**:
+
+$$
+\text{MSE} = \frac{1}{n} \sum_{i=1}^{n} (\hat{y}_i - y_i)^2
+$$
+
+Where:
+- \( \hat{y}_i \) is the predicted solubility
+- \( y_i \) is the true solubility
+- \( n \) is the number of samples
+
+MSE penalizes larger errors more severely than smaller ones, which is especially useful in chemical property prediction where large prediction errors can have significant consequences.
+
+---
+
+#### Gradient Descent: Minimizing the Loss
+
+Once the model calculates the loss, it needs to adjust its internal weights to reduce that loss. This optimization process is called **gradient descent**.
+
+Gradient descent updates the model's weights in the opposite direction of the gradient of the loss function:
+
+$$
+w_{\text{new}} = w_{\text{old}} - \alpha \cdot \frac{\partial \text{Loss}}{\partial w}
+$$
+
+Where:
+- \( w \) is a weight in the network
+- \( \alpha \) is the **learning rate**, a small scalar that determines the step size
+
+This iterative update helps the model gradually "descend" toward a configuration that minimizes the prediction error.
+
+---
+
+#### Backpropagation: Updating the Network
+
+**Backpropagation** is the algorithm that computes how to adjust the weights.
+
+1. It begins by computing the prediction and measuring the loss.
+2. Then, it calculates how much each neuron contributed to the final error by applying the **chain rule** from calculus.
+3. Finally, it adjusts all weights by propagating the error backward from the output layer to the input layer.
+
+Over time, the network becomes better at associating input features with the correct output properties.
+
+---
+
+#### Intuition for Chemists
+
+Think of a chemist optimizing a synthesis route. After a failed reaction, they adjust parameters (temperature, solvent, reactants) based on what went wrong. With enough trials and feedback, they achieve better yields.
+
+A neural network does the same—after each "trial" (training pass), it adjusts its internal settings (weights) to improve its "yield" (prediction accuracy) the next time.
+
+---
+
+**Visualizing Loss Reduction During Training**
+This code demonstrates how a simple neural network learns over time by minimizing error through backpropagation and gradient descent. It also visualizes the loss curve to help you understand how training progresses.
+
+**Solution Code:**
+```python
+# 3.2.3 Example: Visualizing Loss Reduction During Training
+
+import numpy as np
+import matplotlib.pyplot as plt
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense
+
+# Simulated training data: [molecular_weight, logP, rotatable_bonds]
+X_train = np.array([
+    [350.2, 3.3, 5],
+    [275.4, 1.8, 4],
+    [125.7, 0.2, 1],
+    [300.1, 2.5, 3],
+    [180.3, 0.5, 2]
+])
+
+# Simulated solubility labels (normalized between 0 and 1)
+y_train = np.array([0.42, 0.63, 0.91, 0.52, 0.86])
+
+# Define a simple neural network
+model = Sequential()
+model.add(Dense(10, input_dim=3, activation='relu'))
+model.add(Dense(1, activation='sigmoid'))  # Regression output
+
+# Compile the model using MSE (Mean Squared Error) loss
+model.compile(optimizer='adam', loss='mean_squared_error')
+
+# Train the model and record loss values
+history = model.fit(X_train, y_train, epochs=100, verbose=0)
+
+# Plot the training loss over time
+plt.plot(history.history['loss'])
+plt.title('Loss Reduction During Training')
+plt.xlabel('Epoch')
+plt.ylabel('Loss (MSE)')
+plt.grid(True)
+plt.show()
+```
+**This example demonstrates:**
+
+    * How the network calculates and minimizes the loss function (MSE)
+    * How backpropagation adjusts weights over time
+    * How loss consistently decreases with each epoch
+
+**Practice Problem: Observe the Learning Curve**
+Reinforce the concepts of backpropagation and gradient descent by modifying the model to exaggerate or dampen learning behavior.
+1. Change the optimizer from "adam" to "sgd" and observe how the loss reduction changes.
+2. Add validation_split=0.2 to model.fit() to visualize both training and validation loss.
+3. Plot both loss curves using matplotlib.
+
+**Solution**
+```python
+# Add validation and switch optimizer
+model.compile(optimizer='sgd', loss='mean_squared_error')
+
+history = model.fit(X_train, y_train, epochs=100, validation_split=0.2, verbose=0)
+
+# Plot training and validation loss
+plt.plot(history.history['loss'], label='Training Loss')
+plt.plot(history.history['val_loss'], label='Validation Loss')
+plt.title('Training vs Validation Loss')
+plt.xlabel('Epoch')
+plt.ylabel('Loss')
+plt.legend()
+plt.grid(True)
+plt.show()
+```
+You should observe:
+1. Slower convergence when using SGD vs. Adam.
+2. Validation loss potentially diverging if overfitting begins.
+
+
 ## 1) Factual Questions:
 
 ### Question 1
