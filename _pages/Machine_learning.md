@@ -714,7 +714,7 @@ These values reflect the model’s confidence in how soluble each molecule is, w
 - Once trained, they can generalize to unseen data—making predictions for new molecules quickly and efficiently.
 
 ### 3.2.3 How Neural Networks Learn: Backpropagation and Loss Functions
-#### Completed and Compiled Code: [Click Here](https://colab.research.google.com/drive/1xBQ6a24F6L45uOFkgML4E6z58jzsbRFe?usp=sharing)
+#### Completed and Compiled Code: [Click Here](https://colab.research.google.com/drive/1pTOPZNOpcDnMm0SrcdgGQAAfEpT5TvZF?usp=sharing)
 
 In the previous section, we saw how a neural network can take molecular descriptors as input and generate predictions, such as aqueous solubility. However, this raises an important question: **how does the network learn to make accurate predictions in the first place?** The answer lies in two fundamental concepts: the **loss function** and **backpropagation**.
 
@@ -731,9 +731,9 @@ $$
 $$
 
 Where:
-- \( \hat{y}_i \) is the predicted solubility
-- \( y_i \) is the true solubility
-- \( n \) is the number of samples
+- $\hat{y}_i$ is the predicted solubility
+- $y_i$ is the true solubility  
+- $n$ is the number of samples
 
 MSE penalizes larger errors more severely than smaller ones, which is especially useful in chemical property prediction where large prediction errors can have significant consequences.
 
@@ -750,8 +750,8 @@ w_{\text{new}} = w_{\text{old}} - \alpha \cdot \frac{\partial \text{Loss}}{\part
 $$
 
 Where:
-- \( w \) is a weight in the network
-- \( \alpha \) is the **learning rate**, a small scalar that determines the step size
+- $w$ is a weight in the network  
+- $\alpha$ is the **learning rate**, a small scalar that determines the step size
 
 This iterative update helps the model gradually "descend" toward a configuration that minimizes the prediction error.
 
@@ -821,7 +821,6 @@ plt.grid(True)
 plt.show()
 ```
 **This example demonstrates:**
-
     * How the network calculates and minimizes the loss function (MSE)
     * How backpropagation adjusts weights over time
     * How loss consistently decreases with each epoch
@@ -853,6 +852,188 @@ You should observe:
 1. Slower convergence when using SGD vs. Adam.
 2. Validation loss potentially diverging if overfitting begins.
 
+### 3.2.4 Activation Functions
+#### Completed and Compiled Code: [Click Here](https://colab.research.google.com/drive/1ycFBgKmtaej3WhiOnwpSH0iYqEPqXRnG?usp=sharing)
+
+Activation functions are a key component of neural networks that allow them to model complex, non-linear relationships between inputs and outputs. Without activation functions, no matter how many layers we add, a neural network would essentially behave like a linear model. For chemists, this would mean failing to capture the non-linear relationships between molecular descriptors and properties such as solubility, reactivity, or binding affinity.
+---
+**What Is an Activation Function?**
+
+An activation function is applied to the output of each neuron in a hidden layer. It determines whether that neuron should "fire" (i.e., pass information to the next layer) and to what degree.
+
+Think of it like a valve in a chemical reaction pathway: the valve can allow the signal to pass completely, partially, or not at all—depending on the condition (input value). This gating mechanism allows neural networks to build more expressive models that can simulate highly non-linear chemical behavior.
+
+**Common Activation Functions (with Intuition)**
+
+
+Here are the most widely used activation functions and how you can interpret them in chemical modeling contexts:
+
+**1. ReLU (Rectified Linear Unit)**
+$$
+\text{ReLU}(x) = \max(0,x)
+$$
+
+**Behavior**: Passes positive values as-is; blocks negative ones.  
+**Analogy**: A pH-dependent gate that opens only if the environment is basic (positive).  
+**Use**: Fast to compute; ideal for hidden layers in large models.
+
+**2. Sigmoid**
+$$
+\text{Sigmoid}(x) = \frac{1}{1 + e^{-x}}
+$$
+
+**Behavior**: Maps input to a value between 0 and 1.  
+**Analogy**: Represents probability or confidence — useful when you want to interpret the output as "likelihood of solubility" or "chance of toxicity".  
+**Use**: Often used in the output layer for binary classification.
+
+**3. Tanh (Hyperbolic Tangent)**
+$$
+\tanh(x) = \frac{e^x - e^{-x}}{e^x + e^{-x}}
+$$
+
+**Behavior**: Outputs values between -1 and 1, centered around 0.  
+**Analogy**: Models systems with directionality — such as positive vs. negative binding affinity.  
+**Use**: Sometimes preferred over sigmoid in hidden layers.
+
+**Why Are They Important**
+
+Without activation functions, neural networks would be limited to computing weighted sums—essentially doing linear algebra. This would be like trying to model the melting point of a compound using only molecular weight: too simplistic for real-world chemistry.
+
+Activation functions allow networks to "bend" input-output mappings, much like how a catalyst changes the energy profile of a chemical reaction.
+
+---
+
+**Comparing ReLU and Sigmoid Activation Functions**
+This code visually compares how ReLU and Sigmoid behave across a range of inputs. Understanding the shapes of these activation functions helps chemists choose the right one for a neural network layer depending on the task (e.g., regression vs. classification).
+```python
+# 3.2.4 Example: Comparing ReLU vs Sigmoid Activation Functions
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Define ReLU and Sigmoid activation functions
+def relu(x):
+    return np.maximum(0, x)
+
+def sigmoid(x):
+    return 1 / (1 + np.exp(-x))
+
+# Input range
+x = np.linspace(-10, 10, 500)
+
+# Compute function outputs
+relu_output = relu(x)
+sigmoid_output = sigmoid(x)
+
+# Plot the functions
+plt.figure(figsize=(10, 6))
+plt.plot(x, relu_output, label='ReLU', linewidth=2)
+plt.plot(x, sigmoid_output, label='Sigmoid', linewidth=2)
+plt.axhline(0, color='gray', linestyle='--', linewidth=0.5)
+plt.axvline(0, color='gray', linestyle='--', linewidth=0.5)
+plt.title('Activation Function Comparison: ReLU vs Sigmoid')
+plt.xlabel('Input (x)')
+plt.ylabel('Activation Output')
+plt.legend()
+plt.grid(True)
+plt.show()
+```
+
+**This example demonstrates:**
+    * ReLU outputs 0 for any negative input and increases linearly for positive inputs. This makes it ideal for deep layers in large models where speed and sparsity are priorities.
+    * Sigmoid smoothly maps all inputs to values between 0 and 1. This is useful for binary classification tasks, such as predicting whether a molecule is toxic or not.
+    * Why this matters in chemistry: Choosing the right activation function can affect whether your neural network correctly learns properties like solubility, toxicity, or reactivity. For instance, sigmoid may be used in the output layer when predicting probabilities, while ReLU is preferred in hidden layers to retain training efficiency.
+
+---
+
+### 3.2.5 Training a Neural Network for Chemical Property Prediction
+#### Completed and Compiled Code: [Click Here](https://colab.research.google.com/drive/1IhwOUxG9xp8hEt9nkR04u1wTb3hr3Gal?usp=sharing)
+
+In the previous sections, we explored how neural networks are structured and how they learn. In this final section, we’ll put everything together by training a neural network on a small dataset of molecules to predict aqueous solubility — a property of significant importance in drug design and formulation.
+
+Rather than using high-level abstractions, we’ll walk through the full training process: from preparing chemical data to building, training, evaluating, and interpreting a neural network model.
+
+---
+
+**Chemical Context**
+Solubility determines how well a molecule dissolves in water, which affects its absorption and distribution in biological systems. Predicting this property accurately can save time and cost in early drug discovery. By using features like molecular weight, lipophilicity (LogP), and number of rotatable bonds, we can teach a neural network to approximate this property from molecular descriptors.
+
+---
+
+**Step-by-Step Training Example**
+Goal: Predict normalized solubility values from 3 molecular descriptors:
+    * Molecular weight
+    * LogP
+    * Number of rotatable bonds
+    
+```python
+# 3.2.5 Example: Training a Neural Network for Solubility Prediction
+
+import numpy as np
+import matplotlib.pyplot as plt
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import MinMaxScaler
+
+# Step 1: Simulated chemical data
+X = np.array([
+    [350.2, 3.3, 5],
+    [275.4, 1.8, 4],
+    [125.7, 0.2, 1],
+    [300.1, 2.5, 3],
+    [180.3, 0.5, 2],
+    [410.0, 4.1, 6],
+    [220.1, 1.2, 3],
+    [140.0, 0.1, 1]
+])
+y = np.array([0.42, 0.63, 0.91, 0.52, 0.86, 0.34, 0.70, 0.95])  # Normalized solubility
+
+# Step 2: Normalize features using MinMaxScaler
+scaler = MinMaxScaler()
+X_scaled = scaler.fit_transform(X)
+
+# Step 3: Train-test split
+X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.25, random_state=42)
+
+# Step 4: Build the neural network
+model = Sequential()
+model.add(Dense(16, input_dim=3, activation='relu'))
+model.add(Dense(8, activation='relu'))
+model.add(Dense(1, activation='sigmoid'))  # Output layer for regression (normalized range)
+
+# Step 5: Compile and train
+model.compile(optimizer='adam', loss='mean_squared_error')
+history = model.fit(X_train, y_train, epochs=100, verbose=0)
+
+# Step 6: Evaluate performance
+loss = model.evaluate(X_test, y_test, verbose=0)
+print(f"Test Loss (MSE): {loss:.4f}")
+
+# Step 7: Plot training loss
+plt.plot(history.history['loss'])
+plt.title("Training Loss Over Epochs")
+plt.xlabel("Epoch")
+plt.ylabel("Loss (MSE)")
+plt.grid(True)
+plt.show()
+```
+**Interpreting the Results**
+    * The network gradually learns to predict solubility based on three molecular features.
+    * The loss value shows the mean squared error on the test set—lower values mean better predictions.
+    * The loss curve demonstrates whether the model is converging (flattening loss) or struggling (oscillating loss).
+
+---
+
+**Summary**
+This section demonstrated how a basic neural network can be trained on molecular descriptors to predict solubility. While our dataset was small and artificial, the same principles apply to real-world cheminformatics datasets.
+
+You now understand:
+    * How to process input features from molecules
+    * How to build and train a simple feedforward neural network
+    * How to interpret loss, predictions, and model performance
+
+This hands-on foundation prepares you to tackle more complex models like convolutional and graph neural networks in the next sections.
 
 ## 1) Factual Questions:
 
