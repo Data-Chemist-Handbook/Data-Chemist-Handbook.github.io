@@ -1130,3 +1130,55 @@ Message Passing: GNNs typically operate through a message-passing mechanism, whe
 Layer-wise Propagation: In a GNN, the learning process involves multiple layers of message passing. Each layer updates node features based on the aggregated information from neighboring nodes. This iterative process allows the network to capture higher-order relationships and global graph patterns.
 
 Advantages: GNNs leverage the inherent structure of graph data, making them powerful for tasks involving complex relationships and dependencies. They can model interactions between entities more naturally than traditional neural networks and are capable of handling graphs of varying sizes and structures.
+
+### 3.3.1 What Are Graph Neural Networks?
+In traditional machine learning, data is typically represented as fixed-length vectors — a format well-suited for numerical or tabular data. However, molecules are inherently **graph-structured**: atoms are **nodes**, and chemical bonds are **edges** connecting them. This structure contains rich relational information that cannot be captured by simple vector inputs.
+
+**Graph Neural Networks (GNNs)** are a class of deep learning models specifically designed to handle data represented as graphs. They allow information to flow along edges between nodes, enabling the model to understand both **local atomic environments** and **global molecular structure**.
+
+---
+
+**Graph Terminology in Chemistry**
+To understand GNNs, it helps to relate their components directly to molecular features:
+| Graph Component      | Chemistry Equivalent          |
+|----------------------|-------------------------------|
+| Node                 | Atom                          |
+| Edge                 | Chemical bond                 |
+| Node feature         | Atom type, valence, charge    |
+| Edge feature         | Bond type (single, double)    |
+| Graph                | Molecule                      |
+
+A molecule like ethanol (CH₃CH₂OH) can be represented as a graph with 9 atoms (nodes) and 8 bonds (edges). The connectivity between these atoms defines the molecule's properties. Traditional machine learning might ignore the exact layout of bonds, but GNNs preserve this structure during training and prediction.
+
+---
+
+**Why Are GNNs Important in Chemistry?**
+Chemical properties are fundamentally determined by molecular structure. For instance:
+    * A compound’s solubility depends on polar groups distributed across its atoms.
+    * A molecule’s toxicity may be due to a specific substructure.
+    * A drug’s binding affinity is affected by the spatial arrangement of atoms around a pharmacophore.
+GNNs are well-suited for these tasks because they model how atoms influence one another through bonds and connectivity — rather than treating each atom or descriptor in isolation.
+
+---
+
+**Local and Global Information**
+One strength of GNNs is their ability to aggregate information at multiple scales:
+    * **Local features**: What is the immediate environment of an atom? (e.g. its neighbors, bonded atoms)
+    * **Global features**: What is the overall structure of the molecule? (e.g. ring systems, branching)
+Each node (atom) begins with its own feature vector (such as atomic number or degree). The GNN then updates each node’s features by aggregating features from its neighbors, a process called message passing (explained in detail in 3.3.2). This is repeated across layers to allow atoms to receive information from atoms several bonds away.
+
+**Key Takeaways**
+    * Molecules are naturally expressed as graphs, not flat vectors.
+    * Graph Neural Networks are designed to learn from this connectivity.
+    * GNNs are essential tools for predicting molecular properties based on structure.
+    * They enable fine-grained reasoning over atoms and bonds, capturing both local and global structure-function relationships.
+
+### 3.3.2 Message Passing and Graph Convolutions?
+At the heart of every Graph Neural Network (GNN) lies a key process called message passing. This procedure allows each node (atom) in a molecular graph to gather information from its neighboring nodes (bonded atoms), update its internal representation, and iteratively learn patterns that reflect both local chemistry and overall molecular context.
+
+---
+
+
+### 3.3.3 GNNs for Molecular Property Prediction
+### 3.3.4 Code Example: GNN on a Molecular Dataset
+### 3.3.5 Challenges and Interpretability in GNNs
