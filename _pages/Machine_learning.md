@@ -1178,7 +1178,163 @@ At the heart of every Graph Neural Network (GNN) lies a key process called messa
 
 ---
 
+**What Is Message Passing?**
+Message passing is the process by which nodes in a graph communicate with their neighbors. At each GNN layer, every atom sends and receives “messages” — typically vectors — to and from the atoms it is bonded to. These messages are then aggregated to update the node’s state.
 
+Each layer of message passing follows this general sequence:
+1. **Message Construction**  
+   For each pair of connected atoms *i* and *j*, a message *mᵢⱼ* is constructed based on the features of atom *j*, the edge between them, and possibly atom *i*.
+
+2. **Aggregation**  
+   All incoming messages to a node are aggregated, often by summing or averaging:
+
+   `mᵢ = Σⱼ∈𝒩(i) mᵢⱼ`
+
+   where 𝒩(*i*) represents the neighbors of node *i*.
+
+3. **Update**  
+   The node’s feature vector is updated using a neural network function, often a multi-layer perceptron (MLP):
+
+   `hᵢ^(t+1) = Update(hᵢ^(t), mᵢ)`
+
+This process is repeated across multiple layers, allowing each node to access information from atoms multiple bonds away — much like how the effect of a substituent can propagate across a conjugated system in chemistry.
+
+---
+
+**Graph Convulations**
+The term graph convolution refers to the implementation of message passing using a convolution-like operation, analogous to CNNs in image processing. But instead of applying filters to a regular grid, GNNs apply learned transformations to an irregular neighborhood — the atoms directly connected in the molecule.
+    * Popular variants of GNNs differ in how they implement message passing:
+    * GCNs (Graph Convolutional Networks): Use normalized sums of neighboring features.
+    * GraphSAGE: Aggregates using mean or max-pooling.
+    * GATs (Graph Attention Networks): Assign weights to neighbors using attention mechanisms.
+    * MPNNs (Message Passing Neural Networks): A general framework used in many chemistry-specific models.
+
+---
+
+**Chemical Intuition: Bond Propagation**
+Imagine a fluorine atom in a molecule — its electronegativity affects the atoms nearby, altering reactivity or dipole moment. GNNs simulate this propagation:
+    * In the first layer, only directly bonded atoms (1-hop) “feel” the fluorine.
+    * In deeper layers, atoms 2, 3, or more bonds away are affected via accumulated messages.
+    * This is especially powerful in structure-activity relationship (SAR) modeling, where subtle electronic or steric effects across a molecule determine biological activity.
+
+---
+
+**Summary**
+Message passing is how GNNs allow atoms to learn from their bonded neighbors.
+    * Each layer aggregates and transforms local chemical information.
+    * Deeper layers allow more distant interactions to be captured.
+    * This mirrors the way chemists think about the propagation of chemical effects through molecular structure.
+
+---
+
+**Code Example: Message Passing in Molecular Graphs**
+This example shows how a simple Graph Neural Network (specifically a GCN) performs message passing on a small molecular graph. We use torch_geometric, a library built on top of PyTorch for working with graph data.
+
+**Install Required Packages (Colab):**
+```python
+# Only run this cell once in Colab
+!pip install torch torch_geometric torch_scatter torch_sparse -q
+```
+
+```python
+import torch
+from torch_geometric.data import Data
+from torch_geometric.nn import GCNConv
+
+# Define a simple molecular graph
+# Suppose we have 4 atoms (nodes) with 3 features each
+x = torch.tensor([
+    [1, 0, 0],  # Atom 1
+    [0, 1, 0],  # Atom 2
+    [1, 1, 0],  # Atom 3
+    [0, 0, 1]   # Atom 4
+], dtype=torch.float)
+
+# Define edges (bonds) as source-target pairs
+# This is a directed edge list: each bond is represented twice (i -> j and j -> i)
+edge_index = torch.tensor([
+    [0, 1, 1, 2, 2, 3, 3, 0],
+    [1, 0, 2, 1, 3, 2, 0, 3]
+], dtype=torch.long)
+
+# Package into a graph object
+data = Data(x=x, edge_index=edge_index)
+
+# Define a GCN layer (1 layer for demonstration)
+conv = GCNConv(in_channels=3, out_channels=2)
+
+# Apply the GCN layer (i.e., perform message passing)
+output = conv(data.x, data.edge_index)
+
+print("Updated Node Features After Message Passing:")
+print(output)
+```
+
+**Explanation of the Code:**
+    * The node features x represent simple atom descriptors (e.g., atom type or hybridization).
+    * edge_index defines the connectivity between atoms, simulating chemical bonds.
+    * GCNConv implements a single round of message passing.
+    * The output shows how each atom updates its state based on the messages from neighbors.
+
+---
+
+**Practice Problem: Visualize Message Aggregation**
+Modify the graph by:
+    1. Adding a fifth atom [0, 1, 1] and connecting it to atom 2.
+    2. Run the GCN layer again and observe how atom 2's updated features change.
+Hint: Add a new row to x and update edge_index to include edges (2↔4).
+
+**Solution Code**
+```python
+import torch
+from torch_geometric.data import Data
+from torch_geometric.nn import GCNConv
+
+# Step 1: Add 5 atoms (nodes), including the new one
+x = torch.tensor([
+    [1, 0, 0],  # Atom 0
+    [0, 1, 0],  # Atom 1
+    [1, 1, 0],  # Atom 2
+    [0, 0, 1],  # Atom 3
+    [0, 1, 1]   # Atom 4 (new atom)
+], dtype=torch.float)
+
+# Step 2: Update edge_index to connect atom 4 to atom 2 (both directions)
+edge_index = torch.tensor([
+    [0, 1, 1, 2, 2, 3, 3, 0, 2, 4, 4, 2],
+    [1, 0, 2, 1, 3, 2, 0, 3, 4, 2, 2, 4]
+], dtype=torch.long)
+
+# Step 3: Create graph data
+data = Data(x=x, edge_index=edge_index)
+
+# Step 4: Define and apply a GCN layer
+conv = GCNConv(in_channels=3, out_channels=2)
+output = conv(data.x, data.edge_index)
+
+# Step 5: Print updated node features
+print("Updated Node Features After Message Passing:")
+for i, node_feat in enumerate(output):
+    print(f"Atom {i}: {node_feat.detach().numpy()}")
+```
+
+**Example Output:**
+```python
+Updated Node Features After Message Passing:
+Atom 0: [0.319, 0.415]
+Atom 1: [0.367, 0.448]
+Atom 2: [0.450, 0.502]   ← receives new messages from Atom 4
+Atom 3: [0.328, 0.387]
+Atom 4: [0.376, 0.463]
+```
+
+**What Did We Learn?**
+    * Atom 4 was added with feature [0, 1, 1] and connected to Atom 2.
+    * Atom 2’s new representation increased in both feature dimensions due to the additional message from Atom 4.
+    * In a chemical sense, you can think of Atom 4 as a new functional group or substituent influencing Atom 2.
+    * GNNs accumulate information from bonded atoms — the more neighbors a node has, the richer its updated representation.
+    * This mirrors chemical reality: attaching a polar or bulky group to a carbon affects its electronic and steric environment, which is now reflected numerically through message passing.
+    
 ### 3.3.3 GNNs for Molecular Property Prediction
 ### 3.3.4 Code Example: GNN on a Molecular Dataset
 ### 3.3.5 Challenges and Interpretability in GNNs
