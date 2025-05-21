@@ -2774,7 +2774,7 @@ The SMARTS string 'c1ccccc1' represents a six-membered aromatic ring (like benze
 
 ---
 
-### 2) Conceptual/Application Questions:
+### 3) Conceptual/Application Questions
 
 #### Question 8:
 **SMILES, SMARTS, and Fingerprints in the Tox21 Dataset**  
@@ -3656,7 +3656,7 @@ for i, features in enumerate(feature_arrays):
 ---
 # Questions for Section 2.4
 
-### 1) Factual Questions:
+### 1) Factual Questions
 
 #### Question 1: 
 In cheminformatics, the Tanimoto similarity is commonly used to compare molecular structures based on their fingerprints. Which of the following statements correctly explains the relationship between Tanimoto similarity and fingerprints?
@@ -3756,7 +3756,7 @@ A similarity matrix shows pairwise comparisons, often based on Tanimoto similari
 
 ---
 
-### 2) Conceptual/Application Questions:
+### 2) Conceptual/Application Questions
 
 #### Question 6: 
 In chemistry and datascience, it may be helpful to visualize the data and understand trends within the data by creating scatter plots.  In this example, imagine you want to observe the relationship between molecular weight and logP in the BBBP dataset file.  Create a scatter plot with the data below to generate a scatter plot with molecular weight on the x-axis and logP on the y-axis. Make sure to label the axes appropriately.
