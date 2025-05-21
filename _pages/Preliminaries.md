@@ -587,51 +587,57 @@ print(df.dtypes)
 
 ---
 
-**Normalizing and Scaling Data**
+## Normalizing and Scaling Data
 
-**Explanation:**
+**Explanation:**  
 Normalization adjusts the values of numerical columns to a common scale without distorting differences in ranges. This is often used in machine learning algorithms to improve model performance by making data more comparable.
 
-**Example Code:**
-<!-- TODO for anyone: use data that can be scaled. pH and concentration are not linearly related -->
-<!-- ```python
+**Example Code:**  
+```python
 import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
 
 # Example DataFrame
-data = {'Compound': ['A', 'B', 'C'],
-      'Concentration': [0.1, 0.3, 0.5],
-      'pH': [7.0, 6.5, 8.0]}
+data = {
+    'Compound': ['A', 'B', 'C'],
+    'Concentration': [0.1, 0.3, 0.5],
+    'pH': [7.0, 6.5, 8.0]
+}
 df = pd.DataFrame(data)
 
-# Normalizing the 'Concentration' and 'pH' columns
+# Normalize the 'Concentration' and 'pH' columns
 scaler = MinMaxScaler()
 df[['Concentration', 'pH']] = scaler.fit_transform(df[['Concentration', 'pH']])
 
 print(df)
-``` -->
+````
 
-**Practice Problem:**
-We’ll normalize the `num` column using Min-Max scaling, which adjusts values to a common scale between 0 and 1.
+---
 
-1. Normalize the num column in the BBBP dataset using Min-Max scaling.
+### Practice Problem
+
+We’ll normalize the `num` column using Min–Max scaling, which adjusts values to a common scale between 0 and 1.
+
+1. Normalize the `num` column in the BBBP dataset using Min–Max scaling.
 2. Print the first few rows to verify the normalization.
 
-**Solution**
+---
+
+### Solution
 
 ```python
 import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
 
-# Loading the BBBP dataset
+# Load the BBBP dataset
 url = 'https://raw.githubusercontent.com/Data-Chemist-Handbook/Data-Chemist-Handbook.github.io/refs/heads/master/_pages/BBBP.csv'
 df = pd.read_csv(url)
 
-# Normalizing the 'num' column (compound number)
+# Normalize the 'num' column (compound number)
 scaler = MinMaxScaler()
 df[['num']] = scaler.fit_transform(df[['num']])
 
-# Print the first few rows of the normalized dataset
+# Display the first few rows of the normalized dataset
 print(df.head())
 ```
 ---
