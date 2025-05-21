@@ -37,23 +37,27 @@ This section covers essential Python skills, including setting up your environme
 1. **Using Code Cells**:
    - Colab organizes code into **cells**. To run a cell, click on it and press **Shift + Enter** or click the **Play** button.
    
-2. **Installing Packages**:
-   - Colab has many libraries installed by default. You can install additional packages if needed using `pip` commands within a cell.
-   
-   ```python
-   # Install additional libraries
-   !pip install some_package
-   ```
-| **Library**       | **Purpose**                                                                                              | **Pip Install Command**            |
-|--------------------|----------------------------------------------------------------------------------------------------------|------------------------------------|
-| `rdkit`           | Used for cheminformatics tasks such as working with SMILES, molecular fingerprints, 3D coordinates, etc. | `pip install rdkit-pypi`          |
-| `pandas`          | Used for data manipulation and analysis.                                                                | `pip install pandas`              |
-| `numpy`           | Provides support for numerical computing.                                                               | `pip install numpy`               |
-| `matplotlib`      | Used for data visualization, including creating histograms and plots.                                   | `pip install matplotlib`          |
-| `seaborn`         | Provides advanced statistical plotting capabilities.                                                    | `pip install seaborn`             |
-| `scikit-learn`    | Used for machine learning tasks, including regression, clustering, and model evaluation.                 | `pip install scikit-learn`        |
-| `scipy`           | Provides scientific computing tools, including statistical analysis functions like `f_oneway`.          | `pip install scipy`               |
-| `plotly`          | Enables the creation of interactive plots and dashboards.                                               | `pip install plotly`              |
+
+2. **Installing Packages**  
+Colab has many libraries installed by default. You can install additional packages if needed using `pip` commands within a cell.
+
+```bash
+# Install additional libraries
+!pip install some_package
+````
+
+| Library        | Purpose                                                                        | Pip Install Command        |
+| -------------- | ------------------------------------------------------------------------------ | -------------------------- |
+| `rdkit`        | Cheminformatics tasks: SMILES, molecular fingerprints, 3D coordinates, etc.    | `pip install rdkit-pypi`   |
+| `pandas`       | Data manipulation and analysis.                                                | `pip install pandas`       |
+| `numpy`        | Numerical computing support.                                                   | `pip install numpy`        |
+| `matplotlib`   | Data visualization (histograms, plots, etc.).                                  | `pip install matplotlib`   |
+| `seaborn`      | Advanced statistical plotting.                                                 | `pip install seaborn`      |
+| `scikit-learn` | Machine learning: regression, clustering, model evaluation.                    | `pip install scikit-learn` |
+| `scipy`        | Scientific computing: statistical tests (e.g., `f_oneway`), optimization, etc. | `pip install scipy`        |
+| `plotly`       | Interactive plots and dashboards.                                              | `pip install plotly`       |
+
+
 ##### Step 4: Save and Export Your Work
 
 1. **Saving to Google Drive**:
