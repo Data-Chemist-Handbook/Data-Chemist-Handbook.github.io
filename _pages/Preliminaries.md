@@ -585,14 +585,15 @@ df['p_np'] = df['p_np'].astype('category')
 print(df.dtypes)
 ```
 
----
+#### Normalizing and Scaling Data
 
-## Normalizing and Scaling Data
+Because different features may span very different ranges, it’s often useful to bring them onto a common scale before modeling.
 
-**Explanation:**  
+**Explanation:**
 Normalization adjusts the values of numerical columns to a common scale without distorting differences in ranges. This is often used in machine learning algorithms to improve model performance by making data more comparable.
 
-**Example Code:**  
+**Example Code:**
+
 ```python
 import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
@@ -610,20 +611,16 @@ scaler = MinMaxScaler()
 df[['Concentration', 'pH']] = scaler.fit_transform(df[['Concentration', 'pH']])
 
 print(df)
-````
+```
 
----
+**Practice Problem:**
 
-### Practice Problem
-
-We’ll normalize the `num` column using Min–Max scaling, which adjusts values to a common scale between 0 and 1.
+We will normalize the `num` column using Min–Max scaling, which adjusts values to a common scale between 0 and 1.
 
 1. Normalize the `num` column in the BBBP dataset using Min–Max scaling.
 2. Print the first few rows to verify the normalization.
 
----
-
-### Solution
+**Solution**
 
 ```python
 import pandas as pd
@@ -640,55 +637,14 @@ df[['num']] = scaler.fit_transform(df[['num']])
 # Display the first few rows of the normalized dataset
 print(df.head())
 ```
----
-
-**Encoding Categorical Variables**
-
-**Explanation:**
-
-Encoding converts non-numeric data (like categories) into numeric values so that machine learning models can process them. Common encoding methods include one-hot encoding and label encoding.
-
-**Example Code:**
-
-```python
-# Example DataFrame with categorical data
-data = {'Compound': ['A', 'B', 'C'],
-      'State': ['solid', 'liquid', 'gas']}
-df = pd.DataFrame(data)
-
-# One-hot encoding the 'State' column
-df_encoded = pd.get_dummies(df, columns=['State'])
-
-print(df_encoded)
-```
-
-**Practice Problem 1:**
-The `p_np` column is a binary classification of permeability (1 or 0). We will apply one-hot encoding to this column.
-
-1. Apply one-hot encoding to the p_np column in the BBBP dataset.
-2. Print the first few rows of the encoded DataFrame to verify the result.
-
-**Solution**
-
-```python
-# Loading the BBBP dataset
-url = 'https://raw.githubusercontent.com/Data-Chemist-Handbook/Data-Chemist-Handbook.github.io/refs/heads/master/_pages/BBBP.csv'
-df = pd.read_csv(url)
-
-# Apply one-hot encoding to the 'p_np' column
-df_encoded = pd.get_dummies(df, columns=['p_np'], prefix='permeability')
-
-# Print the first few rows of the encoded DataFrame
-print(df_encoded.head())
-```
 
 ---
 
 ### 2.2.3 Data Manipulation with Pandas
 
-#### Completed and Compiled Code: [Click Here](https://colab.research.google.com/drive/1RroAuj838RoxrgHbG9KlsChaA61hscEA?usp=sharing)
+***Completed and Compiled Code: [Click Here](https://colab.research.google.com/drive/1RroAuj838RoxrgHbG9KlsChaA61hscEA?usp=sharing)***
 
-**Filtering and Selecting Data**
+#### Filtering and Selecting Data
 
 **Explanation:**
 
@@ -734,7 +690,7 @@ print(subset_df.head())
 
 ---
 
-**Merging and Joining Datasets**
+#### Merging and Joining Datasets
 
 **Explanation:**
 
@@ -780,7 +736,7 @@ print(merged_df.head())
 
 ---
 
-**Grouping and Aggregation**
+#### Grouping and Aggregation
 
 **Explanation:**
 
@@ -829,7 +785,7 @@ print(aggregated_df)
 
 ---
 
-**Pivot Tables and Reshaping Data**
+#### Pivot Tables and Reshaping Data
 
 **Explanation:**
 
@@ -875,10 +831,10 @@ print(melted_df.head())
 ```
 
 ### 2.2.4 Working with NumPy Arrays
-#### Completed and Compiled Code: [Click Here](https://colab.research.google.com/drive/1LDWWVJu2LRag47-rPnmTusqLmSzkuCAO?usp=sharing)
+***Completed and Compiled Code: [Click Here](https://colab.research.google.com/drive/1LDWWVJu2LRag47-rPnmTusqLmSzkuCAO?usp=sharing)***
 
 
-**Basic Operations and Mathematical Functions**
+#### Basic Operations and Mathematical Functions
 
 **Explanation:**
 
@@ -929,7 +885,7 @@ print(f"Sum: {num_sum}, Mean: {num_mean}, Median: {num_median}")
 
 ---
 
-**Indexing and Slicing**
+#### Indexing and Slicing
 
 **Explanation:**
 
@@ -982,7 +938,7 @@ print(f"Reversed Array: {reversed_array}")
 
 ---
 
-**Reshaping and Broadcasting**
+#### Reshaping and Broadcasting
 
 **Explanation:**
 
@@ -1035,7 +991,7 @@ print(broadcasted_array)
 ```
 
 ### 2.2.5 Introduction to Visualization Libraries
-#### Completed and Compiled Code: [Click Here](https://colab.research.google.com/drive/1qrrTcrkGx8AHl6W2YVG_thzMbSYjV3Ep?usp=sharing)
+***Completed and Compiled Code: [Click Here](https://colab.research.google.com/drive/1qrrTcrkGx8AHl6W2YVG_thzMbSYjV3Ep?usp=sharing)***
 
 Data visualization is critical for interpreting data and uncovering insights. In this section, we’ll use Python’s visualization libraries to create various plots and charts.
 
@@ -1254,7 +1210,7 @@ plt.show()
 ---
 
 ### 2.2.6 Statistical Analysis Basics
-#### Completed and Compiled Code: [Click Here](https://colab.research.google.com/drive/1XBZn9ZEY7a9cTSg41xel1kFN4P57BOPW?usp=sharing)
+***Completed and Compiled Code: [Click Here](https://colab.research.google.com/drive/1XBZn9ZEY7a9cTSg41xel1kFN4P57BOPW?usp=sharing)***
 Statistical analysis is essential for interpreting data and making informed conclusions. In this section, we’ll explore fundamental statistical techniques using Python, which are particularly useful in scientific research.
 
 ---
@@ -1358,7 +1314,7 @@ plt.title('Normal Distribution')
 plt.show()
 ```
 
-**What the Code Does:**
+#### What the Code Does:
 1. **Generate Data**: The `np.random.normal` function creates 1000 random data points with:
    - **Mean (`loc`)**: Set to 0.
    - **Standard Deviation (`scale`)**: Set to 1.
@@ -1376,7 +1332,7 @@ plt.show()
 
 *Figure: Histogram Depicting a Normal Distribution with Mean 0 and Standard Deviation 1*
 
-**Applications in Chemistry:**
+#### Applications in Chemistry:
 
 [comment]: <> (#TODO change these examples. Currently looking for literature relevant examples of normal distribution usage in chemistry.)
 
@@ -1959,38 +1915,33 @@ The `.mean()` method calculates the column-wise average, and assigning it to a n
 ---
 
 #### Question 9
+
 You want to perform an ANOVA statistical analysis to evaluate the activity of the compounds listed in the TOX21 dataset.
 
-Task:  
-Determine whether the average molecular mass of compounds with ToxCast Active Ratio above 20% is statistically different** from those below 20%.
+**Task:**  
+Determine whether the average molecular mass of compounds with ToxCast Active Ratio above 20% is statistically different from those below 20%.
 
-- Use a 95% confidence level (α = 0.05).
+- Use a 95% confidence level (α = 0.05).  
 - Calculate the F-statistic and P-value to assess significance.
 
+**Question:**  
 Are these two groups statistically significant at the 95% confidence level? What are the F-statistic and P-value?
 
-**A.** Yes, F-Statistic: 203.89, P-Value: 0.03  
-**B.** Yes, F-Statistic: 476.96, P-Value: 0.00  
-**C.** No, F-Statistic: 78.09, P-Value: 0.09  
-**D.** No, F-Statistic: 548.06, P-Value: 0.10  
+A. Yes, F-Statistic: 203.89, P-Value: 0.03  
+B. Yes, F-Statistic: 476.96, P-Value: 0.00  
+C. No,  F-Statistic: 78.09,  P-Value: 0.09  
+D. No,  F-Statistic: 548.06, P-Value: 0.10  
 
 <details>
-<summary>▶ Click to show explanation</summary>
-</details>
-Correct Answer: B  
-F-Statistic: 476.96  
-P-Value: 0.0000  
-</details>
+<summary>▶ Click to show answer and explanation</summary>
 
-<details>
-<summary>▶ Click to show explanation</summary>
-Explanation:  
+**Correct Answer:**  
+**B.** Yes, F-Statistic: 476.96, P-Value: 0.0000
+
+**Explanation:**  
 Since the P-value < 0.05, the result is statistically significant at the 95% confidence level.  
 This means the difference in average molecular mass between compounds with high and low ToxCast activity is unlikely due to random chance.
-</details>
 
-<summary>▶ Click to show explanation</summary>
-</details>
 ```python
 import pandas as pd
 from scipy.stats import f_oneway
@@ -2005,15 +1956,17 @@ df['toxcast_active_ratio'] = df['% ToxCast Active'] / 100
 df['mass'] = df['AVERAGE MASS']
 
 # Define two groups based on active ratio threshold
-group_low = df[df['toxcast_active_ratio'] <= 0.2]['mass']
-group_high = df[df['toxcast_active_ratio'] > 0.2]['mass']
+group_low  = df[df['toxcast_active_ratio'] <= 0.2]['mass']
+group_high = df[df['toxcast_active_ratio'] >  0.2]['mass']
 
 # Perform ANOVA
 f_stat, p_val = f_oneway(group_low, group_high)
 
 print(f"F-statistic: {f_stat:.2f}")
-print(f"P-value: {p_val:.4f}")
-```
+print(f"P-value:      {p_val:.4f}")
+````
+
+</details>
 
 ---
 
