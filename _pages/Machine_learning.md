@@ -798,7 +798,9 @@ You should observe:
 #### Completed and Compiled Code: [Click Here](https://colab.research.google.com/drive/1ycFBgKmtaej3WhiOnwpSH0iYqEPqXRnG?usp=sharing)
 
 Activation functions are a key component of neural networks that allow them to model complex, non-linear relationships between inputs and outputs. Without activation functions, no matter how many layers we add, a neural network would essentially behave like a linear model. For chemists, this would mean failing to capture the non-linear relationships between molecular descriptors and properties such as solubility, reactivity, or binding affinity.
+
 ---
+
 **What Is an Activation Function?**
 
 An activation function is applied to the output of each neuron in a hidden layer. It determines whether that neuron should "fire" (i.e., pass information to the next layer) and to what degree.
