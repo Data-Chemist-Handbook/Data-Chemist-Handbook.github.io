@@ -2983,8 +2983,10 @@ Morgan fingerprints capture circular substructures in a molecule and are commonl
 ---
 
 ## 2.4 Calculation on Representation
+
 ### 2.4.1 Statistical Analysis of Molecular Representations
-#### Completed and Compiled Code: [Click Here](https://colab.research.google.com/drive/11nh64K3pS5FOHrG9AvPfKAIkKGeX0dsg?usp=sharing)
+
+**Completed and Compiled Code:** [Click Here](https://colab.research.google.com/drive/11nh64K3pS5FOHrG9AvPfKAIkKGeX0dsg?usp=sharing)
 
 #### Introduction to Statistical Analysis in Cheminformatics
 
@@ -3055,9 +3057,9 @@ Write Python code to:
 2. Find the correlation between `LogP` and `BoilingPoint`.
 3. Display the results clearly.
 
-**Solution**:
-
-```python
+<details>
+<summary>▶ Show Solution Code</summary>
+<pre><code class="language-python">
 import pandas as pd
 
 # Provided dataset
@@ -3079,12 +3081,14 @@ correlation_lp_bp = df['LogP'].corr(df['BoilingPoint'])
 print(f"Mean Boiling Point: {mean_bp:.2f}")
 print(f"Variance of Boiling Point: {variance_bp:.2f}")
 print(f"Correlation between LogP and Boiling Point: {correlation_lp_bp:.2f}")
-```
+</code></pre>
+</details>
 
 ---
 
 ### 2.4.2 Exploring Molecular Distributions
-#### Completed and Compiled Code: [Click Here](https://colab.research.google.com/drive/1BIr2XQi6KgCgxJaLvF7mvKGcQPrqQsh-?usp=sharing)
+
+**Completed and Compiled Code:** [Click Here](https://colab.research.google.com/drive/1BIr2XQi6KgCgxJaLvF7mvKGcQPrqQsh-?usp=sharing)
 
 Understanding the distribution of molecular properties is a key aspect of cheminformatics. Analyzing these distributions allows chemists to gain insights into the characteristics of molecular datasets and identify trends or anomalies. This section will focus on analyzing molecular properties, such as molecular weight and logP, using statistical plots like histograms and density plots.
 
@@ -3123,7 +3127,7 @@ A **density plot** smooths out the distribution into a continuous curve, allowin
 
 #### Example: Exploring Molecular Weight Distribution
 
-Let’s analyze the distribution of molecular weights in a sample dataset.
+Let's analyze the distribution of molecular weights in a sample dataset.
 
 ```python
 import pandas as pd
@@ -3162,9 +3166,9 @@ plt.show()
 2. Create a histogram and a density plot of molecular weights.
 3. Identify the range where most molecular weights are concentrated.
 
-**Solution:**
-
-```python
+<details>
+<summary>▶ Show Solution Code</summary>
+<pre><code class="language-python">
 !pip install rdkit-pypi
 
 # Importing packages / might have to run it twice
@@ -3198,7 +3202,8 @@ plt.title('Density Plot of Molecular Weight (BBBP Dataset)')
 plt.xlabel('Molecular Weight')
 plt.ylabel('Density')
 plt.show()
-```
+</code></pre>
+</details>
 
 **Interpretation:**
 - The histogram provides a granular view, dividing molecular weights into discrete bins.
@@ -3214,7 +3219,8 @@ plt.show()
 ---
 
 ### 2.4.3 Similarity and Clustering
-#### Completed and Compiled Code: [Click Here](https://colab.research.google.com/drive/1Hq5atbCqN_nH70x9xjiyxWBfUlVIPIAh?usp=sharing)
+
+**Completed and Compiled Code:** [Click Here](https://colab.research.google.com/drive/1Hq5atbCqN_nH70x9xjiyxWBfUlVIPIAh?usp=sharing)
 
 #### Introduction to Molecular Similarity
 
@@ -3231,7 +3237,8 @@ Clustering is a technique for grouping molecules based on their similarity. It h
 
 #### Example: Fingerprints and Clustering
 
-Let’s analyze a dataset by generating fingerprints for molecules, calculating pairwise similarity, and performing clustering.
+Let's analyze a dataset by generating fingerprints for molecules, calculating pairwise similarity, and performing clustering.
+
 ```python
 !pip install rdkit -q
 # Importing packages / might have to run it twice
@@ -3241,6 +3248,7 @@ from rdkit import Chem
 from rdkit.Chem import AllChem
 from rdkit import DataStructs
 ```
+
 ```python
 # Sample data
 data = {
@@ -3269,9 +3277,12 @@ sim_df = pd.DataFrame(similarity_matrix, columns=df['Compound'], index=df['Compo
 print("Tanimoto Similarity Matrix:")
 print(sim_df)
 ```
+
 ---
+
 ### 2.4.4 Regression Models for Property Prediction
-#### Completed and Compiled Code: [Click Here](https://colab.research.google.com/drive/1moXdjzT56OxQOD7Rr0YEc-60YtAcm-fj?usp=sharing)
+
+**Completed and Compiled Code:** [Click Here](https://colab.research.google.com/drive/1moXdjzT56OxQOD7Rr0YEc-60YtAcm-fj?usp=sharing)
 
 #### Introduction to Regression Models
 
@@ -3344,12 +3355,12 @@ plt.show()
 
 1. Create a synthetic dataset of molecular weights and melting points.
 2. Train a linear regression model to predict melting points based on molecular weights.
-3. Evaluate the model’s performance using MSE and R².
+3. Evaluate the model's performance using MSE and R².
 4. Visualize the data and regression line.
 
-**Solution**:
-
-```python
+<details>
+<summary>▶ Show Solution Code</summary>
+<pre><code class="language-python">
 import pandas as pd
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error, r2_score
@@ -3389,7 +3400,8 @@ plt.ylabel('Melting Point')
 plt.title('Linear Regression: Molecular Weight vs Melting Point')
 plt.legend()
 plt.show()
-```
+</code></pre>
+</details>
 
 #### Key Takeaways
 
@@ -3397,11 +3409,11 @@ plt.show()
 - Linear regression is straightforward and interpretable, making it a useful first approach for property prediction.
 - Metrics like MSE and R² help evaluate the predictive performance of models.
 
-
 ---
 
 ### 2.4.5 Advanced Visualization of Representations
-#### Completed and Compiled Code: [Click Here](https://colab.research.google.com/drive/1q6pZBiZkN2syVwTFq_cBtEZDOhIBaqPf?usp=sharing)
+
+**Completed and Compiled Code:** [Click Here](https://colab.research.google.com/drive/1q6pZBiZkN2syVwTFq_cBtEZDOhIBaqPf?usp=sharing)
 
 #### Introduction to Advanced Visualization
 
@@ -3470,7 +3482,6 @@ plt.show()
 2. **Scatterplot**: `seaborn.scatterplot` is used to add color (`hue`) and size (`size`) encoding for logP.
 3. **Interpretability**: The color gradient and point sizes make it easy to identify patterns.
 
-
 #### Correlation Matrices
 
 Correlation matrices summarize pairwise relationships between molecular properties, highlighting strong positive or negative correlations.
@@ -3502,7 +3513,6 @@ plt.show()
 2. **Correlation Matrix**: Pairwise correlations between variables are calculated.
 3. **Heatmap**: The matrix is visualized with `seaborn.heatmap`, with annotations for clarity.
 
-
 #### Practice Problem
 
 **Context**: Visualizing molecular similarity and correlations helps chemists identify patterns and relationships. This problem involves creating and interpreting heatmaps.
@@ -3513,9 +3523,9 @@ plt.show()
 2. Create a heatmap to visualize the similarity matrix.
 3. Calculate a correlation matrix for molecular properties and visualize it.
 
-**Solution**:
-
-```python
+<details>
+<summary>▶ Show Solution Code</summary>
+<pre><code class="language-python">
 import numpy as np
 import pandas as pd
 import seaborn as sns
@@ -3547,18 +3557,21 @@ correlation_matrix = df.corr()
 sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', cbar=True)
 plt.title('Correlation Matrix of Molecular Properties')
 plt.show()
-```
+</code></pre>
+</details>
 
 #### Key Takeaways
 
 - **Heatmaps** provide a quick overview of similarity or correlation matrices, revealing patterns and clusters.
 - **Scatterplots** visually demonstrate relationships between two molecular properties, with options for color and size encoding.
 - **Correlation matrices** highlight pairwise relationships, aiding in feature selection and hypothesis generation.
-  
+
 ---
 
 ### 2.4.6 Integration of Representations with Machine Learning
-#### Completed and Compiled Code: [Click Here](https://colab.research.google.com/drive/1dj30FmmVAsCiR1g7hk6VuLyIHjwtIYsW?usp=sharing)
+
+**Completed and Compiled Code:** [Click Here](https://colab.research.google.com/drive/1dj30FmmVAsCiR1g7hk6VuLyIHjwtIYsW?usp=sharing)
+
 #### Introduction to Integration of Representations
 
 In cheminformatics, combining molecular representations like **fingerprints**, **3D coordinates**, and **molecular descriptors** enhances the predictive power of machine learning models. These representations capture different aspects of molecular properties and behavior, providing a comprehensive dataset for prediction tasks.
@@ -3569,7 +3582,6 @@ Key steps in integrating representations:
 - **Model Training**: Use machine learning algorithms to train predictive models on the combined features.
 
 This integration is critical for tasks such as property prediction, activity modeling, and virtual screening.
-
 
 #### Combining Representations for Predictive Models
 
@@ -3655,9 +3667,9 @@ Predicting molecular properties using integrated representations is a common tas
 2. Combine these features into a single feature array for each molecule.
 3. Print the resulting feature arrays.
 
-**Solution**:
-
-```python
+<details>
+<summary>▶ Show Solution Code</summary>
+<pre><code class="language-python">
 import numpy as np
 from rdkit import Chem
 from rdkit.Chem import AllChem, Descriptors
@@ -3715,7 +3727,8 @@ for idx, smiles in enumerate(smiles_list):
 # Optionally print first few values of each feature array
 for i, features in enumerate(feature_arrays):
     print(f"Feature array for molecule {i + 1} (first 10 values): {features[:10]}")
-```
+</code></pre>
+</details>
 
 #### Key Takeaways
 
@@ -3723,13 +3736,13 @@ for i, features in enumerate(feature_arrays):
 - **Feature Engineering**: Creating unified feature arrays is essential for predictive tasks.
 - **Practical Application**: These methods enable the development of robust machine learning models for cheminformatics.
 
-# Section 2.4 – Quiz Questions
-
-## 1) Factual Questions
-
 ---
 
-### Question 1
+### Section 2.4 – Quiz Questions
+
+#### 1) Factual Questions
+
+##### Question 1
 In cheminformatics, the Tanimoto similarity is commonly used to compare molecular structures based on their fingerprints. Which of the following statements correctly explains the relationship between Tanimoto similarity and fingerprints?
 
 **A.** The Tanimoto similarity measures the similarity between two fingerprints by comparing the number of atoms in each molecule.  
@@ -3752,7 +3765,7 @@ Option B is correct because Tanimoto similarity evaluates the overlap (common su
 
 ---
 
-### Question 2
+##### Question 2
 Cheminformatics and molecular data enable researchers to apply statistical models to discover relationships between structure and function, often accelerating tasks like drug design and toxicity prediction. Which of the following statements about regression models in cheminformatics is TRUE?
 
 **A.** Linear regression can be used to predict molecular properties, but only if the relationship between the property and descriptors is non-linear.  
@@ -3775,7 +3788,7 @@ Option C is correct because the Mean Squared Error (MSE) quantifies the differen
 
 ---
 
-### Question 3
+##### Question 3
 Why is a correlation matrix useful when analyzing molecular properties?
 
 **A.** It helps visualize the relationships between different molecular properties, identifying strong positive or negative correlations.  
@@ -3798,7 +3811,7 @@ A correlation matrix helps visualize the relationships between different molecul
 
 ---
 
-### Question 4
+##### Question 4
 You are given a dataset of molecules and their properties. Which Python method would you use to calculate the average boiling point of these molecules using pandas?
 
 **A.** `df['BoilingPoint'].average()`  
@@ -3821,7 +3834,7 @@ The `.mean()` method applied to a specific column in a pandas DataFrame calculat
 
 ---
 
-### Question 5
+##### Question 5
 You are working with a new dataset and would like to analyze it by making a heatmap. If you ran the following code to generate a heatmap of a similarity matrix, what would this heatmap accomplish for you in cheminformatics?
 
 ```python
@@ -3848,11 +3861,9 @@ A similarity matrix shows pairwise comparisons, often based on Tanimoto similari
 
 ---
 
-## 2) Comprehension / Application Questions
+#### 2) Comprehension / Application Questions
 
----
-
-### Question 6
+##### Question 6
 In chemistry and data science, it may be helpful to visualize the data and understand trends within the data by creating scatter plots. In this example, imagine you want to observe the relationship between molecular weight and logP in the BBBP dataset file. Create a scatter plot with the data below to generate a scatter plot with molecular weight on the x-axis and logP on the y-axis. Make sure to label the axes appropriately.
 
 **Data:**
@@ -3881,7 +3892,7 @@ The data shows a clear positive correlation between molecular weight and logP. A
 
 ---
 
-### Question 7
+##### Question 7
 As a chemist analyzing a compound library, you're interested in understanding whether larger molecules tend to be more lipophilic, which could affect their ability to cross biological membranes. You decide to use a scatter plot to explore the relationship between molecular weight and logP (a measure of lipophilicity).
 
 Given the following code snippet:
@@ -3923,4 +3934,3 @@ In this example, both molecular weight and logP increase together, suggesting th
 </details>
 
 ---
-
