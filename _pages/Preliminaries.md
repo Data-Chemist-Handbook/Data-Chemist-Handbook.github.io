@@ -436,7 +436,7 @@ CSV (Comma-Separated Values) and Excel files are common formats for storing tabu
 
 Think of it as a variable that can store more complex information than a few words or a number. In this instance, we will store data tables as a DataFrame object. When the data table is read into a `pandas` DataFrame, the resulting object will have properties and functions built into it. For example, a substrate scope table can be read into a DataFrame and statistical analysis can be performed on the yield column with only a few lines of code.
 
-<!-- #TODO for Laura find some example data to make this section complete and make sense)
+<!-- TODO for Laura find some example data to make this section complete and make sense)
 -->
 
 **Example Code:**
@@ -1056,14 +1056,14 @@ Line and scatter plots are used to display relationships between variables. Line
 import matplotlib.pyplot as plt
 
 # Example data
-time = [1, 2, 3, 4, 5]
+time = [10, 20, 30, 40, 50]
 concentration = [0.5, 0.6, 0.7, 0.8, 0.9]
 
 # Line plot
 plt.plot(time, concentration, marker='o')
-plt.xlabel('Time')
-plt.ylabel('Concentration')
-plt.title('Concentration over Time')
+plt.xlabel('Time (s)')
+plt.ylabel('Concentration (M)')
+plt.title('Concentration vs Time')
 plt.show()
 ```
 ![Line Plot Example](../../resource/img/preliminaries/pre_2-2/2.2.5-1.png)
