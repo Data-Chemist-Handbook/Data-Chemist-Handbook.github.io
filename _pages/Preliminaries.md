@@ -430,7 +430,7 @@ In this chapter, we'll explore how to use Python for data analysis, focusing on 
 
 ---
 
-### Loading Data from Various File Formats
+### 2.2.1 Loading Data from Various File Formats
 
 **Completed and Compiled Code:** [Click Here](https://colab.research.google.com/drive/193oFwo4NRDWNl9lk8fu86gdS9SAsjcBs?usp=sharing)
 
@@ -493,7 +493,7 @@ print(df.head())
 
 ---
 
-### Data Cleaning and Preprocessing
+### 2.2.2 Data Cleaning and Preprocessing
 
 **Completed and Compiled Code:** [Click Here](https://colab.research.google.com/drive/1i_ZkFKIWSwC7oK8HPf-CodOUDchfe3qp?usp=sharing)
 
@@ -646,7 +646,7 @@ print(df.head())
 
 ---
 
-### Data Manipulation with Pandas
+### 2.2.3 Data Manipulation with Pandas
 
 **Completed and Compiled Code:** [Click Here](https://colab.research.google.com/drive/1RroAuj838RoxrgHbG9KlsChaA61hscEA?usp=sharing)
 
@@ -842,7 +842,7 @@ print(melted_df.head())
 
 ---
 
-### Working with NumPy Arrays
+### 2.2.4 Working with NumPy Arrays
 
 **Completed and Compiled Code:** [Click Here](https://colab.research.google.com/drive/1LDWWVJu2LRag47-rPnmTusqLmSzkuCAO?usp=sharing)
 
@@ -1005,7 +1005,7 @@ print(broadcasted_array)
 
 ---
 
-### Introduction to Visualization Libraries
+### 2.2.5 Introduction to Visualization Libraries
 
 **Completed and Compiled Code:** [Click Here](https://colab.research.google.com/drive/1qrrTcrkGx8AHl6W2YVG_thzMbSYjV3Ep?usp=sharing)
 
@@ -1211,7 +1211,7 @@ plt.show()
 
 ---
 
-### Statistical Analysis Basics
+### 2.2.6 Statistical Analysis Basics
 
 **Completed and Compiled Code:** [Click Here](https://colab.research.google.com/drive/1XBZn9ZEY7a9cTSg41xel1kFN4P57BOPW?usp=sharing)
 
