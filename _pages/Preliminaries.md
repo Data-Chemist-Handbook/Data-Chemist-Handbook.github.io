@@ -2,7 +2,7 @@
 title: 2. Preliminaries
 author: Dan Yoo, Haomin
 edited: Alex Liu, Jingyi Guo
-date: 2024-04-12
+date: 2024-08-12
 category: Jekyll
 layout: post
 ---
