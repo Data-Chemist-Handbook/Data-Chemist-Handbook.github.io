@@ -323,8 +323,7 @@ print(f"Molecular weight: {molecular_weight:.2f}")
 Write a program to define variables for the name and molecular weight of the active compound in Ibuprofen. Display the information using each print method above.
 
 <details>
-<summary>▶ Click to show solution</summary>
-
+<summary>▶ Show Solution Code</summary>
 <pre><code class="language-python">
 compound_name = "Ibuprofen"
 molecular_weight = 206.29
@@ -391,8 +390,7 @@ To load data from any file into your program, the program needs to know where to
 **Problem**: Write Python code to create a variable for a compound's molecular weight and set it to 180.16. Then create a function that doubles the molecular weight.
 
 <details>
-<summary>▶ Click to show solution</summary>
-
+<summary>▶ Show Solution Code</summary>
 <pre><code class="language-python">
 # Define a variable for molecular weight
 molecular_weight = 180.16
@@ -557,9 +555,8 @@ In the BBBP dataset, the `num` column (compound number) should be treated as an 
 2. Verify that the conversions are successful by printing the data types.
 
 <details>
-<summary>▶ Click to show solution</summary>
-
-```python
+<summary>▶ Show Solution Code</summary>
+<pre><code class="language-python">
 # Loading the dataset again
 url = 'https://raw.githubusercontent.com/Data-Chemist-Handbook/Data-Chemist-Handbook.github.io/refs/heads/master/_pages/BBBP.csv'
 df = pd.read_csv(url)
@@ -570,7 +567,7 @@ df['p_np'] = df['p_np'].astype('category')
 
 # Print the data types of the columns
 print(df.dtypes)
-```
+</code></pre>
 </details>
 
 #### Normalizing and Scaling Data
@@ -609,9 +606,8 @@ We will normalize the `num` column using Min–Max scaling, which adjusts values
 2. Print the first few rows to verify the normalization.
 
 <details>
-<summary>▶ Click to show solution</summary>
-
-```python
+<summary>▶ Show Solution Code</summary>
+<pre><code class="language-python">
 import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
 
@@ -625,7 +621,7 @@ df[['num']] = scaler.fit_transform(df[['num']])
 
 # Display the first few rows of the normalized dataset
 print(df.head())
-```
+</code></pre>
 </details>
 
 ---
@@ -662,9 +658,8 @@ print(filtered_df)
 2. Select a subset of columns from the dataset and display only the `name` and `smiles` columns.
 
 <details>
-<summary>▶ Click to show solution</summary>
-
-```python
+<summary>▶ Show Solution Code</summary>
+<pre><code class="language-python">
 # Loading the BBBP dataset
 url = 'https://raw.githubusercontent.com/Data-Chemist-Handbook/Data-Chemist-Handbook.github.io/refs/heads/master/_pages/BBBP.csv'
 df = pd.read_csv(url)
@@ -677,7 +672,7 @@ subset_df = df[['name', 'smiles']]
 
 print(filtered_df.head())
 print(subset_df.head())
-```
+</code></pre>
 </details>
 
 #### Merging and Joining Datasets
@@ -708,9 +703,8 @@ print(merged_df)
 2. Perform a left join on the `name` column and display the result.
 
 <details>
-<summary>▶ Click to show solution</summary>
-
-```python
+<summary>▶ Show Solution Code</summary>
+<pre><code class="language-python">
 # Loading the BBBP dataset
 url = 'https://raw.githubusercontent.com/Data-Chemist-Handbook/Data-Chemist-Handbook.github.io/refs/heads/master/_pages/BBBP.csv'
 df = pd.read_csv(url)
@@ -724,7 +718,7 @@ merged_df = pd.merge(df1, df2, on='name', how='left')
 
 # Print the merged DataFrame
 print(merged_df.head())
-```
+</code></pre>
 </details>
 
 #### Grouping and Aggregation
@@ -755,9 +749,8 @@ print(grouped_df)
 2. Use multiple aggregation functions (e.g., count and mean) on the `carbon count` column.
 
 <details>
-<summary>▶ Click to show solution</summary>
-
-```python
+<summary>▶ Show Solution Code</summary>
+<pre><code class="language-python">
 # Load dataset
 url = 'https://raw.githubusercontent.com/Data-Chemist-Handbook/Data-Chemist-Handbook.github.io/refs/heads/master/_pages/BBBP.csv'
 df = pd.read_csv(url)
@@ -773,7 +766,7 @@ aggregated_df = df.groupby('p_np')['carbon_count'].agg(['count', 'mean'])
 
 print(grouped_df)
 print(aggregated_df)
-```
+</code></pre>
 </details>
 
 #### Pivot Tables and Reshaping Data
@@ -803,9 +796,8 @@ print(pivot_df)
 2. Use the `melt()` function to reshape the DataFrame, converting columns back into rows.
 
 <details>
-<summary>▶ Click to show solution</summary>
-
-```python
+<summary>▶ Show Solution Code</summary>
+<pre><code class="language-python">
 # Load the BBBP dataset
 url = 'https://raw.githubusercontent.com/Data-Chemist-Handbook/Data-Chemist-Handbook.github.io/refs/heads/master/_pages/BBBP.csv'
 df = pd.read_csv(url)
@@ -821,7 +813,7 @@ melted_df = df.melt(id_vars=['name'], value_vars=['carbon_count', 'p_np'])
 
 print(pivot_df)
 print(melted_df.head())
-```
+</code></pre>
 </details>
 
 ---
@@ -859,9 +851,8 @@ print(f"Sum: {arr_sum}, Mean: {arr_mean}")
 2. Perform basic statistical operations like `sum`, `mean`, and `median` on the `num` array.
 
 <details>
-<summary>▶ Click to show solution</summary>
-
-```python
+<summary>▶ Show Solution Code</summary>
+<pre><code class="language-python">
 import pandas as pd
 import numpy as np
 
@@ -878,7 +869,7 @@ num_mean = np.mean(num_array)
 num_median = np.median(num_array)
 
 print(f"Sum: {num_sum}, Mean: {num_mean}, Median: {num_median}")
-```
+</code></pre>
 </details>
 
 #### Indexing and Slicing
@@ -909,9 +900,8 @@ print(slice_arr)
 <!-- TODO for Alex explain what reversing an array as ; TODO for Laura use a better column than the num column which is indices and not a relevant example) -->
 
 <details>
-<summary>▶ Click to show solution</summary>
-
-```python
+<summary>▶ Show Solution Code</summary>
+<pre><code class="language-python">
 # Load the BBBP dataset
 url = 'https://raw.githubusercontent.com/Data-Chemist-Handbook/Data-Chemist-Handbook.github.io/refs/heads/master/_pages/BBBP.csv'
 df = pd.read_csv(url)
@@ -930,7 +920,7 @@ reversed_array = carbon_array[::-1]
 
 print(f"Sliced Array (every second element): {sliced_array}")
 print(f"Reversed Array: {reversed_array}")
-```
+</code></pre>
 </details>
 
 #### Reshaping and Broadcasting
@@ -963,9 +953,8 @@ print(broadcast_arr)
 2. Use broadcasting to add 100 to all elements in the reshaped array.
 
 <details>
-<summary>▶ Click to show solution</summary>
-
-```python
+<summary>▶ Show Solution Code</summary>
+<pre><code class="language-python">
 # Load the BBBP dataset
 url = 'https://raw.githubusercontent.com/Data-Chemist-Handbook/Data-Chemist-Handbook.github.io/refs/heads/master/_pages/BBBP.csv'
 df = pd.read_csv(url)
@@ -984,7 +973,7 @@ print(reshaped_array)
 
 print("\nBroadcasted Array (after adding 100):")
 print(broadcasted_array)
-```
+</code></pre>
 </details>
 
 ---
@@ -1239,9 +1228,8 @@ Standard Deviation of Molecular Weight: 23.874672772626646
 Calculate the mean, median, and variance for the `num` column in the BBBP dataset.
 
 <details>
-<summary>▶ Click to show solution</summary>
-
-```python
+<summary>▶ Show Solution Code</summary>
+<pre><code class="language-python">
 import pandas as pd
 
 # Load the BBBP dataset
@@ -1254,12 +1242,7 @@ median_num = df['num'].median()
 variance_num = df['num'].var()
 
 print(f'Mean: {mean_num}, Median: {median_num}, Variance: {variance_num}')
-```
-
-**Result**
-```python
-Mean: 1027.3760975609757, Median: 1026.5, Variance: 351455.52905260166
-```
+</code></pre>
 </details>
 
 #### Probability Distributions
@@ -1333,9 +1316,8 @@ plt.show()
 Generate a normally distributed dataset based on the mean and standard deviation of the `num` column in the BBBP dataset. Plot a histogram of the generated data.
 
 <details>
-<summary>▶ Click to show solution</summary>
-
-```python
+<summary>▶ Show Solution Code</summary>
+<pre><code class="language-python">
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -1355,13 +1337,7 @@ plt.xlabel('Value')
 plt.ylabel('Density')
 plt.title('Normal Distribution of num')
 plt.show()
-```
-
-<!-- #TODO change this figure for the new practice problem -->
-
-![Normal Distribution Example](../../resource/img/preliminaries/pre_2-2/2.2.6-4.png)
-
-*Figure: Histogram Illustrating a Normal Distribution of 'num' Values from the BBBP Dataset*
+</code></pre>
 </details>
 
 #### Hypothesis Testing
@@ -1450,9 +1426,8 @@ By using hypothesis testing, chemists can make statistically supported decisions
 In the BBBP dataset, compare the mean `num` values between permeable (p_np=1) and non-permeable (p_np=0) compounds using a t-test.
 
 <details>
-<summary>▶ Click to show solution</summary>
-
-```python
+<summary>▶ Show Solution Code</summary>
+<pre><code class="language-python">
 from scipy.stats import ttest_ind
 import pandas as pd
 
@@ -1467,11 +1442,7 @@ non_permeable = df[df['p_np'] == 0]['num']
 # Perform t-test
 t_stat, p_val = ttest_ind(permeable, non_permeable)
 print(f"T-statistic: {t_stat}, P-value: {p_val}")
-```
-**Result**
-```python
-T-statistic: 21.556533998843065, P-value: 4.703739370417683e-93
-```
+</code></pre>
 </details>
 
 #### Correlation and Regression
@@ -1561,9 +1532,8 @@ Intercept: 38.947368421052616
 Calculate the correlation between `num` and `p_np` in the BBBP dataset. Then, perform a linear regression to predict `num` based on `p_np`.
 
 <details>
-<summary>▶ Click to show solution</summary>
-
-```python
+<summary>▶ Show Solution Code</summary>
+<pre><code class="language-python">
 import pandas as pd
 from scipy.stats import pearsonr
 from sklearn.linear_model import LinearRegression
@@ -1582,14 +1552,7 @@ y = df['num']
 model = LinearRegression().fit(X, y)
 print(f"Regression coefficient: {model.coef_[0]}")
 print(f"Intercept: {model.intercept_}")
-```
-
-**Result**
-```python
-Correlation between num and p_np: 0.43004111834348213
-Regression coefficient: 600.5995724446097
-Intercept: 568.2836438923398
-```
+</code></pre>
 </details>
 
 #### ANOVA (Analysis of Variance)
@@ -1676,9 +1639,8 @@ By using ANOVA, chemists can draw statistically sound conclusions about the effe
 Group the `num` column in the BBBP dataset by the first digit of `num` (e.g., 1XX, 2XX, 3XX) and perform an ANOVA test to see if the mean values differ significantly among these groups.
 
 <details>
-<summary>▶ Click to show solution</summary>
-
-```python
+<summary>▶ Show Solution Code</summary>
+<pre><code class="language-python">
 from scipy.stats import f_oneway
 import pandas as pd
 
@@ -1694,11 +1656,7 @@ group3 = df[df['num'].between(300, 399)]['num']
 # Perform ANOVA
 f_stat, p_val = f_oneway(group1, group2, group3)
 print(f"F-statistic: {f_stat}, P-value: {p_val}")
-```
-**Result**
-```python
-F-statistic: 1188.118811881188, P-value: 1.946499706613343e-142
-```
+</code></pre>
 </details>
 
 ---
