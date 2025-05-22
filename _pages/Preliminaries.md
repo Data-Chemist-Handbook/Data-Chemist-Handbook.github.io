@@ -1886,19 +1886,19 @@ D. No,  F-Statistic: 548.06, P-Value: 0.10
 <details>
 <summary>▶ Click to show answer</summary>
 
-Correct Answer: B  
+Correct Answer: B
 </details>
 
 <details>
-<summary>▶ Click to show answer and explanation</summary>
+<summary>▶ Click to show explanation</summary>
 
+Explanation:  
 Since the P-value < 0.05, the result is statistically significant at the 95% confidence level.  
 This means the difference in average molecular mass between compounds with high and low ToxCast activity is unlikely due to random chance.
-<details>
+</details>
 
 <details>
 <summary>▶ Show Solution Code</summary>
-
 <pre><code class="language-python">
 import pandas as pd
 from scipy.stats import f_oneway
