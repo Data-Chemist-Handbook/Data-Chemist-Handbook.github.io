@@ -2594,8 +2594,8 @@ ibuprofen = Chem.MolFromSmiles(ibuprofen_smiles)
 img = Draw.MolToImage(ibuprofen, size=(300, 300))
 img.save("ibuprofen.png")
 ```
-
 This section provides a comprehensive overview of molecular visualization using PyMOL and RDKit, highlighting their capabilities and applications in cheminformatics. The example code, practice problem, and solution demonstrate how to visualize molecular structures effectively, leveraging real data and tools.
+
 ---
 
 ### Section 2.3 – Quiz Questions
