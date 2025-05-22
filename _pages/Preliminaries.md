@@ -424,17 +424,17 @@ def double_weight(weight):
 # Test the function
 print(f"Double molecular weight: {double_weight(molecular_weight)}")
 ```
-# 2.2 Data Analysis with Python
+## 2.2 Data Analysis with Python
 
 In this chapter, we'll explore how to use Python for data analysis, focusing on importing and managing datasets commonly encountered in chemistry. Data analysis is a crucial skill for chemists, allowing you to extract meaningful insights from experimental data, predict outcomes, and make informed decisions in your research. Effective data analysis begins with properly importing and managing your datasets. This section will guide you through loading data from various file formats, including those specific to chemistry, and handling data from databases.
 
 ---
 
-## 2.2.1 Loading Data from Various File Formats
+### Loading Data from Various File Formats
 
 **Completed and Compiled Code:** [Click Here](https://colab.research.google.com/drive/193oFwo4NRDWNl9lk8fu86gdS9SAsjcBs?usp=sharing)
 
-### 2.2.1.1 Reading Data from CSV
+#### Reading Data from CSV
 
 **Explanation:**
 
@@ -461,11 +461,11 @@ excel_data = pd.read_excel('compound_properties.xlsx', sheet_name='Sheet1')
 - `pd.read_csv()` reads data from a CSV file into a DataFrame.
 - `pd.read_excel()` reads data from an Excel file. The `sheet_name` parameter specifies which sheet to read.
 
-### 2.2.1.2 Reading CSVs via File Upload or Link
+#### Reading CSVs via File Upload or Link
 
 You can read CSV files in two ways:
 
-#### Method 1: Upload the file manually (e.g., in Jupyter or Google Colab)
+**Method 1: Upload the file manually (e.g., in Jupyter or Google Colab)**
 
 Download the BBBP.csv File: [Click Here](https://github.com/Data-Chemist-Handbook/Data-Chemist-Handbook.github.io/blob/master/_pages/BBBP.csv)
 
@@ -478,7 +478,7 @@ df = pd.read_csv('BBBP.csv')
 print(df.head())
 ```
 
-#### Method 2: Load the file directly from a GitHub raw link
+**Method 2: Load the file directly from a GitHub raw link**
 
 This method allows your code to be instantly runnable without needing to manually upload files.
 
@@ -493,11 +493,11 @@ print(df.head())
 
 ---
 
-## 2.2.2 Data Cleaning and Preprocessing
+### Data Cleaning and Preprocessing
 
 **Completed and Compiled Code:** [Click Here](https://colab.research.google.com/drive/1i_ZkFKIWSwC7oK8HPf-CodOUDchfe3qp?usp=sharing)
 
-### 2.2.2.1 Handling Missing Values and Duplicates
+#### Handling Missing Values and Duplicates
 
 Because datasets often combine data from multiple sources or are taken from large databases, they need to be processed before being analyzed to prevent using incomplete or incorrect data. The processing is called cleaning and can be done with the help of built in functions rather than through manual fixing.
 
@@ -538,7 +538,7 @@ In this practice problem, we removed data rows that did not contain `smiles` inf
 
 <!-- TODO for Alex: write solution to practice problem -->
 
-### 2.2.2.2 Data Type Conversions
+#### Data Type Conversions
 
 **Explanation:**
 Converting data types to the desired type for a given data category enables proper representation of the data for performing mathematical calculations or comparisons. This is necessary when data is imported with incorrect types (e.g., numbers stored as strings).
@@ -589,7 +589,7 @@ print(df.dtypes)
 ```
 </details>
 
-### 2.2.2.3 Normalizing and Scaling Data
+#### Normalizing and Scaling Data
 
 Because different features may span very different ranges, it's often useful to bring them onto a common scale before modeling.
 
@@ -646,11 +646,11 @@ print(df.head())
 
 ---
 
-## 2.2.3 Data Manipulation with Pandas
+### Data Manipulation with Pandas
 
 **Completed and Compiled Code:** [Click Here](https://colab.research.google.com/drive/1RroAuj838RoxrgHbG9KlsChaA61hscEA?usp=sharing)
 
-### 2.2.3.1 Filtering and Selecting Data
+#### Filtering and Selecting Data
 
 **Explanation:**
 
@@ -696,7 +696,7 @@ print(subset_df.head())
 ```
 </details>
 
-### 2.2.3.2 Merging and Joining Datasets
+#### Merging and Joining Datasets
 
 **Explanation:**
 
@@ -743,7 +743,7 @@ print(merged_df.head())
 ```
 </details>
 
-### 2.2.3.3 Grouping and Aggregation
+#### Grouping and Aggregation
 
 **Explanation:**
 
@@ -792,7 +792,7 @@ print(aggregated_df)
 ```
 </details>
 
-### 2.2.3.4 Pivot Tables and Reshaping Data
+#### Pivot Tables and Reshaping Data
 
 **Explanation:**
 
@@ -842,11 +842,11 @@ print(melted_df.head())
 
 ---
 
-## 2.2.4 Working with NumPy Arrays
+### Working with NumPy Arrays
 
 **Completed and Compiled Code:** [Click Here](https://colab.research.google.com/drive/1LDWWVJu2LRag47-rPnmTusqLmSzkuCAO?usp=sharing)
 
-### 2.2.4.1 Basic Operations and Mathematical Functions
+#### Basic Operations and Mathematical Functions
 
 **Explanation:**
 
@@ -897,7 +897,7 @@ print(f"Sum: {num_sum}, Mean: {num_mean}, Median: {num_median}")
 ```
 </details>
 
-### 2.2.4.2 Indexing and Slicing
+#### Indexing and Slicing
 
 **Explanation:**
 
@@ -949,7 +949,7 @@ print(f"Reversed Array: {reversed_array}")
 ```
 </details>
 
-### 2.2.4.3 Reshaping and Broadcasting
+#### Reshaping and Broadcasting
 
 **Explanation:**
 
@@ -1005,7 +1005,7 @@ print(broadcasted_array)
 
 ---
 
-## 2.2.5 Introduction to Visualization Libraries
+### Introduction to Visualization Libraries
 
 **Completed and Compiled Code:** [Click Here](https://colab.research.google.com/drive/1qrrTcrkGx8AHl6W2YVG_thzMbSYjV3Ep?usp=sharing)
 
@@ -1024,7 +1024,7 @@ import seaborn as sns
 import plotly.express as px
 ```
 
-### 2.2.5.1 Line and Scatter Plots
+#### Line and Scatter Plots
 
 **Explanation:**
 Line and scatter plots are used to display relationships between variables. Line plots are commonly used for trend analysis, while scatter plots are useful for examining the correlation between two numerical variables.
@@ -1068,7 +1068,7 @@ plt.show()
 
 *Figure: Scatter Plot of Molecular Weight vs. Boiling Point*
 
-### 2.2.5.2 Histograms and Density Plots
+#### Histograms and Density Plots
 
 **Explanation:**
 
@@ -1115,7 +1115,7 @@ plt.show()
 
 *Figure: Density Plot Visualizing Data Distribution*
 
-### 2.2.5.3 Box Plots and Violin Plots
+#### Box Plots and Violin Plots
 
 <!-- TODO for Laura use a relevant chemistry dataset such as number of aromatic rings in each compound in a set of molecules -->
 
@@ -1160,7 +1160,7 @@ plt.show()
 
 *Figure: Violin Plot Highlighting Value Distribution and Density Across Categories*
 
-### 2.2.5.4 Heatmaps and Correlation Matrices
+#### Heatmaps and Correlation Matrices
 
 <!-- TODO for Laura explain the use of a heat map in simple and clear language and provide a chemistry relevant situational exmaple of when you'd use it. need to come back to this to provide a suggestion -->
 
@@ -1211,13 +1211,13 @@ plt.show()
 
 ---
 
-## 2.2.6 Statistical Analysis Basics
+### Statistical Analysis Basics
 
 **Completed and Compiled Code:** [Click Here](https://colab.research.google.com/drive/1XBZn9ZEY7a9cTSg41xel1kFN4P57BOPW?usp=sharing)
 
 Statistical analysis is essential for interpreting data and making informed conclusions. In this section, we'll explore fundamental statistical techniques using Python, which are particularly useful in scientific research.
 
-### 2.2.6.1 Descriptive Statistics
+#### Descriptive Statistics
 
 **Explanation:**
 Descriptive statistics summarize and describe the main features of a dataset. Common descriptive statistics include the mean, median, mode, variance, and standard deviation.
@@ -1278,7 +1278,7 @@ Mean: 1027.3760975609757, Median: 1026.5, Variance: 351455.52905260166
 ```
 </details>
 
-### 2.2.6.2 Probability Distributions
+#### Probability Distributions
 
 **Explanation:**
 
@@ -1317,7 +1317,7 @@ plt.title('Normal Distribution')
 plt.show()
 ```
 
-#### What the Code Does:
+**What the Code Does:**
 1. **Generate Data**: The `np.random.normal` function creates 1000 random data points with:
    - **Mean (`loc`)**: Set to 0.
    - **Standard Deviation (`scale`)**: Set to 1.
@@ -1335,7 +1335,7 @@ plt.show()
 
 *Figure: Histogram Depicting a Normal Distribution with Mean 0 and Standard Deviation 1*
 
-#### Applications in Chemistry:
+**Applications in Chemistry:**
 
 <!-- #TODO change these examples. Currently looking for literature relevant examples of normal distribution usage in chemistry. -->
 
@@ -1380,7 +1380,7 @@ plt.show()
 *Figure: Histogram Illustrating a Normal Distribution of 'num' Values from the BBBP Dataset*
 </details>
 
-### 2.2.6.3 Hypothesis Testing
+#### Hypothesis Testing
 
 **Explanation:**
 
@@ -1404,7 +1404,7 @@ Hypothesis testing is a statistical method used to evaluate whether there is eno
    - Compare reaction yields under different conditions (e.g., catalysts or solvents).
    - Evaluate the effectiveness of a new material or treatment compared to a control group.
 
-**Example Code for t-test**:
+**Example Code for t-test:**
 
 ```python
 from scipy.stats import ttest_ind
@@ -1436,11 +1436,11 @@ T-statistic: -1.6285130624347315, P-value: 0.14206565386214137
    - **T-Statistic**: Quantifies the difference in means relative to data variability.
    - **P-Value**: Indicates whether the observed difference is statistically significant.
 
-**Interpretation**:
+**Interpretation:**
 - The **t-statistic** is -1.63, indicating that the mean of `group_a` is slightly lower than the mean of `group_b`.
 - The **p-value** is 0.14, which is greater than 0.05. This means we fail to reject the null hypothesis and conclude that there is no statistically significant difference between the two groups.
 
-**Applications in Chemistry**:
+**Applications in Chemistry:**
 
 1. **Catalyst Comparison**:
    - Determine if two catalysts produce significantly different yields or reaction rates.
@@ -1451,7 +1451,7 @@ T-statistic: -1.6285130624347315, P-value: 0.14206565386214137
 3. **Experimental Conditions**:
    - Test whether changes in temperature, pressure, or solvent lead to meaningful differences in reaction outcomes.
 
-**Important Considerations**:
+**Important Considerations:**
 - Ensure the data meets the assumptions of a t-test:
   - Independence of groups.
   - Approximately normal distribution.
@@ -1484,14 +1484,13 @@ non_permeable = df[df['p_np'] == 0]['num']
 t_stat, p_val = ttest_ind(permeable, non_permeable)
 print(f"T-statistic: {t_stat}, P-value: {p_val}")
 ```
-
 **Result**
 ```python
 T-statistic: 21.556533998843065, P-value: 4.703739370417683e-93
 ```
 </details>
 
-### 2.2.6.4 Correlation and Regression
+#### Correlation and Regression
 
 **Explanation:**
 
@@ -1560,7 +1559,7 @@ Intercept: 38.947368421052616
       - **Regression Coefficient**: Shows how much the boiling point changes for a one-unit increase in molecular weight.
       - **Intercept**: Indicates the boiling point when the molecular weight is zero.
 
-**Interpretation**:
+**Interpretation:**
 - If the correlation coefficient is high (close to 1 or -1), it suggests a strong linear relationship.
 - The regression coefficient quantifies the strength of this relationship, and the intercept gives the baseline prediction.
 
@@ -1609,7 +1608,7 @@ Intercept: 568.2836438923398
 ```
 </details>
 
-### 2.2.6.5 ANOVA (Analysis of Variance)
+#### ANOVA (Analysis of Variance)
 
 **Explanation:**
 
@@ -1633,7 +1632,7 @@ ANOVA (Analysis of Variance) is a statistical method used to determine if there 
    - The p-value indicates the probability of observing the F-statistic if H₀ is true.
    - A small p-value (typically < 0.05) leads to rejecting H₀, suggesting that group means are significantly different.
 
-**Why It's Useful for Chemists**:
+**Why It's Useful for Chemists:**
 - ANOVA can identify whether different conditions (e.g., catalysts, solvents, or temperatures) significantly affect a property of interest, such as yield, rate, or stability.
 
 **Example Code for ANOVA:**
@@ -1667,11 +1666,11 @@ F-statistic: 3.151036525172754, P-value: 0.07944851235243751
    - **F-Statistic**: Measures the ratio of between-group variability to within-group variability.
    - **P-Value**: If this is below a threshold (e.g., 0.05), it suggests that the differences in means are statistically significant.
 
-**Interpretation**:
+**Interpretation:**
 - The p-value (0.08) is greater than 0.05, so we cannot reject the null hypothesis.
 - This indicates that it isn't statistically significant from the others.
 
-**Applications in Chemistry**:
+**Applications in Chemistry:**
 
 1. **Catalyst Screening**:
    - Compare reaction yields across multiple catalysts to identify the most effective one.
