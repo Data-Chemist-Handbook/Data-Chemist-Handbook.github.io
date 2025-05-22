@@ -1,8 +1,8 @@
 ---
 title: 2. Preliminaries
 author: Dan Yoo, Haomin
-edited: Alex Liu
-date: 2024-08-12
+edited: Alex Liu, Jingyi Guo
+date: 2025-05-21
 category: Jekyll
 layout: post
 ---
@@ -424,24 +424,25 @@ def double_weight(weight):
 # Test the function
 print(f"Double molecular weight: {double_weight(molecular_weight)}")
 ```
-## 2.2 Data Analysis with Python
+# 2.2 Data Analysis with Python
 
 In this chapter, we'll explore how to use Python for data analysis, focusing on importing and managing datasets commonly encountered in chemistry. Data analysis is a crucial skill for chemists, allowing you to extract meaningful insights from experimental data, predict outcomes, and make informed decisions in your research. Effective data analysis begins with properly importing and managing your datasets. This section will guide you through loading data from various file formats, including those specific to chemistry, and handling data from databases.
 
-### 2.2.1 Loading Data from Various File Formats
+---
 
-#### Completed and Compiled Code: [Click Here](https://colab.research.google.com/drive/193oFwo4NRDWNl9lk8fu86gdS9SAsjcBs?usp=sharing)
+## 2.2.1 Loading Data from Various File Formats
 
-**Reading Data from CSV**
+**Completed and Compiled Code:** [Click Here](https://colab.research.google.com/drive/193oFwo4NRDWNl9lk8fu86gdS9SAsjcBs?usp=sharing)
+
+### 2.2.1.1 Reading Data from CSV
 
 **Explanation:**
 
-CSV (Comma-Separated Values) and Excel files are common formats for storing tabular data. Python’s `pandas` library provides straightforward methods to read these files into DataFrames, which are powerful data structures for working with tabular data. A DataFrame is what is known in programming as an object. Objects contain data organized in specific defined structures and have properties that can be changed and used by the programmer.
+CSV (Comma-Separated Values) and Excel files are common formats for storing tabular data. Python's `pandas` library provides straightforward methods to read these files into DataFrames, which are powerful data structures for working with tabular data. A DataFrame is what is known in programming as an object. Objects contain data organized in specific defined structures and have properties that can be changed and used by the programmer.
 
 Think of it as a variable that can store more complex information than a few words or a number. In this instance, we will store data tables as a DataFrame object. When the data table is read into a `pandas` DataFrame, the resulting object will have properties and functions built into it. For example, a substrate scope table can be read into a DataFrame and statistical analysis can be performed on the yield column with only a few lines of code.
 
-<!-- #TODO for Laura find some example data to make this section complete and make sense)
--->
+<!-- #TODO for Laura find some example data to make this section complete and make sense) -->
 
 **Example Code:**
 
@@ -457,10 +458,10 @@ excel_data = pd.read_excel('compound_properties.xlsx', sheet_name='Sheet1')
 
 **Explanation of the Code:**
 
-  - `pd.read_csv()` reads data from a CSV file into a DataFrame.
-  - `pd.read_excel()` reads data from an Excel file. The `sheet_name` parameter specifies which sheet to read.
+- `pd.read_csv()` reads data from a CSV file into a DataFrame.
+- `pd.read_excel()` reads data from an Excel file. The `sheet_name` parameter specifies which sheet to read.
 
-#### Reading CSVs via File Upload or Link
+### 2.2.1.2 Reading CSVs via File Upload or Link
 
 You can read CSV files in two ways:
 
@@ -484,17 +485,19 @@ This method allows your code to be instantly runnable without needing to manuall
 ```python
 import pandas as pd
 
-#loading the dataset
+# Loading the dataset
 url = 'https://raw.githubusercontent.com/Data-Chemist-Handbook/Data-Chemist-Handbook.github.io/refs/heads/master/_pages/BBBP.csv'
 df = pd.read_csv(url)
 print(df.head())
 ```
 
-### 2.2.2 Data Cleaning and Preprocessing
+---
 
-***Completed and Compiled Code: [Click Here](https://colab.research.google.com/drive/1i_ZkFKIWSwC7oK8HPf-CodOUDchfe3qp?usp=sharing)***
+## 2.2.2 Data Cleaning and Preprocessing
 
-#### Handling Missing Values and Duplicates
+**Completed and Compiled Code:** [Click Here](https://colab.research.google.com/drive/1i_ZkFKIWSwC7oK8HPf-CodOUDchfe3qp?usp=sharing)
+
+### 2.2.2.1 Handling Missing Values and Duplicates
 
 Because datasets often combine data from multiple sources or are taken from large databases, they need to be processed before being analyzed to prevent using incomplete or incorrect data. The processing is called cleaning and can be done with the help of built in functions rather than through manual fixing.
 
@@ -525,17 +528,17 @@ Given a DataFrame with missing values:
 1. Fill missing values in the `name` column with `'Unknown'` and in the `smiles` column with an empty string.
 2. Remove any duplicate rows based on the `smiles` column.
 
-##### Considerations
+<details>
+<summary>▶ Click to show considerations</summary>
 
 In this practice problem, we removed data rows that did not contain `smiles` info, but what if we wanted to attempt to fill in the data based on the name? There are ways to do this through other python packages, such as pubchempy.
 
 <!-- TODO for Laura: write solution to considerations -->
+</details>
 
-<!-- TODO for Alex: write solution to practice problem
--->
----
+<!-- TODO for Alex: write solution to practice problem -->
 
-**Data Type Conversions**
+### 2.2.2.2 Data Type Conversions
 
 **Explanation:**
 Converting data types to the desired type for a given data category enables proper representation of the data for performing mathematical calculations or comparisons. This is necessary when data is imported with incorrect types (e.g., numbers stored as strings).
@@ -549,7 +552,7 @@ data = {'product': [1, 2, 3],
       'yield': ['75', '46', '32']}
 df = pd.DataFrame(data)
 
-print("the data types before conversion are " + df.types)
+print("the data types before conversion are " + str(df.dtypes))
 
 # Converting 'product' to string
 df['product'] = df['product'].astype(str)
@@ -560,7 +563,7 @@ df['milligrams'] = df['milligrams'].astype(float)
 # Converting 'yield' to integer
 df['yield'] = df['yield'].astype(int)
 
-print("the data types after conversion are " + df.dtypes)
+print("the data types after conversion are " + str(df.dtypes))
 ```
 
 **Practice Problem 1:**
@@ -569,10 +572,10 @@ In the BBBP dataset, the `num` column (compound number) should be treated as an 
 1. Convert the num column to integer and the p_np column to a categorical type.
 2. Verify that the conversions are successful by printing the data types.
 
-**Solution**
+<details>
+<summary>▶ Click to show solution</summary>
 
 ```python
-
 # Loading the dataset again
 url = 'https://raw.githubusercontent.com/Data-Chemist-Handbook/Data-Chemist-Handbook.github.io/refs/heads/master/_pages/BBBP.csv'
 df = pd.read_csv(url)
@@ -584,10 +587,11 @@ df['p_np'] = df['p_np'].astype('category')
 # Print the data types of the columns
 print(df.dtypes)
 ```
+</details>
 
-#### Normalizing and Scaling Data
+### 2.2.2.3 Normalizing and Scaling Data
 
-Because different features may span very different ranges, it’s often useful to bring them onto a common scale before modeling.
+Because different features may span very different ranges, it's often useful to bring them onto a common scale before modeling.
 
 **Explanation:**
 Normalization adjusts the values of numerical columns to a common scale without distorting differences in ranges. This is often used in machine learning algorithms to improve model performance by making data more comparable.
@@ -620,7 +624,8 @@ We will normalize the `num` column using Min–Max scaling, which adjusts values
 1. Normalize the `num` column in the BBBP dataset using Min–Max scaling.
 2. Print the first few rows to verify the normalization.
 
-**Solution**
+<details>
+<summary>▶ Click to show solution</summary>
 
 ```python
 import pandas as pd
@@ -637,14 +642,15 @@ df[['num']] = scaler.fit_transform(df[['num']])
 # Display the first few rows of the normalized dataset
 print(df.head())
 ```
+</details>
 
 ---
 
-### 2.2.3 Data Manipulation with Pandas
+## 2.2.3 Data Manipulation with Pandas
 
-***Completed and Compiled Code: [Click Here](https://colab.research.google.com/drive/1RroAuj838RoxrgHbG9KlsChaA61hscEA?usp=sharing)***
+**Completed and Compiled Code:** [Click Here](https://colab.research.google.com/drive/1RroAuj838RoxrgHbG9KlsChaA61hscEA?usp=sharing)
 
-#### Filtering and Selecting Data
+### 2.2.3.1 Filtering and Selecting Data
 
 **Explanation:**
 
@@ -671,7 +677,8 @@ print(filtered_df)
 1. Filter a DataFrame from the BBBP dataset to show only rows where the `num` (compound number) is greater than 500.
 2. Select a subset of columns from the dataset and display only the `name` and `smiles` columns.
 
-**Solution**
+<details>
+<summary>▶ Click to show solution</summary>
 
 ```python
 # Loading the BBBP dataset
@@ -687,10 +694,9 @@ subset_df = df[['name', 'smiles']]
 print(filtered_df.head())
 print(subset_df.head())
 ```
+</details>
 
----
-
-#### Merging and Joining Datasets
+### 2.2.3.2 Merging and Joining Datasets
 
 **Explanation:**
 
@@ -717,7 +723,9 @@ print(merged_df)
 1. Merge two DataFrames from the BBBP dataset: One containing the `name` and `smiles` columns and another containing the `num` and `p_np` columns.
 2. Perform a left join on the `name` column and display the result.
 
-**Solution**
+<details>
+<summary>▶ Click to show solution</summary>
+
 ```python
 # Loading the BBBP dataset
 url = 'https://raw.githubusercontent.com/Data-Chemist-Handbook/Data-Chemist-Handbook.github.io/refs/heads/master/_pages/BBBP.csv'
@@ -733,10 +741,9 @@ merged_df = pd.merge(df1, df2, on='name', how='left')
 # Print the merged DataFrame
 print(merged_df.head())
 ```
+</details>
 
----
-
-#### Grouping and Aggregation
+### 2.2.3.3 Grouping and Aggregation
 
 **Explanation:**
 
@@ -758,13 +765,14 @@ print(grouped_df)
 
 **Practice Problem:**
 
-<!-- TODO for Laura use the B3DB subset csv for this example
--->
+<!-- TODO for Laura use the B3DB subset csv for this example -->
 
 1. Group the BBBP dataset by `p_np` and compute the average `carbon count` for each group (permeable and non-permeable compounds).
 2. Use multiple aggregation functions (e.g., count and mean) on the `carbon count` column.
 
-**Solution**
+<details>
+<summary>▶ Click to show solution</summary>
+
 ```python
 # Load dataset
 url = 'https://raw.githubusercontent.com/Data-Chemist-Handbook/Data-Chemist-Handbook.github.io/refs/heads/master/_pages/BBBP.csv'
@@ -782,10 +790,9 @@ aggregated_df = df.groupby('p_np')['carbon_count'].agg(['count', 'mean'])
 print(grouped_df)
 print(aggregated_df)
 ```
+</details>
 
----
-
-#### Pivot Tables and Reshaping Data
+### 2.2.3.4 Pivot Tables and Reshaping Data
 
 **Explanation:**
 
@@ -811,7 +818,9 @@ print(pivot_df)
 1. Create a pivot table from the BBBP dataset to summarize the average `carbon count` for each `p_np` group (permeable and non-permeable).
 2. Use the `melt()` function to reshape the DataFrame, converting columns back into rows.
 
-**Solution**
+<details>
+<summary>▶ Click to show solution</summary>
+
 ```python
 # Load the BBBP dataset
 url = 'https://raw.githubusercontent.com/Data-Chemist-Handbook/Data-Chemist-Handbook.github.io/refs/heads/master/_pages/BBBP.csv'
@@ -829,17 +838,19 @@ melted_df = df.melt(id_vars=['name'], value_vars=['carbon_count', 'p_np'])
 print(pivot_df)
 print(melted_df.head())
 ```
+</details>
 
-### 2.2.4 Working with NumPy Arrays
-***Completed and Compiled Code: [Click Here](https://colab.research.google.com/drive/1LDWWVJu2LRag47-rPnmTusqLmSzkuCAO?usp=sharing)***
+---
 
+## 2.2.4 Working with NumPy Arrays
 
-#### Basic Operations and Mathematical Functions
+**Completed and Compiled Code:** [Click Here](https://colab.research.google.com/drive/1LDWWVJu2LRag47-rPnmTusqLmSzkuCAO?usp=sharing)
+
+### 2.2.4.1 Basic Operations and Mathematical Functions
 
 **Explanation:**
 
-<!-- #TODO for Alex This explanation is insufficient, elaborate on numpy's utility and its widespread use. try to stick to terms that are less jargon heavy. for example, instead of "numerical computing" say something like "mathematical operations")
--->
+<!-- #TODO for Alex This explanation is insufficient, elaborate on numpy's utility and its widespread use. try to stick to terms that are less jargon heavy. for example, instead of "numerical computing" say something like "mathematical operations") -->
 NumPy is a library for numerical computing in Python, allowing for efficient array operations, including mathematical functions like summing or averaging.
 
 **Example Code:**
@@ -859,14 +870,16 @@ print(f"Sum: {arr_sum}, Mean: {arr_mean}")
 
 **Practice Problem 1:**
 
-<!-- TODO for Laura: change this example to use one of the columns added to the dataset that would make more sense to average because num is the indices and does not make sense to average
--->
+<!-- TODO for Laura: change this example to use one of the columns added to the dataset that would make more sense to average because num is the indices and does not make sense to average -->
 1. Create a NumPy array from the `num` column in the **BBBP** dataset.
 2. Perform basic statistical operations like `sum`, `mean`, and `median` on the `num` array.
 
-**Solution**
+<details>
+<summary>▶ Click to show solution</summary>
+
 ```python
 import pandas as pd
+import numpy as np
 
 # Load the BBBP dataset
 url = 'https://raw.githubusercontent.com/Data-Chemist-Handbook/Data-Chemist-Handbook.github.io/refs/heads/master/_pages/BBBP.csv'
@@ -882,15 +895,13 @@ num_median = np.median(num_array)
 
 print(f"Sum: {num_sum}, Mean: {num_mean}, Median: {num_median}")
 ```
+</details>
 
----
-
-#### Indexing and Slicing
+### 2.2.4.2 Indexing and Slicing
 
 **Explanation:**
 
-<!-- TODO for Alex explain what indexing and slicing are in simple terms and why they are useful in simple terms)
--->
+<!-- TODO for Alex explain what indexing and slicing are in simple terms and why they are useful in simple terms) -->
 NumPy arrays can be sliced to access subsets of data.
 
 **Example Code:**
@@ -911,9 +922,11 @@ print(slice_arr)
 2. Slice the array to extract every second element.
 3. Reverse the array using slicing.
 
-<!-- TODO for Alex explain what reversing an array as ; TODO for Laura use a better column than the num column which is indices and not a relevant example)
--->
-**Solution**
+<!-- TODO for Alex explain what reversing an array as ; TODO for Laura use a better column than the num column which is indices and not a relevant example) -->
+
+<details>
+<summary>▶ Click to show solution</summary>
+
 ```python
 # Load the BBBP dataset
 url = 'https://raw.githubusercontent.com/Data-Chemist-Handbook/Data-Chemist-Handbook.github.io/refs/heads/master/_pages/BBBP.csv'
@@ -933,12 +946,10 @@ reversed_array = carbon_array[::-1]
 
 print(f"Sliced Array (every second element): {sliced_array}")
 print(f"Reversed Array: {reversed_array}")
-
 ```
+</details>
 
----
-
-#### Reshaping and Broadcasting
+### 2.2.4.3 Reshaping and Broadcasting
 
 **Explanation:**
 
@@ -962,13 +973,14 @@ print(broadcast_arr)
 
 **Practice Problem 3:**
 
-<!-- TODO for Laura have the reader use data that makes more sense than the num column which is not a relevant metric and explain why you might want to reshape an array or do an operation with broadcasting)
--->
+<!-- TODO for Laura have the reader use data that makes more sense than the num column which is not a relevant metric and explain why you might want to reshape an array or do an operation with broadcasting) -->
 
 1. Reshape a NumPy array created from the `num` column of the **BBBP** dataset to a shape of `(5, 20)` (or similar based on the array length).
 2. Use broadcasting to add 100 to all elements in the reshaped array.
 
-**Solution**
+<details>
+<summary>▶ Click to show solution</summary>
+
 ```python
 # Load the BBBP dataset
 url = 'https://raw.githubusercontent.com/Data-Chemist-Handbook/Data-Chemist-Handbook.github.io/refs/heads/master/_pages/BBBP.csv'
@@ -989,11 +1001,15 @@ print(reshaped_array)
 print("\nBroadcasted Array (after adding 100):")
 print(broadcasted_array)
 ```
+</details>
 
-### 2.2.5 Introduction to Visualization Libraries
-***Completed and Compiled Code: [Click Here](https://colab.research.google.com/drive/1qrrTcrkGx8AHl6W2YVG_thzMbSYjV3Ep?usp=sharing)***
+---
 
-Data visualization is critical for interpreting data and uncovering insights. In this section, we’ll use Python’s visualization libraries to create various plots and charts.
+## 2.2.5 Introduction to Visualization Libraries
+
+**Completed and Compiled Code:** [Click Here](https://colab.research.google.com/drive/1qrrTcrkGx8AHl6W2YVG_thzMbSYjV3Ep?usp=sharing)
+
+Data visualization is critical for interpreting data and uncovering insights. In this section, we'll use Python's visualization libraries to create various plots and charts.
 
 **Explanation:**
 Python has several powerful libraries for data visualization, including **Matplotlib** and **Seaborn**.
@@ -1008,15 +1024,13 @@ import seaborn as sns
 import plotly.express as px
 ```
 
----
-
-#### Line and Scatter Plots
+### 2.2.5.1 Line and Scatter Plots
 
 **Explanation:**
 Line and scatter plots are used to display relationships between variables. Line plots are commonly used for trend analysis, while scatter plots are useful for examining the correlation between two numerical variables.
 
-<!-- TODO for Laura Include units for concentration and time. also make it relevant by mentioning that this graph can be used to determine the reaction kinetics and this reaction would be 0th order)
--->
+<!-- TODO for Laura Include units for concentration and time. also make it relevant by mentioning that this graph can be used to determine the reaction kinetics and this reaction would be 0th order) -->
+
 **Example Code for Line Plot:**
 ```python
 import matplotlib.pyplot as plt
@@ -1054,14 +1068,11 @@ plt.show()
 
 *Figure: Scatter Plot of Molecular Weight vs. Boiling Point*
 
----
-
-#### Histograms and Density Plots
+### 2.2.5.2 Histograms and Density Plots
 
 **Explanation:**
 
-<!-- TODO for Laura this definition of histogram is too abstract. Explain it in terms of a relevant example. For example, a substrate scope table in an organic synthesis paper has a list of yields for each substrate. A histogram could be used to show how many compounds are between 0-10, 10-20, 20-30, etc up to 90-100 percent yield. then use a real dataset in the example from a paper. probably use the same synthetic paper as used earlier.)
--->
+<!-- TODO for Laura this definition of histogram is too abstract. Explain it in terms of a relevant example. For example, a substrate scope table in an organic synthesis paper has a list of yields for each substrate. A histogram could be used to show how many compounds are between 0-10, 10-20, 20-30, etc up to 90-100 percent yield. then use a real dataset in the example from a paper. probably use the same synthetic paper as used earlier.) -->
 Histograms display the distribution of a single variable by dividing it into bins, while density plots are smoothed versions of histograms that show the probability density.
 
 **Example Code for Histogram:**
@@ -1085,8 +1096,7 @@ plt.show()
 
 **Example Code for Density Plot:**
 
-<!-- TODO for Laura use the same new dataset as above
--->
+<!-- TODO for Laura use the same new dataset as above -->
 
 ```python
 import seaborn as sns
@@ -1105,15 +1115,12 @@ plt.show()
 
 *Figure: Density Plot Visualizing Data Distribution*
 
----
+### 2.2.5.3 Box Plots and Violin Plots
 
-#### Box Plots and Violin Plots
-
-<!-- TODO for Laura use a relevant chemistry dataset such as number of aromatic rings in each compound in a set of molecules
--->
+<!-- TODO for Laura use a relevant chemistry dataset such as number of aromatic rings in each compound in a set of molecules -->
 
 **Explanation:**
-Box plots show the distribution of data based on quartiles and are useful for spotting outliers. Violin plots combine box plots and density plots to provide more detail on the distribution’s shape.
+Box plots show the distribution of data based on quartiles and are useful for spotting outliers. Violin plots combine box plots and density plots to provide more detail on the distribution's shape.
 
 **Example Code for Box Plot:**
 ```python
@@ -1133,8 +1140,7 @@ plt.show()
 
 *Figure: Box Plot Showing Value Distribution Across Categories*
 
-<!-- TODO for Laura use the same new dataset as above
--->
+<!-- TODO for Laura use the same new dataset as above -->
 
 **Example Code for Violin Plot:**
 ```python
@@ -1154,12 +1160,9 @@ plt.show()
 
 *Figure: Violin Plot Highlighting Value Distribution and Density Across Categories*
 
----
+### 2.2.5.4 Heatmaps and Correlation Matrices
 
-#### Heatmaps and Correlation Matrices
-
-<!-- TODO for Laura explain the use of a heat map in simple and clear language and provide a chemistry relevant situational exmaple of when you'd use it. need to come back to this to provide a suggestion
--->
+<!-- TODO for Laura explain the use of a heat map in simple and clear language and provide a chemistry relevant situational exmaple of when you'd use it. need to come back to this to provide a suggestion -->
 
 **Explanation:**
 Heatmaps display data as a color-coded matrix. They are often used to show correlations between variables or visualize patterns within data.
@@ -1183,8 +1186,7 @@ plt.show()
 
 *Figure: Heatmap Depicting Data as a Color-Coded Matrix*
 
-<!-- TODO for Laura use the same new dataset as above)
--->
+<!-- TODO for Laura use the same new dataset as above) -->
 **Example Code for Correlation Matrix:**
 ```python
 import seaborn as sns
@@ -1209,19 +1211,18 @@ plt.show()
 
 ---
 
-### 2.2.6 Statistical Analysis Basics
-***Completed and Compiled Code: [Click Here](https://colab.research.google.com/drive/1XBZn9ZEY7a9cTSg41xel1kFN4P57BOPW?usp=sharing)***
-Statistical analysis is essential for interpreting data and making informed conclusions. In this section, we’ll explore fundamental statistical techniques using Python, which are particularly useful in scientific research.
+## 2.2.6 Statistical Analysis Basics
 
----
+**Completed and Compiled Code:** [Click Here](https://colab.research.google.com/drive/1XBZn9ZEY7a9cTSg41xel1kFN4P57BOPW?usp=sharing)
 
-#### Descriptive Statistics
+Statistical analysis is essential for interpreting data and making informed conclusions. In this section, we'll explore fundamental statistical techniques using Python, which are particularly useful in scientific research.
+
+### 2.2.6.1 Descriptive Statistics
 
 **Explanation:**
 Descriptive statistics summarize and describe the main features of a dataset. Common descriptive statistics include the mean, median, mode, variance, and standard deviation.
 
-<!-- TODO for Laura are these values real? Change them to be real
--->
+<!-- TODO for Laura are these values real? Change them to be real -->
 
 **Example Code:**
 ```python
@@ -1248,13 +1249,14 @@ Median Boiling Point: 105.0
 Standard Deviation of Molecular Weight: 23.874672772626646
 ```
 
-<!-- TODO for Laura use a chemistry relevant metric from one of the data columns that will be added to BBBP.csv
--->
+<!-- TODO for Laura use a chemistry relevant metric from one of the data columns that will be added to BBBP.csv -->
 
 **Practice Problem 1:**
 Calculate the mean, median, and variance for the `num` column in the BBBP dataset.
 
-**Solution**
+<details>
+<summary>▶ Click to show solution</summary>
+
 ```python
 import pandas as pd
 
@@ -1274,8 +1276,9 @@ print(f'Mean: {mean_num}, Median: {median_num}, Variance: {variance_num}')
 ```python
 Mean: 1027.3760975609757, Median: 1026.5, Variance: 351455.52905260166
 ```
+</details>
 
-#### Probability Distributions
+### 2.2.6.2 Probability Distributions
 
 **Explanation:**
 
@@ -1285,8 +1288,8 @@ The **normal distribution** is characterized by:
 - A **bell-shaped curve** that is symmetric around its mean.
 - The majority of values clustering near the mean, with fewer values occurring as you move further away.
 - Its shape is determined by two parameters:
-- **Mean** (μ): The central value where the curve is centered.
-- **Standard deviation** (σ): A measure of the spread of data around the mean. A smaller σ results in a steeper, narrower curve, while a larger σ produces a wider, flatter curve.
+  - **Mean** (μ): The central value where the curve is centered.
+  - **Standard deviation** (σ): A measure of the spread of data around the mean. A smaller σ results in a steeper, narrower curve, while a larger σ produces a wider, flatter curve.
 
 In cheminformatics, normal distributions can describe various molecular properties, such as bond lengths, molecular weights, or reaction times, especially when the data arises from natural phenomena or measurements.
 
@@ -1326,7 +1329,7 @@ plt.show()
 
 **Interpretation:**
 - The plot shows the majority of values concentrated around 0 (the mean), with the frequency tapering off symmetrically on either side.
-- The shape of the curve reflects the standard deviation. Most values (approximately 68%) fall within one standard deviation (μ\pmσ) of the mean.
+- The shape of the curve reflects the standard deviation. Most values (approximately 68%) fall within one standard deviation (μ±σ) of the mean.
 
 ![Normal Distribution Example](../../resource/img/preliminaries/pre_2-2/2.2.6-3.png)
 
@@ -1334,18 +1337,20 @@ plt.show()
 
 #### Applications in Chemistry:
 
-[comment]: <> (#TODO change these examples. Currently looking for literature relevant examples of normal distribution usage in chemistry.)
+<!-- #TODO change these examples. Currently looking for literature relevant examples of normal distribution usage in chemistry. -->
 
 - **Molecular Property Analysis**: Understand the variation in molecular weights or boiling points for a compound set.
 - **Error Analysis**: Model and visualize experimental errors, assuming they follow a normal distribution.
 - **Kinetic Studies**: Analyze reaction times or rates for processes that exhibit natural variability.
 
-[comment]: <> (#TODO change the practice problem. the issues with the num column are well documented above. Look for examples of log-normal distributions in chemistry data)
+<!-- #TODO change the practice problem. the issues with the num column are well documented above. Look for examples of log-normal distributions in chemistry data -->
 
 **Practice Problem 2:**
 Generate a normally distributed dataset based on the mean and standard deviation of the `num` column in the BBBP dataset. Plot a histogram of the generated data.
 
-**Solution**
+<details>
+<summary>▶ Click to show solution</summary>
+
 ```python
 import pandas as pd
 import numpy as np
@@ -1368,15 +1373,14 @@ plt.title('Normal Distribution of num')
 plt.show()
 ```
 
-[comment]: <> (#TODO change this figure for the new practice problem)
+<!-- #TODO change this figure for the new practice problem -->
 
 ![Normal Distribution Example](../../resource/img/preliminaries/pre_2-2/2.2.6-4.png)
 
 *Figure: Histogram Illustrating a Normal Distribution of 'num' Values from the BBBP Dataset*
+</details>
 
----
-
-#### Hypothesis Testing
+### 2.2.6.3 Hypothesis Testing
 
 **Explanation:**
 
@@ -1385,8 +1389,8 @@ Hypothesis testing is a statistical method used to evaluate whether there is eno
 **Key Concepts:**
 
 1. **Null and Alternative Hypotheses**:
-   - **Null Hypothesis (H_0)**: Assumes no difference between the groups being tested (e.g., the means of two groups are equal).
-   - **Alternative Hypothesis (H_a)**: Assumes there is a difference between the groups (e.g., the means of two groups are not equal).
+   - **Null Hypothesis (H₀)**: Assumes no difference between the groups being tested (e.g., the means of two groups are equal).
+   - **Alternative Hypothesis (Hₐ)**: Assumes there is a difference between the groups (e.g., the means of two groups are not equal).
 
 2. **T-Test**:
    - A t-test compares the means of two independent groups to determine if the observed differences are statistically significant.
@@ -1394,13 +1398,11 @@ Hypothesis testing is a statistical method used to evaluate whether there is eno
 
 3. **Interpreting Results**:
    - **T-Statistic**: Measures the difference between group means relative to the variability of the data. Larger values suggest greater differences.
-   - **P-Value**: Represents the probability of observing the data assuming H_0 is true. A small p-value (commonly < 0.05) indicates significant differences between groups.
+   - **P-Value**: Represents the probability of observing the data assuming H₀ is true. A small p-value (commonly < 0.05) indicates significant differences between groups.
 
-4. **Why It’s Useful for Chemists**:
+4. **Why It's Useful for Chemists**:
    - Compare reaction yields under different conditions (e.g., catalysts or solvents).
    - Evaluate the effectiveness of a new material or treatment compared to a control group.
-
----
 
 **Example Code for t-test**:
 
@@ -1451,20 +1453,21 @@ T-statistic: -1.6285130624347315, P-value: 0.14206565386214137
 
 **Important Considerations**:
 - Ensure the data meets the assumptions of a t-test:
-- Independence of groups.
-- Approximately normal distribution.
-- Similar variances (use Welch’s t-test if variances differ).
+  - Independence of groups.
+  - Approximately normal distribution.
+  - Similar variances (use Welch's t-test if variances differ).
 - For multiple group comparisons, consider using ANOVA instead of a t-test.
 
 By using hypothesis testing, chemists can make statistically supported decisions about experimental results and conditions.
 
-
-[comment]: <> (#TODO change this practice problem, use real data)
+<!-- #TODO change this practice problem, use real data -->
 
 **Practice Problem 3:**
 In the BBBP dataset, compare the mean `num` values between permeable (p_np=1) and non-permeable (p_np=0) compounds using a t-test.
 
-**Solution**
+<details>
+<summary>▶ Click to show solution</summary>
+
 ```python
 from scipy.stats import ttest_ind
 import pandas as pd
@@ -1481,12 +1484,14 @@ non_permeable = df[df['p_np'] == 0]['num']
 t_stat, p_val = ttest_ind(permeable, non_permeable)
 print(f"T-statistic: {t_stat}, P-value: {p_val}")
 ```
+
 **Result**
 ```python
 T-statistic: 21.556533998843065, P-value: 4.703739370417683e-93
 ```
+</details>
 
-#### Correlation and Regression
+### 2.2.6.4 Correlation and Regression
 
 **Explanation:**
 
@@ -1495,17 +1500,17 @@ Correlation and regression are statistical tools used to analyze relationships b
 **Correlation:**
 - **Definition**: Correlation quantifies the strength and direction of a linear relationship between two variables.
 - **Range**: The correlation coefficient (r) ranges from -1 to 1:
-- r = 1 : Perfect positive correlation (as one variable increases, the other also increases proportionally).
-- r = -1 : Perfect negative correlation (as one variable increases, the other decreases proportionally).
-- r = 0 : No correlation.
+  - r = 1: Perfect positive correlation (as one variable increases, the other also increases proportionally).
+  - r = -1: Perfect negative correlation (as one variable increases, the other decreases proportionally).
+  - r = 0: No correlation.
 - **Use in Chemistry**: For example, correlation can reveal whether molecular weight is related to boiling point in a set of compounds.
 
 **Regression:**
 - **Definition**: Regression predicts the value of a dependent variable based on one or more independent variables.
 - **Types**: Simple linear regression (one independent variable) and multiple linear regression (two or more independent variables).
 - **Output**:
-   - **Regression Coefficient (\beta )**: Indicates the magnitude and direction of the relationship between the independent variable and the dependent variable.
-   - **Intercept (\alpha )**: Represents the predicted value of the dependent variable when the independent variable is zero.
+   - **Regression Coefficient (β)**: Indicates the magnitude and direction of the relationship between the independent variable and the dependent variable.
+   - **Intercept (α)**: Represents the predicted value of the dependent variable when the independent variable is zero.
    - **Use in Chemistry**: Regression can predict molecular properties, such as boiling point, based on easily measurable features like molecular weight.
 
 **Example Code for Correlation and Linear Regression:**
@@ -1555,7 +1560,7 @@ Intercept: 38.947368421052616
       - **Regression Coefficient**: Shows how much the boiling point changes for a one-unit increase in molecular weight.
       - **Intercept**: Indicates the boiling point when the molecular weight is zero.
 
-**Interpretation:**
+**Interpretation**:
 - If the correlation coefficient is high (close to 1 or -1), it suggests a strong linear relationship.
 - The regression coefficient quantifies the strength of this relationship, and the intercept gives the baseline prediction.
 
@@ -1567,13 +1572,14 @@ Intercept: 38.947368421052616
 3. **Experimental Design**:
    - Understand relationships between variables to guide targeted experiments.
 
-
-[comment]: <> (#TODO change this practice problem, use real data)
+<!-- #TODO change this practice problem, use real data -->
 
 **Practice Problem 4:**
 Calculate the correlation between `num` and `p_np` in the BBBP dataset. Then, perform a linear regression to predict `num` based on `p_np`.
 
-**Solution**
+<details>
+<summary>▶ Click to show solution</summary>
+
 ```python
 import pandas as pd
 from scipy.stats import pearsonr
@@ -1601,8 +1607,9 @@ Correlation between num and p_np: 0.43004111834348213
 Regression coefficient: 600.5995724446097
 Intercept: 568.2836438923398
 ```
+</details>
 
-#### ANOVA (Analysis of Variance)
+### 2.2.6.5 ANOVA (Analysis of Variance)
 
 **Explanation:**
 
@@ -1615,21 +1622,19 @@ ANOVA (Analysis of Variance) is a statistical method used to determine if there 
    - If the variability between groups is significantly larger than the variability within groups, it suggests that the group means are different.
 
 2. **Hypotheses**:
-   - **Null Hypothesis (H_0)**: All group means are equal.
-   - **Alternative Hypothesis (H_a)**: At least one group mean is different.
+   - **Null Hypothesis (H₀)**: All group means are equal.
+   - **Alternative Hypothesis (Hₐ)**: At least one group mean is different.
 
 3. **F-Statistic**:
    - The F-statistic is calculated as the ratio of between-group variability to within-group variability.
    - A larger F-statistic indicates a greater likelihood of differences between group means.
 
 4. **P-Value**:
-   - The p-value indicates the probability of observing the F-statistic ifH_0 is true.
-   - A small p-value (typically < 0.05) leads to rejectingH_0, suggesting that group means are significantly different.
+   - The p-value indicates the probability of observing the F-statistic if H₀ is true.
+   - A small p-value (typically < 0.05) leads to rejecting H₀, suggesting that group means are significantly different.
 
-**Why It’s Useful for Chemists**:
+**Why It's Useful for Chemists**:
 - ANOVA can identify whether different conditions (e.g., catalysts, solvents, or temperatures) significantly affect a property of interest, such as yield, rate, or stability.
-
----
 
 **Example Code for ANOVA:**
 
@@ -1662,12 +1667,9 @@ F-statistic: 3.151036525172754, P-value: 0.07944851235243751
    - **F-Statistic**: Measures the ratio of between-group variability to within-group variability.
    - **P-Value**: If this is below a threshold (e.g., 0.05), it suggests that the differences in means are statistically significant.
 
-
 **Interpretation**:
 - The p-value (0.08) is greater than 0.05, so we cannot reject the null hypothesis.
 - This indicates that it isn't statistically significant from the others.
-
----
 
 **Applications in Chemistry**:
 
@@ -1685,12 +1687,14 @@ F-statistic: 3.151036525172754, P-value: 0.07944851235243751
 
 By using ANOVA, chemists can draw statistically sound conclusions about the effects of categorical variables on continuous properties, guiding decision-making in experimental designs.
 
-[comment]: <> (#TODO change this practice problem, use real data)
+<!-- #TODO change this practice problem, use real data -->
 
 **Practice Problem 5:**
 Group the `num` column in the BBBP dataset by the first digit of `num` (e.g., 1XX, 2XX, 3XX) and perform an ANOVA test to see if the mean values differ significantly among these groups.
 
-**Solution**
+<details>
+<summary>▶ Click to show solution</summary>
+
 ```python
 from scipy.stats import f_oneway
 import pandas as pd
@@ -1712,13 +1716,17 @@ print(f"F-statistic: {f_stat}, P-value: {p_val}")
 ```python
 F-statistic: 1188.118811881188, P-value: 1.946499706613343e-142
 ```
-# Section 2.2 – Quiz Questions
-
-### 1) Factual Questions
+</details>
 
 ---
 
-#### Question 1  
+# Section 2.2 – Quiz Questions
+
+## 1) Factual Questions
+
+---
+
+### Question 1  
 You're analyzing a large toxicity dataset with over 50 different biological and chemical metrics (columns) for each compound. To summarize complex information, such as average assay scores grouped by molecular weight range or chemical class, which of the following functions would be most useful?
 
 **A.** Merge the dataset  
@@ -1731,16 +1739,17 @@ You're analyzing a large toxicity dataset with over 50 different biological and 
 
 Correct Answer: D  
 </details>
-<details>
 
+<details>
 <summary>▶ Click to show explanation</summary>
+
 Explanation:  
 Pivot tables help chemists aggregate results (e.g., toxicity scores by chemical class or molecular descriptor bins), making it easier to spot trends, compare subgroups, and prepare the data for downstream modeling or visualization.
 </details>
 
 ---
 
-#### Question 2  
+### Question 2  
 You're training a machine learning model to predict compound toxicity. Your dataset includes a categorical feature called "TargetClass" that describes the biological target type (e.g., enzyme, receptor, transporter). Why is encoding this categorical column necessary before model training?
 
 **A.** It removes unnecessary data from the dataset.  
@@ -1756,15 +1765,15 @@ Correct Answer: B
 
 <details>
 <summary>▶ Click to show explanation</summary>
+
 Explanation:  
-Encoding converts non-numeric data (e.g., categories) into numerical values so that machine learning models can process them. Common methods include one-hot encoding and label encoding.  Explanation:
-Most machine learning algorithms can’t handle raw text or labels as inputs. Encoding (e.g., one-hot or label encoding) translates categories into numeric form, allowing the model to interpret class differences and make predictions based on them — a common step when working with descriptors like compound type, target family, or assay outcome.
+Encoding converts non-numeric data (e.g., categories) into numerical values so that machine learning models can process them. Common methods include one-hot encoding and label encoding. Most machine learning algorithms can't handle raw text or labels as inputs. Encoding (e.g., one-hot or label encoding) translates categories into numeric form, allowing the model to interpret class differences and make predictions based on them — a common step when working with descriptors like compound type, target family, or assay outcome.
 </details>
 
 ---
 
-#### Question 3  
-You’re working with a dataset containing results from multiple bioassays for various compounds. Each row contains a compound ID, assay name, and response value. You want to summarize this dataset so that each compound has one row, and the assay names become columns.
+### Question 3  
+You're working with a dataset containing results from multiple bioassays for various compounds. Each row contains a compound ID, assay name, and response value. You want to summarize this dataset so that each compound has one row, and the assay names become columns.
 
 **A.** Pivot tables are used to remove missing values from a dataset.  
 **B.** The `pivot_table()` function is used to summarize and reorganize data by converting rows into columns.  
@@ -1779,13 +1788,14 @@ Correct Answer: B
 
 <details>
 <summary>▶ Click to show explanation</summary>
+
 Explanation:
 In cheminformatics, pivot_table() is especially useful for converting assay results from long to wide format, where each assay becomes a separate column. This transformation is common before merging descriptor data or building a machine learning dataset.
 </details>
 
 ---
 
-#### Question 4  
+### Question 4  
 You are comparing solubility data of compounds measured in different units (mg/mL, g/L, ppm). To ensure fair comparison across all compounds, you decide to use Min-Max normalization. What is the primary reason for doing this?
 
 **A.** To standardize solvent types across experiments  
@@ -1801,13 +1811,14 @@ Correct Answer: B
 
 <details>
 <summary>▶ Click to show explanation</summary>
+
 Explanation:  
 Min-Max normalization rescales values to a fixed range (often 0 to 1), making it easier to compare across features with different units or scales.
 </details>
 
 ---
 
-#### Question 5  
+### Question 5  
 You are working with a dataset of reaction yields, but the yield values are stored as strings (e.g., `'85'`, `'90'`). You need to compute averages for reporting. What function should you use?
 
 **A.** `df.rename()`  
@@ -1823,17 +1834,18 @@ Correct Answer: C
 
 <details>
 <summary>▶ Click to show explanation</summary>
+
 Explanation: 
 `astype()` is used to convert a column's data type, such as from string to float or integer, so mathematical operations can be performed.
 </details>
 
 ---
 
-### 2) Comprehension / Application Questions
+## 2) Comprehension / Application Questions
 
 ---
 
-#### Question 6  
+### Question 6  
 You have just received a dataset regarding the toxicity of commonly used compounds (**TOX21**) and would like to get an idea of the metrics in the dataset.
 
 Task: Read the `TOX21.csv` dataset into a DataFrame and print the first five rows. Which of the following matches your third compound in the output?
@@ -1851,11 +1863,12 @@ Correct Answer: C
 
 <details>
 <summary>▶ Click to show explanation</summary>
+
 Explanation:  
 The third row of the dataset contains Dimethylglyoxime, based on the output of `df.head()`.
 </details>
 
-
+<details>
 <summary>▶ Show Solution Code</summary>
 
 ```python
@@ -1864,12 +1877,12 @@ import pandas as pd
 url = "https://raw.githubusercontent.com/Data-Chemist-Handbook/Data-Chemist-Handbook.github.io/refs/heads/master/_pages/Chemical%20List%20tox21sl-2025-02-20.csv"
 df = pd.read_csv(url)
 print(df.head())
- ```
+```
 </details>
 
 ---
 
-#### Question 7  
+### Question 7  
 After looking at the TOX21 dataset, you realize that there are missing values in rows and duplicate rows.  
 To fix this problem, you should handle the missing values by using _____ and get rid of duplicate rows by _____.
 
@@ -1886,13 +1899,14 @@ Correct Answer: A
 
 <details>
 <summary>▶ Click to show explanation</summary>
+
 Explanation:  
-`fillna('unknown')` fills missing values with a placeholder, maintaining the dataset’s size. `drop_duplicates()` removes any repeated rows to ensure clean data.
+`fillna('unknown')` fills missing values with a placeholder, maintaining the dataset's size. `drop_duplicates()` removes any repeated rows to ensure clean data.
 </details>
 
 ---
 
-#### Question 8  
+### Question 8  
 Which function and code would allow you to create a new column that represents the average of the boiling points `'bp'` in your dataset?
 
 **A.** Grouping; `df['avg_bp'] = df['bp'].mean()`  
@@ -1908,13 +1922,14 @@ Correct Answer: A
 
 <details>
 <summary>▶ Click to show explanation</summary>
+
 Explanation:  
 The `.mean()` method calculates the column-wise average, and assigning it to a new column applies that single value across all rows.
 </details>
 
 ---
 
-#### Question 9
+### Question 9
 
 You want to perform an ANOVA statistical analysis to evaluate the activity of the compounds listed in the TOX21 dataset.
 
@@ -1964,13 +1979,12 @@ f_stat, p_val = f_oneway(group_low, group_high)
 
 print(f"F-statistic: {f_stat:.2f}")
 print(f"P-value:      {p_val:.4f}")
-````
-
+```
 </details>
 
 ---
 
-#### Question 10  
+### Question 10  
 You are analyzing a SMILES dataset of drug candidates and want to estimate the **carbon atom count** for each compound to study how size influences permeability. What code snippet would achieve this?
 
 **A.** `df['carbon_count'] = df['name'].count('C')`  
@@ -1979,19 +1993,21 @@ You are analyzing a SMILES dataset of drug candidates and want to estimate the *
 **D.** `df['carbon_count'] = count(df['smiles'], 'C')`  
 
 <details>
-<summary>▶ Click to show solution</summary>
+<summary>▶ Click to show answer</summary>
+
 Correct Answer: B  
-<details>
+</details>
 
 <details>
 <summary>▶ Click to show explanation</summary>
+
 Explanation:  
 Using `apply()` with a lambda function allows you to count the number of carbon atoms (`'C'`) in each SMILES string.
 </details>
 
 ---
 
-#### Question 11  
+### Question 11  
 After calculating the carbon counts, you want to see if permeable compounds (p_np = 1) tend to have different carbon counts than non-permeable ones (p_np = 0). Which of the following code snippets best performs this comparison?
 
 **A.** `df.groupby('carbon_count')['p_np'].mean()`  
@@ -2007,33 +2023,36 @@ Correct Answer: B
 
 <details>
 <summary>▶ Click to show explanation</summary>
+
 Explanation:  
 Grouping by `'p_np'` and calculating the mean of `'carbon_count'` lets you compare average carbon counts between permeability classes.
 </details>
 
 ---
 
-#### Question 12  
+### Question 12
+
 You want to build a simple model that predicts whether a compound is permeable based on its carbon count. Which two Python tools would best help you analyze the relationship and build a linear model?
 
-**A.** `groupby()` and `melt()`  
-**B.** `pearsonr()` and `LinearRegression()`  
-**C.** `pivot_table()` and `df.fillna()`  
-**D.** `apply()` and `get_dummies()`  
+- A. `groupby()` and `melt()`
+- B. `pearsonr()` and `LinearRegression()`
+- C. `pivot_table()` and `df.fillna()`
+- D. `apply()` and `get_dummies()`
 
 <details>
 <summary>▶ Click to show answer</summary>
 
-Correct Answer: B  
+**Correct Answer:** B
 </details>
 
 <details>
 <summary>▶ Click to show explanation</summary>
-Explanation:  
+
 `pearsonr()` helps determine correlation, while `LinearRegression()` can fit a model to predict one variable based on another.
 </details>
 
 ---
+
 
 ## 2.3 Representation
 
@@ -2640,168 +2659,217 @@ img.save("ibuprofen.png")
 
 This section provides a comprehensive overview of molecular visualization using PyMOL and RDKit, highlighting their capabilities and applications in cheminformatics. The example code, practice problem, and solution demonstrate how to visualize molecular structures effectively, leveraging real data and tools.
 
+# Section 2.3 – Quiz Questions
 
-### Section 2.3 -- Quiz Questions
+## 1) Factual Questions
 
-### 1) Factual Questions:
+---
 
-#### Question 1:
+### Question 1
 In cheminformatics, SMILES (Simplified Molecular Input Line Entry System) plays a crucial role in computational chemistry and drug discovery. Which of the following best describes its significance in the intersection of chemistry and computer science?
 
-- A) SMILES enables the direct simulation of molecular interactions in biological systems without additional processing.
-- B) SMILES provides a standardized text-based format for representing molecular structures, making it easier to store, search, and analyze large chemical databases using computational tools.
-- C) SMILES replaces the need for molecular visualization software, as text-based representations are sufficient for all cheminformatics applications.
-- D) SMILES only works with small molecules, and cannot be used in large-scale machine-learning applications for drug discovery.
+**A.** SMILES enables the direct simulation of molecular interactions in biological systems without additional processing.  
+**B.** SMILES provides a standardized text-based format for representing molecular structures, making it easier to store, search, and analyze large chemical databases using computational tools.  
+**C.** SMILES replaces the need for molecular visualization software, as text-based representations are sufficient for all cheminformatics applications.  
+**D.** SMILES only works with small molecules, and cannot be used in large-scale machine-learning applications for drug discovery.
 
 <details>
-  <summary>▶ Click to show answer</summary>
-  Correct Answer: B) SMILES provides a standardized text-based format for representing molecular structures, making it easier to store, search, and analyze large chemical databases using computational tools.
+<summary>▶ Click to show answer</summary>
+
+Correct Answer: B
+</details>
+
+<details>
+<summary>▶ Click to show explanation</summary>
+
+Explanation:  
+SMILES provides a standardized text-based format for representing molecular structures, making it easier to store, search, and analyze large chemical databases using computational tools.
 </details>
 
 ---
 
-#### Question 2:
+### Question 2
 Which of the following statements about SMILES (Simplified Molecular Input Line Entry System) is true?
 
-- A) SMILES represents molecular structures using three-dimensional coordinates.
-- B) The Chem.MolFromSmiles() function in RDKit is used to convert a SMILES string into a molecule object.
-- C) Aromatic rings in a molecule can only be identified manually by visual inspection.
-- D) The GetNumAtoms() function in RDKit counts only the carbon atoms in a molecule.
+**A.** SMILES represents molecular structures using three-dimensional coordinates.  
+**B.** The Chem.MolFromSmiles() function in RDKit is used to convert a SMILES string into a molecule object.  
+**C.** Aromatic rings in a molecule can only be identified manually by visual inspection.  
+**D.** The GetNumAtoms() function in RDKit counts only the carbon atoms in a molecule.
 
 <details>
-  <summary>▶ Click to show answer</summary>
-  Correct Answer: B) The Chem.MolFromSmiles() function in RDKit is used to convert a SMILES string into a molecule object.
+<summary>▶ Click to show answer</summary>
+
+Correct Answer: B
+</details>
+
+<details>
+<summary>▶ Click to show explanation</summary>
+
+Explanation:  
+The Chem.MolFromSmiles() function in RDKit is used to convert a SMILES string into a molecule object.
 </details>
 
 ---
 
-#### Question 3:
-**Distinguishing SMILES and SMARTS in Cheminformatics:**
+### Question 3
+**Distinguishing SMILES and SMARTS in Cheminformatics:**  
 Which of the following best describes the key difference between SMILES and SMARTS in cheminformatics?
 
-- A) SMILES is used to represent complete molecular structures, while SMARTS is used to define and search for molecular substructures.
-- B) SMARTS is a simplified version of SMILES that only represents common functional groups.
-- C) SMILES allows for substructure searching in chemical databases, while SMARTS is only used for visualizing molecules.
-- D) SMARTS and SMILES are interchangeable and can always be used in the same cheminformatics applications without modification.
+**A.** SMILES is used to represent complete molecular structures, while SMARTS is used to define and search for molecular substructures.  
+**B.** SMARTS is a simplified version of SMILES that only represents common functional groups.  
+**C.** SMILES allows for substructure searching in chemical databases, while SMARTS is only used for visualizing molecules.  
+**D.** SMARTS and SMILES are interchangeable and can always be used in the same cheminformatics applications without modification.
 
 <details>
-  <summary>▶ Click to show answer</summary>
-  Correct Answer: A) SMILES is used to represent complete molecular structures, while SMARTS is used to define and search for molecular substructures.
+<summary>▶ Click to show answer</summary>
+
+Correct Answer: A
+</details>
+
+<details>
+<summary>▶ Click to show explanation</summary>
+
+Explanation:  
+SMILES is used to represent complete molecular structures, while SMARTS is used to define and search for molecular substructures.
 </details>
 
 ---
 
-#### Question 4:
-You are looking at a molecule written in SMIELS notation that has aromatic rings, and you must locate all of the locations of this functional group.  Which of the following correctly represents an aromatic ring in SMILES notation?
+### Question 4
+You are looking at a molecule written in SMILES notation that has aromatic rings, and you must locate all of the locations of this functional group. Which of the following correctly represents an aromatic ring in SMILES notation?
 
-A. C=C-C=C-C=C
-B. c1ccccc1
-C. C#C#C#C#C#C
-D. C(C)(C)C(C)C
+**A.** C=C-C=C-C=C  
+**B.** c1ccccc1  
+**C.** C#C#C#C#C#C  
+**D.** C(C)(C)C(C)C
 
-<details> <summary>▶ Click to show answer</summary>
+<details>
+<summary>▶ Click to show answer</summary>
+
 Correct Answer: B
-Explanation:
+</details>
+
+<details>
+<summary>▶ Click to show explanation</summary>
+
+Explanation:  
 In SMILES, aromatic atoms are represented with lowercase letters. c1ccccc1 is the SMILES notation for benzene, an aromatic ring.
 </details>
 
 ---
 
-#### Question 5:
+### Question 5
 Which of the following is not a reason for using 3D coordinates in cheminformatics?
 
-**A)** Simulating protein-ligand docking
+**A.** Simulating protein-ligand docking  
+**B.** Exploring stereochemistry and geometry  
+**C.** Predicting melting points from SMILES strings  
+**D.** Visualizing spatial interactions between atoms
 
-**B)** Exploring stereochemistry and geometry
+<details>
+<summary>▶ Click to show answer</summary>
 
-**C)** Predicting melting points from SMILES strings
-
-**D)** Visualizing spatial interactions between atoms
-
-<details> <summary>▶ Click to show answer</summary> Correct Answer: C) Predicting melting points from SMILES strings 
+Correct Answer: C
 </details>
 
+<details>
 <summary>▶ Click to show explanation</summary>
-Explanation: Melting points are empirical properties. While molecular structure may correlate, they aren’t predicted directly from 3D coordinates.
+
+Explanation:  
+Melting points are empirical properties. While molecular structure may correlate, they aren't predicted directly from 3D coordinates.
 </details>
 
 ---
 
-#### Question 6:
+### Question 6
 You are analyzing a set of drug candidates and want to ensure that their molecular weights fall within a range suitable for oral bioavailability. Which RDKit function allows you to calculate the molecular weight of a compound from its molecular structure?
 
-**A)** Descriptors.MolWt()
+**A.** Descriptors.MolWt()  
+**B.** Chem.MolFromSmarts()  
+**C.** AllChem.EmbedMolecule()  
+**D.** Chem.GetNumAtoms()
 
-**B)** Chem.MolFromSmarts()
+<details>
+<summary>▶ Click to show answer</summary>
 
-**C)** AllChem.EmbedMolecule()
+Correct Answer: A
+</details>
 
-**D)** Chem.GetNumAtoms()
-
-<details> <summary>▶ Click to show answer</summary> Correct Answer: A) `Descriptors.MolWt()`  </details>
-
+<details>
 <summary>▶ Click to show explanation</summary>
-Explanation:
+
+Explanation:  
 The Descriptors.MolWt() function from RDKit is used to calculate the molecular weight of a molecule, which is an important parameter for filtering compounds based on drug-likeness and predicting pharmacokinetic properties.
 </details>
 
 ---
 
-#### Question 7:
-You’re working with a chemical database and want to identify compounds that contain aromatic rings, such as benzene-like structures, which are often associated with stability and π-π interactions in drug design. You use the following RDKit code:
+### Question 7
+You're working with a chemical database and want to identify compounds that contain aromatic rings, such as benzene-like structures, which are often associated with stability and π-π interactions in drug design. You use the following RDKit code:
+
 ```python
-python
-Copy
-Edit
 molecule.HasSubstructMatch(Chem.MolFromSmarts('c1ccccc1'))
 ```
+
 What does this line of code do?
 
-**A)** It checks if a molecule contains a primary amine.
+**A.** It checks if a molecule contains a primary amine.  
+**B.** It generates a fingerprint for the molecule.  
+**C.** It matches the molecule against an aromatic ring SMARTS pattern.  
+**D.** It calculates the logP of the molecule.
 
-**B)** It generates a fingerprint for the molecule.
+<details>
+<summary>▶ Click to show answer</summary>
 
-**C)** It matches the molecule against an aromatic ring SMARTS pattern.
+Correct Answer: C
+</details>
 
-**D)** It calculates the logP of the molecule.
-
-<details> <summary>▶ Click to show answer</summary> Correct Answer: C) It matches the molecule against an aromatic ring SMARTS pattern. </details>
-
+<details>
 <summary>▶ Click to show explanation</summary>
-Explanation:
+
+Explanation:  
 The SMARTS string 'c1ccccc1' represents a six-membered aromatic ring (like benzene). This line checks whether the molecule contains that substructure — a key technique in substructure searching for SAR analysis, filtering, or building compound libraries with specific functional groups.
 </details>
 
 ---
 
-### 3) Conceptual/Application Questions
+## 2) Comprehension / Application Questions
 
-#### Question 8:
+---
+
+### Question 8
 **SMILES, SMARTS, and Fingerprints in the Tox21 Dataset**  
-A pharmaceutical company is working with the Tox21 dataset, which contains chemical information on thousands of compounds and their biological activities. The dataset includes SMILES (Simplified Molecular Input Line Entry System) representations of the molecules, as well as SMARTS (substructural patterns) that highlight specific functional groups, and molecular fingerprints that represent the presence or absence of substructures. The chemists need to identify drug candidates that are effective in treating diseases, have low toxicity, and are structurally similar to known safe and effective drugs.  
+
+A pharmaceutical company is working with the Tox21 dataset, which contains chemical information on thousands of compounds and their biological activities. The dataset includes SMILES (Simplified Molecular Input Line Entry System) representations of the molecules, as well as SMARTS (substructural patterns) that highlight specific functional groups, and molecular fingerprints that represent the presence or absence of substructures. The chemists need to identify drug candidates that are effective in treating diseases, have low toxicity, and are structurally similar to known safe and effective drugs.
+
 Given the large size of the dataset and the need to focus on drug discovery, the team is considering which method to use for identifying the most promising drug candidates. The goal is to select drugs that are biologically active but also safe, ensuring that they have desirable molecular properties.
 
 Which of the following methods should the chemists use to efficiently find drug candidates with the most practical medical uses in the Tox21 dataset?
 
-- A) Use SMILES representations to manually check each compound for toxicity and activity, and then visually compare their structures with known drugs.
-- B) Generate SMARTS patterns to identify specific functional groups in the compounds and use them to filter out potentially toxic compounds based on their chemical features.
-- C) Use molecular fingerprints to perform similarity searching and clustering, identifying compounds that are structurally similar to known effective drugs, and then rank them based on their bioactivity and toxicity.
-- D) Create a new SMILES string for each compound and use it to generate a 3D structure, comparing the compounds based on their spatial arrangement to select the most effective drugs.
+**A.** Use SMILES representations to manually check each compound for toxicity and activity, and then visually compare their structures with known drugs.  
+**B.** Generate SMARTS patterns to identify specific functional groups in the compounds and use them to filter out potentially toxic compounds based on their chemical features.  
+**C.** Use molecular fingerprints to perform similarity searching and clustering, identifying compounds that are structurally similar to known effective drugs, and then rank them based on their bioactivity and toxicity.  
+**D.** Create a new SMILES string for each compound and use it to generate a 3D structure, comparing the compounds based on their spatial arrangement to select the most effective drugs.
 
 <details>
-  <summary>▶ Click to show answer</summary>
-Correct Answer: C) Use molecular fingerprints to perform similarity searching and clustering, identifying compounds that are structurally similar to known effective drugs, and then rank them based on their bioactivity and toxicity.
+<summary>▶ Click to show answer</summary>
+
+Correct Answer: C
 </details>
 
+<details>
 <summary>▶ Click to show explanation</summary>
-Explanation: This method leverages the power of molecular fingerprints for fast similarity searching, allowing chemists to find drugs with structural similarities to known active compounds. By clustering the data and ranking the compounds based on both bioactivity and toxicity, chemists can efficiently identify the most promising candidates for medical use.
+
+Explanation:  
+This method leverages the power of molecular fingerprints for fast similarity searching, allowing chemists to find drugs with structural similarities to known active compounds. By clustering the data and ranking the compounds based on both bioactivity and toxicity, chemists can efficiently identify the most promising candidates for medical use.
 </details>
 
 ---
 
-#### Question 9:
+### Question 9
 You are working with the compound oxycodone and would like to convert its SMILES notation into a fingerprint. The SMILES notation of oxycodone is:  
-`COc1ccc2C[C@H]3N(C)CC[C@@]45[C@@H](Oc1c24)C(=O)CC[C@@]35O.`  
+`COc1ccc2C[C@H]3N(C)CC[C@@]45[C@@H](Oc1c24)C(=O)CC[C@@]35O.`
+
 In this notation, the @ symbols represent stereochemistry, where @ is the R configuration, and @@ is the S configuration.
 
 **Hint:**  
@@ -2812,18 +2880,20 @@ Print the fingerprint as a bit string.
 
 **Question:** What is the position of the first 1 in the fingerprint (i.e., the index of the first set bit)?
 
-- A) 12
-- B) 14
-- C) 7
-- D) 3
+**A.** 12  
+**B.** 14  
+**C.** 7  
+**D.** 3
 
 <details>
-  <summary>▶ Click to show answer</summary>
-  Correct Answer: C) 7
+<summary>▶ Click to show answer</summary>
+
+Correct Answer: C
 </details>
 
 ---
-#### Question 10:
+
+### Question 10
 You are trying to create a 3D coordinate of the compound oxycodone  
 (SMILES: `COc1ccc2C[C@H]3N(C)CC[C@@]45[C@@H](Oc1c24)C(=O)CC[C@@]35O`).
 
@@ -2843,22 +2913,20 @@ VI. molecule = Chem.MolFromSmiles(smiles)
 
 What is the correct order of operations?
 
-**A.** I, II, V, IV, III, IV
-
-**B.** II, I, VI, V, IV, III
-
-**C.** II, V, I, IV, IV, III
-
+**A.** I, II, V, IV, III, IV  
+**B.** II, I, VI, V, IV, III  
+**C.** II, V, I, IV, IV, III  
 **D.** II, I, IV, III, IV, V
 
 <details>
 <summary>▶ Click to show answer</summary>
 
-Correct Answer: B) II, I, V, IV, III
-
+Correct Answer: B
 </details>
 
+<details>
 <summary>▶ Click to show explanation</summary>
+
 Explanation:  
 The correct sequence to generate 3D coordinates is:
 
@@ -2872,42 +2940,48 @@ The correct sequence to generate 3D coordinates is:
 
 ---
 
-#### Question 11:
+### Question 11
 You have a SMILES string for ibuprofen and want to visualize it using RDKit. What are the minimum steps required?
 
-**A)** Generate a molecule from SMILES and run MolToImage()
+**A.** Generate a molecule from SMILES and run MolToImage()  
+**B.** Convert SMILES to SMARTS, generate 3D coordinates, and then visualize  
+**C.** Convert SMILES to fingerprint and pass it to a plot function  
+**D.** Save the SMILES to a file and open it in PyMOL
 
-**B)** Convert SMILES to SMARTS, generate 3D coordinates, and then visualize
+<details>
+<summary>▶ Click to show answer</summary>
 
-**C)** Convert SMILES to fingerprint and pass it to a plot function
+Correct Answer: A
+</details>
 
-**D)** Save the SMILES to a file and open it in PyMOL
-
-<details> <summary>▶ Click to show answer</summary> Correct Answer: A) Generate a molecule from SMILES and run `MolToImage()` 
- </details>
-
+<details>
 <summary>▶ Click to show explanation</summary>
-Explanation: RDKit’s `MolToImage()` creates a 2D visualization directly from a SMILES-derived molecule object. 
+
+Explanation:  
+RDKit's `MolToImage()` creates a 2D visualization directly from a SMILES-derived molecule object.
 </details>
 
 ---
 
-#### Question 12:
-You’ve generated a Morgan fingerprint for a compound using RDKit, which encodes the molecule’s structural features into a fixed-length bit vector. How is this fingerprint typically used in cheminformatics applications?
+### Question 12
+You've generated a Morgan fingerprint for a compound using RDKit, which encodes the molecule's structural features into a fixed-length bit vector. How is this fingerprint typically used in cheminformatics applications?
 
-**A)** To calculate 3D molecular coordinates
+**A.** To calculate 3D molecular coordinates  
+**B.** To identify specific functional groups using pattern matching  
+**C.** To compare structural similarity between compounds  
+**D.** To visualize a molecule in PyMOL
 
-**B)** To identify specific functional groups using pattern matching
+<details>
+<summary>▶ Click to show answer</summary>
 
-**C)** To compare structural similarity between compounds
-
-**D)** To visualize a molecule in PyMOL
-
-<details> <summary>▶ Click to show answer</summary> Correct Answer: C) To compare structural similarity between compounds 
+Correct Answer: C
 </details>
 
+<details>
 <summary>▶ Click to show explanation</summary>
-Explanation: Morgan fingerprints capture circular substructures in a molecule and are commonly used for similarity searching and clustering. By comparing the overlap of fingerprints (e.g., using Tanimoto similarity), chemists can rapidly screen for structurally related compounds, aiding in lead optimization, scaffold hopping, or library design.
+
+Explanation:  
+Morgan fingerprints capture circular substructures in a molecule and are commonly used for similarity searching and clustering. By comparing the overlap of fingerprints (e.g., using Tanimoto similarity), chemists can rapidly screen for structurally related compounds, aiding in lead optimization, scaffold hopping, or library design.
 </details>
 
 ---
@@ -3653,141 +3727,165 @@ for i, features in enumerate(feature_arrays):
 - **Feature Engineering**: Creating unified feature arrays is essential for predictive tasks.
 - **Practical Application**: These methods enable the development of robust machine learning models for cheminformatics.
 
+# Section 2.4 – Quiz Questions
+
+## 1) Factual Questions
+
 ---
-# Questions for Section 2.4
 
-### 1) Factual Questions
-
-#### Question 1: 
+### Question 1
 In cheminformatics, the Tanimoto similarity is commonly used to compare molecular structures based on their fingerprints. Which of the following statements correctly explains the relationship between Tanimoto similarity and fingerprints?
-- A) The Tanimoto similarity measures the similarity between two fingerprints by comparing the number of atoms in each molecule.
-- B) The Tanimoto similarity compares the number of common substructures between two fingerprints relative to the total number of substructures, indicating their structural similarity.
-- C) Tanimoto similarity is not applicable to fingerprints, as it is only used for comparing the molecular weights of compounds.
-- D) The Tanimoto similarity calculates the exact difference between two fingerprints, allowing for precise structural dissimilarity measurement.
+
+**A.** The Tanimoto similarity measures the similarity between two fingerprints by comparing the number of atoms in each molecule.  
+**B.** The Tanimoto similarity compares the number of common substructures between two fingerprints relative to the total number of substructures, indicating their structural similarity.  
+**C.** Tanimoto similarity is not applicable to fingerprints, as it is only used for comparing the molecular weights of compounds.  
+**D.** The Tanimoto similarity calculates the exact difference between two fingerprints, allowing for precise structural dissimilarity measurement.
 
 <details>
-  <summary>Answer</summary>
-  Correct Answer: B) The Tanimoto similarity compares the number of common substructures between two fingerprints relative to the total number of substructures, indicating their structural similarity.
+<summary>▶ Click to show answer</summary>
+
+Correct Answer: B
 </details>
 
+<details>
 <summary>▶ Click to show explanation</summary>
+
 Explanation:  
 Option B is correct because Tanimoto similarity evaluates the overlap (common substructures) between two fingerprints and normalizes it by the total number of substructures present in both fingerprints.
 </details>
 
 ---
 
-#### Question 2: 
+### Question 2
 Cheminformatics and molecular data enable researchers to apply statistical models to discover relationships between structure and function, often accelerating tasks like drug design and toxicity prediction. Which of the following statements about regression models in cheminformatics is TRUE?
-- A) Linear regression can be used to predict molecular properties, but only if the relationship between the property and descriptors is non-linear.
-- B) Multiple regression models assume that there is no relationship between the dependent and independent variables.
-- C) The Mean Squared Error (MSE) and R-squared (R²) metrics are used to evaluate the predictive performance of regression models.
-- D) In regression models, the dependent variable (property being predicted) is always the same as the independent variables (descriptors).
+
+**A.** Linear regression can be used to predict molecular properties, but only if the relationship between the property and descriptors is non-linear.  
+**B.** Multiple regression models assume that there is no relationship between the dependent and independent variables.  
+**C.** The Mean Squared Error (MSE) and R-squared (R²) metrics are used to evaluate the predictive performance of regression models.  
+**D.** In regression models, the dependent variable (property being predicted) is always the same as the independent variables (descriptors).
 
 <details>
-<summary>▶ Click to show solution</summary>
-  Correct Answer: C) The Mean Squared Error (MSE) and R-squared (R²) metrics are used to evaluate the predictive performance of regression models.
+<summary>▶ Click to show answer</summary>
+
+Correct Answer: C
 </details>
+
+<details>
 <summary>▶ Click to show explanation</summary>
+
 Explanation:  
 Option C is correct because the Mean Squared Error (MSE) quantifies the difference between predicted and actual values, while R-squared (R²) measures how much variance in the dependent variable is explained by the independent variables.
 </details>
 
 ---
 
-#### Question 3: 
+### Question 3
 Why is a correlation matrix useful when analyzing molecular properties?
-- A) It helps visualize the relationships between different molecular properties, identifying strong positive or negative correlations.
-- B) It replaces missing data in the dataset to ensure accurate predictions.
-- C) It generates new molecular properties by averaging existing ones.
-- D) It classifies molecules into different categories based on their chemical structure.
+
+**A.** It helps visualize the relationships between different molecular properties, identifying strong positive or negative correlations.  
+**B.** It replaces missing data in the dataset to ensure accurate predictions.  
+**C.** It generates new molecular properties by averaging existing ones.  
+**D.** It classifies molecules into different categories based on their chemical structure.
 
 <details>
-  <summary>Answer</summary>
-  Correct Answer: A) It helps visualize the relationships between different molecular properties, identifying strong positive or negative correlations.
+<summary>▶ Click to show answer</summary>
+
+Correct Answer: A
+</details>
+
+<details>
+<summary>▶ Click to show explanation</summary>
+
+Explanation:  
+A correlation matrix helps visualize the relationships between different molecular properties, identifying strong positive or negative correlations that can inform feature selection and model building.
 </details>
 
 ---
 
-#### Question 4:
+### Question 4
 You are given a dataset of molecules and their properties. Which Python method would you use to calculate the average boiling point of these molecules using pandas?
 
-**A)** df['BoilingPoint'].average()
+**A.** `df['BoilingPoint'].average()`  
+**B.** `mean(df.BoilingPoint)`  
+**C.** `df.mean('BoilingPoint')`  
+**D.** `df['BoilingPoint'].mean()`
 
-**B)** mean(df.BoilingPoint)
+<details>
+<summary>▶ Click to show answer</summary>
 
-**C)** df.mean('BoilingPoint')
-
-**D)** df['BoilingPoint'].mean()
-
-<details> <summary>Answer</summary> Correct Answer: D) `df['BoilingPoint'].mean()`
-
+Correct Answer: D
 </details>
 
+<details>
 <summary>▶ Click to show explanation</summary>
-Explanation:
-The .mean() method applied to a specific column in a pandas DataFrame calculates the average value for that column.
+
+Explanation:  
+The `.mean()` method applied to a specific column in a pandas DataFrame calculates the average value for that column.
 </details>
 
 ---
 
-#### Question 5:
-You are working with a new dataset and would like to analyze it by making a heatmap.  If you ran the following code to generate a heatmap of a similarity matrix, what would this heatmap accomplish for you in cheminformatics?
+### Question 5
+You are working with a new dataset and would like to analyze it by making a heatmap. If you ran the following code to generate a heatmap of a similarity matrix, what would this heatmap accomplish for you in cheminformatics?
 
 ```python
 sns.heatmap(similarity_matrix, annot=True, cmap='coolwarm', cbar=True)
 ```
 
-**A)** The melting point of unknown molecules.
+**A.** The melting point of unknown molecules.  
+**B.** The relationships between SMILES strings and IUPAC names.  
+**C.** The structural similarity between molecules based on their fingerprints.  
+**D.** The error rate in a regression model.
 
-**B)** The relationships between SMILES strings and IUPAC names.
+<details>
+<summary>▶ Click to show answer</summary>
 
-**C)** The structural similarity between molecules based on their fingerprints.
-
-**D)** The error rate in a regression model.
-
-<details> <summary>Answer</summary> Correct Answer: C) The structural similarity between molecules based on their fingerprints.
+Correct Answer: C
 </details>
 
+<details>
 <summary>▶ Click to show explanation</summary>
-Explanation:
+
+Explanation:  
 A similarity matrix shows pairwise comparisons, often based on Tanimoto similarity, to help identify structurally similar or distinct molecules.
 </details>
 
 ---
 
-### 2) Conceptual/Application Questions
+## 2) Comprehension / Application Questions
 
-#### Question 6: 
-In chemistry and datascience, it may be helpful to visualize the data and understand trends within the data by creating scatter plots.  In this example, imagine you want to observe the relationship between molecular weight and logP in the BBBP dataset file.  Create a scatter plot with the data below to generate a scatter plot with molecular weight on the x-axis and logP on the y-axis. Make sure to label the axes appropriately.
+---
+
+### Question 6
+In chemistry and data science, it may be helpful to visualize the data and understand trends within the data by creating scatter plots. In this example, imagine you want to observe the relationship between molecular weight and logP in the BBBP dataset file. Create a scatter plot with the data below to generate a scatter plot with molecular weight on the x-axis and logP on the y-axis. Make sure to label the axes appropriately.
 
 **Data:**
 - Molecular weight: [50, 90, 134, 239, 252]
 - LogP: [0.7, 0.94, 1.24, 2.89, 3.21]
 
-Which scatter plot below looks like the scatter plot you produced?
+Which scatter plot below would look like the scatter plot you produced?
 
-- A)
-![Answer A - Scatter Plot](../_pages/Quiz_2.4_Question_4_Answer_A.png)
-- B)
-![Answer B - Scatter Plot](../_pages/Quiz_2.4_Question_4_Answer_B.png)
-- C)
-![Answer C - Scatter Plot](../_pages/Quiz_2.4_Question_4_Answer_C.png)
-- D)
-![Answer D - Scatter Plot](../_pages/Quiz_2.4_Question_4_Answer_D.png)
+**A.** Answer A - Shows decreasing trend  
+**B.** Answer B - Shows no clear pattern  
+**C.** Answer C - Shows increasing trend with positive correlation  
+**D.** Answer D - Shows constant values
 
 <details>
-  <summary>Answer</summary>
-  Correct Answer: [You can add the correct plot once the options are available.]
+<summary>▶ Click to show answer</summary>
+
+Correct Answer: C
+</details>
+
+<details>
+<summary>▶ Click to show explanation</summary>
 
 Explanation:  
-  [You can provide a brief explanation of the relationship between molecular weight and logP once the plots are available.]
+The data shows a clear positive correlation between molecular weight and logP. As molecular weight increases from 50 to 252, logP increases from 0.7 to 3.21, indicating that larger molecules in this dataset tend to be more lipophilic.
 </details>
-<summary>▶ Click to show explanation</summary>
-</details>
+
 ---
 
-#### Question 7:
+### Question 7
 As a chemist analyzing a compound library, you're interested in understanding whether larger molecules tend to be more lipophilic, which could affect their ability to cross biological membranes. You decide to use a scatter plot to explore the relationship between molecular weight and logP (a measure of lipophilicity).
 
 Given the following code snippet:
@@ -3810,19 +3908,21 @@ plt.show()
 
 What chemical insight should you expect to gain from this plot?
 
-**A)** LogP decreases linearly as molecular weight increases.
+**A.** LogP decreases linearly as molecular weight increases.  
+**B.** There is no observable trend — the data is completely random.  
+**C.** LogP increases with molecular weight, suggesting a positive relationship between size and lipophilicity.  
+**D.** Molecular weight and LogP both remain constant, so no conclusion can be drawn.
 
-**B)** There is no observable trend — the data is completely random.
+<details>
+<summary>▶ Click to show answer</summary>
 
-**C)** LogP increases with molecular weight, suggesting a positive relationship between size and lipophilicity.
-
-**D)** Molecular weight and LogP both remain constant, so no conclusion can be drawn.
-
-<details> <summary>Answer</summary> Correct Answer: C) LogP increases with molecular weight, suggesting a positive relationship between size and lipophilicity.
+Correct Answer: C
 </details>
 
+<details>
 <summary>▶ Click to show explanation</summary>
-Explanation:
+
+Explanation:  
 In this example, both molecular weight and logP increase together, suggesting that larger compounds may be more lipophilic. This kind of trend can guide medicinal chemists in optimizing drug candidates for permeability and bioavailability by balancing molecular size with lipophilicity.
 </details>
 
