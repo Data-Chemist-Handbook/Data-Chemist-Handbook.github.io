@@ -2638,14 +2638,13 @@ img.save("ibuprofen.png")
 ```
 
 This section provides a comprehensive overview of molecular visualization using PyMOL and RDKit, highlighting their capabilities and applications in cheminformatics. The example code, practice problem, and solution demonstrate how to visualize molecular structures effectively, leveraging real data and tools.
-
-# Section 2.3 – Quiz Questions
-
-## 1) Factual Questions
-
 ---
 
-### Question 1
+### Section 2.3 – Quiz Questions
+
+#### 1) Factual Questions
+
+##### Question 1
 In cheminformatics, SMILES (Simplified Molecular Input Line Entry System) plays a crucial role in computational chemistry and drug discovery. Which of the following best describes its significance in the intersection of chemistry and computer science?
 
 **A.** SMILES enables the direct simulation of molecular interactions in biological systems without additional processing.  
@@ -2668,7 +2667,7 @@ SMILES provides a standardized text-based format for representing molecular stru
 
 ---
 
-### Question 2
+##### Question 2
 Which of the following statements about SMILES (Simplified Molecular Input Line Entry System) is true?
 
 **A.** SMILES represents molecular structures using three-dimensional coordinates.  
@@ -2691,7 +2690,7 @@ The Chem.MolFromSmiles() function in RDKit is used to convert a SMILES string in
 
 ---
 
-### Question 3
+##### Question 3
 **Distinguishing SMILES and SMARTS in Cheminformatics:**  
 Which of the following best describes the key difference between SMILES and SMARTS in cheminformatics?
 
@@ -2715,7 +2714,7 @@ SMILES is used to represent complete molecular structures, while SMARTS is used 
 
 ---
 
-### Question 4
+##### Question 4
 You are looking at a molecule written in SMILES notation that has aromatic rings, and you must locate all of the locations of this functional group. Which of the following correctly represents an aromatic ring in SMILES notation?
 
 **A.** C=C-C=C-C=C  
@@ -2738,7 +2737,7 @@ In SMILES, aromatic atoms are represented with lowercase letters. c1ccccc1 is th
 
 ---
 
-### Question 5
+##### Question 5
 Which of the following is not a reason for using 3D coordinates in cheminformatics?
 
 **A.** Simulating protein-ligand docking  
@@ -2761,7 +2760,7 @@ Melting points are empirical properties. While molecular structure may correlate
 
 ---
 
-### Question 6
+##### Question 6
 You are analyzing a set of drug candidates and want to ensure that their molecular weights fall within a range suitable for oral bioavailability. Which RDKit function allows you to calculate the molecular weight of a compound from its molecular structure?
 
 **A.** Descriptors.MolWt()  
@@ -2784,7 +2783,7 @@ The Descriptors.MolWt() function from RDKit is used to calculate the molecular w
 
 ---
 
-### Question 7
+##### Question 7
 You're working with a chemical database and want to identify compounds that contain aromatic rings, such as benzene-like structures, which are often associated with stability and π-π interactions in drug design. You use the following RDKit code:
 
 ```python
@@ -2813,11 +2812,9 @@ The SMARTS string 'c1ccccc1' represents a six-membered aromatic ring (like benze
 
 ---
 
-## 2) Comprehension / Application Questions
+#### 2) Comprehension / Application Questions
 
----
-
-### Question 8
+##### Question 8
 **SMILES, SMARTS, and Fingerprints in the Tox21 Dataset**  
 
 A pharmaceutical company is working with the Tox21 dataset, which contains chemical information on thousands of compounds and their biological activities. The dataset includes SMILES (Simplified Molecular Input Line Entry System) representations of the molecules, as well as SMARTS (substructural patterns) that highlight specific functional groups, and molecular fingerprints that represent the presence or absence of substructures. The chemists need to identify drug candidates that are effective in treating diseases, have low toxicity, and are structurally similar to known safe and effective drugs.
@@ -2846,7 +2843,7 @@ This method leverages the power of molecular fingerprints for fast similarity se
 
 ---
 
-### Question 9
+##### Question 9
 You are working with the compound oxycodone and would like to convert its SMILES notation into a fingerprint. The SMILES notation of oxycodone is:  
 `COc1ccc2C[C@H]3N(C)CC[C@@]45[C@@H](Oc1c24)C(=O)CC[C@@]35O.`
 
@@ -2871,9 +2868,32 @@ Print the fingerprint as a bit string.
 Correct Answer: C
 </details>
 
+<details>
+<summary>▶ Show Solution Code</summary>
+<pre><code class="language-python">
+from rdkit import Chem
+from rdkit.Chem import rdMolDescriptors
+
+# Define the SMILES string for oxycodone
+smiles = 'COc1ccc2C[C@H]3N(C)CC[C@@]45[C@@H](Oc1c24)C(=O)CC[C@@]35O'
+
+# Convert SMILES to molecule object
+molecule = Chem.MolFromSmiles(smiles)
+
+# Generate Morgan fingerprint with radius=2 and nBits=1024
+fingerprint = rdMolDescriptors.GetMorganFingerprintAsBitVect(molecule, radius=2, nBits=1024)
+
+# Convert to bit string and find first 1
+bit_string = fingerprint.ToBitString()
+first_one_position = bit_string.index('1')
+
+print(f"First 1 position: {first_one_position}")
+</code></pre>
+</details>
+
 ---
 
-### Question 10
+##### Question 10
 You are trying to create a 3D coordinate of the compound oxycodone  
 (SMILES: `COc1ccc2C[C@H]3N(C)CC[C@@]45[C@@H](Oc1c24)C(=O)CC[C@@]35O`).
 
@@ -2918,9 +2938,26 @@ The correct sequence to generate 3D coordinates is:
 6. III – Loop through atoms to print 3D coordinates
 </details>
 
+<details>
+<summary>▶ Show Solution Code</summary>
+<pre><code class="language-python">
+from rdkit import Chem
+from rdkit.Chem import AllChem
+
+smiles = 'COc1ccc2C[C@H]3N(C)CC[C@@]45[C@@H](Oc1c24)C(=O)CC[C@@]35O'
+molecule = Chem.MolFromSmiles(smiles)
+AllChem.EmbedMolecule(molecule)
+AllChem.UFFOptimizeMolecule(molecule)
+
+for atom in molecule.GetAtoms():
+    pos = molecule.GetConformer().GetAtomPosition(atom.GetIdx())
+    print(f"Atom {atom.GetSymbol()} - x: {pos.x}, y: {pos.y}, z: {pos.z}")
+</code></pre>
+</details>
+
 ---
 
-### Question 11
+##### Question 11
 You have a SMILES string for ibuprofen and want to visualize it using RDKit. What are the minimum steps required?
 
 **A.** Generate a molecule from SMILES and run MolToImage()  
@@ -2941,9 +2978,27 @@ Explanation:
 RDKit's `MolToImage()` creates a 2D visualization directly from a SMILES-derived molecule object.
 </details>
 
+<details>
+<summary>▶ Show Solution Code</summary>
+<pre><code class="language-python">
+from rdkit import Chem
+from rdkit.Chem import Draw
+
+# SMILES for ibuprofen
+smiles = 'CC(C)Cc1ccc(cc1)C(C)C(=O)O'
+
+# Generate molecule from SMILES
+molecule = Chem.MolFromSmiles(smiles)
+
+# Visualize the molecule
+img = Draw.MolToImage(molecule)
+img.show()
+</code></pre>
+</details>
+
 ---
 
-### Question 12
+##### Question 12
 You've generated a Morgan fingerprint for a compound using RDKit, which encodes the molecule's structural features into a fixed-length bit vector. How is this fingerprint typically used in cheminformatics applications?
 
 **A.** To calculate 3D molecular coordinates  
