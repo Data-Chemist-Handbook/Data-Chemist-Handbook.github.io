@@ -13,18 +13,20 @@ In the Preliminaries chapter, we will introduce some base coding and data analys
 
 This section covers essential Python skills, including setting up your environment, understanding basic syntax, and using packages to aid data analysis. This foundational knowledge is valuable for beginners and will support more advanced data analysis in later sections.
 
+---
+
 ### 2.1.1 Setting up Python Environment
 
 #### Option 1: Using Google Colab
 
 **Google Colab** is a cloud-based platform for running Python code in what are called notebooks, which section code in to small chunks that can be run independently. Dividing a program into small sections is helpful for data science and machine learning. Follow these steps to get started. Using Google Colab allows you to run Python code in a flexible, collaborative environment without any local setup. It's particularly useful for working with large datasets or sharing notebooks with others.
 
-##### Step 1: Access Google Colab
+**Step 1: Access Google Colab**
 
 1. **Open Google Colab**: Go to [Google Colab](https://colab.research.google.com).
 2. **Sign in with Google**: Log in with your Google account to access and save notebooks in Google Drive.
 
-##### Step 2: Create or Open a Notebook
+**Step 2: Create or Open a Notebook**
 
 1. **Create a New Notebook**:
    - Click on **File > New notebook** to open a blank notebook.
@@ -32,7 +34,7 @@ This section covers essential Python skills, including setting up your environme
 2. **Open an Existing Notebook**:
    - Choose **File > Open notebook**. You can load notebooks from Google Drive, GitHub, or your computer.
 
-##### Step 3: Set Up and Run Code
+**Step 3: Set Up and Run Code**
 
 1. **Using Code Cells**:
    - Colab organizes code into **cells**. To run a cell, click on it and press **Shift + Enter** or click the **Play** button.
@@ -44,7 +46,7 @@ Colab has many libraries installed by default. You can install additional packag
 ```bash
 # Install additional libraries
 !pip install some_package
-````
+```
 
 | Library        | Purpose                                                                        | Pip Install Command        |
 | -------------- | ------------------------------------------------------------------------------ | -------------------------- |
@@ -57,8 +59,7 @@ Colab has many libraries installed by default. You can install additional packag
 | `scipy`        | Scientific computing: statistical tests (e.g., `f_oneway`), optimization, etc. | `pip install scipy`        |
 | `plotly`       | Interactive plots and dashboards.                                              | `pip install plotly`       |
 
-
-##### Step 4: Save and Export Your Work
+**Step 4: Save and Export Your Work**
 
 1. **Saving to Google Drive**:
    - Your Colab notebooks will automatically save to Google Drive. You can access them later under **Colab Notebooks** in Drive.
@@ -66,7 +67,7 @@ Colab has many libraries installed by default. You can install additional packag
 2. **Downloading Notebooks**:
    - To keep a copy on your computer, go to **File > Download > Download .ipynb**.
 
-##### Step 5: Loading Files and Datasets in Colab
+**Step 5: Loading Files and Datasets in Colab**
 
 1. **Mount Google Drive**: 
    - Run the following code to access your files on Google Drive. After running, authorize access to your Drive.
@@ -77,9 +78,9 @@ Colab has many libraries installed by default. You can install additional packag
    ```
    
 2. **Load Local Files**:
-   - Use Colab’s file upload feature by clicking the **File** icon on the left sidebar, then selecting **Upload Notebook**.
+   - Use Colab's file upload feature by clicking the **File** icon on the left sidebar, then selecting **Upload Notebook**.
 
-##### Step 6: Adding and Executing Markdown Cells
+**Step 6: Adding and Executing Markdown Cells**
 
 1. **Adding Markdown for Documentation**:
    - To add notes, explanations, or instructions in text, you can insert a **Markdown cell** by clicking **+ Text** in the toolbar.
@@ -89,12 +90,10 @@ Colab has many libraries installed by default. You can install additional packag
 - **Managing Data Files**: Store datasets in Google Drive to access them easily across multiple sessions.
 - **Running Long Calculations**: Colab may disconnect if idle. To prevent data loss, make sure to save work frequently.
 - **Collaborative Editing**: Share Colab notebooks with colleagues for real-time collaboration by clicking **Share** in the top-right corner.
-  
----
 
 #### Option 2: Installing Anaconda and Jupyter Notebook
 
-To get started with Python, we’ll set up a development environment using **Anaconda** and **Jupyter Notebook**.
+To get started with Python, we'll set up a development environment using **Anaconda** and **Jupyter Notebook**.
 
 - **Anaconda**: A package manager and environment manager commonly used for data science. It simplifies package installation and management.
 
@@ -102,11 +101,9 @@ To get started with Python, we’ll set up a development environment using **Ana
 
 Here's a detailed guide on installing Anaconda on different operating systems. Each step is tailored for Windows, macOS, and Linux to ensure a smooth setup.
 
----
+**Installing Anaconda on Windows, macOS, and Linux**
 
-##### Installing Anaconda on Windows, macOS, and Linux
-
-##### Download Anaconda
+**Download Anaconda**
 
 1. **Go to the Anaconda Download Page**:
    - Visit the [Anaconda download page](https://www.anaconda.com/download/success).
@@ -116,9 +113,7 @@ Here's a detailed guide on installing Anaconda on different operating systems. E
    - Select the Python 3.x version (e.g., Python 3.9 or 3.10) for the latest stable release.
    - Anaconda may detect your operating system and only give one option to download.
 
----
-
-##### Windows Installation Instructions
+**Windows Installation Instructions**
 
 1. **Run the Installer**:
    - Open the downloaded `.exe` file.
@@ -136,7 +131,7 @@ Here's a detailed guide on installing Anaconda on different operating systems. E
 
 5. **Advanced Installation Options**:
    - Check **Add Anaconda to my PATH environment variable** (optional but not recommended due to potential conflicts).
-   - Ensure **Register Anaconda as my default Python 3.x** is selected, so Anaconda’s Python is used by default.
+   - Ensure **Register Anaconda as my default Python 3.x** is selected, so Anaconda's Python is used by default.
 
 6. **Complete the Installation**:
    - Click **Install** and wait for the process to finish.
@@ -147,9 +142,7 @@ Here's a detailed guide on installing Anaconda on different operating systems. E
    - Type `conda --version` to verify the installation.
    - Launch **Jupyter Notebook** by typing `jupyter notebook`.
 
----
-
-##### macOS Installation Instructions
+**macOS Installation Instructions**
 
 1. **Run the Installer**:
    - Open the downloaded `.pkg` file.
@@ -162,7 +155,7 @@ Here's a detailed guide on installing Anaconda on different operating systems. E
    - By default, Anaconda is installed in the `/Users/username/anaconda3` directory.
 
 4. **Advanced Options**:
-   - You may be asked if you want Anaconda’s Python to be your default Python.
+   - You may be asked if you want Anaconda's Python to be your default Python.
    - Choose **Yes** to add Anaconda to your PATH automatically.
 
 5. **Complete the Installation**:
@@ -173,9 +166,7 @@ Here's a detailed guide on installing Anaconda on different operating systems. E
    - Type `conda --version` to verify that Anaconda is installed.
    - Launch **Jupyter Notebook** by typing `jupyter notebook`.
 
----
-
-##### Linux Installation Instructions
+**Linux Installation Instructions**
 
 1. **Open Terminal**.
 
@@ -210,9 +201,7 @@ Here's a detailed guide on installing Anaconda on different operating systems. E
    - Type `conda --version` to confirm that Anaconda is installed.
    - Launch **Jupyter Notebook** by typing `jupyter notebook`.
 
----
-
-##### Post-Installation: Launch Jupyter Notebook
+**Post-Installation: Launch Jupyter Notebook**
 
 1. **Open Anaconda Prompt (Windows) or Terminal (macOS/Linux)**.
 2. **Start Jupyter Notebook**:
@@ -223,7 +212,7 @@ Here's a detailed guide on installing Anaconda on different operating systems. E
 
 ### 2.1.2 Basic Syntax and Structure
 
-Python's simple syntax makes it a powerful and beginner-friendly language for data analysis. Here, we’ll cover core aspects:
+Python's simple syntax makes it a powerful and beginner-friendly language for data analysis. Here, we'll cover core aspects:
 
 #### Variables, Loops, and Functions
 
@@ -257,9 +246,9 @@ print(molecular_weight_ratio(molecular_weight))
 
 **Data Types**: How data such as a variable is represented to and stored in the computer.
 
-  - ***string*** type: Data meant to be interpreted literally 
-  - ***integer*** type: Data meant to be stored as an integer
-  - ***float*** type: Data meant to be stored as a floating point number with decimal precision
+- ***string*** type: Data meant to be interpreted literally 
+- ***integer*** type: Data meant to be stored as an integer
+- ***float*** type: Data meant to be stored as a floating point number with decimal precision
 
 ```python
 # Display the data type of variables
@@ -274,10 +263,10 @@ print(type(my_float))
 
 **Mathematical Operations**: The four regular mathematical operations can be used on integer and float type variables and order of operations is followed.
 
-  - Addition with the "+" character
-  - Substraction with the "-" character
-  - Multiplication with the "*" character
-  - Division with the "/" character
+- Addition with the "+" character
+- Substraction with the "-" character
+- Multiplication with the "*" character
+- Division with the "/" character
 
 ```python
 # Use the mathematical operators
@@ -290,9 +279,7 @@ print(my_int * 3 / 2 + 1 - 3)
 
 Print commands are used in most programming languages to display the output of code that has been run. Printing is essential for checking code functionality, displaying calculations, and formatting data. Here are a few common ways to print in Python, along with examples that can help navigate real-world coding scenarios.
 
----
-
-##### Simple Print Statements
+**Simple Print Statements**
 
 **Explanation:** The `print()` function displays text or values to the screen. You can print variables or text strings directly.
 
@@ -305,20 +292,16 @@ compound_name = "Aspirin"
 print("Compound:", compound_name)
 ```
 
----
+**Using f-strings for Formatted Output**
 
-##### Using f-strings for Formatted Output
-
-**Explanation:** Python’s formatted strings known as f-strings make it easy to display the value of a variable along with or embedded in other text, which simplifies displaying complex data clearly.
+**Explanation:** Python's formatted strings known as f-strings make it easy to display the value of a variable along with or embedded in other text, which simplifies displaying complex data clearly.
 
 ```python
 molecular_weight = 180.16
 print(f"The molecular weight of {compound_name} is {molecular_weight}")
 ```
 
----
-
-##### Concatenating Strings and Variables
+**Concatenating Strings and Variables**
 
 **Explanation:** Concatenating, or combining strings and variables is possible using the `+` operator, but the variable must first be converted to a string.
 
@@ -326,9 +309,7 @@ print(f"The molecular weight of {compound_name} is {molecular_weight}")
 print("The molecular weight of " + compound_name + " is " + str(molecular_weight))
 ```
 
----
-
-##### Formatting Numbers
+**Formatting Numbers**
 
 **Explanation:** To control the display of floating-point numbers (e.g., limiting decimal places), use formatting options within f-strings.
 
@@ -337,15 +318,14 @@ print("The molecular weight of " + compound_name + " is " + str(molecular_weight
 print(f"Molecular weight: {molecular_weight:.2f}")
 ```
 
----
-
 **Practice Problem**
 
 Write a program to define variables for the name and molecular weight of the active compound in Ibuprofen. Display the information using each print method above.
 
-**Solution**
+<details>
+<summary>▶ Click to show solution</summary>
 
-```python
+<pre><code class="language-python">
 compound_name = "Ibuprofen"
 molecular_weight = 206.29
 
@@ -360,13 +340,14 @@ print("The molecular weight of " + compound_name + " is " + str(molecular_weight
 
 # Formatting numbers
 print(f"Molecular weight: {molecular_weight:.2f}")
-```
+</code></pre>
+</details>
 
 ---
 
 ### 2.1.3 Python Packages
 
-Python packages are pre-built libraries that simplify data analysis. Here, we’ll focus on a few essential packages for our work.
+Python packages are pre-built libraries that simplify data analysis. Here, we'll focus on a few essential packages for our work.
 
 #### Key Packages
 
@@ -389,19 +370,17 @@ import seaborn as sns
 
 To load data from any file into your program, the program needs to know where to find the file. This can be accomplished in one of two ways. In the following example, we will load a text file.
 
-   1. Place the file inside the same folder as your program and open the file by its name:
+1. Place the file inside the same folder as your program and open the file by its name:
 
    ```python
-
    # Loading data from a text file in the same location as your program
    with open('data.txt') as f:
       data = f.read()
    ```
 
-   2. Find the full directory path to your file and provide this as the file name. In Windows, you can right click a file in File Explorer and click on "Copy as path" to copy the full directory path to your file. For example, if user coolchemist has the file 'data.txt' in their Desktop folder, the code to load this file might look like this:
+2. Find the full directory path to your file and provide this as the file name. In Windows, you can right click a file in File Explorer and click on "Copy as path" to copy the full directory path to your file. For example, if user coolchemist has the file 'data.txt' in their Desktop folder, the code to load this file might look like this:
 
    ```python
-
    # Loading data from a text file in the Desktop folder of user coolchemist
    with open('C:\Users\coolchemist\Desktop\data.txt') as f:
       data = f.read()
@@ -409,11 +388,12 @@ To load data from any file into your program, the program needs to know where to
 
 **Practice Problem:**
 
-**Problem**: Write Python code to create a variable for a compound’s molecular weight and set it to 180.16. Then create a function that doubles the molecular weight.
+**Problem**: Write Python code to create a variable for a compound's molecular weight and set it to 180.16. Then create a function that doubles the molecular weight.
 
-**Solution**
+<details>
+<summary>▶ Click to show solution</summary>
 
-```python
+<pre><code class="language-python">
 # Define a variable for molecular weight
 molecular_weight = 180.16
 
@@ -423,7 +403,11 @@ def double_weight(weight):
 
 # Test the function
 print(f"Double molecular weight: {double_weight(molecular_weight)}")
-```
+</code></pre>
+</details>
+
+---
+
 ## 2.2 Data Analysis with Python
 
 In this chapter, we'll explore how to use Python for data analysis, focusing on importing and managing datasets commonly encountered in chemistry. Data analysis is a crucial skill for chemists, allowing you to extract meaningful insights from experimental data, predict outcomes, and make informed decisions in your research. Effective data analysis begins with properly importing and managing your datasets. This section will guide you through loading data from various file formats, including those specific to chemistry, and handling data from databases.
