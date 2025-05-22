@@ -1807,15 +1807,13 @@ The third row of the dataset contains Dimethylglyoxime, based on the output of `
 
 <details>
 <summary>▶ Show Solution Code</summary>
-
-```python
+<pre><code class="language-python">
 import pandas as pd
 
 url = "https://raw.githubusercontent.com/Data-Chemist-Handbook/Data-Chemist-Handbook.github.io/refs/heads/master/_pages/Chemical%20List%20tox21sl-2025-02-20.csv"
 df = pd.read_csv(url)
 print(df.head())
-```
-
+</code></pre>
 </details>
 
 ---
@@ -1895,7 +1893,9 @@ D. No,  F-Statistic: 548.06, P-Value: 0.10
 Since the P-value < 0.05, the result is statistically significant at the 95% confidence level.  
 This means the difference in average molecular mass between compounds with high and low ToxCast activity is unlikely due to random chance.
 
-```python
+<details>
+<summary>▶ Show Solution Code</summary>
+<pre><code class="language-python">
 import pandas as pd
 from scipy.stats import f_oneway
 
@@ -1917,7 +1917,8 @@ f_stat, p_val = f_oneway(group_low, group_high)
 
 print(f"F-statistic: {f_stat:.2f}")
 print(f"P-value:      {p_val:.4f}")
-```
+</code></pre>
+</details>
 
 </details>
 
