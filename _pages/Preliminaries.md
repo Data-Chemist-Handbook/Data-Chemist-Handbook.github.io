@@ -1703,13 +1703,11 @@ F-statistic: 1188.118811881188, P-value: 1.946499706613343e-142
 
 ---
 
-# Section 2.2 – Quiz Questions
+### Section 2.2 – Quiz Questions
 
-## 1) Factual Questions
+#### 1) Factual Questions
 
----
-
-#### Question 1  
+##### Question 1  
 You're analyzing a large toxicity dataset with over 50 different biological and chemical metrics (columns) for each compound. To summarize complex information, such as average assay scores grouped by molecular weight range or chemical class, which of the following functions would be most useful?
 
 **A.** Merge the dataset  
@@ -1732,7 +1730,7 @@ Pivot tables help chemists aggregate results (e.g., toxicity scores by chemical 
 
 ---
 
-#### Question 2  
+##### Question 2  
 You're training a machine learning model to predict compound toxicity. Your dataset includes a categorical feature called "TargetClass" that describes the biological target type (e.g., enzyme, receptor, transporter). Why is encoding this categorical column necessary before model training?
 
 **A.** It removes unnecessary data from the dataset.  
@@ -1755,7 +1753,7 @@ Encoding converts non-numeric data (e.g., categories) into numerical values so t
 
 ---
 
-#### Question 3  
+##### Question 3  
 You're working with a dataset containing results from multiple bioassays for various compounds. Each row contains a compound ID, assay name, and response value. You want to summarize this dataset so that each compound has one row, and the assay names become columns.
 
 **A.** Pivot tables are used to remove missing values from a dataset.  
@@ -1778,7 +1776,7 @@ In cheminformatics, pivot_table() is especially useful for converting assay resu
 
 ---
 
-#### Question 4  
+##### Question 4  
 You are comparing solubility data of compounds measured in different units (mg/mL, g/L, ppm). To ensure fair comparison across all compounds, you decide to use Min-Max normalization. What is the primary reason for doing this?
 
 **A.** To standardize solvent types across experiments  
@@ -1801,7 +1799,7 @@ Min-Max normalization rescales values to a fixed range (often 0 to 1), making it
 
 ---
 
-#### Question 5  
+##### Question 5  
 You are working with a dataset of reaction yields, but the yield values are stored as strings (e.g., `'85'`, `'90'`). You need to compute averages for reporting. What function should you use?
 
 **A.** `df.rename()`  
@@ -1824,11 +1822,9 @@ Explanation:
 
 ---
 
-## 2) Comprehension / Application Questions
+#### 2) Comprehension / Application Questions
 
----
-
-#### Question 6  
+##### Question 6  
 You have just received a dataset regarding the toxicity of commonly used compounds (**TOX21**) and would like to get an idea of the metrics in the dataset.
 
 Task: Read the `TOX21.csv` dataset into a DataFrame and print the first five rows. Which of the following matches your third compound in the output?
@@ -1854,19 +1850,19 @@ The third row of the dataset contains Dimethylglyoxime, based on the output of `
 <details>
 <summary>▶ Show Solution Code</summary>
 
-<pre><code class="language-python">
+```python
 import pandas as pd
 
 url = "https://raw.githubusercontent.com/Data-Chemist-Handbook/Data-Chemist-Handbook.github.io/refs/heads/master/_pages/Chemical%20List%20tox21sl-2025-02-20.csv"
 df = pd.read_csv(url)
 print(df.head())
-</code></pre>
+```
 
 </details>
 
 ---
 
-#### Question 7  
+##### Question 7  
 After looking at the TOX21 dataset, you realize that there are missing values in rows and duplicate rows.  
 To fix this problem, you should handle the missing values by using _____ and get rid of duplicate rows by _____.
 
@@ -1890,7 +1886,7 @@ Explanation:
 
 ---
 
-#### Question 8  
+##### Question 8  
 Which function and code would allow you to create a new column that represents the average of the boiling points `'bp'` in your dataset?
 
 **A.** Grouping; `df['avg_bp'] = df['bp'].mean()`  
@@ -1913,7 +1909,7 @@ The `.mean()` method calculates the column-wise average, and assigning it to a n
 
 ---
 
-#### Question 9
+##### Question 9
 
 You want to perform an ANOVA statistical analysis to evaluate the activity of the compounds listed in the TOX21 dataset.
 
@@ -1941,7 +1937,7 @@ D. No,  F-Statistic: 548.06, P-Value: 0.10
 Since the P-value < 0.05, the result is statistically significant at the 95% confidence level.  
 This means the difference in average molecular mass between compounds with high and low ToxCast activity is unlikely due to random chance.
 
-<pre><code class="language-python">
+```python
 import pandas as pd
 from scipy.stats import f_oneway
 
@@ -1963,13 +1959,13 @@ f_stat, p_val = f_oneway(group_low, group_high)
 
 print(f"F-statistic: {f_stat:.2f}")
 print(f"P-value:      {p_val:.4f}")
-</code></pre>
+```
 
 </details>
 
 ---
 
-#### Question 10  
+##### Question 10  
 You are analyzing a SMILES dataset of drug candidates and want to estimate the **carbon atom count** for each compound to study how size influences permeability. What code snippet would achieve this?
 
 **A.** `df['carbon_count'] = df['name'].count('C')`  
@@ -1992,7 +1988,7 @@ Using `apply()` with a lambda function allows you to count the number of carbon 
 
 ---
 
-#### Question 11  
+##### Question 11  
 After calculating the carbon counts, you want to see if permeable compounds (p_np = 1) tend to have different carbon counts than non-permeable ones (p_np = 0). Which of the following code snippets best performs this comparison?
 
 **A.** `df.groupby('carbon_count')['p_np'].mean()`  
@@ -2015,7 +2011,7 @@ Grouping by `'p_np'` and calculating the mean of `'carbon_count'` lets you compa
 
 ---
 
-#### Question 12
+##### Question 12
 
 You want to build a simple model that predicts whether a compound is permeable based on its carbon count. Which two Python tools would best help you analyze the relationship and build a linear model?
 
