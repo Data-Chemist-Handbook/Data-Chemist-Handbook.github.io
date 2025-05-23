@@ -2000,7 +2000,7 @@ The power of GNNs lies in their ability to learn directly from molecular structu
 
 This approach opens exciting possibilities for drug discovery, materials science, and other fields where predicting molecular properties is crucial.
 
-# 3.3.4 Code Example: GNN on a Molecular Dataset
+### 3.3.4 Code Example: GNN on a Molecular Dataset
 
 #### Completed and Compiled Code: [Click Here](https://colab.research.google.com/drive/1qKnKQH4nC5jVzxtsJSUrmwrGu3-YbZha?usp=sharing)
 
