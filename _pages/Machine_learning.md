@@ -2000,9 +2000,9 @@ The power of GNNs lies in their ability to learn directly from molecular structu
 
 This approach opens exciting possibilities for drug discovery, materials science, and other fields where predicting molecular properties is crucial.
 
-### 3.3.4 Code Example: GNN on a Molecular Dataset
+# 3.3.4 Code Example: GNN on a Molecular Dataset
 
-#### Completed and Compiled Code: [Click Here](https://colab.research.google.com/drive/1PLACEHOLDER_GNN_DATASET?usp=sharing)
+#### Completed and Compiled Code: [Click Here](https://colab.research.google.com/drive/1qKnKQH4nC5jVzxtsJSUrmwrGu3-YbZha?usp=sharing)
 
 Building on our understanding of GNN fundamentals, let's tackle a complete real-world example using the ESOL dataset - a benchmark collection of 1,128 molecules with experimental aqueous solubility measurements. This dataset represents the kind of challenge GNNs excel at: predicting complex molecular properties from structure alone.
 
@@ -2025,7 +2025,11 @@ import io
 url = "https://raw.githubusercontent.com/deepchem/deepchem/master/datasets/delaney-processed.csv"
 response = requests.get(url)
 data = pd.read_csv(io.StringIO(response.text))
+```
 
+Let's examine the dataset structure to understand what we're working with:
+
+```python
 # Display basic information about the dataset
 print(f"Dataset shape: {data.shape}")
 print("\nColumn names:")
@@ -2034,7 +2038,56 @@ print(data.columns.tolist())
 # Preview the first few rows
 print("\nFirst 5 rows:")
 print(data.head())
+```
 
+This gives us:
+
+```
+Dataset shape: (1128, 10)
+
+Column names:
+['Compound ID', 'ESOL predicted log solubility in mols per litre', 'Minimum Degree', 'Molecular Weight', 'Number of H-Bond Donors', 'Number of Rings', 'Number of Rotatable Bonds', 'Polar Surface Area', 'measured log solubility in mols per litre', 'smiles']
+
+First 5 rows:
+  Compound ID  ESOL predicted log solubility in mols per litre  \
+0   Amigdalin                                           -0.974   
+1    Fenfuram                                           -2.885   
+2      citral                                           -2.579   
+3      Picene                                           -6.618   
+4   Thiophene                                           -2.232   
+
+   Minimum Degree  Molecular Weight  Number of H-Bond Donors  Number of Rings  \
+0               1           457.432                        7                3   
+1               1           201.225                        1                2   
+2               1           152.237                        0                0   
+3               2           278.354                        0                5   
+4               2            84.143                        0                1   
+
+   Number of Rotatable Bonds  Polar Surface Area  \
+0                          7              202.32   
+1                          2               42.24   
+2                          4               17.07   
+3                          0                0.00   
+4                          0                0.00   
+
+   measured log solubility in mols per litre  \
+0                                      -0.77   
+1                                      -3.30   
+2                                      -2.06   
+3                                      -7.87   
+4                                      -1.33   
+
+                                              smiles  
+0  OCC3OC(OCC2OC(OC(C#N)c1ccccc1)C(O)C(O)C2O)C(O)...  
+1                             Cc1occc1C(=O)Nc2ccccc2  
+2                               CC(C)=CCCC(C)=CC(=O)  
+3                 c1ccc2c(c1)ccc3c2ccc4c5ccccc5ccc43  
+4                                            c1ccsc1  
+```
+
+For our task, we're particularly interested in the SMILES representations of molecules and their measured solubility values. Let's extract these columns and analyze the solubility distribution:
+
+```python
 # Extract SMILES and solubility columns for our task
 esol_data = {
     'smiles': data['smiles'].tolist(),
@@ -2055,7 +2108,23 @@ plt.ylabel('Count')
 plt.title('Distribution of Solubility Values in ESOL Dataset')
 plt.grid(True, alpha=0.3)
 plt.show()
+```
 
+The analysis shows a wide range of solubility values:
+
+```
+Solubility range: -11.60 to 1.58 log S
+Mean solubility: -3.05 log S
+Standard deviation: 2.10
+```
+
+![Solubility Distribution](/resource/img/gnn/solubility_distribution.png)
+
+The distribution reveals that most compounds in the dataset have moderate to low solubility, with a long tail of very insoluble compounds. This diversity makes it a good test for our model's ability to learn structure-property relationships.
+
+Let's visualize a few example molecules to get a sense of the structural diversity:
+
+```python
 # Visualize a few example molecules
 def visualize_molecules(smiles_list, labels=None, molsPerRow=4, size=(150, 150)):
     mols = [Chem.MolFromSmiles(smiles) for smiles in smiles_list]
@@ -2080,11 +2149,13 @@ print("\nExample molecules from the dataset:")
 visualize_molecules(sample_smiles, sample_labels, molsPerRow=2)
 ```
 
-The ESOL dataset contains a wide range of solubility values, from highly water-soluble compounds to nearly insoluble hydrocarbons. This diversity makes it an excellent test of a model's ability to learn general structure-property relationships.
+![Example Molecules](/resource/img/gnn/example_molecules.png)
+
+We can see significant structural diversity in the dataset, from simple molecules to complex polycyclic compounds and sugars. The solubility values also span a wide range, which will challenge our model to learn general patterns rather than memorizing specific examples.
 
 **Enhanced Molecular Featurization**
 
-For this more challenging dataset, we need richer atomic features that capture the nuances affecting solubility. Let's expand our featurization to include more chemical information.
+For this more challenging dataset, we need richer atomic features that capture the nuances affecting solubility. Let's expand our featurization to include more chemical information:
 
 ```python
 def enhanced_atom_features(atom):
@@ -2102,7 +2173,20 @@ def enhanced_atom_features(atom):
         int(atom.GetChiralTag() != 0)           # Chirality
     ]
     return features
+```
 
+We're extracting ten features for each atom, capturing essential chemical properties:
+- Element type (atomic number)
+- Connectivity (degree)
+- Electronic state (charge, hybridization, aromaticity)
+- Physical properties (mass)
+- Structural context (ring membership, valence)
+- Hydrogen bonding potential (H count)
+- 3D information (chirality)
+
+Similarly, we can extract features for bonds:
+
+```python
 def enhanced_bond_features(bond):
     """Extract bond-specific features"""
     bond_type_map = {
@@ -2118,7 +2202,11 @@ def enhanced_bond_features(bond):
         int(bond.IsInRing())
     ]
     return features
+```
 
+Let's test our enhanced featurization on a sample molecule:
+
+```python
 # Test enhanced featurization
 test_smiles = data['smiles'].iloc[0]  # Get first molecule from dataset
 test_mol = Chem.MolFromSmiles(test_smiles)
@@ -2127,7 +2215,22 @@ print("Enhanced atomic features:")
 for i, atom in enumerate(test_mol.GetAtoms()):
     features = enhanced_atom_features(atom)
     print(f"Atom {i} ({atom.GetSymbol()}): {features}")
+```
 
+For brevity, I'll just show a few atoms from the output:
+
+```
+Testing featurization on molecule: OCC3OC(OCC2OC(OC(C#N)c1ccccc1)C(O)C(O)C2O)C(O)C(O)C3O 
+Enhanced atomic features:
+Atom 0 (O): [8, 1, 0, 4, 0, 0.15999000000000002, 2, 0, 1, 0]
+Atom 1 (C): [6, 2, 0, 4, 0, 0.12011, 4, 0, 2, 0]
+Atom 2 (C): [6, 3, 0, 4, 0, 0.12011, 4, 1, 1, 0]
+...
+```
+
+Similarly, we can examine bond features:
+
+```python
 print("\nEnhanced bond features:")
 for i, bond in enumerate(test_mol.GetBonds()):
     features = enhanced_bond_features(bond)
@@ -2162,7 +2265,13 @@ class AdvancedMolecularGNN(nn.Module):
         for i in range(num_layers):
             self.conv_layers.append(GCNConv(hidden_dim, hidden_dim))
             self.batch_norms.append(nn.BatchNorm1d(hidden_dim))
-        
+```
+
+This first part of our model defines the embedding layer and multiple graph convolutional layers with batch normalization. The embedding layer transforms our atomic features into a higher-dimensional space, while the convolutional layers allow information to flow between connected atoms.
+
+Let's continue with the rest of the model architecture:
+
+```python
         # Attention-based final layer
         self.attention_conv = GATConv(hidden_dim, hidden_dim, heads=4, concat=False)
         
@@ -2180,7 +2289,16 @@ class AdvancedMolecularGNN(nn.Module):
             nn.Dropout(0.1),
             nn.Linear(hidden_dim // 2, 1)
         )
-    
+```
+
+We're using several advanced techniques here:
+- An **attention layer** (GATConv) that learns to focus on the most important atoms
+- **Multiple pooling strategies** (mean, max, and sum) to capture different aspects of the molecular structure
+- A **multi-layer prediction head** with regularization (dropout and batch normalization)
+
+Now, let's implement the forward pass:
+
+```python
     def forward(self, x, edge_index, batch):
         # Initial embedding
         x = F.relu(self.node_embedding(x))
@@ -2202,7 +2320,18 @@ class AdvancedMolecularGNN(nn.Module):
         
         # Final prediction
         return self.predictor(x_combined)
+```
 
+The forward pass includes:
+1. Embedding the atomic features
+2. Applying multiple graph convolutional layers with residual connections to prevent over-smoothing
+3. Using an attention mechanism to focus on important atoms
+4. Applying three different pooling operations and concatenating the results
+5. Passing the molecular representation through a prediction head to output the solubility
+
+Let's initialize our model:
+
+```python
 # Initialize the advanced model
 node_feature_dim = len(enhanced_atom_features(test_mol.GetAtomWithIdx(0)))
 advanced_model = AdvancedMolecularGNN(node_features=node_feature_dim, hidden_dim=128)
@@ -2210,18 +2339,19 @@ total_params = sum(p.numel() for p in advanced_model.parameters())
 print(f"Advanced model has {total_params:,} parameters")
 ```
 
-This architecture incorporates several important innovations. The residual connections help prevent the over-smoothing problem we discussed earlier, while the attention mechanism allows the model to focus on the most important atoms for solubility prediction. The combination of multiple pooling strategies provides a richer molecular representation than any single strategy alone.
+```
+Advanced model has 193,025 parameters
+```
 
-**Complete Training Pipeline**
+Our model has nearly 200,000 parameters - quite sophisticated for a molecular property prediction task. This complexity allows it to capture intricate patterns in the molecular data.
 
-Now let's implement a complete training pipeline with proper data splitting, validation, and performance monitoring.
+![GNN Architecture](/resource/img/gnn/gnn_architecture.png)
+
+**Creating the Molecular Dataset**
+
+Now we need to convert our molecules into a format suitable for the GNN. We'll create a custom dataset class that transforms SMILES strings into graph objects:
 
 ```python
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import mean_squared_error, r2_score
-from torch_geometric.data import DataLoader
-import torch.optim as optim
-
 # Create custom dataset class
 class MoleculeDataset(Dataset):
     def __init__(self, smiles_list, targets=None, transform=None):
@@ -2268,7 +2398,17 @@ class MoleculeDataset(Dataset):
     
     def get(self, idx):
         return self.data_list[idx]
+```
 
+This class handles:
+1. Converting SMILES strings to RDKit molecules
+2. Extracting atom features and bond connectivity
+3. Creating PyTorch Geometric Data objects
+4. Attaching target values (solubility in our case)
+
+Let's create our dataset using a subset of the ESOL data for demonstration purposes:
+
+```python
 # Prepare dataset
 print("Creating molecular graphs from ESOL dataset...")
 # Use a subset for demonstration purposes
@@ -2281,7 +2421,16 @@ subset_solubility = [esol_data['solubility'][i] for i in subset_indices]
 # Create the dataset
 dataset = MoleculeDataset(subset_smiles, subset_solubility)
 print(f"Successfully created {len(dataset)} molecular graphs")
+```
 
+```
+Creating molecular graphs from ESOL dataset...
+Successfully created 500 molecular graphs
+```
+
+Now we'll split the data into training and testing sets:
+
+```python
 # Split into training and testing sets
 train_size = int(0.8 * len(dataset))
 test_size = len(dataset) - train_size
@@ -2292,7 +2441,18 @@ test_loader = DataLoader(test_dataset, batch_size=32, shuffle=False)
 
 print(f"Training set: {len(train_dataset)} molecules")
 print(f"Test set: {len(test_dataset)} molecules")
+```
 
+```
+Training set: 400 molecules
+Test set: 100 molecules
+```
+
+**Training the GNN Model**
+
+Now we're ready to train our model. We'll use the Adam optimizer with weight decay for regularization and a learning rate scheduler to adjust the learning rate during training:
+
+```python
 # Initialize model, optimizer, and loss function
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 print(f"Using device: {device}")
@@ -2301,11 +2461,11 @@ model = AdvancedMolecularGNN(node_features=node_feature_dim, hidden_dim=128).to(
 optimizer = optim.Adam(model.parameters(), lr=0.001, weight_decay=1e-5)
 scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, patience=5, factor=0.5, verbose=True)
 criterion = nn.MSELoss()
+```
 
-# Training history
-train_losses = []
-test_losses = []
+Let's define functions for training and testing:
 
+```python
 # Training function
 def train(epoch):
     model.train()
@@ -2342,6 +2502,14 @@ def test(loader):
             true_values.extend(batch.y.cpu().numpy())
     
     return total_loss / len(loader.dataset), predictions, true_values
+```
+
+Now let's run the training loop:
+
+```python
+# Training history
+train_losses = []
+test_losses = []
 
 # Training loop
 print("Starting training...")
@@ -2364,9 +2532,26 @@ for epoch in range(1, num_epochs + 1):
 print("Training completed!")
 ```
 
-**Model Evaluation and Analysis**
+```
+Starting training...
+Epoch 5/50: Train Loss = 3.8180, Test Loss = 3.7528
+Epoch 10/50: Train Loss = 3.0630, Test Loss = 4.1828
+Epoch 15/50: Train Loss = 3.0040, Test Loss = 3.5984
+Epoch 20/50: Train Loss = 2.7701, Test Loss = 3.4262
+Epoch 25/50: Train Loss = 2.2046, Test Loss = 3.2144
+Epoch 30/50: Train Loss = 2.4281, Test Loss = 4.2213
+Epoch 35/50: Train Loss = 2.3694, Test Loss = 2.9626
+Epoch 40/50: Train Loss = 1.8962, Test Loss = 2.8725
+Epoch 45/50: Train Loss = 1.8127, Test Loss = 2.7931
+Epoch 50/50: Train Loss = 1.7089, Test Loss = 3.1437
+Training completed!
+```
 
-After training, we evaluate our model's performance using standard regression metrics and visualize the results to understand its strengths and limitations.
+We can see that the training loss decreases over time, indicating that the model is learning. However, the test loss fluctuates, suggesting that the model might be overfitting or that the small dataset size makes the test loss noisy.
+
+**Evaluating the Model**
+
+Let's evaluate our model's performance on the test set:
 
 ```python
 # Final evaluation
@@ -2381,7 +2566,20 @@ print(f"\nFinal Model Performance:")
 print(f"Mean Squared Error: {mse:.4f}")
 print(f"Root Mean Squared Error: {rmse:.4f}")
 print(f"R² Score: {r2:.4f}")
+```
 
+```
+Final Model Performance:
+Mean Squared Error: 3.1437
+Root Mean Squared Error: 1.7731
+R² Score: 0.0001
+```
+
+The R² score is very low, indicating that our model is not performing much better than a constant prediction equal to the mean solubility. This is likely due to the small subset of data we're using (only 500 molecules) and the complexity of the solubility prediction task.
+
+Let's visualize the training progress and prediction results:
+
+```python
 # Visualize results
 fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(15, 6))
 
@@ -2405,51 +2603,19 @@ ax2.grid(True, alpha=0.3)
 
 plt.tight_layout()
 plt.show()
-
-# Analyze errors in more detail
-errors = np.array(test_predictions) - np.array(test_true_values)
-abs_errors = np.abs(errors)
-
-plt.figure(figsize=(10, 6))
-plt.hist(errors, bins=30, alpha=0.7, edgecolor='black')
-plt.axvline(x=0, color='red', linestyle='--')
-plt.xlabel('Prediction Error (log S)')
-plt.ylabel('Count')
-plt.title('Distribution of Prediction Errors')
-plt.grid(True, alpha=0.3)
-plt.show()
-
-# Find molecules with largest errors
-test_dataset_indices = test_dataset.indices
-largest_errors_idx = np.argsort(abs_errors)[-5:]  # Top 5 largest errors
-
-print("\nMolecules with largest prediction errors:")
-print(f"{'Index':<10} {'SMILES':<30} {'True':<10} {'Predicted':<10} {'Error':<10}")
-print("-" * 70)
-
-for i in largest_errors_idx:
-    dataset_idx = test_dataset_indices[i]
-    mol_idx = subset_indices[dataset_idx]
-    smiles = esol_data['smiles'][mol_idx]
-    true_val = test_true_values[i]
-    pred_val = test_predictions[i]
-    error = pred_val - true_val
-    
-    print(f"{mol_idx:<10} {smiles[:30]:<30} {true_val:<10.2f} {pred_val:<10.2f} {error:<10.2f}")
-
-# Visualize these molecules
-error_smiles = [esol_data['smiles'][subset_indices[test_dataset_indices[i]]] for i in largest_errors_idx]
-error_labels = [f"True: {test_true_values[i]:.2f}\nPred: {test_predictions[i]:.2f}" for i in largest_errors_idx]
-
-print("\nMolecules with largest errors:")
-visualize_molecules(error_smiles, error_labels, molsPerRow=3)
 ```
 
-This analysis helps us understand the model's performance across different types of molecules and identifies specific chemical structures that challenge our current approach.
+![Training and Predictions](/resource/img/gnn/training_and_predictions.png)
 
-**Making New Predictions**
+The training curve shows that the model's training loss decreases over time, but the test loss remains relatively flat. The scatter plot of predicted vs. true values shows significant scatter, confirming the low R² value.
 
-Finally, let's see how our model performs on molecules it hasn't seen before:
+We can also look at the distribution of prediction errors:
+
+![Error Distribution](/resource/img/gnn/error_distribution.png)
+
+**Making Predictions on New Molecules**
+
+Despite the model's modest performance on this small dataset, let's see how it performs on some well-known molecules:
 
 ```python
 # Define a function to make predictions on new molecules
@@ -2499,7 +2665,25 @@ print("-" * 70)
 for smiles, name in test_compounds:
     prediction = predict_solubility(smiles)
     print(f"{name:<15} {smiles:<35} {prediction:<20.4f}")
+```
 
+```
+Predictions for new compounds:
+Compound        SMILES                              Predicted Solubility
+----------------------------------------------------------------------
+Water           O                                   -1.3580             
+Ethanol         CCO                                 -0.8482             
+Octane          CCCCCCCC                            -2.4735             
+Benzene         c1ccccc1                            -1.5154             
+Phenol          c1ccccc1O                           -2.4121             
+Acetic acid     CC(=O)O                             -4.4445             
+Caffeine        CN1C=NC2=C1C(=O)N(C(=O)N2C)C        -3.8011             
+Aspirin         CCC(=O)OC1=CC=CC=C1C(=O)O           -2.0205             
+```
+
+Let's visualize these test compounds along with their predicted solubilities:
+
+```python
 # Visualize these molecules
 new_smiles = [smiles for smiles, _ in test_compounds]
 new_labels = [f"{name}\nPred: {predict_solubility(smiles):.2f}" for smiles, name in test_compounds]
@@ -2508,7 +2692,25 @@ print("\nTest compounds:")
 visualize_molecules(new_smiles, new_labels, molsPerRow=4)
 ```
 
-The ESOL dataset and our GNN model provide a powerful framework for predicting molecular solubility from structure alone. This approach can be extended to other molecular properties and serves as a foundation for more sophisticated graph neural network applications in chemistry and drug discovery.
+![Test Compounds](/resource/img/gnn/test_compounds.png)
+
+**Conclusion**
+
+We've demonstrated how to build a Graph Neural Network for molecular property prediction using the ESOL dataset. Despite the limitations of our small training set, we've implemented a sophisticated model architecture with many advanced features:
+
+1. **Enhanced atomic featurization** that captures element identity, connectivity, electronic state, and structural context
+2. **Residual connections** to prevent over-smoothing in deep GNNs
+3. **Attention mechanisms** to focus on the most relevant atoms
+4. **Multiple pooling strategies** to capture different aspects of the molecular structure
+5. **Regularization techniques** like dropout and batch normalization
+
+To improve performance, we would need to:
+- Use the full ESOL dataset rather than a small subset
+- Fine-tune hyperparameters through cross-validation
+- Potentially add edge features to better represent bond types
+- Consider ensemble methods or alternative architectures
+
+Despite the modest performance metrics, this example demonstrates the potential of GNNs for molecular property prediction. With larger datasets and more sophisticated architectures, these models have achieved state-of-the-art results on many chemical prediction tasks, demonstrating their ability to learn complex structure-property relationships directly from molecular graphs.
 
 ### 3.3.5 Challenges and Interpretability in GNNs
 
