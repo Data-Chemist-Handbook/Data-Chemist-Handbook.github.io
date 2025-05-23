@@ -1136,23 +1136,24 @@ Chemical toxicity often arises from complex, nonlinear interactions among molecu
 
 Graph Neural Networks (GNNs) are a class of neural networks designed to operate on graph-structured data. Unlike traditional neural networks, which work with data in grid-like structures (such as images or sequences), GNNs are specifically tailored to handle data represented as graphs, where entities are nodes and relationships are edges.
 
-Graph Structure: A graph consists of nodes (vertices) and edges (connections between nodes). GNNs are adept at processing and learning from this structure, capturing the dependencies and interactions between nodes.
+**Graph Structure**: A graph consists of nodes (vertices) and edges (connections between nodes). GNNs are adept at processing and learning from this structure, capturing the dependencies and interactions between nodes.
 
-Message Passing: GNNs typically operate through a message-passing mechanism, where nodes aggregate information from their neighbors to update their own representations. This involves sending and receiving messages along the edges of the graph and combining these messages to refine the node's feature representation.
+**Message Passing**: GNNs typically operate through a message-passing mechanism, where nodes aggregate information from their neighbors to update their own representations. This involves sending and receiving messages along the edges of the graph and combining these messages to refine the node's feature representation.
 
-Layer-wise Propagation: In a GNN, the learning process involves multiple layers of message passing. Each layer updates node features based on the aggregated information from neighboring nodes. This iterative process allows the network to capture higher-order relationships and global graph patterns.
+**Layer-wise Propagation**: In a GNN, the learning process involves multiple layers of message passing. Each layer updates node features based on the aggregated information from neighboring nodes. This iterative process allows the network to capture higher-order relationships and global graph patterns.
 
-Advantages: GNNs leverage the inherent structure of graph data, making them powerful for tasks involving complex relationships and dependencies. They can model interactions between entities more naturally than traditional neural networks and are capable of handling graphs of varying sizes and structures.
+**Advantages**: GNNs leverage the inherent structure of graph data, making them powerful for tasks involving complex relationships and dependencies. They can model interactions between entities more naturally than traditional neural networks and are capable of handling graphs of varying sizes and structures.
 
 ### 3.3.1 What Are Graph Neural Networks?
+
 In traditional machine learning, data is typically represented as fixed-length vectors — a format well-suited for numerical or tabular data. However, molecules are inherently **graph-structured**: atoms are **nodes**, and chemical bonds are **edges** connecting them. This structure contains rich relational information that cannot be captured by simple vector inputs.
 
 **Graph Neural Networks (GNNs)** are a class of deep learning models specifically designed to handle data represented as graphs. They allow information to flow along edges between nodes, enabling the model to understand both **local atomic environments** and **global molecular structure**.
 
----
-
 **Graph Terminology in Chemistry**
+
 To understand GNNs, it helps to relate their components directly to molecular features:
+
 | Graph Component      | Chemistry Equivalent          |
 |----------------------|-------------------------------|
 | Node                 | Atom                          |
@@ -1163,87 +1164,89 @@ To understand GNNs, it helps to relate their components directly to molecular fe
 
 A molecule like ethanol (CH₃CH₂OH) can be represented as a graph with 9 atoms (nodes) and 8 bonds (edges). The connectivity between these atoms defines the molecule's properties. Traditional machine learning might ignore the exact layout of bonds, but GNNs preserve this structure during training and prediction.
 
----
-
 **Why Are GNNs Important in Chemistry?**
+
 Chemical properties are fundamentally determined by molecular structure. For instance:
-    * A compound’s solubility depends on polar groups distributed across its atoms.
-    * A molecule’s toxicity may be due to a specific substructure.
-    * A drug’s binding affinity is affected by the spatial arrangement of atoms around a pharmacophore.
+- A compound's solubility depends on polar groups distributed across its atoms.
+- A molecule's toxicity may be due to a specific substructure.
+- A drug's binding affinity is affected by the spatial arrangement of atoms around a pharmacophore.
+
 GNNs are well-suited for these tasks because they model how atoms influence one another through bonds and connectivity — rather than treating each atom or descriptor in isolation.
 
----
-
 **Local and Global Information**
+
 One strength of GNNs is their ability to aggregate information at multiple scales:
-    * **Local features**: What is the immediate environment of an atom? (e.g. its neighbors, bonded atoms)
-    * **Global features**: What is the overall structure of the molecule? (e.g. ring systems, branching)
-Each node (atom) begins with its own feature vector (such as atomic number or degree). The GNN then updates each node’s features by aggregating features from its neighbors, a process called message passing (explained in detail in 3.3.2). This is repeated across layers to allow atoms to receive information from atoms several bonds away.
+- **Local features**: What is the immediate environment of an atom? (e.g. its neighbors, bonded atoms)
+- **Global features**: What is the overall structure of the molecule? (e.g. ring systems, branching)
+
+Each node (atom) begins with its own feature vector (such as atomic number or degree). The GNN then updates each node's features by aggregating features from its neighbors, a process called message passing (explained in detail in 3.3.2). This is repeated across layers to allow atoms to receive information from atoms several bonds away.
 
 **Key Takeaways**
-    * Molecules are naturally expressed as graphs, not flat vectors.
-    * Graph Neural Networks are designed to learn from this connectivity.
-    * GNNs are essential tools for predicting molecular properties based on structure.
-    * They enable fine-grained reasoning over atoms and bonds, capturing both local and global structure-function relationships.
+- Molecules are naturally expressed as graphs, not flat vectors.
+- Graph Neural Networks are designed to learn from this connectivity.
+- GNNs are essential tools for predicting molecular properties based on structure.
+- They enable fine-grained reasoning over atoms and bonds, capturing both local and global structure-function relationships.
 
-### 3.3.2 Message Passing and Graph Convolutions?
+### 3.3.2 Message Passing and Graph Convolutions
+
 At the heart of every Graph Neural Network (GNN) lies a key process called message passing. This procedure allows each node (atom) in a molecular graph to gather information from its neighboring nodes (bonded atoms), update its internal representation, and iteratively learn patterns that reflect both local chemistry and overall molecular context.
 
----
-
 **What Is Message Passing?**
-Message passing is the process by which nodes in a graph communicate with their neighbors. At each GNN layer, every atom sends and receives “messages” — typically vectors — to and from the atoms it is bonded to. These messages are then aggregated to update the node’s state.
+
+Message passing is the process by which nodes in a graph communicate with their neighbors. At each GNN layer, every atom sends and receives "messages" — typically vectors — to and from the atoms it is bonded to. These messages are then aggregated to update the node's state.
 
 Each layer of message passing follows this general sequence:
-1. **Message Construction**  
-   For each pair of connected atoms *i* and *j*, a message *mᵢⱼ* is constructed based on the features of atom *j*, the edge between them, and possibly atom *i*.
 
-2. **Aggregation**  
-   All incoming messages to a node are aggregated, often by summing or averaging:
+1. **Message Construction**
 
-   `mᵢ = Σⱼ∈𝒩(i) mᵢⱼ`
+For each pair of connected atoms *i* and *j*, a message *m<sub>ij</sub>* is constructed based on the features of atom *j*, the edge between them, and possibly atom *i*.
 
-   where 𝒩(*i*) represents the neighbors of node *i*.
+2. **Aggregation**
 
-3. **Update**  
-   The node’s feature vector is updated using a neural network function, often a multi-layer perceptron (MLP):
+All incoming messages to a node are aggregated, often by summing or averaging:
 
-   `hᵢ^(t+1) = Update(hᵢ^(t), mᵢ)`
+$$m_i = \sum_{j \in N(i)} m_{ij}$$
+
+where *N(i)* represents the neighbors of node *i*.
+
+3. **Update**
+
+The node's feature vector is updated using a neural network function, often a multi-layer perceptron (MLP):
+
+$$h_i^{(t+1)} = \text{Update}(h_i^{(t)}, m_i)$$
 
 This process is repeated across multiple layers, allowing each node to access information from atoms multiple bonds away — much like how the effect of a substituent can propagate across a conjugated system in chemistry.
 
----
+**Graph Convolutions**
 
-**Graph Convulations**
 The term graph convolution refers to the implementation of message passing using a convolution-like operation, analogous to CNNs in image processing. But instead of applying filters to a regular grid, GNNs apply learned transformations to an irregular neighborhood — the atoms directly connected in the molecule.
-    * Popular variants of GNNs differ in how they implement message passing:
-    * GCNs (Graph Convolutional Networks): Use normalized sums of neighboring features.
-    * GraphSAGE: Aggregates using mean or max-pooling.
-    * GATs (Graph Attention Networks): Assign weights to neighbors using attention mechanisms.
-    * MPNNs (Message Passing Neural Networks): A general framework used in many chemistry-specific models.
 
----
+Popular variants of GNNs differ in how they implement message passing:
+- **GCNs (Graph Convolutional Networks)**: Use normalized sums of neighboring features.
+- **GraphSAGE**: Aggregates using mean or max-pooling.
+- **GATs (Graph Attention Networks)**: Assign weights to neighbors using attention mechanisms.
+- **MPNNs (Message Passing Neural Networks)**: A general framework used in many chemistry-specific models.
 
 **Chemical Intuition: Bond Propagation**
-Imagine a fluorine atom in a molecule — its electronegativity affects the atoms nearby, altering reactivity or dipole moment. GNNs simulate this propagation:
-    * In the first layer, only directly bonded atoms (1-hop) “feel” the fluorine.
-    * In deeper layers, atoms 2, 3, or more bonds away are affected via accumulated messages.
-    * This is especially powerful in structure-activity relationship (SAR) modeling, where subtle electronic or steric effects across a molecule determine biological activity.
 
----
+Imagine a fluorine atom in a molecule — its electronegativity affects the atoms nearby, altering reactivity or dipole moment. GNNs simulate this propagation:
+- In the first layer, only directly bonded atoms (1-hop) "feel" the fluorine.
+- In deeper layers, atoms 2, 3, or more bonds away are affected via accumulated messages.
+- This is especially powerful in structure-activity relationship (SAR) modeling, where subtle electronic or steric effects across a molecule determine biological activity.
 
 **Summary**
-Message passing is how GNNs allow atoms to learn from their bonded neighbors.
-    * Each layer aggregates and transforms local chemical information.
-    * Deeper layers allow more distant interactions to be captured.
-    * This mirrors the way chemists think about the propagation of chemical effects through molecular structure.
 
----
+Message passing is how GNNs allow atoms to learn from their bonded neighbors.
+- Each layer aggregates and transforms local chemical information.
+- Deeper layers allow more distant interactions to be captured.
+- This mirrors the way chemists think about the propagation of chemical effects through molecular structure.
 
 **Code Example: Message Passing in Molecular Graphs**
+
 This example shows how a simple Graph Neural Network (specifically a GCN) performs message passing on a small molecular graph. We use torch_geometric, a library built on top of PyTorch for working with graph data.
 
 **Install Required Packages (Colab):**
+
 ```python
 # Only run this cell once in Colab
 !pip install torch torch_geometric torch_scatter torch_sparse -q
@@ -1284,20 +1287,21 @@ print(output)
 ```
 
 **Explanation of the Code:**
-    * The node features x represent simple atom descriptors (e.g., atom type or hybridization).
-    * edge_index defines the connectivity between atoms, simulating chemical bonds.
-    * GCNConv implements a single round of message passing.
-    * The output shows how each atom updates its state based on the messages from neighbors.
-
----
+- The node features x represent simple atom descriptors (e.g., atom type or hybridization).
+- edge_index defines the connectivity between atoms, simulating chemical bonds.
+- GCNConv implements a single round of message passing.
+- The output shows how each atom updates its state based on the messages from neighbors.
 
 **Practice Problem: Visualize Message Aggregation**
+
 Modify the graph by:
-    1. Adding a fifth atom [0, 1, 1] and connecting it to atom 2.
-    2. Run the GCN layer again and observe how atom 2's updated features change.
+1. Adding a fifth atom [0, 1, 1] and connecting it to atom 2.
+2. Run the GCN layer again and observe how atom 2's updated features change.
+
 Hint: Add a new row to x and update edge_index to include edges (2↔4).
 
 **Solution Code**
+
 ```python
 import torch
 from torch_geometric.data import Data
@@ -1332,6 +1336,7 @@ for i, node_feat in enumerate(output):
 ```
 
 **Example Output:**
+
 ```python
 Updated Node Features After Message Passing:
 Atom 0: [0.319, 0.415]
@@ -1342,12 +1347,1090 @@ Atom 4: [0.376, 0.463]
 ```
 
 **What Did We Learn?**
-    * Atom 4 was added with feature [0, 1, 1] and connected to Atom 2.
-    * Atom 2’s new representation increased in both feature dimensions due to the additional message from Atom 4.
-    * In a chemical sense, you can think of Atom 4 as a new functional group or substituent influencing Atom 2.
-    * GNNs accumulate information from bonded atoms — the more neighbors a node has, the richer its updated representation.
-    * This mirrors chemical reality: attaching a polar or bulky group to a carbon affects its electronic and steric environment, which is now reflected numerically through message passing.
+- Atom 4 was added with feature [0, 1, 1] and connected to Atom 2.
+- Atom 2's new representation increased in both feature dimensions due to the additional message from Atom 4.
+- In a chemical sense, you can think of Atom 4 as a new functional group or substituent influencing Atom 2.
+- GNNs accumulate information from bonded atoms — the more neighbors a node has, the richer its updated representation.
+- This mirrors chemical reality: attaching a polar or bulky group to a carbon affects its electronic and steric environment, which is now reflected numerically through message passing.
     
 ### 3.3.3 GNNs for Molecular Property Prediction
+
+#### Completed and Compiled Code: [Click Here](https://colab.research.google.com/drive/1PLACEHOLDER_GNN_PROPERTY?usp=sharing)
+
+Now that we understand how message passing works in Graph Neural Networks, let's explore how to apply these powerful models to predict molecular properties. Unlike traditional approaches that rely on hand-crafted molecular descriptors, GNNs can automatically learn relevant features directly from the molecular graph structure.
+
+The beauty of using GNNs for molecular property prediction lies in their ability to capture both local atomic environments and global molecular patterns. Consider predicting aqueous solubility - a critical property in drug development. Traditional methods might calculate descriptors like molecular weight, surface area, or hydrogen bond donors. While useful, these descriptors treat the molecule as a collection of independent features, ignoring the intricate relationships between atoms.
+
+A Graph Neural Network approaches this differently. It sees a molecule as a network of atoms connected by bonds, where each atom's contribution to solubility depends not only on its own properties but also on its chemical neighborhood. The hydroxyl group (-OH) in ethanol, for example, contributes to solubility not just because it's polar, but because it's attached to a small alkyl chain rather than a large hydrophobic framework.
+
+**From Molecular Structure to Property Prediction**
+
+The process of using GNNs for molecular property prediction follows a logical sequence. First, we convert our molecular structures into graph representations where atoms become nodes and chemical bonds become edges. Each atom receives an initial feature vector containing information like atomic number, degree, and formal charge.
+
+```python
+import torch
+from rdkit import Chem
+
+def get_atom_features(atom):
+    """Extract basic atomic features for GNN input"""
+    return [
+        atom.GetAtomicNum(),        # What element is this?
+        atom.GetDegree(),           # How many bonds?
+        atom.GetFormalCharge(),     # What's the charge?
+        int(atom.GetIsAromatic()),  # Is it aromatic?
+        atom.GetTotalNumHs()        # How many hydrogens?
+    ]
+
+# Example: Convert caffeine molecule to features
+smiles = "CN1C=NC2=C1C(=O)N(C(=O)N2C)C"  # Caffeine
+mol = Chem.MolFromSmiles(smiles)
+
+atom_features = []
+for atom in mol.GetAtoms():
+    features = get_atom_features(atom)
+    atom_features.append(features)
+    print(f"Atom {atom.GetIdx()} ({atom.GetSymbol()}): {features}")
+```
+
+Next, we define the connectivity between atoms by creating an edge list that represents all chemical bonds in the molecule.
+
+```python
+def get_bond_connections(mol):
+    """Extract bond connectivity for graph edges"""
+    edges = []
+    for bond in mol.GetBonds():
+        i = bond.GetBeginAtomIdx()
+        j = bond.GetEndAtomIdx()
+        # Add both directions for undirected chemical bonds
+        edges.extend([[i, j], [j, i]])
+    return edges
+
+# Get connectivity for caffeine
+connections = get_bond_connections(mol)
+print(f"Caffeine has {len(connections)//2} bonds connecting {mol.GetNumAtoms()} atoms")
+```
+
+The magic happens when we apply multiple layers of message passing. In the first layer, each atom learns about its immediate neighbors - the atoms it's directly bonded to. In deeper layers, information propagates further, allowing atoms to "sense" the presence of functional groups or structural motifs several bonds away.
+
+**Building a Simple GNN for Property Prediction**
+
+Let's construct a basic GNN that can predict molecular properties. We'll use PyTorch Geometric, which provides convenient building blocks for graph neural networks.
+
+```python
+import torch.nn as nn
+import torch.nn.functional as F
+from torch_geometric.nn import GCNConv, global_mean_pool
+
+class MolecularGNN(nn.Module):
+    def __init__(self, num_features=5, hidden_dim=64, num_layers=3):
+        super(MolecularGNN, self).__init__()
+        
+        # Create GNN layers for message passing
+        self.gnn_layers = nn.ModuleList()
+        self.gnn_layers.append(GCNConv(num_features, hidden_dim))
+        
+        for _ in range(num_layers - 1):
+            self.gnn_layers.append(GCNConv(hidden_dim, hidden_dim))
+        
+        # Final prediction layer
+        self.predictor = nn.Linear(hidden_dim, 1)
+    
+    def forward(self, x, edge_index, batch):
+        # Apply message passing layers
+        for layer in self.gnn_layers:
+            x = F.relu(layer(x, edge_index))
+        
+        # Pool atom features to get molecule-level representation
+        x = global_mean_pool(x, batch)
+        
+        # Make final prediction
+        return self.predictor(x)
+
+# Create model
+model = MolecularGNN(num_features=5, hidden_dim=64, num_layers=3)
+print(f"Model has {sum(p.numel() for p in model.parameters())} parameters")
+```
+
+The pooling step deserves special attention. After message passing, we have updated feature vectors for every atom in the molecule. But we need a single molecular-level representation to make our property prediction. The `global_mean_pool` function averages all atom features, creating a fixed-size molecular fingerprint regardless of the molecule's size.
+
+**Understanding What the Model Learns**
+
+One fascinating aspect of GNNs is how they automatically discover chemically meaningful patterns. Early layers typically focus on basic atomic properties and immediate bonding patterns. Deeper layers begin to recognize functional groups, ring systems, and larger molecular motifs.
+
+```python
+def analyze_molecular_representation(model, mol_graph):
+    """Examine what the GNN learns at different layers"""
+    model.eval()
+    x, edge_index = mol_graph.x, mol_graph.edge_index
+    
+    print("Layer-by-layer analysis:")
+    for i, layer in enumerate(model.gnn_layers):
+        x = F.relu(layer(x, edge_index))
+        avg_activation = x.mean().item()
+        print(f"Layer {i+1}: Average activation = {avg_activation:.3f}")
+        
+        # Show which atoms are most activated
+        atom_importance = x.sum(dim=1)  # Sum across feature dimensions
+        top_atom = atom_importance.argmax().item()
+        print(f"  Most activated atom: {top_atom}")
+    
+    return x
+```
+
+This analysis can reveal interesting chemical insights. For instance, when predicting solubility, the model might learn to pay special attention to polar atoms like oxygen and nitrogen, or to atoms in specific positions relative to aromatic rings.
+
+**Training on Real Molecular Data**
+
+Training a GNN for molecular property prediction requires careful attention to data preparation and model validation. Let's walk through a complete training example using a small dataset of molecules with known solubility values.
+
+```python
+from torch_geometric.data import Data, DataLoader
+import numpy as np
+
+# Sample molecules with experimental solubility data (log S)
+molecules = [
+    ("CCO", -0.24),           # Ethanol: quite soluble
+    ("CCCCCCCC", -5.15),      # Octane: very insoluble  
+    ("c1ccccc1O", -0.04),     # Phenol: moderately soluble
+    ("CC(=O)O", 1.52),        # Acetic acid: very soluble
+    ("c1ccccc1", -2.13)       # Benzene: poorly soluble
+]
+
+def create_training_data(molecules):
+    """Convert molecules to PyTorch Geometric data objects"""
+    data_list = []
+    
+    for smiles, solubility in molecules:
+        mol = Chem.MolFromSmiles(smiles)
+        
+        # Get atom features
+        atom_features = [get_atom_features(atom) for atom in mol.GetAtoms()]
+        x = torch.tensor(atom_features, dtype=torch.float)
+        
+        # Get bond connectivity
+        edge_list = get_bond_connections(mol)
+        edge_index = torch.tensor(edge_list, dtype=torch.long).t()
+        
+        # Create graph with target value
+        graph = Data(x=x, edge_index=edge_index, y=torch.tensor([solubility]))
+        data_list.append(graph)
+    
+    return data_list
+
+# Prepare training data
+train_data = create_training_data(molecules)
+train_loader = DataLoader(train_data, batch_size=2, shuffle=True)
+
+print(f"Created {len(train_data)} molecular graphs for training")
+```
+
+The training loop follows standard PyTorch conventions, but with a few molecular-specific considerations. We use Mean Squared Error as our loss function since we're predicting continuous solubility values.
+
+```python
+import torch.optim as optim
+
+# Initialize model and optimizer
+model = MolecularGNN(num_features=5)
+optimizer = optim.Adam(model.parameters(), lr=0.01)
+criterion = nn.MSELoss()
+
+# Training loop
+model.train()
+for epoch in range(50):
+    total_loss = 0
+    
+    for batch in train_loader:
+        optimizer.zero_grad()
+        
+        # Forward pass
+        predictions = model(batch.x, batch.edge_index, batch.batch)
+        loss = criterion(predictions.squeeze(), batch.y)
+        
+        # Backward pass
+        loss.backward()
+        optimizer.step()
+        
+        total_loss += loss.item()
+    
+    if epoch % 10 == 0:
+        avg_loss = total_loss / len(train_loader)
+        print(f"Epoch {epoch}: Average Loss = {avg_loss:.4f}")
+```
+
+After training, we can evaluate our model's performance and gain insights into what it has learned. The trained GNN should now be able to predict solubility for new molecules based on their graph structure.
+
+**Chemical Insights from GNN Predictions**
+
+One of the most exciting aspects of using GNNs in chemistry is their potential to reveal new structure-activity relationships. By analyzing which atoms and bonds contribute most to predictions, we can gain insights that complement traditional chemical knowledge.
+
+For example, a well-trained solubility prediction model might learn that hydroxyl groups significantly increase solubility, but their effect depends on the surrounding molecular context. A hydroxyl group attached to a small alkyl chain has a different impact compared to one embedded in a large hydrophobic framework.
+
+These insights make GNNs valuable not just for prediction, but also for hypothesis generation and molecular design. By understanding what molecular features drive certain properties, chemists can design new compounds with desired characteristics more efficiently.
+
 ### 3.3.4 Code Example: GNN on a Molecular Dataset
+
+#### Completed and Compiled Code: [Click Here](https://colab.research.google.com/drive/1PLACEHOLDER_GNN_DATASET?usp=sharing)
+
+Building on our understanding of GNN fundamentals, let's tackle a complete real-world example using the ESOL dataset - a benchmark collection of 1,128 molecules with experimental aqueous solubility measurements. This dataset represents the kind of challenge GNNs excel at: predicting complex molecular properties from structure alone.
+
+The ESOL (delaney) dataset is particularly interesting because solubility is notoriously difficult to predict. It depends on subtle interactions between molecular size, polarity, hydrogen bonding capability, and three-dimensional structure. Traditional QSAR approaches often struggle with this property because simple descriptors cannot capture the complex interplay of these factors.
+
+**Preparing the Dataset**
+
+First, let's examine what makes the ESOL dataset challenging and representative of real-world molecular property prediction tasks.
+
+```python
+import pandas as pd
+import numpy as np
+from rdkit import Chem
+import matplotlib.pyplot as plt
+
+# Sample of ESOL dataset (normally you'd load from CSV)
+esol_sample = {
+    'smiles': [
+        'CCO', 'CC(C)O', 'CCCCCCCC', 'c1ccccc1O', 'CC(=O)O',
+        'CCN', 'CCC(C)O', 'c1ccccc1', 'CCN(CC)CC', 'CC(=O)N',
+        'CCCC', 'CC(C)(C)O', 'c1ccc2ccccc2c1', 'CCCCO', 'c1ccncc1'
+    ],
+    'solubility': [
+        -0.24, -0.05, -5.15, -0.04, 1.52,
+        0.30, -0.42, -2.13, 0.15, 0.87,
+        -2.51, 0.35, -4.11, -0.42, -0.64
+    ]
+}
+
+# Analyze the data distribution
+solubilities = esol_sample['solubility']
+print(f"Solubility range: {min(solubilities):.2f} to {max(solubilities):.2f} log S")
+print(f"Mean solubility: {np.mean(solubilities):.2f} log S")
+
+# Visualize distribution
+plt.figure(figsize=(8, 5))
+plt.hist(solubilities, bins=8, edgecolor='black', alpha=0.7)
+plt.xlabel('Log Solubility (log S)')
+plt.ylabel('Count')
+plt.title('Distribution of Solubility Values in Sample Dataset')
+plt.grid(True, alpha=0.3)
+plt.show()
+```
+
+The wide range of solubility values (-5.15 to 1.52 log S) represents molecules spanning from highly water-soluble compounds like acetic acid to nearly insoluble hydrocarbons like octane. This diversity makes the dataset an excellent test of a model's ability to learn general structure-property relationships.
+
+**Enhanced Molecular Featurization**
+
+For this more challenging dataset, we need richer atomic features that capture the nuances affecting solubility. Let's expand our featurization to include more chemical information.
+
+```python
+def enhanced_atom_features(atom):
+    """Extract comprehensive atomic features for solubility prediction"""
+    features = [
+        atom.GetAtomicNum(),                    # Element identity
+        atom.GetDegree(),                       # Number of bonds
+        atom.GetFormalCharge(),                 # Formal charge
+        int(atom.GetHybridization()),          # Hybridization state
+        int(atom.GetIsAromatic()),             # Aromatic or not
+        atom.GetMass() * 0.01,                 # Atomic mass (scaled)
+        atom.GetTotalValence(),                # Total valence
+        int(atom.IsInRing()),                  # Ring membership
+        atom.GetTotalNumHs(),                  # Hydrogen count
+        int(atom.GetChiralTag() != 0)          # Chirality
+    ]
+    return features
+
+def enhanced_bond_features(bond):
+    """Extract bond-specific features"""
+    bond_type_map = {
+        Chem.BondType.SINGLE: 1,
+        Chem.BondType.DOUBLE: 2, 
+        Chem.BondType.TRIPLE: 3,
+        Chem.BondType.AROMATIC: 4
+    }
+    
+    features = [
+        bond_type_map.get(bond.GetBondType(), 0),
+        int(bond.GetIsAromatic()),
+        int(bond.IsInRing())
+    ]
+    return features
+
+# Test enhanced featurization
+test_mol = Chem.MolFromSmiles("c1ccccc1O")  # Phenol
+print("Enhanced atomic features for phenol:")
+for i, atom in enumerate(test_mol.GetAtoms()):
+    features = enhanced_atom_features(atom)
+    print(f"Atom {i} ({atom.GetSymbol()}): {len(features)} features")
+```
+
+These enhanced features provide the GNN with much more chemical context. The hybridization state helps distinguish sp3 carbons from sp2 carbons, chirality information preserves stereochemical details, and bond features allow the model to differentiate between single bonds, double bonds, and aromatic bonds.
+
+**Advanced GNN Architecture**
+
+For this more complex dataset, we'll implement a sophisticated GNN architecture that incorporates several modern improvements: attention mechanisms, residual connections, and multiple pooling strategies.
+
+```python
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+from torch_geometric.nn import GCNConv, GATConv, global_mean_pool, global_max_pool
+from torch_geometric.data import Data
+
+class AdvancedMolecularGNN(nn.Module):
+    def __init__(self, node_features=10, hidden_dim=128, num_layers=4):
+        super(AdvancedMolecularGNN, self).__init__()
+        
+        # Initial embedding layer
+        self.embedding = nn.Linear(node_features, hidden_dim)
+        
+        # Graph convolutional layers with residual connections
+        self.conv_layers = nn.ModuleList()
+        for i in range(num_layers):
+            self.conv_layers.append(GCNConv(hidden_dim, hidden_dim))
+        
+        # Attention-based final layer
+        self.attention_conv = GATConv(hidden_dim, hidden_dim, heads=4, concat=False)
+        
+        # Prediction head with multiple pooling
+        self.predictor = nn.Sequential(
+            nn.Linear(hidden_dim * 2, hidden_dim),  # *2 for mean+max pooling
+            nn.ReLU(),
+            nn.BatchNorm1d(hidden_dim),
+            nn.Dropout(0.2),
+            nn.Linear(hidden_dim, hidden_dim // 2),
+            nn.ReLU(),
+            nn.Dropout(0.1),
+            nn.Linear(hidden_dim // 2, 1)
+        )
+    
+    def forward(self, x, edge_index, batch):
+        # Initial embedding
+        x = F.relu(self.embedding(x))
+        initial_x = x  # Store for residual connection
+        
+        # Apply convolutional layers with residual connections
+        for i, conv in enumerate(self.conv_layers):
+            x_new = F.relu(conv(x, edge_index))
+            if i > 0:  # Add residual connection after first layer
+                x = x + x_new
+            else:
+                x = x_new
+        
+        # Apply attention mechanism
+        x = self.attention_conv(x, edge_index)
+        
+        # Combine multiple pooling strategies
+        x_mean = global_mean_pool(x, batch)
+        x_max = global_max_pool(x, batch)
+        x_combined = torch.cat([x_mean, x_max], dim=1)
+        
+        # Final prediction
+        return self.predictor(x_combined)
+
+# Initialize the advanced model
+advanced_model = AdvancedMolecularGNN(node_features=10, hidden_dim=128)
+total_params = sum(p.numel() for p in advanced_model.parameters())
+print(f"Advanced model has {total_params:,} parameters")
+```
+
+This architecture incorporates several important innovations. The residual connections help prevent the over-smoothing problem we discussed earlier, while the attention mechanism allows the model to focus on the most important atoms for solubility prediction. The combination of mean and max pooling provides a richer molecular representation than either strategy alone.
+
+**Complete Training Pipeline**
+
+Now let's implement a complete training pipeline with proper data splitting, validation, and performance monitoring.
+
+```python
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error, r2_score
+from torch_geometric.data import DataLoader
+
+def create_molecular_graph(smiles, target=None):
+    """Convert SMILES to graph with enhanced features"""
+    mol = Chem.MolFromSmiles(smiles)
+    if mol is None:
+        return None
+    
+    # Get enhanced atom features
+    atom_features = [enhanced_atom_features(atom) for atom in mol.GetAtoms()]
+    x = torch.tensor(atom_features, dtype=torch.float)
+    
+    # Get bond connectivity
+    edge_indices = []
+    for bond in mol.GetBonds():
+        i, j = bond.GetBeginAtomIdx(), bond.GetEndAtomIdx()
+        edge_indices.extend([[i, j], [j, i]])
+    
+    if len(edge_indices) == 0:  # Handle single atoms
+        edge_indices = [[], []]
+    
+    edge_index = torch.tensor(edge_indices, dtype=torch.long).t().contiguous()
+    
+    # Create data object
+    data = Data(x=x, edge_index=edge_index)
+    if target is not None:
+        data.y = torch.tensor([target], dtype=torch.float)
+    
+    return data
+
+# Convert all molecules to graphs
+print("Converting molecules to graphs...")
+all_graphs = []
+all_targets = []
+
+for smiles, solubility in zip(esol_sample['smiles'], esol_sample['solubility']):
+    graph = create_molecular_graph(smiles, solubility)
+    if graph is not None:
+        all_graphs.append(graph)
+        all_targets.append(solubility)
+
+print(f"Successfully created {len(all_graphs)} molecular graphs")
+
+# Split into training and testing sets
+train_graphs, test_graphs = train_test_split(all_graphs, test_size=0.2, random_state=42)
+train_loader = DataLoader(train_graphs, batch_size=4, shuffle=True)
+test_loader = DataLoader(test_graphs, batch_size=4, shuffle=False)
+
+print(f"Training set: {len(train_graphs)} molecules")
+print(f"Test set: {len(test_graphs)} molecules")
+```
+
+The training process monitors both training and validation performance to detect overfitting early. We track multiple metrics to get a comprehensive view of model performance.
+
+```python
+import torch.optim as optim
+
+# Initialize model, optimizer, and loss function
+model = AdvancedMolecularGNN(node_features=10, hidden_dim=128)
+optimizer = optim.Adam(model.parameters(), lr=0.001, weight_decay=1e-5)
+scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, patience=10, factor=0.5)
+criterion = nn.MSELoss()
+
+# Training history
+train_losses = []
+test_losses = []
+
+print("Starting training...")
+for epoch in range(100):
+    # Training phase
+    model.train()
+    train_loss = 0
+    
+    for batch in train_loader:
+        optimizer.zero_grad()
+        pred = model(batch.x, batch.edge_index, batch.batch).squeeze()
+        loss = criterion(pred, batch.y)
+        loss.backward()
+        optimizer.step()
+        train_loss += loss.item()
+    
+    avg_train_loss = train_loss / len(train_loader)
+    train_losses.append(avg_train_loss)
+    
+    # Validation phase
+    model.eval()
+    test_loss = 0
+    
+    with torch.no_grad():
+        for batch in test_loader:
+            pred = model(batch.x, batch.edge_index, batch.batch).squeeze()
+            loss = criterion(pred, batch.y)
+            test_loss += loss.item()
+    
+    avg_test_loss = test_loss / len(test_loader)
+    test_losses.append(avg_test_loss)
+    
+    # Learning rate scheduling
+    scheduler.step(avg_test_loss)
+    
+    # Print progress
+    if epoch % 20 == 0:
+        print(f"Epoch {epoch}: Train Loss = {avg_train_loss:.4f}, Test Loss = {avg_test_loss:.4f}")
+
+print("Training completed!")
+```
+
+**Model Evaluation and Analysis**
+
+After training, we evaluate our model's performance using standard regression metrics and visualize the results to understand its strengths and limitations.
+
+```python
+# Final evaluation
+model.eval()
+all_predictions = []
+all_true_values = []
+
+with torch.no_grad():
+    for batch in test_loader:
+        pred = model(batch.x, batch.edge_index, batch.batch).squeeze()
+        all_predictions.extend(pred.cpu().numpy())
+        all_true_values.extend(batch.y.cpu().numpy())
+
+# Calculate performance metrics
+mse = mean_squared_error(all_true_values, all_predictions)
+rmse = np.sqrt(mse)
+r2 = r2_score(all_true_values, all_predictions)
+
+print(f"\nFinal Model Performance:")
+print(f"Mean Squared Error: {mse:.4f}")
+print(f"Root Mean Squared Error: {rmse:.4f}")
+print(f"R² Score: {r2:.4f}")
+
+# Visualize results
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
+
+# Training curves
+ax1.plot(train_losses, label='Training Loss')
+ax1.plot(test_losses, label='Test Loss')
+ax1.set_xlabel('Epoch')
+ax1.set_ylabel('MSE Loss')
+ax1.set_title('Training Progress')
+ax1.legend()
+ax1.grid(True, alpha=0.3)
+
+# Prediction scatter plot
+ax2.scatter(all_true_values, all_predictions, alpha=0.7)
+ax2.plot([min(all_true_values), max(all_true_values)], 
+         [min(all_true_values), max(all_true_values)], 'r--')
+ax2.set_xlabel('True Solubility (log S)')
+ax2.set_ylabel('Predicted Solubility (log S)')
+ax2.set_title(f'Predictions vs True Values (R² = {r2:.3f})')
+ax2.grid(True, alpha=0.3)
+
+plt.tight_layout()
+plt.show()
+```
+
+The results reveal how well our GNN captures the structure-solubility relationships in the data. A high R² score (ideally > 0.8) indicates that the model successfully learned meaningful patterns from the molecular graphs.
+
+**Analyzing Model Predictions**
+
+Let's examine specific predictions to understand what our model has learned about molecular solubility.
+
+```python
+# Analyze individual predictions
+test_smiles = ['CCO', 'CCCCCCCC', 'c1ccccc1O']  # Ethanol, Octane, Phenol
+test_names = ['Ethanol', 'Octane', 'Phenol']
+
+print("Individual Prediction Analysis:")
+print("-" * 50)
+
+for smiles, name in zip(test_smiles, test_names):
+    graph = create_molecular_graph(smiles)
+    model.eval()
+    
+    with torch.no_grad():
+        pred = model(graph.x, graph.edge_index, torch.zeros(graph.x.size(0), dtype=torch.long))
+        predicted_solubility = pred.item()
+    
+    # Get actual value if available
+    if smiles in esol_sample['smiles']:
+        idx = esol_sample['smiles'].index(smiles)
+        actual = esol_sample['solubility'][idx]
+        error = abs(predicted_solubility - actual)
+        print(f"{name:10s}: Predicted = {predicted_solubility:6.2f}, Actual = {actual:6.2f}, Error = {error:.2f}")
+    else:
+        print(f"{name:10s}: Predicted = {predicted_solubility:6.2f}")
+```
+
+This analysis helps us understand whether the model's predictions align with chemical intuition. For example, we expect ethanol to be more soluble than octane due to its hydroxyl group, and phenol to have intermediate solubility due to the balance between its polar -OH group and hydrophobic benzene ring.
+
 ### 3.3.5 Challenges and Interpretability in GNNs
+
+#### Completed and Compiled Code: [Click Here](https://colab.research.google.com/drive/1PLACEHOLDER_GNN_INTERPRETABILITY?usp=sharing)
+
+While Graph Neural Networks have revolutionized molecular property prediction, they come with their own set of challenges and limitations. Understanding these issues is crucial for successfully applying GNNs in real-world chemical problems, where model reliability and interpretability are often as important as predictive accuracy.
+
+**The Over-smoothing Dilemma**
+
+One of the most significant challenges in GNNs is the over-smoothing problem. As we add more layers to capture long-range molecular interactions, node representations tend to become increasingly similar. This is particularly problematic in chemistry, where the distinction between different atomic environments is crucial for accurate property prediction.
+
+Imagine trying to predict the reactivity of a molecule where every carbon atom ends up with nearly identical representations after many message-passing steps. The model loses its ability to distinguish between a carbon in an aromatic ring versus one in an aliphatic chain - a distinction that's fundamental to chemical behavior.
+
+```python
+import torch
+import torch.nn as nn
+from torch_geometric.nn import GCNConv
+import matplotlib.pyplot as plt
+
+def analyze_over_smoothing(model, graph_data, max_layers=8):
+    """Demonstrate the over-smoothing effect with increasing depth"""
+    similarities = []
+    
+    # Create models with different depths
+    for num_layers in range(1, max_layers + 1):
+        # Simple GCN with varying depth
+        layers = []
+        layers.append(GCNConv(graph_data.x.size(1), 64))
+        for _ in range(num_layers - 1):
+            layers.append(GCNConv(64, 64))
+        
+        temp_model = nn.Sequential(*layers)
+        temp_model.eval()
+        
+        # Forward pass
+        x = graph_data.x.float()
+        for layer in temp_model:
+            x = torch.relu(layer(x, graph_data.edge_index))
+        
+        # Calculate pairwise similarities between node representations
+        similarities_matrix = torch.cosine_similarity(x.unsqueeze(1), x.unsqueeze(0), dim=2)
+        avg_similarity = similarities_matrix.mean().item()
+        similarities.append(avg_similarity)
+        
+        print(f"Depth {num_layers}: Average node similarity = {avg_similarity:.3f}")
+    
+    return similarities
+
+# Visualize over-smoothing
+def plot_over_smoothing(similarities):
+    plt.figure(figsize=(8, 5))
+    plt.plot(range(1, len(similarities) + 1), similarities, 'bo-')
+    plt.xlabel('Number of GNN Layers')
+    plt.ylabel('Average Node Similarity')
+    plt.title('Over-smoothing Effect: Node Similarity vs Network Depth')
+    plt.grid(True, alpha=0.3)
+    plt.show()
+    
+    print("Notice how similarity increases with depth - nodes become more alike!")
+```
+
+**Limited Structural Expressiveness**
+
+Another fundamental limitation is that standard message-passing GNNs cannot distinguish between certain molecular structures that are topologically equivalent but chemically distinct. This is particularly relevant for stereochemistry and conformational isomers.
+
+Consider two molecules with identical connectivity but different spatial arrangements. A traditional GNN might assign them identical representations, missing crucial differences in their biological activity or physical properties. This limitation has driven the development of 3D-aware GNNs and more sophisticated architectures.
+
+**Making GNNs Interpretable**
+
+One of the most exciting developments in molecular GNNs is the growing toolkit for model interpretability. These methods help us understand not just what the model predicts, but why it makes those predictions.
+
+**Attention-Based Interpretability**
+
+Graph Attention Networks (GATs) provide a natural form of interpretability through their attention weights. These weights show us which atoms the model considers most important for its predictions.
+
+```python
+import torch.nn.functional as F
+from torch_geometric.nn import GATConv, global_mean_pool
+
+class InterpretableGAT(nn.Module):
+    """GAT model that can show attention weights"""
+    def __init__(self, node_features=10, hidden_dim=64, num_heads=4):
+        super(InterpretableGAT, self).__init__()
+        
+        self.attention_layer = GATConv(node_features, hidden_dim, 
+                                     heads=num_heads, concat=False)
+        self.predictor = nn.Linear(hidden_dim, 1)
+    
+    def forward(self, x, edge_index, batch, return_attention=False):
+        if return_attention:
+            x, attention_weights = self.attention_layer(x, edge_index, 
+                                                      return_attention_weights=True)
+            x = global_mean_pool(x, batch)
+            pred = self.predictor(x)
+            return pred, attention_weights
+        else:
+            x = self.attention_layer(x, edge_index)
+            x = global_mean_pool(x, batch)
+            return self.predictor(x)
+
+def visualize_molecular_attention(model, graph, smiles):
+    """Show which atoms the model pays attention to"""
+    model.eval()
+    
+    with torch.no_grad():
+        # Get prediction and attention weights
+        batch = torch.zeros(graph.x.size(0), dtype=torch.long)
+        pred, attention = model(graph.x, graph.edge_index, batch, return_attention=True)
+        
+        # Extract attention weights
+        edge_index, attention_weights = attention
+        
+        # Calculate attention score for each atom
+        atom_attention = torch.zeros(graph.x.size(0))
+        for i, (source, target) in enumerate(edge_index.t()):
+            atom_attention[source] += attention_weights[i].mean()  # Average across heads
+        
+        # Normalize attention scores
+        atom_attention = atom_attention / atom_attention.sum()
+    
+    print(f"Molecule: {smiles}")
+    print(f"Predicted value: {pred.item():.3f}")
+    print("\nAtom-wise attention scores:")
+    
+    from rdkit import Chem
+    mol = Chem.MolFromSmiles(smiles)
+    for i, atom in enumerate(mol.GetAtoms()):
+        if i < len(atom_attention):
+            print(f"Atom {i:2d} ({atom.GetSymbol():2s}): {atom_attention[i]:.3f}")
+    
+    return atom_attention
+```
+
+This attention analysis can reveal chemically meaningful patterns. For solubility prediction, we might find that the model pays more attention to polar atoms like oxygen and nitrogen, or to atoms in specific structural contexts that affect water interaction.
+
+**Gradient-Based Attribution**
+
+Another powerful interpretability method uses gradients to determine which input features most strongly influence the model's predictions. This is analogous to saliency maps in computer vision.
+
+```python
+def compute_atom_importance(model, graph_data):
+    """Calculate atom importance using gradient-based attribution"""
+    model.eval()
+    graph_data.x.requires_grad_(True)
+    
+    # Forward pass
+    batch = torch.zeros(graph_data.x.size(0), dtype=torch.long)
+    prediction = model(graph_data.x, graph_data.edge_index, batch)
+    
+    # Backward pass to compute gradients
+    prediction.backward()
+    
+    # Calculate importance as gradient magnitude
+    gradients = graph_data.x.grad
+    atom_importance = gradients.abs().sum(dim=1)  # Sum across feature dimensions
+    atom_importance = atom_importance / atom_importance.sum()  # Normalize
+    
+    return atom_importance.detach()
+
+def interpret_molecular_prediction(smiles, model, graph_converter):
+    """Complete interpretation pipeline for a single molecule"""
+    print(f"\nInterpreting prediction for: {smiles}")
+    print("=" * 50)
+    
+    # Convert molecule to graph
+    graph = graph_converter(smiles)
+    if graph is None:
+        print("Could not process molecule")
+        return
+    
+    # Get gradient-based importance
+    atom_importance = compute_atom_importance(model, graph)
+    
+    # Analyze results
+    mol = Chem.MolFromSmiles(smiles)
+    print(f"{'Atom':<6} {'Symbol':<6} {'Importance':<10}")
+    print("-" * 25)
+    
+    for i, atom in enumerate(mol.GetAtoms()):
+        if i < len(atom_importance):
+            symbol = atom.GetSymbol()
+            importance = atom_importance[i].item()
+            print(f"{i:<6} {symbol:<6} {importance:<10.3f}")
+    
+    # Identify most important atoms
+    top_atoms = atom_importance.argsort(descending=True)[:3]
+    print(f"\nMost important atoms for prediction:")
+    for rank, atom_idx in enumerate(top_atoms, 1):
+        atom = mol.GetAtomWithIdx(atom_idx.item())
+        print(f"{rank}. Atom {atom_idx.item()} ({atom.GetSymbol()})")
+```
+
+**Substructure Analysis and Chemical Insights**
+
+Beyond individual atom importance, we can analyze which molecular substructures most strongly correlate with predicted properties. This type of analysis bridges the gap between model predictions and chemical understanding.
+
+```python
+from collections import defaultdict
+from rdkit.Chem import rdMolDescriptors
+
+def analyze_predictive_substructures(model, molecules, targets, radius=2):
+    """Identify substructures that correlate with property values"""
+    substructure_contributions = defaultdict(list)
+    
+    model.eval()
+    with torch.no_grad():
+        for smiles, true_value in zip(molecules, targets):
+            mol = Chem.MolFromSmiles(smiles)
+            if mol is None:
+                continue
+                
+            graph = create_molecular_graph(smiles)
+            batch = torch.zeros(graph.x.size(0), dtype=torch.long)
+            pred_value = model(graph.x, graph.edge_index, batch).item()
+            
+            # Generate substructure fingerprints
+            info = {}
+            fp = rdMolDescriptors.GetMorganFingerprint(mol, radius, bitInfo=info)
+            
+            # Associate each substructure with prediction
+            for bit_id, occurrences in info.items():
+                substructure_contributions[bit_id].append((pred_value, true_value))
+    
+    # Find most predictive substructures
+    predictive_patterns = []
+    for bit_id, values in substructure_contributions.items():
+        if len(values) >= 3:  # Minimum occurrences for statistical significance
+            predictions, actuals = zip(*values)
+            correlation = np.corrcoef(predictions, actuals)[0, 1]
+            
+            if abs(correlation) > 0.6:  # Strong correlation threshold
+                avg_effect = np.mean(predictions)
+                predictive_patterns.append((bit_id, correlation, avg_effect, len(values)))
+    
+    # Sort by correlation strength
+    predictive_patterns.sort(key=lambda x: abs(x[1]), reverse=True)
+    
+    print("Most Predictive Substructures:")
+    print(f"{'Bit ID':<8} {'Correlation':<12} {'Avg Effect':<12} {'Count':<8}")
+    print("-" * 45)
+    
+    for bit_id, corr, effect, count in predictive_patterns[:10]:
+        print(f"{bit_id:<8} {corr:<12.3f} {effect:<12.3f} {count:<8}")
+    
+    return predictive_patterns
+```
+
+**Addressing GNN Limitations**
+
+Understanding these challenges has led to several innovative solutions in the GNN community:
+
+**Residual Connections and Skip Connections** help mitigate over-smoothing by allowing information from earlier layers to bypass deeper transformations.
+
+```python
+class ResidualGCN(nn.Module):
+    """GCN with residual connections to combat over-smoothing"""
+    def __init__(self, node_features, hidden_dim, num_layers):
+        super(ResidualGCN, self).__init__()
+        
+        self.initial_transform = nn.Linear(node_features, hidden_dim)
+        self.conv_layers = nn.ModuleList([
+            GCNConv(hidden_dim, hidden_dim) for _ in range(num_layers)
+        ])
+        self.layer_norms = nn.ModuleList([
+            nn.LayerNorm(hidden_dim) for _ in range(num_layers)
+        ])
+    
+    def forward(self, x, edge_index):
+        # Initial transformation
+        x = self.initial_transform(x)
+        
+        # Apply layers with residual connections
+        for conv, norm in zip(self.conv_layers, self.layer_norms):
+            residual = x
+            x = conv(x, edge_index)
+            x = F.relu(x)
+            x = norm(x + residual)  # Residual connection + normalization
+        
+        return x
+```
+
+**3D-Aware Architectures** address the limitation of purely topological representations by incorporating spatial information about molecular conformations.
+
+**Uncertainty Quantification** methods help us understand when our models are confident in their predictions versus when they might be extrapolating beyond their training distribution.
+
+The field of interpretable GNNs for chemistry is rapidly evolving, with new methods constantly emerging to help us understand these powerful but complex models. As we continue to develop more sophisticated architectures, maintaining interpretability remains crucial for building trust and gaining chemical insights from our predictions.
+
+By understanding both the capabilities and limitations of GNNs, we can apply them more effectively to real-world chemical problems while remaining aware of their boundaries and potential failure modes.
+
+---
+
+### Section 3.3 – Quiz Questions
+
+#### 1) Factual Questions
+
+##### Question 1
+What is the primary advantage of using Graph Neural Networks (GNNs) over traditional neural networks for molecular property prediction?
+
+**A.** GNNs require less computational resources  
+**B.** GNNs can directly process the graph structure of molecules  
+**C.** GNNs always achieve higher accuracy than other methods  
+**D.** GNNs work only with small molecules
+
+<details>
+<summary>▶ Click to show answer</summary>
+
+Correct Answer: B
+</details>
+
+<details>
+<summary>▶ Click to show explanation</summary>
+
+Explanation:  
+GNNs can directly process molecules as graphs where atoms are nodes and bonds are edges, preserving the structural information that is crucial for determining molecular properties.
+</details>
+
+---
+
+##### Question 2
+In the message passing mechanism of GNNs, what happens during the aggregation step?
+
+**A.** Node features are updated using a neural network  
+**B.** Messages from neighboring nodes are combined  
+**C.** Edge features are initialized  
+**D.** The final molecular prediction is made
+
+<details>
+<summary>▶ Click to show answer</summary>
+
+Correct Answer: B
+</details>
+
+<details>
+<summary>▶ Click to show explanation</summary>
+
+Explanation:  
+During aggregation, all incoming messages from neighboring nodes are combined (typically by summing or averaging) to form a single aggregated message for each node.
+</details>
+
+---
+
+##### Question 3
+Which of the following molecular representations is most suitable as input for a Graph Neural Network?
+
+**A.** SMILES string directly as text  
+**B.** 2D image of the molecular structure  
+**C.** Graph with nodes as atoms and edges as bonds  
+**D.** List of molecular descriptors only
+
+<details>
+<summary>▶ Click to show answer</summary>
+
+Correct Answer: C
+</details>
+
+<details>
+<summary>▶ Click to show explanation</summary>
+
+Explanation:  
+GNNs are designed to work with graph-structured data where nodes represent atoms and edges represent chemical bonds, allowing the model to learn from the molecular connectivity.
+</details>
+
+---
+
+##### Question 4
+What is the "over-smoothing" problem in Graph Neural Networks?
+
+**A.** The model becomes too complex to train  
+**B.** Node representations become increasingly similar in deeper networks  
+**C.** The model cannot handle large molecules  
+**D.** Training takes too much time
+
+<details>
+<summary>▶ Click to show answer</summary>
+
+Correct Answer: B
+</details>
+
+<details>
+<summary>▶ Click to show explanation</summary>
+
+Explanation:  
+Over-smoothing occurs when deep GNNs make node representations increasingly similar across layers, losing the ability to distinguish between different atoms and their local environments.
+</details>
+
+---
+
+#### 2) Conceptual Questions
+
+##### Question 5
+You want to build a GNN to predict molecular solubility (a continuous value). Which combination of pooling and output layers would be most appropriate?
+
+**A.**
+```python
+# Mean pooling + regression output
+x = global_mean_pool(x, batch)
+output = nn.Linear(hidden_dim, 1)(x)
+```
+
+**B.**
+```python
+# Max pooling + classification output  
+x = global_max_pool(x, batch)
+output = nn.Sequential(nn.Linear(hidden_dim, 2), nn.Softmax())(x)
+```
+
+**C.**
+```python
+# No pooling + multiple outputs
+output = nn.Linear(hidden_dim, num_atoms)(x)
+```
+
+**D.**
+```python
+# Sum pooling + sigmoid output
+x = global_add_pool(x, batch) 
+output = nn.Sequential(nn.Linear(hidden_dim, 1), nn.Sigmoid())(x)
+```
+
+<details>
+<summary>▶ Click to show answer</summary>
+
+Correct Answer: A
+</details>
+
+<details>
+<summary>▶ Click to show explanation</summary>
+
+Explanation:  
+For continuous property prediction (regression), we need to pool node features to get a molecular-level representation, then use a linear layer to output a single continuous value. Mean pooling is commonly used and effective for this purpose.
+</details>
+
+<details>
+<summary>▶ Show Solution Code</summary>
+<pre><code class="language-python">
+# Complete GNN for solubility prediction
+class SolubilityGNN(nn.Module):
+    def __init__(self, node_features, hidden_dim=64):
+        super(SolubilityGNN, self).__init__()
+        self.conv1 = GCNConv(node_features, hidden_dim)
+        self.conv2 = GCNConv(hidden_dim, hidden_dim)
+        self.predictor = nn.Linear(hidden_dim, 1)
+    
+    def forward(self, x, edge_index, batch):
+        x = F.relu(self.conv1(x, edge_index))
+        x = F.relu(self.conv2(x, edge_index))
+        x = global_mean_pool(x, batch)  # Pool to molecular level
+        return self.predictor(x)        # Single continuous output
+</code></pre>
+</details>
+
+---
+
+##### Question 6
+A chemist notices that their GNN model performs well on training molecules but poorly on a new set of structurally different compounds. What is the most likely cause and solution?
+
+**A.** The model is too simple; add more layers  
+**B.** The model suffers from distribution shift; collect more diverse training data  
+**C.** The learning rate is too high; reduce it  
+**D.** The model has too many parameters; reduce model size
+
+<details>
+<summary>▶ Click to show answer</summary>
+
+Correct Answer: B
+</details>
+
+<details>
+<summary>▶ Click to show explanation</summary>
+
+Explanation:  
+This scenario describes distribution shift, where the model was trained on one chemical space but tested on a different one. The solution is to include more diverse molecular structures in the training data to improve generalization.
+</details>
+
+<details>
+<summary>▶ Show Solution Code</summary>
+<pre><code class="language-python">
+# Data augmentation to improve generalization
+def augment_chemical_space(original_smiles_list):
+    """Expand training data with structural diversity"""
+    augmented_data = []
+    
+    for smiles in original_smiles_list:
+        mol = Chem.MolFromSmiles(smiles)
+        
+        # Add original
+        augmented_data.append(smiles)
+        
+        # Add different SMILES representations
+        for _ in range(3):
+            random_smiles = Chem.MolToSmiles(mol, doRandom=True)
+            augmented_data.append(random_smiles)
+    
+    return augmented_data
+
+# Use diverse training data from multiple chemical databases
+diverse_training_data = combine_datasets([
+    'drug_molecules.csv',
+    'natural_products.csv', 
+    'synthetic_compounds.csv'
+])
+</code></pre>
+</details>
