@@ -1603,7 +1603,7 @@ MolecularGNN(
 
 Our model has 8,769 trainable parameters. Most of these parameters are in the graph convolutional layers, which transform atom features into increasingly sophisticated representations that capture molecular structure.
 
-## Step 3: Preparing Training Data
+**Preparing Training Data**
 
 For our training data, we'll use a collection of molecules with known solubility values. Let's prepare this data for our GNN:
 
@@ -1670,7 +1670,7 @@ Mean solubility: -0.77 log S
 Data loader created with batch size 3
 ```
 
-## Step 4: Understanding What the Model Learns
+**Understanding What the Model Learns**
 
 One fascinating aspect of GNNs is how they automatically discover chemically meaningful patterns. Let's create a function to analyze what our model learns at different layers:
 
@@ -1718,7 +1718,7 @@ Layer 3: Average activation = 0.229
 
 This analysis reveals interesting insights - we can see how activations change through the network and which atoms are receiving the most attention. In this case, atom index 1 (likely the oxygen in ethanol) is consistently the most activated atom across all layers, which makes chemical sense given its importance for solubility!
 
-## Step 5: Training the GNN Model
+**Training the GNN Model**
 
 Now let's train our model on the solubility data:
 
@@ -1770,7 +1770,7 @@ Training completed!
 
 We can see the loss steadily decreasing as our model learns to predict solubility from molecular structure.
 
-## Step 6: Evaluating Model Performance
+**Evaluating Model Performance**
 
 After training, let's evaluate how well our model performs:
 
@@ -1818,7 +1818,7 @@ Root Mean Squared Error: 1.1462
 
 An R² score of 0.62 is quite promising for our small dataset! This means our model is capturing meaningful structure-property relationships despite having only 10 training molecules.
 
-## Step 7: Making Predictions on New Molecules
+**Making Predictions on New Molecules**
 
 Now that we've trained our model, let's use it to predict solubility for new molecules:
 
@@ -1872,7 +1872,7 @@ Naphthalene    :  -1.82 log S
 
 These predictions are chemically reasonable! Naphthalene is indeed the least soluble of the three, while tert-butanol shows moderate solubility as we'd expect.
 
-## Step 8: Enhanced Molecular Feature Analysis
+**Enhanced Molecular Feature Analysis**
 
 To improve our model, we can use more sophisticated atom features:
 
@@ -1916,7 +1916,7 @@ Atom 6 (O): 10 features - [8, 1, 0, 3, 0]...
 
 Adding these additional chemical features can help the model better understand factors affecting solubility, such as hybridization and ring membership.
 
-## Step 9: Detailed Performance Analysis
+**Detailed Performance Analysis**
 
 Let's analyze our model's predictions in more detail:
 
@@ -1985,7 +1985,7 @@ This breakdown reveals important insights:
 - It struggles more with alcohols and acids
 - This suggests we might need more training examples of these challenging molecule types
 
-## Conclusion
+**Conclusion**
 
 We've successfully built and trained a Graph Neural Network for molecular property prediction. Despite using a small dataset, our model achieved an R² score of 0.62, demonstrating its ability to learn meaningful structure-property relationships.
 
@@ -1999,7 +1999,6 @@ Key accomplishments:
 The power of GNNs lies in their ability to learn directly from molecular structure, capturing both local atomic environments and global molecular patterns. As we add more training data and refine our features, we can expect even better performance.
 
 This approach opens exciting possibilities for drug discovery, materials science, and other fields where predicting molecular properties is crucial.
-
 
 ### 3.3.4 Code Example: GNN on a Molecular Dataset
 
