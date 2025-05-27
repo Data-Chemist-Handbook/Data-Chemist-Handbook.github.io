@@ -112,7 +112,10 @@ Dataset: [ChemLLMBench – Tasks Overview](https://github.com/ChemFoundationMode
    1. **Open a notebook** at https://colab.research.google.com  
    2. **Install packages:**  
       ```bash
-      !pip install openai pandas numpy kagglehub
+      !pip install openai 
+      !pip install pandas
+      !pip install numpy
+      !pip install kagglehub
       ```  
    3. **Authenticate:**  
       ```python
@@ -213,4 +216,162 @@ Dataset: [ChemLLMBench – Tasks Overview](https://github.com/ChemFoundationMode
 
    
    Example notebook: [Example notebook](https://colab.research.google.com/drive/1B8qFtN_mkEzX3BGaznvXIstn0P1w6yRP?usp=sharingw)
+## 10.5 Quiz  
+
+### **Factual Questions**
+
+1. **Prompt engineering** is best described as:  
+   - A. Picking the fastest GPU for running an LLM  
+   - B. Carefully crafting instructions so an LLM returns the desired type of answer  
+   - C. Compressing model weights to fit on your laptop  
+   - D. Translating SMILES strings into plain‑text English sentences  
+
+<details><summary>Answer</summary>
+
+**B**
+
+</details>
+
+<details><summary>Explanation</summary>
+
+Prompt engineering focuses on how you *ask* the question so the model’s output is accurate, relevant, and formatted correctly.
+
+</details>
+
+---
+
+2. Which option *best* explains why **chain‑of‑thought prompting** can improve an LLM’s performance on chemistry word problems?  
+   - A. It increases the model’s context‑window size  
+   - B. It forces the model to reveal its hidden layers  
+   - C. It encourages the model to generate intermediate reasoning steps rather than jumping to a final answer  
+   - D. It automatically fine‑tunes the model on PubChem abstracts during inference  
+
+<details><summary>Answer</summary>
+
+**C**
+
+</details>
+
+<details><summary>Explanation</summary>
+
+By requesting step‑by‑step reasoning, you reduce “answer‑in‑one‑shot” errors and let the model use its latent reasoning abilities.
+
+</details>
+
+
+---
+
+3. Which line will **safely** retrieve your OpenAI key that you stored in Colab *Secrets*?  
+   - A. `openai.api_key = os.getenv("OPENAI_API_KEY")`  
+   - B. `openai.api_key = "OPENAI_API_KEY"`  
+   - C. `openai.api_key = open("OPENAI_API_KEY").read()`  
+   - D. `os.environ.clear()`  
+
+<details><summary>Answer</summary>
+
+**A**
+
+</details>
+
+<details><summary>Explanation</summary>
+
+Using `os.getenv` avoids hard‑coding or printing the secret.
+
+</details>
+
+---
+
+4. Few‑shot prompting most closely resembles which traditional ML technique?  
+   - A. Bag‑of‑words vectorization  
+   - B. **k‑Nearest Neighbours** with *k = the number of examples you show*  
+   - C. Stochastic gradient descent  
+   - D. Monte‑Carlo tree search  
+
+<details><summary>Answer</summary>
+
+**B**
+
+</details>
+
+<details><summary>Explanation</summary>
+
+You’re showing labelled exemplars and asking the model to act like “the nearest example”.
+
+</details>
+
+---
+
+### **Comprehension / Application Questions**
+
+5. You need an LLM to predict the *major* product of nitrating toluene. Which prompt is **most likely** to give a correct, parsable result?  
+
+   - A. `Nitrate toluene.`  
+   - B.  
+     ```  
+     You are an expert chemist. Given the reactant SMILES "Cc1ccccc1" and the reagent "HNO3/H2SO4", output only the major product in SMILES notation. Do **not** add commentary.  
+     ```  
+   - C. Please talk about electrophilic aromatic substitution, its history, and finally somewhere mention the product.  
+   - D. Translate this to Klingon, then predict the product: toluene + nitric acid.  
+
+<details><summary>Answer</summary>
+
+**B**
+
+</details>
+
+<details><summary>Explanation</summary>
+
+It supplies role, input format, reagent, and output constraints—maximising parseability.
+
+</details>
+
+---
+
+6. The API snippet below keeps returning *“Rate limit reached”*. What is the **first** practical fix?  
+```python
+completion = client.chat.completions.create(
+    model="gpt-4o-mini",
+    messages=[...],
+    temperature=1,
+    max_tokens=4000,  # ← current
+    top_p=1
+)
+```  
+   - A. Drop `max_tokens` to something realistic (e.g. 1024)
+   - B. Switch model to `"text-davinci-002"`  
+   - C. Delete your billing info  
+   - D. Set `temperature` to 0  
+
+<details><summary>Answer</summary>
+
+**A**
+
+</details>
+
+<details><summary>Explanation</summary>
+
+Huge `max_tokens` values are throttled; lowering it reduces quota usage per call.
+
+</details>
+
+---
+
+7. Writing an interactive Colab helper like `gpt_query()` is valuable mainly because it lets you:  
+    - A. Circumvent token‑billing limits  
+    - B. Iterate quickly with different prompts and see Markdown immediately
+    - C. Compile Python into CUDA kernels  
+    - D. Guarantee the model never hallucinates  
+
+<details><summary>Answer</summary>
+
+**B**
+
+</details>
+
+<details><summary>Explanation</summary>
+
+The helper hides boilerplate and renders responses as nicely formatted markdown for rapid experimentation.
+
+</details>
+
 
