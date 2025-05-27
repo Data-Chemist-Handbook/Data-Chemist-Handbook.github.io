@@ -10,7 +10,7 @@ Dataset: [ChemLLMBench – Tasks Overview](https://github.com/ChemFoundationMode
 
 # Section 10. LLMs for Chemistry
 
-- **Brief Introduction**
+**Brief Introduction**
 
     Large Language Models, or LLMs, are advanced machine learning models capable of understanding and generating human-like text and answering QA questions based on extensive training data from diverse sources.
 
@@ -18,7 +18,7 @@ Dataset: [ChemLLMBench – Tasks Overview](https://github.com/ChemFoundationMode
 
     So what exactly are LLMs and why are they so powerful? We will dive into this in this section.
 
-- ## 10.1 Introduction of LLMs
+## 10.1 Introduction of LLMs
 
     **What are LLMs?**
 
@@ -38,7 +38,7 @@ Dataset: [ChemLLMBench – Tasks Overview](https://github.com/ChemFoundationMode
 
     → Such applications can substantially speed up research processes, improve accuracy, and open new avenues for innovative scientific discoveries.
 
-- ## 10.2 Prompt Engineering
+## 10.2 Prompt Engineering
 
     **Definition:**  
     Prompt engineering involves carefully writing instructions (prompts) to guide LLMs to give accurate and useful answers. In simpler terms, it's how you ask questions or provide information to an AI system clearly and specifically.
@@ -99,7 +99,7 @@ Dataset: [ChemLLMBench – Tasks Overview](https://github.com/ChemFoundationMode
     - **Structure:** State expected response format.  
     - **Examples:** Use few-shot prompts when helpful.
 
-- ## 10.3 Usage of LLM APIs
+## 10.3 Usage of LLM APIs
 
     Chemists can utilize APIs from OpenAI, Google, and others to:
 
@@ -159,7 +159,7 @@ Dataset: [ChemLLMBench – Tasks Overview](https://github.com/ChemFoundationMode
            return int(expected.lower() == answer.lower())
        ```
 
-- ## 10.4 Interactive Programming
+## 10.4 Interactive Programming
 
     Interactive programming means writing code incrementally with immediate feedback, typically in Jupyter Notebooks or Colab.
 
