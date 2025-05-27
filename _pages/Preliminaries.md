@@ -578,6 +578,8 @@ Because different features may span very different ranges, it's often useful to 
 **Explanation:**
 Normalization adjusts the values of numerical columns to a common scale without distorting differences in ranges. This is often used in machine learning algorithms to improve model performance by making data more comparable.
 
+Note: In cheminformatics, the term ‘normalization’ can also refer to chemical structure standardization (e.g., standardizing SMILES representations to avoid duplicates), as discussed in [Walters et al., Nature Chemistry (2021)](https://www.nature.com/articles/s41557-021-00716-z). This section, however, focuses on mathematical feature scaling used in machine learning workflows.
+
 **Example Code:**
 
 ```python
@@ -588,23 +590,23 @@ from sklearn.preprocessing import MinMaxScaler
 data = {
     'Compound': ['A', 'B', 'C'],
     'Concentration': [0.1, 0.3, 0.5],
-    'pH': [7.0, 6.5, 8.0]
+    'BoilingPoint': [100, 150, 200]
 }
 df = pd.DataFrame(data)
 
-# Normalize the 'Concentration' and 'pH' columns
+# Normalize the 'Concentration' and 'BoilingPoint' columns
 scaler = MinMaxScaler()
-df[['Concentration', 'pH']] = scaler.fit_transform(df[['Concentration', 'pH']])
+df[['Concentration', 'BoilingPoint']] = scaler.fit_transform(df[['Concentration', 'BoilingPoint']])
 
 print(df)
 ```
 
 **Practice Problem:**
 
-We will normalize the `num` column using Min–Max scaling, which adjusts values to a common scale between 0 and 1.
+We will normalize the `molweight` column using Min–Max scaling, which adjusts values to a common scale between 0 and 1.
 
-1. Normalize the `num` column in the BBBP dataset using Min–Max scaling.
-2. Print the first few rows to verify the normalization.
+1.	Normalize the `molweight` column in the Boiling Point dataset(boiling_point_chemical_properties.csv) using Min–Max scaling.
+2.	Print the first few rows to verify the normalization.
 
 <details>
 <summary>▶ Show Solution Code</summary>
@@ -612,13 +614,13 @@ We will normalize the `num` column using Min–Max scaling, which adjusts values
 import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
 
-# Load the BBBP dataset
-url = 'https://raw.githubusercontent.com/Data-Chemist-Handbook/Data-Chemist-Handbook.github.io/refs/heads/master/_pages/BBBP.csv'
+# Load the dataset
+url = 'https://raw.githubusercontent.com/Data-Chemist-Handbook/Data-Chemist-Handbook.github.io/refs/heads/master/_pages/boiling_point_chemical_properties.csv'
 df = pd.read_csv(url)
 
-# Normalize the 'num' column (compound number)
+# Normalize the 'molweight' column
 scaler = MinMaxScaler()
-df[['num']] = scaler.fit_transform(df[['num']])
+df[['molweight']] = scaler.fit_transform(df[['molweight']])
 
 # Display the first few rows of the normalized dataset
 print(df.head())
