@@ -8,8 +8,6 @@ layout: post
 
 Dataset: [ChemLLMBench – Tasks Overview](https://github.com/ChemFoundationModels/ChemLLMBench#-tasks-overview)
 
-# Section 10. LLMs for Chemistry
-
 **Brief Introduction**
 
    Large Language Models, or LLMs, are advanced machine learning models capable of understanding and generating human-like text and answering QA questions based on extensive training data from diverse sources.
