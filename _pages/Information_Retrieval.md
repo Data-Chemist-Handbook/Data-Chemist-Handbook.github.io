@@ -34,7 +34,7 @@ Dataset: [ChemLLMBench – Tasks Overview](https://github.com/ChemFoundationMode
 
    → Such applications can substantially speed up research processes, improve accuracy, and open new avenues for innovative scientific discoveries.
 
-   ### **Factual Questions**
+   **Factual Questions**
 
    1. **LLM** is an acronym for:  
       - A. Limited‑Length Memory  
@@ -76,7 +76,7 @@ Dataset: [ChemLLMBench – Tasks Overview](https://github.com/ChemFoundationMode
 
    ---
 
-   ### **Comprehension / Application Question**
+   **Comprehension / Application Question**
 
    3. You ask an LLM:  
       > “List three advantages of using ChatGPT when preparing a lab report.”  
@@ -98,7 +98,7 @@ Dataset: [ChemLLMBench – Tasks Overview](https://github.com/ChemFoundationMode
 
    </details>
 
-   ---
+
 
 ## 10.2 Prompt Engineering
 
@@ -160,7 +160,8 @@ Dataset: [ChemLLMBench – Tasks Overview](https://github.com/ChemFoundationMode
    - **Context:** Include reaction conditions or setup.  
    - **Structure:** State expected response format.  
    - **Examples:** Use few-shot prompts when helpful.
-   ### **Factual Questions**
+
+   **Factual Questions**
 
    1. In a well‑structured prompt, the portion *“SMILES string: CCO”* is best labelled as:  
       - A. General Instruction  
@@ -202,7 +203,7 @@ Dataset: [ChemLLMBench – Tasks Overview](https://github.com/ChemFoundationMode
 
    ---
 
-   ### **Comprehension / Application Question**
+   **Comprehension / Application Question**
 
    3. You write the single‑line prompt  
       > “Predict the major product.”  
@@ -224,7 +225,7 @@ Dataset: [ChemLLMBench – Tasks Overview](https://github.com/ChemFoundationMode
 
    </details>
 
-   ---
+
 
 ## 10.3 Usage of LLM APIs
 
@@ -288,7 +289,7 @@ Dataset: [ChemLLMBench – Tasks Overview](https://github.com/ChemFoundationMode
       def similarity_score(expected, answer):
          return int(expected.lower() == answer.lower())
       ```
-   ### **Factual Questions**
+   **Factual Questions**
 
    1. In the Colab setup, the purpose of  
       ```python
@@ -334,7 +335,7 @@ Dataset: [ChemLLMBench – Tasks Overview](https://github.com/ChemFoundationMode
 
    ---
 
-   ### **Comprehension / Application Question**
+   **Comprehension / Application Question**
 
    3. You call the Chat Completion API twice with the **exact same prompt** but get **different** answers each time.  
       Which settings will make the response **identical** on every call?
@@ -409,7 +410,7 @@ Dataset: [ChemLLMBench – Tasks Overview](https://github.com/ChemFoundationMode
       display(Markdown(output))
       ```  
 
-   ### **Factual Questions**
+   **Factual Questions**
 
    1. Storing the API key in Colab “Secrets” is safer than typing it in plain text because:  
       - A. It shortens execution time.  
@@ -431,7 +432,7 @@ Dataset: [ChemLLMBench – Tasks Overview](https://github.com/ChemFoundationMode
 
    ---
 
-   ### **Comprehension / Application Question**
+   **Comprehension / Application Question**
 
    2. The helper `gpt_query()` function optionally prints `df.head()` when given a `.csv` path.  
       Why is showing the *head* helpful before the API call?  
