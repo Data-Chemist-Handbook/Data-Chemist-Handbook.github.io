@@ -492,7 +492,7 @@ Reinforcement learning can be classified into two main approaches based on how t
 
 - **Value-Based Methods:** These methods estimate the value functions and derive the policy from them. Q-learning is a prominent example, where the agent updates its action value function based on the rewards received.
 
-### 5.3.0: Practical Application in Chemistry
+### 5.2.9: Practical Application in Chemistry
 
 Let’s implement a simple reinforcement learning scenario using Python, where we’ll simulate adjusting the temperature for a chemical reaction to maximize yield. In this example, we'll use Q-learning as our learning method.
 
