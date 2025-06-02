@@ -300,8 +300,8 @@ plt.show()
 </pre>
 
 ---
-## 1) Factual Questions
-### Question 1
+### 1) Factual Questions
+#### Question 1
 What is the main advantage of Bayesian Optimization when applied to molecular property optimization?
 
 **A.** It runs simulations faster by parallelizing them across GPUs
@@ -317,7 +317,7 @@ Correct Answer: C
 
 ---
 
-### Question 2
+#### Question 2
 What role does the Gaussian Process play in Bayesian Optimization?
 
 **A.** It determines which chemical reactions are exothermic
@@ -333,7 +333,7 @@ Correct Answer: B
 
 ---
 
-### Question 3
+#### Question 3
 Which of the following is an acquisition function used in Bayesian Optimization?
 
 **A.** Mean Squared Error
@@ -349,7 +349,7 @@ Correct Answer: C
 
 ---
 
-### Question 4
+#### Question 4
 In the context of molecular optimization, what is the main purpose of an acquisition function?
 
 **A.** To visualize molecular structures in 3D
@@ -365,9 +365,9 @@ Correct Answer: C
 
 ---
 
-## 2) Conceptual Questions
+### 2) Conceptual Questions
 
-### Question 5
+#### Question 5
 Why might a chemist choose Bayesian Optimization instead of grid search when optimizing molecular binding affinity?
 
 **A.** Grid search always converges to a suboptimal result
@@ -383,7 +383,7 @@ Correct Answer: B
 
 ---
 
-### Question 6
+#### Question 6
 Which of the following best describes the exploration vs. exploitation trade-off in Bayesian Optimization?
 
 **A.** Exploration only occurs once before exploitation begins
@@ -541,6 +541,73 @@ print(q_table)
 </pre>
 
 This example demonstrates how a reinforcement learning agent can learn to maximize yield based on the temperature settings of a chemical reaction.
+
+---
+
+### 1) Factual Questions
+#### Question 1
+What is the role of the discount factor (γ) in a Markov Decision Process?
+
+A. It determines the exploration probability
+B. It decides how often the agent updates its policy
+C. It balances immediate vs. future rewards
+D. It scales the reward function linearly
+
+<details> <summary>▶ Click to show answer</summary> Correct Answer: C </details> <details> <summary>▶ Click to show explanation</summary> Explanation: The discount factor γ controls how much future rewards are valued compared to immediate ones. A value closer to 1 emphasizes long-term rewards. </details>
+
+#### Question 2
+Which of the following is not a component of a Markov Decision Process?
+
+A. Policy Gradient
+B. Transition Function
+C. Reward Function
+D. States
+
+<details> <summary>▶ Click to show answer</summary> Correct Answer: A </details> <details> <summary>▶ Click to show explanation</summary> Explanation: Policy gradient is an algorithm used in RL, but it is not a core component of the MDP, which includes states, actions, transitions, rewards, and a discount factor. </details>
+
+#### Question 3
+What type of reinforcement learning does not require modeling the environment?
+
+A. Model-Based RL
+B. Model-Free RL
+C. Deterministic RL
+D. Fully Observable RL
+
+<details> <summary>▶ Click to show answer</summary> Correct Answer: B </details> <details> <summary>▶ Click to show explanation</summary> Explanation: Model-free RL directly learns from experiences without constructing an internal model of the environment. </details>
+
+#### Question 4
+In the ε-greedy strategy, what is the purpose of the ε parameter?
+
+A. It controls learning rate during backpropagation
+B. It adjusts the temperature in simulated annealing
+C. It determines how often the agent explores
+D. It sets the discount for future rewards
+
+<details> <summary>▶ Click to show answer</summary> Correct Answer: C </details> <details> <summary>▶ Click to show explanation</summary> Explanation: In ε-greedy strategies, ε represents the probability of taking a random action (exploration) instead of the best-known action (exploitation). </details>
+
+---
+
+### 2) Conceptual Questions
+#### Question 5
+Why might reinforcement learning be valuable for chemical experiments such as temperature optimization?
+
+A. It avoids the need to run any physical experiments
+B. It uses genetic algorithms to mutate molecules
+C. It can learn optimal settings from experimental feedback
+D. It builds full quantum mechanical models for each compound
+
+<details> <summary>▶ Click to show answer</summary> Correct Answer: C </details> <details> <summary>▶ Click to show explanation</summary> Explanation: Reinforcement learning iteratively improves decision-making based on rewards from previous actions, making it ideal for optimizing variables like temperature in experiments. </details>
+
+#### Question 6
+What is the key difference between policy-based and value-based reinforcement learning?
+
+A. Policy-based methods require a model of the environment
+B. Value-based methods are used only for continuous actions
+C. Policy-based methods optimize actions directly; value-based methods derive actions from value estimates
+D. Value-based methods update policies using crossover and mutation
+
+<details> <summary>▶ Click to show answer</summary> Correct Answer: C </details> <details> <summary>▶ Click to show explanation</summary> Explanation: Policy-based methods learn the policy function directly, while value-based methods estimate value functions and derive the policy from them. </details>
+
 
 ## 5.3 Genetic Algorithms
 Genetic algorithms (GAs) are a class of evolutionary algorithms inspired by Charles Darwin’s theory of natural selection. They operate by iteratively evolving a population of candidate solutions through processes that mimic biological evolution—selection, crossover (recombination), and mutation. These algorithms have found extensive applications in various scientific disciplines, particularly in molecular design and drug discovery, where they help in searching the vast chemical space for molecules with optimized properties.
@@ -810,6 +877,73 @@ else:
    </code>
 </pre>
 
+---
+
+### 1) Factual Questions
+#### Question 1
+What is the purpose of the fitness function in a genetic algorithm applied to molecular design?
+
+A. It encodes molecular structures into SMILES format
+B. It initializes the population of molecules
+C. It quantifies how desirable a molecule is based on defined properties
+D. It randomly mutates molecules to increase diversity
+
+<details> <summary>▶ Click to show answer</summary> Correct Answer: C </details> <details> <summary>▶ Click to show explanation</summary> Explanation: The fitness function evaluates how well a molecule satisfies desired objectives such as solubility, LogP, or drug-likeness, guiding the selection process. </details>
+
+#### Question 2
+Which of the following is not a typical genetic operator in molecular optimization?
+
+A. Crossover
+B. Mutation
+C. Evaluation
+D. Aggregation
+
+<details> <summary>▶ Click to show answer</summary> Correct Answer: D </details> <details> <summary>▶ Click to show explanation</summary> Explanation: Aggregation is not a standard genetic operator. Genetic algorithms typically use crossover, mutation, selection, and evaluation. </details>
+
+#### Question 3
+Which representation method encodes a molecule as a string of atoms and bonds?
+
+A. Graph representation
+B. Fingerprint-based representation
+C. SMILES representation
+D. Adjacency matrix representation
+
+<details> <summary>▶ Click to show answer</summary> Correct Answer: C </details> <details> <summary>▶ Click to show explanation</summary> Explanation: SMILES (Simplified Molecular Input Line Entry System) encodes a molecule as a text string representing its atoms and bonds. </details>
+
+#### Question 4
+What is the main function of mutation in genetic algorithms?
+
+A. To copy molecules from one generation to the next
+B. To combine fragments from two parents
+C. To introduce structural diversity into the population
+D. To sort molecules by LogP
+
+<details> <summary>▶ Click to show answer</summary> Correct Answer: C </details> <details> <summary>▶ Click to show explanation</summary> Explanation: Mutation introduces small, random changes to molecules, helping explore new areas of chemical space and prevent premature convergence. </details>
+
+---
+
+### 2) Conceptual Questions
+#### Question 5
+Why are genetic algorithms especially useful in molecular optimization compared to brute-force methods?
+
+A. They always find the globally optimal molecule in one generation
+B. They use deterministic rules to eliminate randomness
+C. They explore chemical space efficiently through evolution-inspired heuristics
+D. They avoid the need for molecular structure encodings
+
+<details> <summary>▶ Click to show answer</summary> Correct Answer: C </details> <details> <summary>▶ Click to show explanation</summary> Explanation: GAs search large and complex chemical spaces by evolving better solutions over generations, making them far more efficient than brute-force enumeration. </details>
+
+#### Question 6
+What is the role of selection strategies like roulette wheel or tournament selection in GAs?
+
+A. They apply mutations to individual atoms
+B. They visualize molecules during optimization
+C. They choose high-performing molecules for reproduction
+D. They encode molecules into binary fingerprints
+
+<details> <summary>▶ Click to show answer</summary> Correct Answer: C </details> <details> <summary>▶ Click to show explanation</summary> Explanation: Selection strategies determine which molecules are chosen to reproduce, often favoring those with higher fitness scores to guide the algorithm toward better candidates. </details>
+
+---
 
 ## 5.4 Generative models with conditions
 
@@ -1375,3 +1509,68 @@ visualize_generated_molecules(generated_molecules)
    </code>
 </pre>
 
+---
+
+### 1) Factual Questions
+#### Question 1
+What is the main purpose of a conditional generative model in molecular property optimization?
+
+A. To randomly generate chemically valid molecules
+B. To filter invalid molecules after generation
+C. To generate molecules that meet specific predefined property criteria
+D. To simulate chemical reactions in real time
+
+<details> <summary>▶ Click to show answer</summary> Correct Answer: C </details> <details> <summary>▶ Click to show explanation</summary> Explanation: Conditional generative models incorporate desired property constraints (like solubility or toxicity) to steer generation toward molecules that meet specific goals. </details>
+
+#### Question 2
+Which of the following is a valid method for incorporating conditions into a generative model?
+
+A. Deleting features from the input
+B. Concatenating property values with model inputs or latent representations
+C. Training without property labels
+D. Converting SMILES into image format
+
+<details> <summary>▶ Click to show answer</summary> Correct Answer: B </details> <details> <summary>▶ Click to show explanation</summary> Explanation: Conditions can be concatenated with input sequences or latent vectors to guide generation toward molecules with desired properties. </details>
+
+#### Question 3
+Which model architecture uses attention mechanisms for conditional molecular generation?
+
+A. Conditional GAN
+B. Conditional VAE
+C. Transformer-based model
+D. Graph-based classifier
+
+<details> <summary>▶ Click to show answer</summary> Correct Answer: C </details> <details> <summary>▶ Click to show explanation</summary> Explanation: Transformer-based models use self-attention to process input data, including conditioning vectors, allowing for complex control over molecular generation. </details>
+
+#### Question 4
+Which molecular representation is most suitable for 3D property-aware generation?
+
+A. SMILES string
+B. One-hot encoding
+C. Graph representation
+D. 3D atomic coordinates
+
+<details> <summary>▶ Click to show answer</summary> Correct Answer: D </details> <details> <summary>▶ Click to show explanation</summary> Explanation: 3D atomic coordinates are needed when modeling spatial interactions and geometry-dependent properties like docking or quantum behavior. </details>
+
+---
+
+### 2) Conceptual Questions
+#### Question 5
+Why are conditional generative models important in drug discovery?
+
+A. They automate the synthesis of molecules
+B. They evaluate the toxicity of known drugs
+C. They can generate molecules that satisfy multiple property constraints simultaneously
+D. They improve quantum chemical accuracy
+
+<details> <summary>▶ Click to show answer</summary> Correct Answer: C </details> <details> <summary>▶ Click to show explanation</summary> Explanation: Conditional models allow for multi-objective optimization (e.g., high efficacy and low toxicity), which is crucial in drug discovery. </details>
+
+#### Question 6
+What is the trade-off between using SMILES strings and molecular graphs in generative models?
+
+A. SMILES strings require less GPU memory but cannot represent large molecules
+B. Molecular graphs are easier to train but lack structural information
+C. SMILES are simpler and faster but less robust to small changes than graphs
+D. Graphs are compact but harder to interpret than SMILES
+
+<details> <summary>▶ Click to show answer</summary> Correct Answer: C </details> <details> <summary>▶ Click to show explanation</summary> Explanation: SMILES are simple to process with NLP models but are sensitive to small token changes. Graphs capture structural relationships more accurately but are computationally heavier. </details>

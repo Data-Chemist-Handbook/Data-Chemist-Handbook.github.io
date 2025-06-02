@@ -420,7 +420,7 @@ In this chapter, we'll explore how to use Python for data analysis, focusing on 
 
 **Explanation:**
 
-CSV (Comma-Separated Values) and Excel files are common formats for storing tabular data. Python's `pandas` library provides straightforward methods to read these files into DataFrames, which are powerful data structures for working with tabular data. A DataFrame is what is known in programming as an object. Objects contain data organized in specific defined structures and have properties that can be changed and used by the programmer.
+CSV (Comma-Separated Values) and Excel files are common formats for storing tabular data. Python’s `pandas` library provides straightforward methods to read these files into DataFrames, which are powerful data structures for working with tabular data. A DataFrame is what is known in programming as an object. Objects contain data organized in specific defined structures and have properties that can be changed and used by the programmer.
 
 Think of it as a variable that can store more complex information than a few words or a number. In this instance, we will store data tables as a DataFrame object. When the data table is read into a `pandas` DataFrame, the resulting object will have properties and functions built into it. For example, a substrate scope table can be read into a DataFrame and statistical analysis can be performed on the yield column with only a few lines of code.
 
@@ -436,13 +436,24 @@ import pandas as pd
 csv_data = pd.read_csv('experimental_data.csv')
 
 # Reading an Excel file into a DataFrame called "excel_data"
-excel_data = pd.read_excel('compound_properties.xlsx', sheet_name='Sheet1')
+excel_data = pd.read_excel('compound_properties.xlsx', sheet_name='Sheet1', index_col=0)
 ```
-
 **Explanation of the Code:**
 
 - `pd.read_csv()` reads data from a CSV file into a DataFrame.
-- `pd.read_excel()` reads data from an Excel file. The `sheet_name` parameter specifies which sheet to read.
+- `pd.read_excel()` reads data from an Excel file. The `sheet_name` parameter specifies which sheet to read. The `index_col` parameter tells pandas which column to use as the row index.
+
+***Note: What is index_col?***
+
+When loading an Excel file with pandas.read_excel(), pandas automatically assigns row numbers like 0, 1, 2 as the index. But sometimes, the first column of your file already contains meaningful labels—like wavenumbers, timestamps, or compound IDs. In that case, you can tell pandas to use that column as the row index using index_col.
+
+**Without index_col**
+
+Suppose your Excel file starts with a column named “Wavenumber”, followed by data columns like “Time1” and “Time2”. If you don’t set index_col, pandas reads all columns as data. It then adds its own row numbers—0, 1, 2—on the side. The “Wavenumber” column will just be treated as another data column.
+
+**With index_col=0**
+
+By setting index_col=0, you’re telling pandas to treat the first column—“Wavenumber”—as the index. That means each row will now be labeled using the values in the “Wavenumber” column (e.g., 400, 500, 600). This is especially useful when the first column isn’t a feature but a meaningful label.
 
 #### Reading CSVs via File Upload or Link
 
@@ -471,6 +482,25 @@ import pandas as pd
 # Loading the dataset
 url = 'https://raw.githubusercontent.com/Data-Chemist-Handbook/Data-Chemist-Handbook.github.io/refs/heads/master/_pages/BBBP.csv'
 df = pd.read_csv(url)
+print(df.head())
+```
+
+***Note: Method 2 works for CSVs but not for Excel files***
+
+CSV files are plain text files. When you use a raw.githubusercontent.com link, you’re simply accessing that text over the internet, and pandas.read_csv() can parse it just like it would read from a local file.
+
+Excel files (.xlsx), however, are binary files, not plain text. GitHub doesn’t serve .xlsx files with the correct content type to let pd.read_excel() work directly from the URL. Instead, you need to manually download the file into memory using the requests library and wrap it with BytesIO, like this:
+
+```python
+import pandas as pd
+import requests
+from io import BytesIO
+
+url = 'https://raw.githubusercontent.com/Data-Chemist-Handbook/Data-Chemist-Handbook.github.io/master/_pages/LCRaman_data.xlsx'
+response = requests.get(url)
+excel_data = BytesIO(response.content)
+
+df = pd.read_excel(excel_data, sheet_name='Sheet1', index_col=0)
 print(df.head())
 ```
 
@@ -549,7 +579,7 @@ df['yield'] = df['yield'].astype(int)
 print("the data types after conversion are " + str(df.dtypes))
 ```
 
-**Practice Problem 1:**
+**Practice Problem:**
 In the BBBP dataset, the `num` column (compound number) should be treated as an integer, and the `p_np` column (permeability label) should be converted to categorical data.
 
 1. Convert the num column to integer and the p_np column to a categorical type.
@@ -578,52 +608,81 @@ Because different features may span very different ranges, it's often useful to 
 **Explanation:**
 Normalization adjusts the values of numerical columns to a common scale without distorting differences in ranges. This is often used in machine learning algorithms to improve model performance by making data more comparable.
 
-Note: In cheminformatics, the term ‘normalization’ can also refer to chemical structure standardization (e.g., standardizing SMILES representations to avoid duplicates), as discussed in [Walters et al., Nature Chemistry (2021)](https://www.nature.com/articles/s41557-021-00716-z). This section, however, focuses on mathematical feature scaling used in machine learning workflows.
+***Note***: In cheminformatics, the term normalization can also refer to structural standardization (e.g., canonicalizing SMILES to avoid duplicates), as discussed in [Walters et al., Nature Chemistry (2021)](https://www.nature.com/articles/s41557-021-00716-z).
+However, in machine learning, normalization usually refers to mathematical feature scaling (e.g., Min–Max or z-score scaling).
+
+***Note***: Since different features may span very different ranges, it's often useful to bring them onto a common scale before modeling. Machine learning models expect
+- **Rows = individual samples or observations** (e.g., a single spectrum)
+- **Columns = features** (e.g., intensity at different wavenumbers)
+If your data is organized the other way around (e.g., rows as wavenumbers), use `.T` to transpose the DataFrame: `df = df.T`.
+
+***Note***: Not every chemical column should be re-scaled.  
+*Physical constants* such as boiling-point (°C/K), pH, melting-point, ΔHf, etc. already live on a meaningful, absolute scale; forcing them into 0-1 space can hide or even distort mechanistic trends.
+
+By contrast, **measurement-derived signals** (e.g. FTIR, Raman or UV-Vis intensities) and *vectorised descriptors* produced by software (atom counts, fragment fingerprints, Mordred/PaDEL descriptors, etc.) are unit-less abstractions. Re-scaling these routinely improves machine-learning performance and does **not** alter the underlying chemistry.
 
 **Example Code:**
-
 ```python
 import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
 
-# Example DataFrame
-data = {
-    'Compound': ['A', 'B', 'C'],
-    'Concentration': [0.1, 0.3, 0.5],
-    'BoilingPoint': [100, 150, 200]
-}
-df = pd.DataFrame(data)
+# Toy IR-intensity dataset (three peaks per spectrum)
+spectra = pd.DataFrame({
+    "sample": ["spec-1", "spec-2", "spec-3"],
+    "I_1700cm-1": [  920,  415, 1280],
+    "I_1600cm-1": [  640, 1220,  870],
+    "I_1500cm-1": [  305,  510,  460],
+})
 
-# Normalize the 'Concentration' and 'BoilingPoint' columns
 scaler = MinMaxScaler()
-df[['Concentration', 'BoilingPoint']] = scaler.fit_transform(df[['Concentration', 'BoilingPoint']])
+intensity_cols = ["I_1700cm-1", "I_1600cm-1", "I_1500cm-1"]
 
-print(df)
+spectra[intensity_cols] = scaler.fit_transform(spectra[intensity_cols])
+print(spectra)
 ```
+
+**Output:**
+|        | sample  | I_1700cm-1 | I_1600cm-1 | I_1500cm-1 |
+|--------|---------|------------|------------|------------|
+| 0      | spec-1  | 0.583815   | 0.000000   | 0.000000   |
+| 1      | spec-2  | 0.000000   | 1.000000   | 1.000000   |
+| 2      | spec-3  | 1.000000   | 0.396552   | 0.756098   |
 
 **Practice Problem:**
 
-We will normalize the `molweight` column using Min–Max scaling, which adjusts values to a common scale between 0 and 1.
+We will normalize Raman spectral intensity data using Min–Max scaling, which adjusts values to a common scale between 0 and 1.
 
-1.	Normalize the `molweight` column in the Boiling Point dataset(boiling_point_chemical_properties.csv) using Min–Max scaling.
-2.	Print the first few rows to verify the normalization.
+1.	Load LCRaman_data.xlsx from the GitHub repository. This file contains real Raman spectral measurements.
+2.	Transpose the DataFrame to make rows = `spectra` and columns = `wavenumber intensities`.
+3.	Apply Min–Max scaling to the intensity values.
+4.	Print the first few rows to verify the normalized values.
 
 <details>
 <summary>▶ Show Solution Code</summary>
 <pre><code class="language-python">
 import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
+import requests
+from io import BytesIO
 
-# Load the dataset
-url = 'https://raw.githubusercontent.com/Data-Chemist-Handbook/Data-Chemist-Handbook.github.io/refs/heads/master/_pages/boiling_point_chemical_properties.csv'
-df = pd.read_csv(url)
+# Load Raman spectral data from GitHub
+url = 'https://raw.githubusercontent.com/Data-Chemist-Handbook/Data-Chemist-Handbook.github.io/master/_pages/LCRaman_data.xlsx'
+response = requests.get(url)
+excel_data = BytesIO(response.content)
+df = pd.read_excel(excel_data, sheet_name="Sheet1", index_col=0)
 
-# Normalize the 'molweight' column
+# Transpose to make rows = spectra, columns = features
+spectra = df.T
+
+# Apply Min–Max scaling to all intensity columns
 scaler = MinMaxScaler()
-df[['molweight']] = scaler.fit_transform(df[['molweight']])
+spectra_scaled = pd.DataFrame(
+    scaler.fit_transform(spectra),
+    index=spectra.index,
+    columns=spectra.columns
+)
 
-# Display the first few rows of the normalized dataset
-print(df.head())
+print(spectra_scaled.head())
 </code></pre>
 </details>
 
