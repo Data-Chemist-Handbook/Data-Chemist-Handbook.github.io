@@ -1797,7 +1797,7 @@ In cheminformatics, pivot_table() is especially useful for converting assay resu
 ---
 
 ##### Question 4  
-You are comparing solubility data of compounds measured in different units (mg/mL, g/L, ppm). To ensure fair comparison across all compounds, you decide to use Min-Max normalization. What is the primary reason for doing this?
+You are preparing spectral data from a library of compounds for training a new ML algorithm and you decide to use Min-Max normalization. What is the primary reason for doing this?
 
 **A.** To standardize solvent types across experiments  
 **B.** To rescale numerical values into a common range (e.g., 0 to 1)  
@@ -1814,7 +1814,7 @@ Correct Answer: B
 <summary>▶ Click to show explanation</summary>
 
 Explanation:  
-Min-Max normalization rescales values to a fixed range (often 0 to 1), making it easier to compare across features with different units or scales.
+Min-Max normalization rescales values to a fixed range (often 0 to 1), making it easier to compare results from multiple spectra for different compounds in different concentrations.
 </details>
 
 ---
@@ -1904,7 +1904,8 @@ Explanation:
 
 ---
 
-##### Question 8  
+##### Question 8
+<!-- TODO: why would you want a whole column with the same value in it in every row? -->
 Which function and code would allow you to create a new column that represents the average of the boiling points `'bp'` in your dataset?
 
 **A.** Grouping; `df['avg_bp'] = df['bp'].mean()`  
@@ -2068,14 +2069,16 @@ This chapter will explore each of these representation methods in detail, provid
 ### 2.3.1 SMILES (Simplified Molecular Input Line Entry System)
 #### Completed and Compiled Code: [Click Here](https://colab.research.google.com/drive/1H1pbYKAU0jswB6v5gMAWlzHUtPp3GvIR?usp=sharing)
 
+<!-- TODO: discuss if this should be moved to the beginning -->
+
 **Explanation:**
 
-**SMILES**, or **Simplified Molecular Input Line Entry System**, is a notation that encodes molecular structures as text strings. It is a widely used format in cheminformatics due to its simplicity and human-readability. SMILES strings represent atoms and bonds in a molecule, allowing for easy storage and manipulation of chemical information in databases and software applications.
+**SMILES**, or **Simplified Molecular Input Line Entry System**, is a notation that represents molecular structures as text strings. Many sets of rules apply to SMILES formation and interpretation, and these rules have generally become standardized since the development of SMILES in the 1980s. It is a widely used format in cheminformatics due to its simplicity and human-readability. SMILES strings represent atoms and bonds in a molecule, allowing for easy storage and manipulation of chemical information in databases and software applications.
 
-- **Atoms**: Represented by their atomic symbols. For example, carbon is represented as 'C', oxygen as 'O', etc.
-- **Bonds**: Single bonds are implicit, while double, triple, and aromatic bonds are represented by '=', '#', and ':' respectively.
-- **Branches**: Enclosed in parentheses to indicate branching in the molecular structure.
-- **Rings**: Represented by numbers that indicate the start and end of a ring closure.
+- **Atoms**: Atoms are represented by their atomic symbol either as itself or in brackets. Atoms that do not require brackets must be part of the organic subset of atoms including B, C, N, O, P, S, F, Cl, Br, or I. Within this subset, brackets may still be needed for an atom that is not the most abundant isotope, has a charge, has abnormal valence, or is a chiral center. Hydrogens are usually implied and not listed explicitly, assuming normal valence.
+- **Bonds**: Single bonds are implied between atoms adjacent in the string, while double, triple, and aromatic bonds are represented by '=', '#', and ':' respectively.
+- **Branches**: Branched molecules use parentheses around subordinate branched groups to indicate branching in the molecular structure.
+- **Rings**: Rings are represented with numbers that indicate the atoms at the start and end of a ring, with the digit following after the letter symbol of the atoms. Usually the same number is used to identify the ring start and finish to distinguish between multiple rings. For example, cyclohexane would be written as `C1CCCCC1` and napthalene can be written as `c1c2ccccc2ccc1` (SMILES are not case sensitive)
 
 **Importance and Applications:**
 
