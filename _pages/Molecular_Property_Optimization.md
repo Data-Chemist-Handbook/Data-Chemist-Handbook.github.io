@@ -5,19 +5,18 @@ date: 2024-08-15
 category: Jekyll
 layout: post
 ---
-dataset: PMO (https://arxiv.org/pdf/2206.12411)
 
-In drug discovery and materials design, chemists often face the daunting challenge of selecting the next best molecule to synthesize or simulate from an enormous chemical space—estimated to contain over 10e60 possible organic compounds. With limited time and experimental resources, evaluating every candidate molecule isn’t feasible. Instead, chemists must strike a balance between exploration—testing new, untried molecules that might perform well—and exploitation—focusing on refining promising structures that are already known to behave favorably.
+Dataset reference: PMO Benchmark - [Click Here](https://arxiv.org/pdf/2206.12411)
+
+In drug discovery and materials design, chemists often face the daunting challenge of selecting the next best molecule to synthesize or simulate from an enormous chemical space—estimated to contain over 10e60 possible organic compounds. With limited time and experimental resources, evaluating every candidate molecule isn't feasible. Instead, chemists must strike a balance between exploration—testing new, untried molecules that might perform well—and exploitation—focusing on refining promising structures that are already known to behave favorably.
 
 This is the core of molecular property optimization: making intelligent decisions about which molecules to prioritize, especially when targeting properties like solubility, binding affinity, lipophilicity (LogP), or synthetic accessibility. Computational methods have become indispensable tools in this pursuit, and one of the most effective frameworks for tackling this problem is Bayesian Optimization.
-
-
 
 ## 5.1 Bayesian Optimization
 
 ### 5.1.1 Introduction to Bayesian Optimization
 
-Let’s say you’ve synthesized a small batch of molecules and measured their solubility. A few candidates show promise, but you’re working with limited time, budget, or access to high-throughput screening. You now face a dilemma: Should you modify your current leads slightly and improve them (exploit), or try something radically different (explore)? This is where Bayesian Optimization (BO) becomes a game-changer for chemists.
+Let's say you've synthesized a small batch of molecules and measured their solubility. A few candidates show promise, but you're working with limited time, budget, or access to high-throughput screening. You now face a dilemma: Should you modify your current leads slightly and improve them (exploit), or try something radically different (explore)? This is where Bayesian Optimization (BO) becomes a game-changer for chemists.
 
 Bayesian Optimization is a strategy for efficiently finding the optimal molecule when evaluations are expensive—whether that means physical synthesis, simulation, or time-consuming quantum calculations. BO has been successfully applied to problems like optimizing drug-likeness, reaction yields, or physicochemical properties such as LogP.
 
@@ -26,18 +25,18 @@ What makes BO effective is its ability to learn as it goes, constantly updating 
 The most commonly used surrogate in chemistry applications is the Gaussian Process (GP). This model not only predicts how promising a candidate is (expected property value), but also how uncertain that prediction is. For instance, it may estimate that a given molecule has a likely LogP of 3.2—but with a wide confidence interval because that region of chemical space is poorly understood.
 
 This dual prediction (value + uncertainty) is what enables BO to be smart about its next move. It selects the next molecule to evaluate using an acquisition function, which combines the predicted performance and the uncertainty. Two commonly used acquisition functions in chemical optimization are:
-    * **Expected Improvement (EI):** Prefers molecules that could significantly outperform current best candidates.
-    * **Upper Confidence Bound (UCB):** Selects molecules with both high predicted value and high uncertainty, encouraging exploration.
+- **Expected Improvement (EI):** Prefers molecules that could significantly outperform current best candidates.
+- **Upper Confidence Bound (UCB):** Selects molecules with both high predicted value and high uncertainty, encouraging exploration.
 
 By iteratively updating the surrogate model and guiding where to sample next, BO helps chemists avoid wasteful blind searches. Instead of evaluating thousands of compounds randomly, BO steers you toward the most promising and informative candidates—saving time, cost, and effort.
 
-**Chemist’s Insight:** Think of BO like a lab assistant that remembers every result you’ve seen and suggests the next experiment with the highest chance of success or insight.
+**Chemist's Insight:** Think of BO like a lab assistant that remembers every result you've seen and suggests the next experiment with the highest chance of success or insight.
 
 Bayesian Optimization has become a cornerstone of modern computational chemistry pipelines, especially in fields where wet-lab validation is slow or costly. Whether you're designing a new drug molecule or optimizing materials for energy storage, BO can dramatically speed up the discovery process by helping you make smarter choices, faster.
 
 ### 5.1.2 Key Concepts of Bayesian Optimization
 
-Bayesian Optimization may sound complex, but its power lies in just a few fundamental ideas. Together, these concepts enable chemists to prioritize which molecules to test next, all while minimizing wasted experiments. In this section, we’ll break down the three core components of BO—**Bayesian inference, surrogate models, and acquisition functions**—with examples grounded in molecular property prediction.
+Bayesian Optimization may sound complex, but its power lies in just a few fundamental ideas. Together, these concepts enable chemists to prioritize which molecules to test next, all while minimizing wasted experiments. In this section, we'll break down the three core components of BO—**Bayesian inference, surrogate models, and acquisition functions**—with examples grounded in molecular property prediction.
 
 #### 5.1.2.1 Bayesian Inference
 
@@ -45,64 +44,63 @@ At the heart of Bayesian Optimization is Bayesian inference—a framework for up
 
 In BO, we start with a prior belief about how molecules behave (e.g., which structures are likely to have high LogP or low toxicity). As we evaluate each molecule—whether through lab testing or simulation—we collect data and update our model to form a posterior belief: a more informed estimate of which molecules might perform best.
 
-**Chemist’s Insight:** Bayesian inference is like refining your mental model after each experiment—except here, the computer does it quantitatively and consistently.
+**Chemist's Insight:** Bayesian inference is like refining your mental model after each experiment—except here, the computer does it quantitatively and consistently.
 
 This constant updating is what makes BO highly efficient. It ensures that each new test is more informed than the last, helping chemists navigate complex chemical spaces with fewer missteps.
 
 #### 5.1.2.2 Surrogate Models
 
-When synthesizing a molecule or running a simulation takes hours or days, we can't afford to try every candidate blindly. That’s where surrogate models come in. They act as fast approximations of your real experiments.
+When synthesizing a molecule or running a simulation takes hours or days, we can't afford to try every candidate blindly. That's where surrogate models come in. They act as fast approximations of your real experiments.
 
-In Bayesian Optimization, the most popular surrogate model is the Gaussian Process (GP). You can think of it like a “smart guesser” that:
-
-   * Predicts how well a molecule might perform (e.g., expected solubility)
-   * Tells you how confident it is in that prediction (e.g., uncertainty in underexplored regions)
+In Bayesian Optimization, the most popular surrogate model is the Gaussian Process (GP). You can think of it like a "smart guesser" that:
+- Predicts how well a molecule might perform (e.g., expected solubility)
+- Tells you how confident it is in that prediction (e.g., uncertainty in underexplored regions)
 
 This is especially helpful in chemistry, where relationships between structure and property are often non-linear and hard to generalize.
 
-**Example:** A GP might estimate that a new compound has a predicted LogP of 2.1 ± 0.8. That wide margin tells us the model isn’t very confident—maybe because similar molecules haven’t been tested yet.
+**Example:** A GP might estimate that a new compound has a predicted LogP of 2.1 ± 0.8. That wide margin tells us the model isn't very confident—maybe because similar molecules haven't been tested yet.
 
-This built-in uncertainty allows the optimizer to identify gaps in knowledge and target them strategically. By modeling both what we know and what we don’t, surrogate models help prioritize molecules that either have strong potential or will teach us something new.
+This built-in uncertainty allows the optimizer to identify gaps in knowledge and target them strategically. By modeling both what we know and what we don't, surrogate models help prioritize molecules that either have strong potential or will teach us something new.
 
 #### 5.1.2.3 Acquisition Functions
 
-Once the surrogate model is built, we still need a way to decide which molecule to evaluate next. That’s the job of the acquisition function—a mathematical tool that scores all potential candidates based on their predicted value and uncertainty.
+Once the surrogate model is built, we still need a way to decide which molecule to evaluate next. That's the job of the acquisition function—a mathematical tool that scores all potential candidates based on their predicted value and uncertainty.
 
 In simple terms, acquisition functions help balance two goals:
-   * **Exploration:** Try something new to learn more about chemical space.
-   * **Exploitation:** Focus on known regions that already show promising results.
-**Analogy:** It’s like choosing between trying a new restaurant or going back to one you already love. Exploration may lead to a hidden gem, while exploitation gives you a reliable experience.
+- **Exploration:** Try something new to learn more about chemical space.
+- **Exploitation:** Focus on known regions that already show promising results.
+
+**Analogy:** It's like choosing between trying a new restaurant or going back to one you already love. Exploration may lead to a hidden gem, while exploitation gives you a reliable experience.
 
 Here are three commonly used acquisition functions in chemistry applications:
-   * **Expected Improvement (EI):** Estimates how much better a new candidate could be compared to the best one tested so far. It balances optimism and realism.
-   * **Probability of Improvement (PI):** Prioritizes candidates that are likely to beat the current best, even if the improvement is small.
-   * **Upper Confidence Bound (UCB):** Favors candidates with high uncertainty and high predicted value. It’s bold and curious, often uncovering new “hot spots” in unexplored regions.
+- **Expected Improvement (EI):** Estimates how much better a new candidate could be compared to the best one tested so far. It balances optimism and realism.
+- **Probability of Improvement (PI):** Prioritizes candidates that are likely to beat the current best, even if the improvement is small.
+- **Upper Confidence Bound (UCB):** Favors candidates with high uncertainty and high predicted value. It's bold and curious, often uncovering new "hot spots" in unexplored regions.
 
 Each acquisition function has its strengths, and the best choice often depends on how cautious or adventurous you want the search to be.
 
-**Chemist’s Tip:** UCB is especially useful when you're unsure about the landscape—like optimizing a new reaction with limited precedent. EI is better once you have solid leads and want to fine-tune results.
+**Chemist's Tip:** UCB is especially useful when you're unsure about the landscape—like optimizing a new reaction with limited precedent. EI is better once you have solid leads and want to fine-tune results.
 
 **In Summary**
 Bayesian Optimization works because it combines:
-   * A Bayesian mindset that updates knowledge as experiments are run
-   * A surrogate model that predicts both value and uncertainty
-   * An acquisition function that strategically guides what to test next
+- A Bayesian mindset that updates knowledge as experiments are run
+- A surrogate model that predicts both value and uncertainty
+- An acquisition function that strategically guides what to test next
 
 Together, these tools allow chemists to move through chemical space more intelligently—testing fewer molecules, making better decisions, and accelerating discovery.
 
 ### 5.1.3 Bayesian Optimization for Molecular Property Optimization Shortcut
 
-The EDBOplus library presents an easy shortcut option without having to understand the full process of Bayesian Optimization: [https://github.com/doyle-lab-ucla/edboplus/blob/main/examples/tutorials/1_CLI_example.ipynb](https://github.com/doyle-lab-ucla/edboplus/blob/main/examples/tutorials/1_CLI_example.ipynb)
+The EDBOplus library presents an easy shortcut option without having to understand the full process of Bayesian Optimization: [Click Here](https://github.com/doyle-lab-ucla/edboplus/blob/main/examples/tutorials/1_CLI_example.ipynb)
 
 ### 5.1.4 Bayesian Optimization for Molecular Property Optimization Full Manual Process
 
+**Completed and Compiled Code:** [Click Here](https://colab.research.google.com/drive/1uXjcu_bzygtia9xgEHN76xMmQtcV0sY-?usp=sharing)
+
 In the event where we may want to do something more complex, here is the full process laid out in an example looking to optimize logP values:
 
-google colab: [https://colab.research.google.com/drive/1uXjcu_bzygtia9xgEHN76xMmQtcV0sY-?usp=sharing](https://colab.research.google.com/drive/1uXjcu_bzygtia9xgEHN76xMmQtcV0sY-?usp=sharing)
-
 **Step 1: Install RDKit and Other Required Libraries**
-<pre>
-    <code class="python">
+```python
 # Install RDKit in Google Colab
 !pip install rdkit
 
@@ -117,43 +115,34 @@ from sklearn.gaussian_process.kernels import RBF
 from scipy.stats import norm
 from google.colab import files
 import io
-    </code>
-</pre>
+```
 
 **Step 2: Download and Upload the BACE Dataset (Stage 1a) from Drug Design Data**
 
-The **BACE dataset** is available on Drug Design Data: https://drugdesigndata.org/about/grand-challenge-4/bace
+The **BACE dataset** is available on Drug Design Data: [Click Here](https://drugdesigndata.org/about/grand-challenge-4/bace)
 
-<pre>
-    <code class="python">
+```python
 # Load dataset
 uploaded = files.upload()
 print(uploaded.keys()) #verifying if getting a file error
 data = pd.read_csv(io.BytesIO(uploaded['BACE_FEset_compounds_D3R_GC4.csv'])) #file name should match your download file
-    </code>
-</pre>
+```
 
 **Step 3: Understand the Dataset**
 
 Use the head and columns function to understand what our dataset looks like.
 
-<pre>
-    <code class="python">
+```python
 data.head()
-    </code>
-</pre>
+```
 
-<pre>
-    <code class="python">
+```python
 data.columns
-    </code>
-</pre>
+```
 
 **Step 4: Calculate Properties and Application to SMILES**
 
-
-<pre>
-   <code class = "python">
+```python
 # Function to calculate LogP, Molecular Weight, and TPSA for each SMILES string, returning none if does not exist
 def calculate_properties(smiles):
     mol = Chem.MolFromSmiles(smiles)
@@ -168,12 +157,10 @@ def calculate_properties(smiles):
 # Apply the function to the SMILES column (SMILES contains complex organic molecules)
 properties = data['smiles'].apply(calculate_properties)
 data[['LogP', 'Molecular_Weight', 'TPSA']] = pd.DataFrame(properties.tolist(), index=data.index)
-   </code>
-</pre>
+```
 
 **Step 5: Select Target Properties for Optimization and Sample**
-<pre>
-   <code class = "python">
+```python
 # Select the target property for optimization (e.g., LogP)
 target_property = 'LogP'  # Change to 'Molecular_Weight' or 'TPSA' as desire
 x_range = np.linspace(-2*np.pi, 2*np.pi, 100)  # Adjust the range based on your specific goals
@@ -181,12 +168,10 @@ x_range = np.linspace(-2*np.pi, 2*np.pi, 100)  # Adjust the range based on your 
 # Sample x values and outputs from the target property
 sample_x = np.array(range(len(data)))
 sample_y = data[target_property].values
-   </code>
-</pre>
+```
 
 **Define Black Box Functions, Gaussian Process, and Bayesian Optimization**
-<pre>
-   <code class = "python">
+```python
 def black_box_function(x):
     # Use the target property values directly
     return data[target_property].iloc[int(x)]  # Ensure x is an integer
@@ -229,13 +214,10 @@ for i in range(num_iterations):
     plt.ylabel(target_property)
     plt.legend()
     plt.show()  # Show the plot after each iteration
-
-   </code>
-</pre>
+```
 
 **Pinpointing the Optimal and Maximized LogP Value**
-<pre>
-   <code class = "python">
+```python
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.gaussian_process import GaussianProcessRegressor
@@ -296,118 +278,157 @@ plt.xlabel("Compound Index")
 plt.ylabel(target_property)
 plt.legend()
 plt.show()
-   </code>
-</pre>
+```
 
 ---
-### 1) Factual Questions
-#### Question 1
+
+### Section 5.1 – Quiz Questions
+
+#### 1) Factual Questions
+
+##### Question 1
 What is the main advantage of Bayesian Optimization when applied to molecular property optimization?
 
-**A.** It runs simulations faster by parallelizing them across GPUs
-**B.** It avoids the need for molecular descriptors
-**C.** It balances exploring unknown molecules and exploiting promising candidates
+**A.** It runs simulations faster by parallelizing them across GPUs  
+**B.** It avoids the need for molecular descriptors  
+**C.** It balances exploring unknown molecules and exploiting promising candidates  
 **D.** It guarantees the global optimum after one evaluation
 
-<details> <summary>▶ Click to show answer</summary>
+<details>
+<summary>▶ Click to show answer</summary>
+
 Correct Answer: C
 </details>
 
-<details> <summary>▶ Click to show explanation</summary> Explanation: Bayesian Optimization balances exploration of uncertain regions with exploitation of known good regions, making it efficient for expensive-to-evaluate molecular problems. </details>
+<details>
+<summary>▶ Click to show explanation</summary>
+
+Explanation: Bayesian Optimization balances exploration of uncertain regions with exploitation of known good regions, making it efficient for expensive-to-evaluate molecular problems.
+</details>
 
 ---
 
-#### Question 2
+##### Question 2
 What role does the Gaussian Process play in Bayesian Optimization?
 
-**A.** It determines which chemical reactions are exothermic
-**B.** It predicts both expected values and uncertainty for new candidates
-**C.** It performs clustering to group similar molecules
+**A.** It determines which chemical reactions are exothermic  
+**B.** It predicts both expected values and uncertainty for new candidates  
+**C.** It performs clustering to group similar molecules  
 **D.** It selects which molecules to synthesize based on solubility alone
 
-<details> <summary>▶ Click to show answer</summary>
-Correct Answer: B
-</details> 
+<details>
+<summary>▶ Click to show answer</summary>
 
-<details> <summary>▶ Click to show explanation</summary> Explanation: A Gaussian Process is a surrogate model that estimates both the expected value (mean) and the uncertainty (standard deviation) of a molecule’s predicted property. </details>
+Correct Answer: B
+</details>
+
+<details>
+<summary>▶ Click to show explanation</summary>
+
+Explanation: A Gaussian Process is a surrogate model that estimates both the expected value (mean) and the uncertainty (standard deviation) of a molecule's predicted property.
+</details>
 
 ---
 
-#### Question 3
+##### Question 3
 Which of the following is an acquisition function used in Bayesian Optimization?
 
-**A.** Mean Squared Error
-**B.** Pearson Correlation
-**C.** Upper Confidence Bound (UCB)
+**A.** Mean Squared Error  
+**B.** Pearson Correlation  
+**C.** Upper Confidence Bound (UCB)  
 **D.** ReLU Activation
 
-<details> <summary>▶ Click to show answer</summary>
-Correct Answer: C
-</details> 
+<details>
+<summary>▶ Click to show answer</summary>
 
-<details> <summary>▶ Click to show explanation</summary> Explanation: Upper Confidence Bound (UCB) is one of several acquisition functions that guides Bayesian Optimization by considering both predicted value and uncertainty. </details>
+Correct Answer: C
+</details>
+
+<details>
+<summary>▶ Click to show explanation</summary>
+
+Explanation: Upper Confidence Bound (UCB) is one of several acquisition functions that guides Bayesian Optimization by considering both predicted value and uncertainty.
+</details>
 
 ---
 
-#### Question 4
+##### Question 4
 In the context of molecular optimization, what is the main purpose of an acquisition function?
 
-**A.** To visualize molecular structures in 3D
-**B.** To convert SMILES to descriptors
-**C.** To determine the next molecule to evaluate
+**A.** To visualize molecular structures in 3D  
+**B.** To convert SMILES to descriptors  
+**C.** To determine the next molecule to evaluate  
 **D.** To normalize the dataset
 
-<details> <summary>▶ Click to show answer</summary>
-Correct Answer: C
-</details> 
+<details>
+<summary>▶ Click to show answer</summary>
 
-<details> <summary>▶ Click to show explanation</summary> Explanation: Acquisition functions help choose the next point (molecule) to evaluate by balancing exploration and exploitation using the surrogate model’s predictions. </details>
+Correct Answer: C
+</details>
+
+<details>
+<summary>▶ Click to show explanation</summary>
+
+Explanation: Acquisition functions help choose the next point (molecule) to evaluate by balancing exploration and exploitation using the surrogate model's predictions.
+</details>
 
 ---
 
-### 2) Conceptual Questions
+#### 2) Conceptual Questions
 
-#### Question 5
+##### Question 5
 Why might a chemist choose Bayesian Optimization instead of grid search when optimizing molecular binding affinity?
 
-**A.** Grid search always converges to a suboptimal result
-**B.** Bayesian Optimization can suggest new experiments based on prior results
-**C.** Grid search cannot be used on numerical data
+**A.** Grid search always converges to a suboptimal result  
+**B.** Bayesian Optimization can suggest new experiments based on prior results  
+**C.** Grid search cannot be used on numerical data  
 **D.** Bayesian Optimization doesn't need labeled training data
 
-<details> <summary>▶ Click to show answer</summary>
-Correct Answer: B
-</details> 
+<details>
+<summary>▶ Click to show answer</summary>
 
-<details> <summary>▶ Click to show explanation</summary> Explanation: Bayesian Optimization uses Bayesian inference to update a surrogate model with each new result, allowing it to strategically propose new evaluations based on the evolving understanding of chemical space. </details>
+Correct Answer: B
+</details>
+
+<details>
+<summary>▶ Click to show explanation</summary>
+
+Explanation: Bayesian Optimization uses Bayesian inference to update a surrogate model with each new result, allowing it to strategically propose new evaluations based on the evolving understanding of chemical space.
+</details>
 
 ---
 
-#### Question 6
+##### Question 6
 Which of the following best describes the exploration vs. exploitation trade-off in Bayesian Optimization?
 
-**A.** Exploration only occurs once before exploitation begins
-**B.** Exploitation selects high-uncertainty candidates; exploration picks low-uncertainty ones
-**C.** Exploration chooses unknown regions; exploitation uses known good regions
+**A.** Exploration only occurs once before exploitation begins  
+**B.** Exploitation selects high-uncertainty candidates; exploration picks low-uncertainty ones  
+**C.** Exploration chooses unknown regions; exploitation uses known good regions  
 **D.** They are interchangeable and used randomly
 
-<details> <summary>▶ Click to show answer</summary>
-Correct Answer: C
-</details> 
+<details>
+<summary>▶ Click to show answer</summary>
 
-<details> <summary>▶ Click to show explanation</summary> Explanation: Exploration focuses on high-uncertainty regions that could reveal new optimal molecules, while exploitation focuses on areas already known to perform well. </details>
+Correct Answer: C
+</details>
+
+<details>
+<summary>▶ Click to show explanation</summary>
+
+Explanation: Exploration focuses on high-uncertainty regions that could reveal new optimal molecules, while exploitation focuses on areas already known to perform well.
+</details>
 
 ---
 
 ## 5.2 Reinforcement Learning
 
-### 5.2.1: Overview of Reinforcement Learning
+### 5.2.1 Overview of Reinforcement Learning
 
 Reinforcement Learning (RL) is a subset of machine learning where an agent learns to make decisions by interacting with an environment. The agent takes actions in the environment and receives feedback in the form of rewards or penalties. The primary goal is to learn a strategy, or policy, that maximizes cumulative rewards over time.
 
 In simple terms, imagine teaching a pet to perform tricks. You reward them with treats for performing the desired action (like sitting or rolling over) and may ignore or gently correct them when they do not comply. Over time, the pet learns which actions lead to the best outcomes.
 
-### 5.2.2: The Markov Decision Process Framework
+### 5.2.2 The Markov Decision Process Framework
 
 At the heart of reinforcement learning is the **Markov Decision Process (MDP)**, which provides a mathematical framework for modeling decision-making. An MDP consists of:
 
@@ -419,9 +440,9 @@ At the heart of reinforcement learning is the **Markov Decision Process (MDP)**,
 
 Mathematically, an MDP can be represented as a tuple (S, A, T, R, γ).
 
-### 5.2.3: Conceptual Example in Chemistry
+### 5.2.3 Conceptual Example in Chemistry
 
-Let’s consider a simplified example involving a chemistry lab experiment. Imagine you are trying to determine the best temperature setting for a reaction to maximize yield.
+Let's consider a simplified example involving a chemistry lab experiment. Imagine you are trying to determine the best temperature setting for a reaction to maximize yield.
 
 - **States (S):** Different temperature settings (e.g., 20°C, 25°C, 30°C).
 - **Actions (A):** Adjusting the temperature up or down.
@@ -429,7 +450,7 @@ Let’s consider a simplified example involving a chemistry lab experiment. Imag
 
 As you experiment, you would record the yield for each temperature and adjust your strategy based on the results. Over time, you learn which temperature yields the best results, similar to how an RL agent learns the best actions to take.
 
-### 5.2.4: Environmental Types in Reinforcement Learning
+### 5.2.4 Environmental Types in Reinforcement Learning
 
 Reinforcement learning environments can vary significantly. They can be categorized as:
 
@@ -445,37 +466,33 @@ Reinforcement learning environments can vary significantly. They can be categori
    - Static environments do not change while the agent is deliberating.
    - Dynamic environments may change based on the agent's actions or external factors.
 
-### 5.2.5: Classifications of Reinforcement Learning
+### 5.2.5 Classifications of Reinforcement Learning
 
 Reinforcement learning can be broadly divided into two categories:
 
-#### 5.2.5.1: Model-Based Reinforcement Learning
+#### 5.2.5.1 Model-Based Reinforcement Learning
 
 In model-based reinforcement learning, the agent builds a model of the environment's dynamics. This allows the agent to simulate different actions and predict their outcomes before taking them. This approach can lead to faster learning since the agent can plan its actions based on the model.
 
-#### 5.2.5.2: Model-Free Reinforcement Learning
+#### 5.2.5.2 Model-Free Reinforcement Learning
 
 Model-free reinforcement learning does not require a model of the environment. Instead, the agent learns directly from its experiences. This approach can be simpler to implement but may require more interactions with the environment to learn effectively. Popular model-free methods include Q-learning and policy gradient methods.
 
-### 5.2.6: Understanding Value Functions
+### 5.2.6 Understanding Value Functions
 
 A value function estimates how good it is for the agent to be in a given state, considering the long-term reward. There are two primary types of value functions:
 
 - **State Value Function (V):** Estimates the expected return from a state, following a specific policy.
 
-  \[
-  V(s) = E[R | s]
-  \]
+  $$V(s) = E[R | s]$$
 
 - **Action Value Function (Q):** Estimates the expected return from taking a specific action in a state and then following a specific policy.
 
-  \[
-  Q(s, a) = E[R | s, a]
-  \]
+  $$Q(s, a) = E[R | s, a]$$
 
 Understanding value functions helps the agent evaluate the quality of its actions and adjust its strategy accordingly.
 
-### 5.2.7: The Exploration-Exploitation Dilemma
+### 5.2.7 The Exploration-Exploitation Dilemma
 
 One of the critical challenges in reinforcement learning is the trade-off between **exploration** and **exploitation**:
 
@@ -484,7 +501,7 @@ One of the critical challenges in reinforcement learning is the trade-off betwee
 
 An effective RL algorithm must balance these two aspects to learn efficiently. For example, using an ε-greedy strategy, the agent occasionally selects a random action (exploration) while mostly selecting the best-known action (exploitation).
 
-### 5.2.8: Policy-Based vs. Value-Based Approaches
+### 5.2.8 Policy-Based vs. Value-Based Approaches
 
 Reinforcement learning can be classified into two main approaches based on how the agent learns:
 
@@ -492,12 +509,11 @@ Reinforcement learning can be classified into two main approaches based on how t
 
 - **Value-Based Methods:** These methods estimate the value functions and derive the policy from them. Q-learning is a prominent example, where the agent updates its action value function based on the rewards received.
 
-### 5.3.0: Practical Application in Chemistry
+### 5.2.9 Practical Application in Chemistry
 
-Let’s implement a simple reinforcement learning scenario using Python, where we’ll simulate adjusting the temperature for a chemical reaction to maximize yield. In this example, we'll use Q-learning as our learning method.
+Let's implement a simple reinforcement learning scenario using Python, where we'll simulate adjusting the temperature for a chemical reaction to maximize yield. In this example, we'll use Q-learning as our learning method.
 
-<pre>
-    <code class="python">
+```python
 import numpy as np
 import random
 
@@ -537,80 +553,153 @@ for episode in range(1000):  # Number of episodes
 # Output the learned Q-table
 print("Learned Q-table:")
 print(q_table)
-    </code>
-</pre>
+```
 
 This example demonstrates how a reinforcement learning agent can learn to maximize yield based on the temperature settings of a chemical reaction.
 
 ---
 
-### 1) Factual Questions
-#### Question 1
+### Section 5.2 – Quiz Questions
+
+#### 1) Factual Questions
+
+##### Question 1
 What is the role of the discount factor (γ) in a Markov Decision Process?
 
-A. It determines the exploration probability
-B. It decides how often the agent updates its policy
-C. It balances immediate vs. future rewards
-D. It scales the reward function linearly
+**A.** It determines the exploration probability  
+**B.** It decides how often the agent updates its policy  
+**C.** It balances immediate vs. future rewards  
+**D.** It scales the reward function linearly
 
-<details> <summary>▶ Click to show answer</summary> Correct Answer: C </details> <details> <summary>▶ Click to show explanation</summary> Explanation: The discount factor γ controls how much future rewards are valued compared to immediate ones. A value closer to 1 emphasizes long-term rewards. </details>
+<details>
+<summary>▶ Click to show answer</summary>
 
-#### Question 2
-Which of the following is not a component of a Markov Decision Process?
+Correct Answer: C
+</details>
 
-A. Policy Gradient
-B. Transition Function
-C. Reward Function
-D. States
+<details>
+<summary>▶ Click to show explanation</summary>
 
-<details> <summary>▶ Click to show answer</summary> Correct Answer: A </details> <details> <summary>▶ Click to show explanation</summary> Explanation: Policy gradient is an algorithm used in RL, but it is not a core component of the MDP, which includes states, actions, transitions, rewards, and a discount factor. </details>
-
-#### Question 3
-What type of reinforcement learning does not require modeling the environment?
-
-A. Model-Based RL
-B. Model-Free RL
-C. Deterministic RL
-D. Fully Observable RL
-
-<details> <summary>▶ Click to show answer</summary> Correct Answer: B </details> <details> <summary>▶ Click to show explanation</summary> Explanation: Model-free RL directly learns from experiences without constructing an internal model of the environment. </details>
-
-#### Question 4
-In the ε-greedy strategy, what is the purpose of the ε parameter?
-
-A. It controls learning rate during backpropagation
-B. It adjusts the temperature in simulated annealing
-C. It determines how often the agent explores
-D. It sets the discount for future rewards
-
-<details> <summary>▶ Click to show answer</summary> Correct Answer: C </details> <details> <summary>▶ Click to show explanation</summary> Explanation: In ε-greedy strategies, ε represents the probability of taking a random action (exploration) instead of the best-known action (exploitation). </details>
+Explanation: The discount factor γ controls how much future rewards are valued compared to immediate ones. A value closer to 1 emphasizes long-term rewards.
+</details>
 
 ---
 
-### 2) Conceptual Questions
-#### Question 5
+##### Question 2
+Which of the following is not a component of a Markov Decision Process?
+
+**A.** Policy Gradient  
+**B.** Transition Function  
+**C.** Reward Function  
+**D.** States
+
+<details>
+<summary>▶ Click to show answer</summary>
+
+Correct Answer: A
+</details>
+
+<details>
+<summary>▶ Click to show explanation</summary>
+
+Explanation: Policy gradient is an algorithm used in RL, but it is not a core component of the MDP, which includes states, actions, transitions, rewards, and a discount factor.
+</details>
+
+---
+
+##### Question 3
+What type of reinforcement learning does not require modeling the environment?
+
+**A.** Model-Based RL  
+**B.** Model-Free RL  
+**C.** Deterministic RL  
+**D.** Fully Observable RL
+
+<details>
+<summary>▶ Click to show answer</summary>
+
+Correct Answer: B
+</details>
+
+<details>
+<summary>▶ Click to show explanation</summary>
+
+Explanation: Model-free RL directly learns from experiences without constructing an internal model of the environment.
+</details>
+
+---
+
+##### Question 4
+In the ε-greedy strategy, what is the purpose of the ε parameter?
+
+**A.** It controls learning rate during backpropagation  
+**B.** It adjusts the temperature in simulated annealing  
+**C.** It determines how often the agent explores  
+**D.** It sets the discount for future rewards
+
+<details>
+<summary>▶ Click to show answer</summary>
+
+Correct Answer: C
+</details>
+
+<details>
+<summary>▶ Click to show explanation</summary>
+
+Explanation: In ε-greedy strategies, ε represents the probability of taking a random action (exploration) instead of the best-known action (exploitation).
+</details>
+
+---
+
+#### 2) Conceptual Questions
+
+##### Question 5
 Why might reinforcement learning be valuable for chemical experiments such as temperature optimization?
 
-A. It avoids the need to run any physical experiments
-B. It uses genetic algorithms to mutate molecules
-C. It can learn optimal settings from experimental feedback
-D. It builds full quantum mechanical models for each compound
+**A.** It avoids the need to run any physical experiments  
+**B.** It uses genetic algorithms to mutate molecules  
+**C.** It can learn optimal settings from experimental feedback  
+**D.** It builds full quantum mechanical models for each compound
 
-<details> <summary>▶ Click to show answer</summary> Correct Answer: C </details> <details> <summary>▶ Click to show explanation</summary> Explanation: Reinforcement learning iteratively improves decision-making based on rewards from previous actions, making it ideal for optimizing variables like temperature in experiments. </details>
+<details>
+<summary>▶ Click to show answer</summary>
 
-#### Question 6
+Correct Answer: C
+</details>
+
+<details>
+<summary>▶ Click to show explanation</summary>
+
+Explanation: Reinforcement learning iteratively improves decision-making based on rewards from previous actions, making it ideal for optimizing variables like temperature in experiments.
+</details>
+
+---
+
+##### Question 6
 What is the key difference between policy-based and value-based reinforcement learning?
 
-A. Policy-based methods require a model of the environment
-B. Value-based methods are used only for continuous actions
-C. Policy-based methods optimize actions directly; value-based methods derive actions from value estimates
-D. Value-based methods update policies using crossover and mutation
+**A.** Policy-based methods require a model of the environment  
+**B.** Value-based methods are used only for continuous actions  
+**C.** Policy-based methods optimize actions directly; value-based methods derive actions from value estimates  
+**D.** Value-based methods update policies using crossover and mutation
 
-<details> <summary>▶ Click to show answer</summary> Correct Answer: C </details> <details> <summary>▶ Click to show explanation</summary> Explanation: Policy-based methods learn the policy function directly, while value-based methods estimate value functions and derive the policy from them. </details>
+<details>
+<summary>▶ Click to show answer</summary>
 
+Correct Answer: C
+</details>
+
+<details>
+<summary>▶ Click to show explanation</summary>
+
+Explanation: Policy-based methods learn the policy function directly, while value-based methods estimate value functions and derive the policy from them.
+</details>
+
+---
 
 ## 5.3 Genetic Algorithms
-Genetic algorithms (GAs) are a class of evolutionary algorithms inspired by Charles Darwin’s theory of natural selection. They operate by iteratively evolving a population of candidate solutions through processes that mimic biological evolution—selection, crossover (recombination), and mutation. These algorithms have found extensive applications in various scientific disciplines, particularly in molecular design and drug discovery, where they help in searching the vast chemical space for molecules with optimized properties.
+
+Genetic algorithms (GAs) are a class of evolutionary algorithms inspired by Charles Darwin's theory of natural selection. They operate by iteratively evolving a population of candidate solutions through processes that mimic biological evolution—selection, crossover (recombination), and mutation. These algorithms have found extensive applications in various scientific disciplines, particularly in molecular design and drug discovery, where they help in searching the vast chemical space for molecules with optimized properties.
 
 Traditional brute-force methods for molecular optimization are computationally expensive due to the enormous number of possible molecular structures. In contrast, genetic algorithms provide an efficient heuristic approach by learning from previous generations and guiding the search towards more promising molecules.
 
@@ -619,6 +708,7 @@ In this chapter, we will explore the mechanisms, applications, advantages, limit
 ### 5.3.1 Principles of Genetic Algorithms
 
 A genetic algorithm follows a structured evolutionary cycle, consisting of the following main steps:
+
 1. **Initialization:** The algorithm begins with a random population of candidate solutions (molecules), each encoded in a structured format such as SMILES strings, molecular graphs, or fingerprints.
 2. **Fitness Evaluation:** Each molecule is evaluated using a fitness function that quantifies its desirability based on specific molecular properties (e.g., solubility, binding affinity).
 3. **Selection:** Molecules with the best properties are more likely to be chosen as parents for reproduction.
@@ -636,6 +726,7 @@ Genetic algorithms have been widely used in computational chemistry and drug dis
 #### 5.3.2.1 De Novo Molecular Generation
 
 GAs can evolve new molecular structures from scratch, optimizing for drug-likeness, bioavailability, or docking affinity with biological targets.
+
 #### 5.3.2.2 Lead Optimization
 
 In drug development, GAs refine existing molecular candidates by improving their efficacy, solubility, or toxicity profiles while maintaining their structural integrity.
@@ -664,11 +755,11 @@ The choice of representation impacts how genetic operations are applied.
 
 #### 5.3.3.2 Defining the Fitness Function
 
-The fitness function evaluates each molecule’s desirability based on specific molecular properties. Some commonly used objectives include:
+The fitness function evaluates each molecule's desirability based on specific molecular properties. Some commonly used objectives include:
 - **Lipophilicity (LogP):** Determines how well a drug dissolves in fats versus water.
 - **Molecular Weight (MW):** Drugs must have an appropriate MW for absorption and distribution in the body.
 - **Synthetic Feasibility:** Ensures that generated molecules can be synthesized in a lab.
-- **Drug-Likeness:** Uses metrics such as Lipinski’s Rule of Five to assess whether a molecule is suitable as a drug candidate.
+- **Drug-Likeness:** Uses metrics such as Lipinski's Rule of Five to assess whether a molecule is suitable as a drug candidate.
 
 The fitness function is crucial because it guides the evolutionary process toward the desired molecular properties.
 
@@ -692,14 +783,12 @@ Once the molecules are evaluated, the GA applies selection, crossover, and mutat
 
 Tuning these genetic operators balances exploration (diversity) and exploitation (optimization).
 
-
 #### 5.3.3.4 Genetic Algorithms Example
 
-google colab: [https://colab.research.google.com/drive/1uXjcu_bzygtia9xgEHN76xMmQtcV0sY-?usp=sharing](https://colab.research.google.com/drive/18EQfIEUt72nzruy4_2rb0aAXwglOT5C_?usp=sharing)
+**Completed and Compiled Code:** [Click Here](https://colab.research.google.com/drive/18EQfIEUt72nzruy4_2rb0aAXwglOT5C_?usp=sharing)
 
 **Step 1: Install and Import Required Dependencies**
-<pre>
-    <code class="python">
+```python
 # Install necessary libraries in Google Colab
 !pip install rdkit-pypi deap
 import random
@@ -709,13 +798,11 @@ from rdkit import Chem
 from rdkit.Chem import Descriptors, Draw
 from deap import base, creator, tools, algorithms
 import pandas as pd
-    </code>
-</pre>
+```
 
 **Step 2: Load and Process the Dataset**
 
-<pre>
-    <code class="python">
+```python
 # Load the ESOL dataset (water solubility dataset)
 url = "https://raw.githubusercontent.com/deepchem/deepchem/master/datasets/delaney-processed.csv"
 data = pd.read_csv(url)
@@ -730,13 +817,11 @@ if not valid_smiles_list:
     raise ValueError("No valid SMILES found in the dataset.")
 
 print(f"Loaded {len(valid_smiles_list)} valid molecules.")
-    </code>
-</pre>
+```
 
 **Step 3: Define the Genetic Algorithm Compounds**
 
-<pre>
-    <code class="python">
+```python
 def fitness_function(individual):
     """
     Evaluates the fitness of a molecule based on LogP.
@@ -788,16 +873,11 @@ toolbox.register("mate", crossover_smiles)
 toolbox.register("mutate", mutate_smiles)
 toolbox.register("select", tools.selTournament, tournsize=3)
 toolbox.register("evaluate", fitness_function)
-
-    </code>
-</pre>
-
+```
 
 **Step 4: Run the Genetic Algorithm**
 
-
-<pre>
-   <code class = "python">
+```python
 # Genetic Algorithm Parameters
 POP_SIZE = 100
 GENS = 50
@@ -809,14 +889,10 @@ population = toolbox.population(n=POP_SIZE)
 
 # Run the genetic algorithm
 algorithms.eaSimple(population, toolbox, cxpb=CROSSOVER_RATE, mutpb=MUTATION_RATE, ngen=GENS, verbose=True)
-
-       
-   </code>
-</pre>
+```
 
 **Step 5: Select and Validate the Best Molecule**
-<pre>
-   <code class = "python">
+```python
 # Filter out invalid molecules before selecting the best one
 valid_population = [ind for ind in population if Chem.MolFromSmiles(ind[0])]
 if not valid_population:
@@ -827,12 +903,10 @@ if not valid_population:
 
 best_individual = tools.selBest(valid_population, k=1)[0]
 print("Best Valid Molecule:", best_individual[0], "LogP:", fitness_function(best_individual)[0])
-   </code>
-</pre>
+```
 
 **Step 6: Visualize the Best Model**
-<pre>
-   <code class = "python">
+```python
 def visualize_molecule(smiles):
     """
     Converts a SMILES string to an RDKit molecular image.
@@ -851,12 +925,10 @@ if best_individual:
         display(image)
     else:
         print("Could not generate a valid molecule for visualization.")
-   </code>
-</pre>
+```
 
 **Step 7: Track Optimization Progress**
-<pre>
-   <code class = "python">
+```python
 # Ensure only valid fitness scores are plotted
 fitness_scores = []
 for ind in population:
@@ -874,74 +946,145 @@ if fitness_scores:
     plt.show()
 else:
     print("No valid fitness scores to plot.")
-   </code>
-</pre>
+```
 
 ---
 
-### 1) Factual Questions
-#### Question 1
+### Section 5.3 – Quiz Questions
+
+#### 1) Factual Questions
+
+##### Question 1
 What is the purpose of the fitness function in a genetic algorithm applied to molecular design?
 
-A. It encodes molecular structures into SMILES format
-B. It initializes the population of molecules
-C. It quantifies how desirable a molecule is based on defined properties
-D. It randomly mutates molecules to increase diversity
+**A.** It encodes molecular structures into SMILES format  
+**B.** It initializes the population of molecules  
+**C.** It quantifies how desirable a molecule is based on defined properties  
+**D.** It randomly mutates molecules to increase diversity
 
-<details> <summary>▶ Click to show answer</summary> Correct Answer: C </details> <details> <summary>▶ Click to show explanation</summary> Explanation: The fitness function evaluates how well a molecule satisfies desired objectives such as solubility, LogP, or drug-likeness, guiding the selection process. </details>
+<details>
+<summary>▶ Click to show answer</summary>
 
-#### Question 2
-Which of the following is not a typical genetic operator in molecular optimization?
+Correct Answer: C
+</details>
 
-A. Crossover
-B. Mutation
-C. Evaluation
-D. Aggregation
+<details>
+<summary>▶ Click to show explanation</summary>
 
-<details> <summary>▶ Click to show answer</summary> Correct Answer: D </details> <details> <summary>▶ Click to show explanation</summary> Explanation: Aggregation is not a standard genetic operator. Genetic algorithms typically use crossover, mutation, selection, and evaluation. </details>
-
-#### Question 3
-Which representation method encodes a molecule as a string of atoms and bonds?
-
-A. Graph representation
-B. Fingerprint-based representation
-C. SMILES representation
-D. Adjacency matrix representation
-
-<details> <summary>▶ Click to show answer</summary> Correct Answer: C </details> <details> <summary>▶ Click to show explanation</summary> Explanation: SMILES (Simplified Molecular Input Line Entry System) encodes a molecule as a text string representing its atoms and bonds. </details>
-
-#### Question 4
-What is the main function of mutation in genetic algorithms?
-
-A. To copy molecules from one generation to the next
-B. To combine fragments from two parents
-C. To introduce structural diversity into the population
-D. To sort molecules by LogP
-
-<details> <summary>▶ Click to show answer</summary> Correct Answer: C </details> <details> <summary>▶ Click to show explanation</summary> Explanation: Mutation introduces small, random changes to molecules, helping explore new areas of chemical space and prevent premature convergence. </details>
+Explanation: The fitness function evaluates how well a molecule satisfies desired objectives such as solubility, LogP, or drug-likeness, guiding the selection process.
+</details>
 
 ---
 
-### 2) Conceptual Questions
-#### Question 5
+##### Question 2
+Which of the following is not a typical genetic operator in molecular optimization?
+
+**A.** Crossover  
+**B.** Mutation  
+**C.** Evaluation  
+**D.** Aggregation
+
+<details>
+<summary>▶ Click to show answer</summary>
+
+Correct Answer: D
+</details>
+
+<details>
+<summary>▶ Click to show explanation</summary>
+
+Explanation: Aggregation is not a standard genetic operator. Genetic algorithms typically use crossover, mutation, selection, and evaluation.
+</details>
+
+---
+
+##### Question 3
+Which representation method encodes a molecule as a string of atoms and bonds?
+
+**A.** Graph representation  
+**B.** Fingerprint-based representation  
+**C.** SMILES representation  
+**D.** Adjacency matrix representation
+
+<details>
+<summary>▶ Click to show answer</summary>
+
+Correct Answer: C
+</details>
+
+<details>
+<summary>▶ Click to show explanation</summary>
+
+Explanation: SMILES (Simplified Molecular Input Line Entry System) encodes a molecule as a text string representing its atoms and bonds.
+</details>
+
+---
+
+##### Question 4
+What is the main function of mutation in genetic algorithms?
+
+**A.** To copy molecules from one generation to the next  
+**B.** To combine fragments from two parents  
+**C.** To introduce structural diversity into the population  
+**D.** To sort molecules by LogP
+
+<details>
+<summary>▶ Click to show answer</summary>
+
+Correct Answer: C
+</details>
+
+<details>
+<summary>▶ Click to show explanation</summary>
+
+Explanation: Mutation introduces small, random changes to molecules, helping explore new areas of chemical space and prevent premature convergence.
+</details>
+
+---
+
+#### 2) Conceptual Questions
+
+##### Question 5
 Why are genetic algorithms especially useful in molecular optimization compared to brute-force methods?
 
-A. They always find the globally optimal molecule in one generation
-B. They use deterministic rules to eliminate randomness
-C. They explore chemical space efficiently through evolution-inspired heuristics
-D. They avoid the need for molecular structure encodings
+**A.** They always find the globally optimal molecule in one generation  
+**B.** They use deterministic rules to eliminate randomness  
+**C.** They explore chemical space efficiently through evolution-inspired heuristics  
+**D.** They avoid the need for molecular structure encodings
 
-<details> <summary>▶ Click to show answer</summary> Correct Answer: C </details> <details> <summary>▶ Click to show explanation</summary> Explanation: GAs search large and complex chemical spaces by evolving better solutions over generations, making them far more efficient than brute-force enumeration. </details>
+<details>
+<summary>▶ Click to show answer</summary>
 
-#### Question 6
+Correct Answer: C
+</details>
+
+<details>
+<summary>▶ Click to show explanation</summary>
+
+Explanation: GAs search large and complex chemical spaces by evolving better solutions over generations, making them far more efficient than brute-force enumeration.
+</details>
+
+---
+
+##### Question 6
 What is the role of selection strategies like roulette wheel or tournament selection in GAs?
 
-A. They apply mutations to individual atoms
-B. They visualize molecules during optimization
-C. They choose high-performing molecules for reproduction
-D. They encode molecules into binary fingerprints
+**A.** They apply mutations to individual atoms  
+**B.** They visualize molecules during optimization  
+**C.** They choose high-performing molecules for reproduction  
+**D.** They encode molecules into binary fingerprints
 
-<details> <summary>▶ Click to show answer</summary> Correct Answer: C </details> <details> <summary>▶ Click to show explanation</summary> Explanation: Selection strategies determine which molecules are chosen to reproduce, often favoring those with higher fitness scores to guide the algorithm toward better candidates. </details>
+<details>
+<summary>▶ Click to show answer</summary>
+
+Correct Answer: C
+</details>
+
+<details>
+<summary>▶ Click to show explanation</summary>
+
+Explanation: Selection strategies determine which molecules are chosen to reproduce, often favoring those with higher fitness scores to guide the algorithm toward better candidates.
+</details>
 
 ---
 
@@ -969,39 +1112,36 @@ The addition of conditions allows for greater control and precision in the gener
 
 In the field of molecular design, the chemical space—comprising all theoretically possible molecules—is vast and largely unexplored. Traditional trial-and-error methods of exploring this space are slow, resource-intensive, and often limited in their ability to optimize multiple properties simultaneously. Generative models, and specifically conditional generative models, address this challenge by:
 
-
-- Guided Exploration: Allowing researchers to specify desired molecular properties, thus narrowing the search space.
-- Accelerated Discovery: Rapidly generating candidate molecules with high probability of success in real-world applications.
-- Multi-Objective Optimization: Balancing trade-offs between competing molecular properties, such as efficacy and safety.
+- **Guided Exploration:** Allowing researchers to specify desired molecular properties, thus narrowing the search space.
+- **Accelerated Discovery:** Rapidly generating candidate molecules with high probability of success in real-world applications.
+- **Multi-Objective Optimization:** Balancing trade-offs between competing molecular properties, such as efficacy and safety.
 
 For example, in drug discovery, a conditional generative model might be tasked with generating molecules that are not only effective against a particular target protein but are also non-toxic and metabolically stable. Similarly, in materials science, conditional models can help design polymers with specific mechanical or thermal properties.
 
 **Applications Across Domains**
 
+Conditional generative models have proven their utility across various domains:
+- **Drug Discovery:** Generating molecules with tailored ADMET (absorption, distribution, metabolism, excretion, and toxicity) profiles.
+- **Materials Science:** Designing compounds with specific physical or chemical properties, such as conductivity or strength.
+- **Synthetic Chemistry:** Optimizing molecules for ease of synthesis or compatibility with specific reaction pathways.
 
-- Conditional generative models have proven their utility across various domains:
-- Drug Discovery: Generating molecules with tailored ADMET (absorption, distribution, metabolism, excretion, and toxicity) profiles.
-- Materials Science: Designing compounds with specific physical or chemical properties, such as conductivity or strength.
-- Synthetic Chemistry: Optimizing molecules for ease of synthesis or compatibility with specific reaction pathways.
-  
 ### 5.4.3 Incorporating Conditions in Generative Models
 
 To generate data that satisfies specific requirements, generative models need a mechanism to include the desired conditions as part of the generation process. This is achieved in several ways, depending on the model architecture:
 
 **Input Embedding and Concatenation**
 
-
 - Conditions are treated as additional inputs, often concatenated with the primary data representation. For example:
-    - In a molecular model using SMILES (Simplified Molecular Input Line Entry System) strings, conditions such as desired solubility can be concatenated as numerical features.
-    - In graph-based models, properties like binding affinity may be embedded alongside the graph node and edge features.
+  - In a molecular model using SMILES (Simplified Molecular Input Line Entry System) strings, conditions such as desired solubility can be concatenated as numerical features.
+  - In graph-based models, properties like binding affinity may be embedded alongside the graph node and edge features.
 - This method works well with architectures like neural networks, where inputs can be treated as feature vectors.
 
 **Latent Space Conditioning**
 
-
 - In models like Variational Autoencoders (VAEs), conditions are embedded into the latent space—a compressed representation of the data.
 - By augmenting the latent space with property-specific information, the model learns to decode latent vectors into outputs that reflect both the data distribution and the specified conditions.
 - Example: A VAE trained on molecules can be conditioned to generate molecules with a specific melting point by embedding the desired melting point in the latent vector.
+
 **Adversarial Conditioning**
 - Generative Adversarial Networks (GANs) achieve conditioning by incorporating the desired properties into both the generator and discriminator networks.
 - The generator produces samples that aim to satisfy the conditions, while the discriminator evaluates both the sample validity and whether the conditions are met.
@@ -1018,42 +1158,42 @@ Several types of generative models have been adapted for conditional use in mole
 - cGANs excel at generating high-quality and diverse outputs.
 - Transformers are powerful for handling complex molecular representations and large datasets.
 - Reinforcement learning approaches are well-suited for optimizing challenging or non-differentiable objectives.
+
 By leveraging these models, researchers can efficiently explore chemical space while ensuring that generated molecules meet specified requirements. The section below illustrates specific breakdowns for each type of model.
 
 **Conditional Variational Autoencoders (cVAEs)**
-- Architecture:
-    - A cVAE consists of an encoder-decoder framework where conditions are introduced into the latent space.
-- How It Works:
-    - The encoder compresses molecular representations into a latent vector while embedding the conditions.
-    - The decoder generates new molecules from the latent vector, ensuring they align with the conditions.
-- Application Example:
-    - Generating drug-like molecules with high solubility and low toxicity.
-      
+- **Architecture:**
+  - A cVAE consists of an encoder-decoder framework where conditions are introduced into the latent space.
+- **How It Works:**
+  - The encoder compresses molecular representations into a latent vector while embedding the conditions.
+  - The decoder generates new molecules from the latent vector, ensuring they align with the conditions.
+- **Application Example:**
+  - Generating drug-like molecules with high solubility and low toxicity.
+
 **Conditional Generative Adversarial Networks (cGANs)**
-- Architecture:
-    - A cGAN consists of a generator-discriminator pair, with conditions embedded into both networks.
-- How It Works:
-    - The generator creates samples aimed at satisfying the conditions, and the discriminator evaluates their validity and adherence to the specified properties.
-- Application Example:
-    - Designing polymers with specific thermal or mechanical properties.
+- **Architecture:**
+  - A cGAN consists of a generator-discriminator pair, with conditions embedded into both networks.
+- **How It Works:**
+  - The generator creates samples aimed at satisfying the conditions, and the discriminator evaluates their validity and adherence to the specified properties.
+- **Application Example:**
+  - Designing polymers with specific thermal or mechanical properties.
 
 **Transformer-Based Conditional Models**
-- Architecture:
-    - Transformer models use self-attention mechanisms to handle sequence or graph data.
-- How It Works:
-    - Conditions are integrated as input embeddings or used to modulate attention weights, allowing precise control over generated structures.
-- Application Example:
-    - Generating molecular graphs with desired binding affinity to a target protein.
+- **Architecture:**
+  - Transformer models use self-attention mechanisms to handle sequence or graph data.
+- **How It Works:**
+  - Conditions are integrated as input embeddings or used to modulate attention weights, allowing precise control over generated structures.
+- **Application Example:**
+  - Generating molecular graphs with desired binding affinity to a target protein.
 
 **Reinforcement Learning-Augmented Generative Models**
-- Architecture:
-    - Generative models are combined with reinforcement learning to optimize for conditions during the generation process.
-- How It Works:
-    - A reward function evaluates the generated molecules for property adherence, and the model updates its parameters to maximize this reward.
-- Application Example:
-    - Designing molecules with high binding affinity and low synthetic complexity.
- 
-  
+- **Architecture:**
+  - Generative models are combined with reinforcement learning to optimize for conditions during the generation process.
+- **How It Works:**
+  - A reward function evaluates the generated molecules for property adherence, and the model updates its parameters to maximize this reward.
+- **Application Example:**
+  - Designing molecules with high binding affinity and low synthetic complexity.
+
 ### 5.4.5 Representations and Conditioning Strategies
 
 Effective molecular property optimization using conditional generative models depends heavily on the choice of molecular representation and the encoding of property conditions. This section explores the key strategies for representing molecules and encoding conditions, along with the trade-offs between representation complexity and model performance.
@@ -1062,59 +1202,61 @@ Effective molecular property optimization using conditional generative models de
 
 Different molecular representations influence the performance and efficiency of generative models. The most commonly used representations are:
 
+- **SMILES Strings:**
+  - A linear textual representation of molecular structures.
+  - Simple to preprocess and widely used for sequence-based models like RNNs, VAEs, and transformers.
+  - **Advantages:**
+    - Easy to work with using standard NLP techniques.
+    - Compact and human-readable.
+  - **Challenges:**
+    - Sensitive to small changes (e.g., one character change can drastically alter the molecule).
+    - Does not explicitly capture 3D structural information.
 
+- **Molecular Graphs:**
+  - Represent molecules as graphs, with atoms as nodes and bonds as edges.
+  - Suitable for graph neural networks (GNNs) or graph-based generative models.
+  - **Advantages:**
+    - Captures the underlying structure and relationships between atoms.
+    - More robust for tasks involving structural optimization.
+  - **Challenges:**
+    - Higher computational complexity compared to SMILES.
+    - Requires specialized graph-based architectures.
 
-- SMILES Strings:
-    - A linear textual representation of molecular structures.
-    - Simple to preprocess and widely used for sequence-based models like RNNs, VAEs, and transformers.
-    - Advantages:
-        - Easy to work with using standard NLP techniques.
-        - Compact and human-readable.
-    - Challenges:
-        - Sensitive to small changes (e.g., one character change can drastically alter the molecule).
-        - Does not explicitly capture 3D structural information.
-- Molecular Graphs:
-    - Represent molecules as graphs, with atoms as nodes and bonds as edges.
-    - Suitable for graph neural networks (GNNs) or graph-based generative models.
-    - Advantages:
-        - Captures the underlying structure and relationships between atoms.
-        - More robust for tasks involving structural optimization.
-    - Challenges:
-        - Higher computational complexity compared to SMILES.
-        - Requires specialized graph-based architectures.
-- 3D Structures:
-    - Include spatial coordinates of atoms, representing molecular conformations in 3D space.
-    - Used in models that integrate quantum-chemical calculations or focus on protein-ligand interactions.
-    - Advantages:
-        - Provides detailed information about molecular geometry and interactions.
-        - Crucial for applications in drug binding and docking studies.
-    - Challenges:
-        - Computationally intensive to handle and process.
+- **3D Structures:**
+  - Include spatial coordinates of atoms, representing molecular conformations in 3D space.
+  - Used in models that integrate quantum-chemical calculations or focus on protein-ligand interactions.
+  - **Advantages:**
+    - Provides detailed information about molecular geometry and interactions.
+    - Crucial for applications in drug binding and docking studies.
+  - **Challenges:**
+    - Computationally intensive to handle and process.
     - Requires additional data (e.g., X-ray crystallography or simulations).
 
 #### 5.4.5.2 Encoding Conditions
 
 The conditions used to guide generative models can be scalar (numerical) or categorical, depending on the property to be optimized.
-- Scalar Properties:
-    - Examples: Solubility, binding affinity, molecular weight.
-    - Encoding:
-        - Directly use numerical values or normalize them within a specific range.
-        - Feed as continuous input to the model or integrate into the latent space.
-    - Application: Generate molecules with a specific solubility threshold or within a molecular weight range.
-- Categorical Data:
-    - Examples: Functional groups, molecule types, or chemical classes.
-    - Encoding:
-        - Use one-hot encoding, where each category is represented as a binary vector.
-        - Alternatively, embed categorical data as dense vectors using an embedding layer.
-    - Application: Generate molecules that belong to a specific class (e.g., benzene derivatives) or contain certain functional groups (e.g., hydroxyl groups).
+- **Scalar Properties:**
+  - Examples: Solubility, binding affinity, molecular weight.
+  - **Encoding:**
+    - Directly use numerical values or normalize them within a specific range.
+    - Feed as continuous input to the model or integrate into the latent space.
+  - **Application:** Generate molecules with a specific solubility threshold or within a molecular weight range.
+
+- **Categorical Data:**
+  - Examples: Functional groups, molecule types, or chemical classes.
+  - **Encoding:**
+    - Use one-hot encoding, where each category is represented as a binary vector.
+    - Alternatively, embed categorical data as dense vectors using an embedding layer.
+  - **Application:** Generate molecules that belong to a specific class (e.g., benzene derivatives) or contain certain functional groups (e.g., hydroxyl groups).
 
 #### 5.4.5.3 Trade-Offs Between Representation Complexity and Model Performance
-- Simpler Representations (e.g., SMILES):
-    - Easier to preprocess and faster to train.
-    - Risk of losing critical structural or spatial information.
-- Complex Representations (e.g., molecular graphs, 3D structures):
-    - Provide richer information about the molecule.
-    - Require more computational resources and specialized architectures.
+- **Simpler Representations (e.g., SMILES):**
+  - Easier to preprocess and faster to train.
+  - Risk of losing critical structural or spatial information.
+- **Complex Representations (e.g., molecular graphs, 3D structures):**
+  - Provide richer information about the molecule.
+  - Require more computational resources and specialized architectures.
+
 The choice of representation and encoding depends on the task's requirements, the computational budget, and the complexity of the target properties.
 
 ### 5.4.6 Applications in Molecular Property Optimization
@@ -1123,40 +1265,39 @@ Conditional generative models have demonstrated transformative potential across 
 
 #### 5.4.6.1 Drug Discovery
 
-- Generating Molecules with Specific ADMET Properties:
-    - ADMET (Absorption, Distribution, Metabolism, Excretion, and Toxicity) properties are crucial in drug development. Conditional generative models can produce molecules that satisfy these requirements, ensuring better pharmacokinetics and reduced side effects.
-    - Example: A cVAE can be trained to generate molecules with high bioavailability and low toxicity.
-- Ligand-Based and Structure-Based Drug Design:
-    - Ligand-based models generate molecules based on known active compounds, optimizing specific properties like binding affinity.
-    - Structure-based models use 3D information about the target protein to generate molecules that fit its binding pocket.
-    - Example: A conditional GAN could generate ligands with optimal binding to a specific enzyme, improving the lead optimization process.
+- **Generating Molecules with Specific ADMET Properties:**
+  - ADMET (Absorption, Distribution, Metabolism, Excretion, and Toxicity) properties are crucial in drug development. Conditional generative models can produce molecules that satisfy these requirements, ensuring better pharmacokinetics and reduced side effects.
+  - Example: A cVAE can be trained to generate molecules with high bioavailability and low toxicity.
+- **Ligand-Based and Structure-Based Drug Design:**
+  - Ligand-based models generate molecules based on known active compounds, optimizing specific properties like binding affinity.
+  - Structure-based models use 3D information about the target protein to generate molecules that fit its binding pocket.
+  - Example: A conditional GAN could generate ligands with optimal binding to a specific enzyme, improving the lead optimization process.
 
 #### 5.4.6.2 Materials Science
 
-- Designing Polymers with Target Mechanical Properties:
-    - Polymers with specific mechanical properties, such as high elasticity, strength, or thermal stability, are crucial in materials design.
-    - Conditional models allow the generation of polymer candidates that meet predefined criteria, reducing the time required for experimental testing.
-    - Example: A transformer-based model can generate polymer structures optimized for tensile strength while maintaining low production costs.
-- Thermal Properties Optimization:
-    - Generate materials with specific thermal conductivity or resistance to heat, which are essential in electronics or aerospace industries.
-    - Example: Use a graph-based conditional model to design materials for heat sinks with high thermal conductivity.
+- **Designing Polymers with Target Mechanical Properties:**
+  - Polymers with specific mechanical properties, such as high elasticity, strength, or thermal stability, are crucial in materials design.
+  - Conditional models allow the generation of polymer candidates that meet predefined criteria, reducing the time required for experimental testing.
+  - Example: A transformer-based model can generate polymer structures optimized for tensile strength while maintaining low production costs.
+- **Thermal Properties Optimization:**
+  - Generate materials with specific thermal conductivity or resistance to heat, which are essential in electronics or aerospace industries.
+  - Example: Use a graph-based conditional model to design materials for heat sinks with high thermal conductivity.
 
 #### 5.4.6.3 Synthetic Chemistry
 
-- Optimizing Molecules for Synthesis Feasibility:
-    - Molecules designed through generative models can sometimes be difficult or expensive to synthesize. Conditional models can optimize for synthetic accessibility, ensuring that generated molecules can be produced using available chemical pathways.
-    - Example: A cGAN could generate molecules that minimize the number of synthetic steps while maintaining desired properties like high yield.
-- Designing Molecules for Specific Reaction Pathways:
-    - Conditional models can generate molecules that align with specific reaction mechanisms or catalytic conditions, aiding in reaction design and optimization.
-    - Example: Generate precursors for a specific polymerization reaction to produce biodegradable plastics.
+- **Optimizing Molecules for Synthesis Feasibility:**
+  - Molecules designed through generative models can sometimes be difficult or expensive to synthesize. Conditional models can optimize for synthetic accessibility, ensuring that generated molecules can be produced using available chemical pathways.
+  - Example: A cGAN could generate molecules that minimize the number of synthetic steps while maintaining desired properties like high yield.
+- **Designing Molecules for Specific Reaction Pathways:**
+  - Conditional models can generate molecules that align with specific reaction mechanisms or catalytic conditions, aiding in reaction design and optimization.
+  - Example: Generate precursors for a specific polymerization reaction to produce biodegradable plastics.
 
 ### 5.4.7 Generative Models with Conditions Full Manual Process
 
-google colab: [https://colab.research.google.com/drive/1uXjcu_bzygtia9xgEHN76xMmQtcV0sY-?usp=sharing](https://colab.research.google.com/drive/18EQfIEUt72nzruy4_2rb0aAXwglOT5C_?usp=sharing)
+**Completed and Compiled Code:** [Click Here](https://colab.research.google.com/drive/18EQfIEUt72nzruy4_2rb0aAXwglOT5C_?usp=sharing)
 
 **Step 1: Install Required Libraries**
-<pre>
-    <code class="python">
+```python
 !pip install rdkit-pypi
 !pip install tensorflow
 !pip install numpy pandas
@@ -1168,29 +1309,24 @@ import pandas as pd
 from rdkit import Chem
 from rdkit.Chem import Descriptors, Draw
 from sklearn.model_selection import train_test_split
-    </code>
-</pre>
+```
 
 **Step 2: Download and Upload the ESOL Dataset from Deepchemdata**
 
-The **ESOL Dataset** is available on Github: https://github.com/deepchem/deepchem/blob/master/datasets/delaney-processed.csv
+The **ESOL Dataset** is available on Github: [Click Here](https://github.com/deepchem/deepchem/blob/master/datasets/delaney-processed.csv)
 
-<pre>
-    <code class="python">
+```python
 # Load the ESOL dataset (direct source: https://github.com/deepchem/deepchem/blob/master/datasets/delaney-processed.csv)
 url = 'https://deepchemdata.s3-us-west-1.amazonaws.com/datasets/delaney-processed.csv'
 data = pd.read_csv(url)
 
 # Display the first few rows of the dataset
 data.head()
-    </code>
-</pre>
+```
 
 **Step 3: Data Preprocessing and Encoding**
 
-
-<pre>
-    <code class="python">
+```python
 # Tokenize SMILES strings
 data['tokenized_smiles'] = data['smiles'].apply(lambda x: list(x))
 
@@ -1215,15 +1351,11 @@ y = data['normalized_solubility'].values.reshape(-1, 1)
 
 # Split into training and testing sets
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-    </code>
-</pre>
-
+```
 
 **Step 4: Conditional Variational Autoencoder (cVAE) Architecture**
 
-
-<pre>
-   <code class = "python">
+```python
 # Set parameters
 latent_dim = 50  # Dimensionality of the latent space
 input_dim = X_train.shape[1]  # Length of the input sequences
@@ -1264,12 +1396,10 @@ decoder = models.Model([latent_inputs, condition_input], decoded, name='Decoder'
 # cVAE model
 outputs = decoder([encoder([smiles_input, condition_input])[2], condition_input])
 cvae = models.Model([smiles_input, condition_input], outputs, name='cVAE')
-   </code>
-</pre>
+```
 
 **Step 5: Custom cVAE Model Implementation and Training**
-<pre>
-   <code class = "python">
+```python
 # Custom VAE class with integrated loss
 class CVAE(Model):
     def __init__(self, encoder, decoder, **kwargs):
@@ -1304,12 +1434,10 @@ cvae.compile(optimizer="adam")
 cvae.fit([X_train, y_train], epochs=50, batch_size=32, validation_data=([X_test, y_test], None))
 
 # code may take a bit of time to run as we are training 50 epochs
-   </code>
-</pre>
+```
 
 **Step 6: Molecule Generation, Evaluation, and Visualization**
-<pre>
-   <code class = "python">
+```python
 # Improved decoding using probability sampling instead of argmax
 def decode_smiles_probabilistic(encoded_output, idx_to_char):
     smiles = ''
@@ -1377,12 +1505,10 @@ if valid_molecules:
     display(visualize_molecules(valid_molecules))
 else:
     print("No valid molecules generated.")
-   </code>
-</pre>
+```
 
 **Step 7: Latent Space Visualization Using PCA**
-<pre>
-   <code class = "python">
+```python
 # Step 1: Inverse PCA to get the original latent vector
 # Ensure 'pca' is the same PCA object used for dimensionality reduction
 high_solubility_latent_2d = np.array([[ -0.01, 0.006 ]])  # Example coordinates from PCA plot
@@ -1409,12 +1535,10 @@ for coords in solubility_points:
     generated_smiles = decode_smiles_probabilistic(generated_output[0], idx_to_char)
     
     print(f"Generated molecule from latent space coordinates {coords}: {generated_smiles}")
-   </code>
-</pre>
+```
 
 **Step 8: Latent Space Exploration and Molecule Generation Based on Solubility**
-<pre>
-   <code class = "python">
+```python
 # Step 1: Inverse PCA to get the original latent vector
 # Ensure 'pca' is the same PCA object used for dimensionality reduction
 high_solubility_latent_2d = np.array([[ -0.01, 0.006 ]])  # Example coordinates from PCA plot
@@ -1441,12 +1565,10 @@ for coords in solubility_points:
     generated_smiles = decode_smiles_probabilistic(generated_output[0], idx_to_char)
     
     print(f"Generated molecule from latent space coordinates {coords}: {generated_smiles}")
-   </code>
-</pre>
+```
 
 **Step 9: Latent Space Targeting for Property-Driven Molecule Generation and Visualization**
-<pre>
-   <code class = "python">
+```python
 # Step 1: Encode the test data to obtain the latent representations
 z_mean, _, _ = encoder.predict([X_test, y_test])  # Encoder outputs for PCA
 pca = PCA(n_components=2)                         # PCA for dimensionality reduction
@@ -1506,71 +1628,142 @@ def visualize_generated_molecules(smiles_list):
 
 # Display generated molecules
 visualize_generated_molecules(generated_molecules)
-   </code>
-</pre>
+```
 
 ---
 
-### 1) Factual Questions
-#### Question 1
+### Section 5.4 – Quiz Questions
+
+#### 1) Factual Questions
+
+##### Question 1
 What is the main purpose of a conditional generative model in molecular property optimization?
 
-A. To randomly generate chemically valid molecules
-B. To filter invalid molecules after generation
-C. To generate molecules that meet specific predefined property criteria
-D. To simulate chemical reactions in real time
+**A.** To randomly generate chemically valid molecules  
+**B.** To filter invalid molecules after generation  
+**C.** To generate molecules that meet specific predefined property criteria  
+**D.** To simulate chemical reactions in real time
 
-<details> <summary>▶ Click to show answer</summary> Correct Answer: C </details> <details> <summary>▶ Click to show explanation</summary> Explanation: Conditional generative models incorporate desired property constraints (like solubility or toxicity) to steer generation toward molecules that meet specific goals. </details>
+<details>
+<summary>▶ Click to show answer</summary>
 
-#### Question 2
-Which of the following is a valid method for incorporating conditions into a generative model?
+Correct Answer: C
+</details>
 
-A. Deleting features from the input
-B. Concatenating property values with model inputs or latent representations
-C. Training without property labels
-D. Converting SMILES into image format
+<details>
+<summary>▶ Click to show explanation</summary>
 
-<details> <summary>▶ Click to show answer</summary> Correct Answer: B </details> <details> <summary>▶ Click to show explanation</summary> Explanation: Conditions can be concatenated with input sequences or latent vectors to guide generation toward molecules with desired properties. </details>
-
-#### Question 3
-Which model architecture uses attention mechanisms for conditional molecular generation?
-
-A. Conditional GAN
-B. Conditional VAE
-C. Transformer-based model
-D. Graph-based classifier
-
-<details> <summary>▶ Click to show answer</summary> Correct Answer: C </details> <details> <summary>▶ Click to show explanation</summary> Explanation: Transformer-based models use self-attention to process input data, including conditioning vectors, allowing for complex control over molecular generation. </details>
-
-#### Question 4
-Which molecular representation is most suitable for 3D property-aware generation?
-
-A. SMILES string
-B. One-hot encoding
-C. Graph representation
-D. 3D atomic coordinates
-
-<details> <summary>▶ Click to show answer</summary> Correct Answer: D </details> <details> <summary>▶ Click to show explanation</summary> Explanation: 3D atomic coordinates are needed when modeling spatial interactions and geometry-dependent properties like docking or quantum behavior. </details>
+Explanation: Conditional generative models incorporate desired property constraints (like solubility or toxicity) to steer generation toward molecules that meet specific goals.
+</details>
 
 ---
 
-### 2) Conceptual Questions
-#### Question 5
+##### Question 2
+Which of the following is a valid method for incorporating conditions into a generative model?
+
+**A.** Deleting features from the input  
+**B.** Concatenating property values with model inputs or latent representations  
+**C.** Training without property labels  
+**D.** Converting SMILES into image format
+
+<details>
+<summary>▶ Click to show answer</summary>
+
+Correct Answer: B
+</details>
+
+<details>
+<summary>▶ Click to show explanation</summary>
+
+Explanation: Conditions can be concatenated with input sequences or latent vectors to guide generation toward molecules with desired properties.
+</details>
+
+---
+
+##### Question 3
+Which model architecture uses attention mechanisms for conditional molecular generation?
+
+**A.** Conditional GAN  
+**B.** Conditional VAE  
+**C.** Transformer-based model  
+**D.** Graph-based classifier
+
+<details>
+<summary>▶ Click to show answer</summary>
+
+Correct Answer: C
+</details>
+
+<details>
+<summary>▶ Click to show explanation</summary>
+
+Explanation: Transformer-based models use self-attention to process input data, including conditioning vectors, allowing for complex control over molecular generation.
+</details>
+
+---
+
+##### Question 4
+Which molecular representation is most suitable for 3D property-aware generation?
+
+**A.** SMILES string  
+**B.** One-hot encoding  
+**C.** Graph representation  
+**D.** 3D atomic coordinates
+
+<details>
+<summary>▶ Click to show answer</summary>
+
+Correct Answer: D
+</details>
+
+<details>
+<summary>▶ Click to show explanation</summary>
+
+Explanation: 3D atomic coordinates are needed when modeling spatial interactions and geometry-dependent properties like docking or quantum behavior.
+</details>
+
+---
+
+#### 2) Conceptual Questions
+
+##### Question 5
 Why are conditional generative models important in drug discovery?
 
-A. They automate the synthesis of molecules
-B. They evaluate the toxicity of known drugs
-C. They can generate molecules that satisfy multiple property constraints simultaneously
-D. They improve quantum chemical accuracy
+**A.** They automate the synthesis of molecules  
+**B.** They evaluate the toxicity of known drugs  
+**C.** They can generate molecules that satisfy multiple property constraints simultaneously  
+**D.** They improve quantum chemical accuracy
 
-<details> <summary>▶ Click to show answer</summary> Correct Answer: C </details> <details> <summary>▶ Click to show explanation</summary> Explanation: Conditional models allow for multi-objective optimization (e.g., high efficacy and low toxicity), which is crucial in drug discovery. </details>
+<details>
+<summary>▶ Click to show answer</summary>
 
-#### Question 6
+Correct Answer: C
+</details>
+
+<details>
+<summary>▶ Click to show explanation</summary>
+
+Explanation: Conditional models allow for multi-objective optimization (e.g., high efficacy and low toxicity), which is crucial in drug discovery.
+</details>
+
+---
+
+##### Question 6
 What is the trade-off between using SMILES strings and molecular graphs in generative models?
 
-A. SMILES strings require less GPU memory but cannot represent large molecules
-B. Molecular graphs are easier to train but lack structural information
-C. SMILES are simpler and faster but less robust to small changes than graphs
-D. Graphs are compact but harder to interpret than SMILES
+**A.** SMILES strings require less GPU memory but cannot represent large molecules  
+**B.** Molecular graphs are easier to train but lack structural information  
+**C.** SMILES are simpler and faster but less robust to small changes than graphs  
+**D.** Graphs are compact but harder to interpret than SMILES
 
-<details> <summary>▶ Click to show answer</summary> Correct Answer: C </details> <details> <summary>▶ Click to show explanation</summary> Explanation: SMILES are simple to process with NLP models but are sensitive to small token changes. Graphs capture structural relationships more accurately but are computationally heavier. </details>
+<details>
+<summary>▶ Click to show answer</summary>
+
+Correct Answer: C
+</details>
+
+<details>
+<summary>▶ Click to show explanation</summary>
+
+Explanation: SMILES are simple to process with NLP models but are sensitive to small token changes. Graphs capture structural relationships more accurately but are computationally heavier.
+</details>
