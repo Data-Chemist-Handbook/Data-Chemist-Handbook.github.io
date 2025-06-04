@@ -250,6 +250,7 @@ print(molecular_weight_ratio(molecular_weight))
 - ***integer*** type: Data meant to be stored as an integer
 - ***float*** type: Data meant to be stored as a floating point number with decimal precision
 
+**Example Code**
 ```python
 # Display the data type of variables
 my_string = "10"
@@ -261,6 +262,13 @@ print(type(my_int))
 print(type(my_float))
 ```
 
+**Output**
+```python
+<class 'str'>
+<class 'int'>
+<class 'float'>
+```
+
 **Mathematical Operations**: The four regular mathematical operations can be used on integer and float type variables and order of operations is followed.
 
 - Addition with the "+" character
@@ -268,11 +276,17 @@ print(type(my_float))
 - Multiplication with the "*" character
 - Division with the "/" character
 
+**Example Code**
 ```python
 # Use the mathematical operators
 my_int = 10
 
 print(my_int * 3 / 2 + 1 - 3)
+```
+
+**Output**
+```python
+13.0
 ```
 
 #### Basic Printing Techniques in Python
@@ -283,6 +297,7 @@ Print commands are used in most programming languages to display the output of c
 
 **Explanation:** The `print()` function displays text or values to the screen. You can print variables or text strings directly.
 
+**Example Code**
 ```python
 # Basic print
 print("Welcome to Python programming!")
@@ -292,30 +307,56 @@ compound_name = "Aspirin"
 print("Compound:", compound_name)
 ```
 
+**Output**
+```python
+Welcome to Python programming!
+Compound: Aspirin
+```
+
 **Using f-strings for Formatted Output**
 
 **Explanation:** Python's formatted strings known as f-strings make it easy to display the value of a variable along with or embedded in other text, which simplifies displaying complex data clearly.
 
+**Example Code**
 ```python
+compound_name = "Aspirin"
 molecular_weight = 180.16
 print(f"The molecular weight of {compound_name} is {molecular_weight}")
+```
+
+**Output**
+```python
+The molecular weight of Aspirin is 180.16
 ```
 
 **Concatenating Strings and Variables**
 
 **Explanation:** Concatenating, or combining strings and variables is possible using the `+` operator, but the variable must first be converted to a string.
 
+**Example Code**
 ```python
 print("The molecular weight of " + compound_name + " is " + str(molecular_weight))
+```
+
+**Output**
+```python
+The molecular weight of Aspirin is 180.16
 ```
 
 **Formatting Numbers**
 
 **Explanation:** To control the display of floating-point numbers (e.g., limiting decimal places), use formatting options within f-strings.
 
+**Example Code**
 ```python
+molecular_weight = 180.16
 # Display molecular weight with two decimal places
 print(f"Molecular weight: {molecular_weight:.2f}")
+```
+
+**Output**
+```python
+Molecular weight: 180.16
 ```
 
 **Practice Problem**
@@ -404,6 +445,11 @@ print(f"Double molecular weight: {double_weight(molecular_weight)}")
 </code></pre>
 </details>
 
+**Output**
+```python
+Double molecular weight: 360.32
+```
+
 ---
 
 ## 2.2 Data Analysis with Python
@@ -438,6 +484,7 @@ csv_data = pd.read_csv('experimental_data.csv')
 # Reading an Excel file into a DataFrame called "excel_data"
 excel_data = pd.read_excel('compound_properties.xlsx', sheet_name='Sheet1', index_col=0)
 ```
+
 **Explanation of the Code:**
 
 - `pd.read_csv()` reads data from a CSV file into a DataFrame.
@@ -469,6 +516,7 @@ uploaded = files.upload()
    
 import pandas as pd
 df = pd.read_csv('BBBP.csv')
+# .head() gets the first 5 rows
 print(df.head())
 ```
 
@@ -483,6 +531,16 @@ import pandas as pd
 url = 'https://raw.githubusercontent.com/Data-Chemist-Handbook/Data-Chemist-Handbook.github.io/refs/heads/master/_pages/BBBP.csv'
 df = pd.read_csv(url)
 print(df.head())
+```
+
+**Output**
+```python
+   num                  name  p_np                                             smiles
+0    1            Propanolol     1                   [Cl].CC(C)NCC(O)COc1cccc2ccccc12
+1    2  Terbutylchlorambucil     1           C(=O)(OC(C)(C)C)CCCc1ccc(cc1)N(CCCl)CCCl
+2    3                 40730     1  c12c3c(N4CCN(C)CC4)c(F)cc1c(c(C(O)=O)cn2C(C)CO...
+3    4                    24     1                   C1CCN(CC1)Cc1cccc(c1)OCCCNC(=O)C
+4    5           cloxacillin     1  Cc1onc(c2ccccc2Cl)c1C(=O)N[C@H]3[C@H]4SC(C)(C)...
 ```
 
 ***Note: Method 2 works for CSVs but not for Excel files***
@@ -504,6 +562,19 @@ df = pd.read_excel(excel_data, sheet_name='Sheet1', index_col=0)
 print(df.head())
 ```
 
+**Output**
+```python
+                  time       4.5  4.533333 ... 7.433333  7.466667
+40mM amino acids                                                                                                                                                                                               
+wavenumber/cm-1    NaN       NaN       NaN ...      NaN       NaN
+325.65             NaN  0.003956  0.003982 ... 0.012759  0.014740
+327.651677         NaN  0.005396  0.004230 ... 0.012213  0.014480
+329.652707         NaN  0.004024  0.005562 ... 0.012120  0.012711
+331.65309          NaN  0.003313  0.005206 ... 0.009913  0.011362
+
+[5 rows x 91 columns]
+```
+
 ---
 
 ### 2.2.2 Data Cleaning and Preprocessing
@@ -520,17 +591,41 @@ Data cleaning can be done with built in functions of the DataFrame object. This 
 **Example Code:**
 
 ```python
-# Handling missing values: fill missing names with 'Unknown' and smiles with an empty string
+import pandas as pd
+
+# Create a sample dataset with some missing 'name' values and duplicate 'smiles'
+data = {
+    'name': ['Aspirin', None, 'Ibuprofen', 'Aspirin', None],
+    'smiles': ['CC(=O)OC1=CC=CC=C1C(=O)O', 'CC(=O)OC1=CC=CC=C1C(=O)O', 'CC(C)CC1=CC=C(C=C1)C(C)C(=O)O', '', '']
+}
+df = pd.DataFrame(data)
+
+# Number of rows before removing duplicates
+initial_row_count = len(df)
+
+# Count how many rows have missing values in the 'name' column using isna() (checks for NaN) and sum() (counts total)
+missing_name_count = df['name'].isna().sum()
+
+# Handle missing values
 df_filled = df.fillna({'name': 'Unknown', 'smiles': ''})
 
-# Removing duplicate rows based on the SMILES column
-df_no_duplicates = df.drop_duplicates(subset=['smiles'])
+# Remove duplicate rows based on the 'smiles' column; 'subset' specifies which column(s) to consider for identifying duplicates
+df_no_duplicates = df_filled.drop_duplicates(subset=['smiles'])
 
-# Displaying the first five rows of the cleaned dataset
-print(df_filled.head())
+# Final row count after removing duplicates
+final_row_count = len(df_no_duplicates)
 
-# Displaying the number of rows after removing duplicates
-print(f"Number of rows after removing duplicates: {len(df_no_duplicates)}")
+# Print results
+print(f"Number of rows before removing duplicates: {initial_row_count}")
+print(f"Number of rows with missing names (filled as 'Unknown'): {missing_name_count}")
+print(f"Number of rows after removing duplicates: {final_row_count}")
+```
+
+**Output**
+```python
+Number of rows before removing duplicates: 5
+Number of rows with missing names (filled as 'Unknown'): 2
+Number of rows after removing duplicates: 3
 ```
 
 **Practice Problem:**
@@ -550,6 +645,7 @@ In this practice problem, we removed data rows that did not contain `smiles` inf
 </details>
 
 <!-- TODO for Alex: write solution to practice problem -->
+<!-- Comment from Dan: I think there is no missing `name` value with Unknown in BBBP.csv dataset. Need to find a new dataset with unknown value -->
 
 #### Data Type Conversions
 
@@ -559,13 +655,16 @@ Converting data types to the desired type for a given data category enables prop
 **Example Code:**
 
 ```python
+import pandas as pd
+
 # Example DataFrame with mixed types
 data = {'product': [1, 2, 3],
       'milligrams': ['10.31', '8.04', '3.19'],
       'yield': ['75', '46', '32']}
 df = pd.DataFrame(data)
 
-print("the data types before conversion are " + str(df.dtypes))
+print("the data types before conversion are:")
+print(str(df.dtypes) + "\n")
 
 # Converting 'product' to string
 df['product'] = df['product'].astype(str)
@@ -576,8 +675,25 @@ df['milligrams'] = df['milligrams'].astype(float)
 # Converting 'yield' to integer
 df['yield'] = df['yield'].astype(int)
 
-print("the data types after conversion are " + str(df.dtypes))
+print("the data types after conversion are:")
+print(str(df.dtypes))
 ```
+
+**Output**
+```python
+the data types before conversion are:
+product        int64
+milligrams    object
+yield         object
+dtype: object
+
+the data types after conversion are:
+product        object
+milligrams    float64
+yield           int64
+dtype: object
+```
+**Note:** In pandas, `dtype: object` means the column can hold any Python object, most commonly strings.
 <!-- explain what a classification model is -->
 **Practice Problem:**
 In the BBBP dataset, the `num` column (compound number) should be treated as an integer, and the `p_np` column (permeability label) should be converted to categorical data.
@@ -588,6 +704,8 @@ In the BBBP dataset, the `num` column (compound number) should be treated as an 
 <details>
 <summary>▶ Show Solution Code</summary>
 <pre><code class="language-python">
+import pandas as pd
+
 # Loading the dataset again
 url = 'https://raw.githubusercontent.com/Data-Chemist-Handbook/Data-Chemist-Handbook.github.io/refs/heads/master/_pages/BBBP.csv'
 df = pd.read_csv(url)
@@ -600,6 +718,15 @@ df['p_np'] = df['p_np'].astype('category')
 print(df.dtypes)
 </code></pre>
 </details>
+
+**Output**
+```python
+num          int64
+name        object
+p_np      category
+smiles      object
+dtype: object
+```
 
 #### Normalizing and Scaling Data
 
@@ -674,6 +801,18 @@ df = pd.read_excel(excel_data, sheet_name="Sheet1", index_col=0)
 # Transpose to make rows = spectra, columns = features
 spectra = df.T
 
+# Remove any rows (now columns) that aren't numeric (force numeric, NaN if not)
+spectra = spectra.apply(pd.to_numeric, errors='coerce')
+
+# Drop columns that are all NaNs (e.g. invalid features)
+spectra = spectra.dropna(axis=1, how='all')
+
+# Ensure all column names are strings to avoid errors in scikit-learn, which requires uniform string-type feature names
+new_columns = []
+for col in spectra.columns:
+    new_columns.append(str(col))
+spectra.columns = new_columns
+
 # Apply Min–Max scaling to all intensity columns
 scaler = MinMaxScaler()
 spectra_scaled = pd.DataFrame(
@@ -686,6 +825,28 @@ print(spectra_scaled.head())
 </code></pre>
 </details>
 
+**Output**
+```python
+            325.65  327.65167664  ... 2033.94965376  2035.29038256
+time           NaN           NaN  ...           NaN            NaN
+4.5       0.751313      0.778351  ...      0.821384       0.763345
+4.533333  0.751916      0.749897  ...      0.783924       0.634459
+4.566667  0.810788      0.814801  ...      0.789397       0.666986
+4.6       0.758148      0.819177  ...      0.756293       0.574035
+```
+
+**Explanation of the Code:**
+The script starts by loading Raman spectral data from an Excel file hosted on GitHub. It reads the first sheet into a pandas DataFrame, using the first column as the index. At this point, rows represent Raman shifts (wavenumbers), and columns represent sample measurements at various time points or conditions.
+
+To prepare the data for machine learning, the DataFrame is transposed so that each row represents a spectrum (sample), and each column corresponds to a wavenumber feature. This is the standard format expected by most machine learning models: rows as observations, columns as features.
+
+The script then converts all values to numeric using pd.to_numeric(). This step handles any non-numeric entries (e.g., text or metadata), converting them to NaN, which ensures that only valid numerical data is kept for further processing.
+
+Next, columns that contain only NaN values are dropped. These typically result from unmeasured or corrupted wavenumbers and offer no useful information, so removing them helps clean the dataset and reduce dimensionality.
+
+Before scaling, the script ensures all column names are strings. This is important because scikit-learn requires feature names to be of a consistent type. If a mix of float and string column names is present (common when wavenumbers are numeric), it raises a TypeError. Converting all names to strings ensures compatibility.
+
+Finally, Min–Max scaling is applied to normalize all feature values between 0 and 1. This ensures that each wavenumber contributes equally to analyses, preventing features with large values from dominating. The first few rows of the scaled data are printed to verify the transformation.
 ---
 
 ### 2.2.3 Data Manipulation with Pandas
@@ -714,6 +875,13 @@ filtered_df = df[df['MolecularWeight'] > 200]
 print(filtered_df)
 ```
 
+**Output**
+```python
+  Compound  MolecularWeight
+1        B           250.23
+2        C           320.45
+```
+
 **Practice Problem 1:**
 
 1. Filter a DataFrame from the BBBP dataset to show only rows where the `num` (compound number) is greater than 500.
@@ -722,6 +890,8 @@ print(filtered_df)
 <details>
 <summary>▶ Show Solution Code</summary>
 <pre><code class="language-python">
+import pandas as pd
+
 # Loading the BBBP dataset
 url = 'https://raw.githubusercontent.com/Data-Chemist-Handbook/Data-Chemist-Handbook.github.io/refs/heads/master/_pages/BBBP.csv'
 df = pd.read_csv(url)
@@ -733,9 +903,27 @@ filtered_df = df[df['num'] > 500]
 subset_df = df[['name', 'smiles']]
 
 print(filtered_df.head())
+print() # New line
 print(subset_df.head())
 </code></pre>
 </details>
+
+**Output**
+```python
+     num          name  p_np                                       smiles
+499  501      buramate     1                          OCCOC(=O)NCc1ccccc1
+500  502  butabarbital     1                 CCC(C)C1(CC)C(=O)NC(=O)NC1=O
+501  503      caffeine     1                 Cn1cnc2N(C)C(=O)N(C)C(=O)c12
+502  504   cannabidiol     1  CCCCCc1cc(O)c(C2C=C(C)CC[C@H]2C(C)=C)c(O)c1
+503  505      capuride     1                      CCC(C)C(CC)C(=O)NC(N)=O
+
+                   name                                             smiles
+0            Propanolol                   [Cl].CC(C)NCC(O)COc1cccc2ccccc12
+1  Terbutylchlorambucil           C(=O)(OC(C)(C)C)CCCc1ccc(cc1)N(CCCl)CCCl
+2                 40730  c12c3c(N4CCN(C)CC4)c(F)cc1c(c(C(O)=O)cn2C(C)CO...
+3                    24                   C1CCN(CC1)Cc1cccc(c1)OCCCNC(=O)C
+4           cloxacillin  Cc1onc(c2ccccc2Cl)c1C(=O)N[C@H]3[C@H]4SC(C)(C)...
+```
 
 #### Merging and Joining Datasets
 
@@ -746,6 +934,8 @@ Merging allows for combining data from multiple DataFrames based on a common col
 **Example Code:**
 
 ```python
+import pandas as pd
+
 # Example DataFrames
 df1 = pd.DataFrame({'Compound': ['A', 'B'],
                      'MolecularWeight': [180.16, 250.23]})
@@ -759,6 +949,13 @@ merged_df = pd.merge(df1, df2, on='Compound')
 print(merged_df)
 ```
 
+**Output**
+```python
+  Compound  MolecularWeight  MeltingPoint
+0        A           180.16           120
+1        B           250.23           150
+```
+
 **Practice Problem 2:**
 
 1. Merge two DataFrames from the BBBP dataset: One containing the `name` and `smiles` columns and another containing the `num` and `p_np` columns.
@@ -767,6 +964,8 @@ print(merged_df)
 <details>
 <summary>▶ Show Solution Code</summary>
 <pre><code class="language-python">
+import pandas as pd
+
 # Loading the BBBP dataset
 url = 'https://raw.githubusercontent.com/Data-Chemist-Handbook/Data-Chemist-Handbook.github.io/refs/heads/master/_pages/BBBP.csv'
 df = pd.read_csv(url)
@@ -783,6 +982,16 @@ print(merged_df.head())
 </code></pre>
 </details>
 
+**Output**
+```python
+                   name                                             smiles  num  p_np
+0            Propanolol                   [Cl].CC(C)NCC(O)COc1cccc2ccccc12    1     1
+1  Terbutylchlorambucil           C(=O)(OC(C)(C)C)CCCc1ccc(cc1)N(CCCl)CCCl    2     1
+2                 40730  c12c3c(N4CCN(C)CC4)c(F)cc1c(c(C(O)=O)cn2C(C)CO...    3     1
+3                    24                   C1CCN(CC1)Cc1cccc(c1)OCCCNC(=O)C    4     1
+4                    24                   C1CCN(CC1)Cc1cccc(c1)OCCCNC(=O)C  667     1
+```
+
 #### Grouping and Aggregation
 
 **Explanation:**
@@ -792,6 +1001,8 @@ Grouping organizes data based on specific columns, and aggregation provides summ
 **Example Code:**
 
 ```python
+import pandas as pd
+
 # Example DataFrame
 data = {'Compound': ['A', 'A', 'B', 'B'],
          'Measurement': [1, 2, 3, 4]}
@@ -801,6 +1012,14 @@ df = pd.DataFrame(data)
 grouped_df = df.groupby('Compound').sum()
 
 print(grouped_df)
+```
+
+**Output**
+```python
+          Measurement
+Compound             
+A                   3
+B                   7
 ```
 
 **Practice Problem:**
@@ -813,6 +1032,8 @@ print(grouped_df)
 <details>
 <summary>▶ Show Solution Code</summary>
 <pre><code class="language-python">
+import pandas as pd
+
 # Load dataset
 url = 'https://raw.githubusercontent.com/Data-Chemist-Handbook/Data-Chemist-Handbook.github.io/refs/heads/master/_pages/BBBP.csv'
 df = pd.read_csv(url)
@@ -827,9 +1048,23 @@ grouped_df = df.groupby('p_np')['carbon_count'].mean()
 aggregated_df = df.groupby('p_np')['carbon_count'].agg(['count', 'mean'])
 
 print(grouped_df)
+print()
 print(aggregated_df)
 </code></pre>
 </details>
+
+**Output**
+```python
+p_np
+0    14.283644
+1    14.998724
+Name: carbon_count, dtype: float64
+
+      count       mean
+p_np                  
+0       483  14.283644
+1      1567  14.998724
+```
 
 #### Pivot Tables and Reshaping Data
 
@@ -840,6 +1075,8 @@ Pivot tables help reorganize data to make it easier to analyze by converting row
 **Example Code:**
 
 ```python
+import pandas as pd
+
 # Example DataFrame
 data = {'Compound': ['A', 'B', 'A', 'B'],
          'Property': ['MeltingPoint', 'MeltingPoint', 'BoilingPoint', 'BoilingPoint'],
@@ -852,6 +1089,14 @@ pivot_df = df.pivot_table(values='Value', index='Compound', columns='Property')
 print(pivot_df)
 ```
 
+**Output**
+```python
+Property  BoilingPoint  MeltingPoint
+Compound                            
+A                300.0         120.0
+B                350.0         150.0
+```
+
 **Practice Problem 3:**
 
 1. Create a pivot table from the BBBP dataset to summarize the average `carbon count` for each `p_np` group (permeable and non-permeable).
@@ -860,6 +1105,8 @@ print(pivot_df)
 <details>
 <summary>▶ Show Solution Code</summary>
 <pre><code class="language-python">
+import pandas as pd
+
 # Load the BBBP dataset
 url = 'https://raw.githubusercontent.com/Data-Chemist-Handbook/Data-Chemist-Handbook.github.io/refs/heads/master/_pages/BBBP.csv'
 df = pd.read_csv(url)
@@ -877,6 +1124,20 @@ print(pivot_df)
 print(melted_df.head())
 </code></pre>
 </details>
+
+**Output**
+```python
+      carbon_count
+p_np              
+0        14.283644
+1        14.998724
+                   name      variable  value
+0            Propanolol  carbon_count      7
+1  Terbutylchlorambucil  carbon_count     14
+2                 40730  carbon_count      9
+3                    24  carbon_count     11
+4           cloxacillin  carbon_count     11
+```
 
 ---
 
@@ -904,6 +1165,11 @@ arr_sum = np.sum(arr)
 arr_mean = np.mean(arr)
 
 print(f"Sum: {arr_sum}, Mean: {arr_mean}")
+```
+
+**Output**
+```python
+Sum: 15, Mean: 3.0
 ```
 
 **Practice Problem 1:**
@@ -934,6 +1200,11 @@ print(f"Sum: {num_sum}, Mean: {num_mean}, Median: {num_median}")
 </code></pre>
 </details>
 
+**Output**
+```python
+Sum: 2106121, Mean: 1027.3760975609757, Median: 1026.5
+```
+
 #### Indexing and Slicing
 
 **Explanation:**
@@ -944,6 +1215,8 @@ NumPy arrays can be sliced to access subsets of data.
 **Example Code:**
 
 ```python
+import numpy as np
+
 # Example array
 arr = np.array([10, 20, 30, 40, 50])
 
@@ -951,6 +1224,11 @@ arr = np.array([10, 20, 30, 40, 50])
 slice_arr = arr[1:4]
 
 print(slice_arr)
+```
+
+**Output**
+```python
+[20 30 40]
 ```
 
 **Practice Problem 2:**
@@ -964,6 +1242,9 @@ print(slice_arr)
 <details>
 <summary>▶ Show Solution Code</summary>
 <pre><code class="language-python">
+import pandas as pd
+import numpy as np
+
 # Load the BBBP dataset
 url = 'https://raw.githubusercontent.com/Data-Chemist-Handbook/Data-Chemist-Handbook.github.io/refs/heads/master/_pages/BBBP.csv'
 df = pd.read_csv(url)
@@ -980,10 +1261,18 @@ sliced_array = carbon_array[::2]
 # Reverse the array's contents using slicing
 reversed_array = carbon_array[::-1]
 
+print(f"Carbon Array (from carbon_count): {carbon_array}")
 print(f"Sliced Array (every second element): {sliced_array}")
 print(f"Reversed Array: {reversed_array}")
 </code></pre>
 </details>
+
+**Output**
+```python
+Carbon Array (from carbon_count): [ 7 14  9 ... 18 22 11]
+Sliced Array (every second element): [ 7  9 11 ...  0 15 22]
+Reversed Array: [11 22 18 ...  9 14  7]
+```
 
 #### Reshaping and Broadcasting
 
@@ -994,6 +1283,8 @@ Reshaping changes the shape, or dimensions, of an array, and broadcasting applie
 **Example Code:**
 
 ```python
+import numpy as np
+
 # Example array
 arr = np.array([[1, 2, 3], [4, 5, 6]])
 
@@ -1004,7 +1295,18 @@ reshaped_arr = arr.reshape(3, 2)
 broadcast_arr = arr + 10
 
 print(reshaped_arr)
+print()
 print(broadcast_arr)
+```
+
+**Output**
+```python
+[[1 2]
+ [3 4]
+ [5 6]]
+
+[[11 12 13]
+ [14 15 16]]
 ```
 
 **Practice Problem 3:**
@@ -1017,6 +1319,9 @@ print(broadcast_arr)
 <details>
 <summary>▶ Show Solution Code</summary>
 <pre><code class="language-python">
+import pandas as pd
+import numpy as np
+
 # Load the BBBP dataset
 url = 'https://raw.githubusercontent.com/Data-Chemist-Handbook/Data-Chemist-Handbook.github.io/refs/heads/master/_pages/BBBP.csv'
 df = pd.read_csv(url)
@@ -1037,6 +1342,33 @@ print("\nBroadcasted Array (after adding 100):")
 print(broadcasted_array)
 </code></pre>
 </details>
+
+**Output**
+```python
+Reshaped Array:
+[[  1   2   3   4   5   6   7   8   9  10  11  12  13  14  15  16  17  18
+   19  20]
+ [ 21  22  23  24  25  26  27  28  29  30  31  32  33  34  35  36  37  38
+   39  40]
+ [ 41  42  43  44  45  46  47  48  49  50  51  52  53  54  55  56  57  58
+   59  60]
+ [ 61  62  64  65  66  67  68  69  70  71  72  73  74  75  76  77  78  79
+   80  81]
+ [ 82  83  84  85  86  87  88  89  90  91  92  93  94  95  96  97  98  99
+  100 101]]
+
+Broadcasted Array (after adding 100):
+[[101 102 103 104 105 106 107 108 109 110 111 112 113 114 115 116 117 118
+  119 120]
+ [121 122 123 124 125 126 127 128 129 130 131 132 133 134 135 136 137 138
+  139 140]
+ [141 142 143 144 145 146 147 148 149 150 151 152 153 154 155 156 157 158
+  159 160]
+ [161 162 164 165 166 167 168 169 170 171 172 173 174 175 176 177 178 179
+  180 181]
+ [182 183 184 185 186 187 188 189 190 191 192 193 194 195 196 197 198 199
+  200 201]]
+```
 
 ---
 
@@ -1081,6 +1413,9 @@ plt.ylabel('Concentration (M)')
 plt.title('Concentration vs Time')
 plt.show()
 ```
+
+**Output**
+
 ![Line Plot Example](../../resource/img/preliminaries/pre_2-2/2.2.5-1.png)
 
 *Figure: Line Plot of Time vs. Concentration*
@@ -1099,6 +1434,9 @@ sns.scatterplot(data=df, x='MolecularWeight', y='BoilingPoint')
 plt.title('Molecular Weight vs Boiling Point')
 plt.show()
 ```
+
+**Output**
+
 ![Scatter Plot Example](../../resource/img/preliminaries/pre_2-2/2.2.5-2.png)
 
 *Figure: Scatter Plot of Molecular Weight vs. Boiling Point*
@@ -1125,6 +1463,9 @@ plt.title('Histogram Demonstrating Data Distribution')
 plt.grid(axis='y', linestyle='--', alpha=0.7)  # Add grid for better readability
 plt.show()
 ```
+
+**Output**
+
 ![Histogram Example](../../resource/img/preliminaries/pre_2-2/2.2.5-3.png)
 
 *Figure: Histogram Demonstrating Data Distribution*
@@ -1146,6 +1487,9 @@ plt.ylabel('Density')
 plt.title('Density Plot')
 plt.show()
 ```
+
+**Output**
+
 ![Density Plot Example](../../resource/img/preliminaries/pre_2-2/2.2.5-4.png)
 
 *Figure: Density Plot Visualizing Data Distribution*
@@ -1171,6 +1515,9 @@ sns.boxplot(data=df, x='Category', y='Value')
 plt.title('Box Plot')
 plt.show()
 ```
+
+**Output**
+
 ![Box Plot Example](../../resource/img/preliminaries/pre_2-2/2.2.5-5.png)
 
 *Figure: Box Plot Showing Value Distribution Across Categories*
@@ -1191,6 +1538,9 @@ sns.violinplot(data=df, x='Category', y='Value')
 plt.title('Violin Plot')
 plt.show()
 ```
+
+**Output**
+
 ![Violin Plot Example](../../resource/img/preliminaries/pre_2-2/2.2.5-6.png)
 
 *Figure: Violin Plot Highlighting Value Distribution and Density Across Categories*
@@ -1277,7 +1627,7 @@ print(f"Median Boiling Point: {median_bp}")
 print(f"Standard Deviation of Molecular Weight: {std_mw}")
 ```
 
-**Result**
+**Output**
 ```python
 Mean Molecular Weight: 182.0
 Median Boiling Point: 105.0
@@ -1306,6 +1656,11 @@ variance_num = df['num'].var()
 print(f'Mean: {mean_num}, Median: {median_num}, Variance: {variance_num}')
 </code></pre>
 </details>
+
+**Output**
+```python
+Mean: 1027.3760975609757, Median: 1026.5, Variance: 351455.5290526015
+```
 
 #### Probability Distributions
 
@@ -1345,6 +1700,12 @@ plt.ylabel('Probability')
 plt.title('Normal Distribution')
 plt.show()
 ```
+
+**Output**
+
+![Example Code Output](../../resource/img/preliminaries/pre_2-2/2.2.6-2.png)
+
+**Note:** This code can result in a different output every time it is run, since np.random.normal generates random data
 
 **What the Code Does:**
 1. **Generate Data**: The `np.random.normal` function creates 1000 random data points with:
@@ -1402,6 +1763,12 @@ plt.show()
 </code></pre>
 </details>
 
+<!-- #TODO After updating new practice problem, also add an ouput -->
+**Output**
+```python
+
+```
+
 #### Hypothesis Testing
 
 **Explanation:**
@@ -1441,7 +1808,7 @@ t_stat, p_val = ttest_ind(group_a, group_b)
 print(f"T-statistic: {t_stat}, P-value: {p_val}")
 ```
 
-**Example Result**
+**Output**
 ```python
 T-statistic: -1.6285130624347315, P-value: 0.14206565386214137
 ```
@@ -1507,6 +1874,12 @@ print(f"T-statistic: {t_stat}, P-value: {p_val}")
 </code></pre>
 </details>
 
+<!-- #TODO After updating new practice problem, also add an ouput -->
+**Output**
+```python
+
+```
+
 #### Correlation and Regression
 
 **Explanation:**
@@ -1554,7 +1927,7 @@ model = LinearRegression().fit(X, y)
 print(f"Regression coefficient: {model.coef_[0]}")
 print(f"Intercept: {model.intercept_}")
 ```
-**Example Output**
+**Output**
 ```python
 Correlation: 0.9145574682496187
 Regression coefficient: 0.36842105263157904
@@ -1617,6 +1990,14 @@ print(f"Intercept: {model.intercept_}")
 </code></pre>
 </details>
 
+<!-- #TODO After updating new practice problem, also add an ouput -->
+**Output**
+```python
+Correlation between num and p_np: 0.43004111834348224
+Regression coefficient: 600.5995724446169
+Intercept: 568.2836438923343
+```
+
 #### ANOVA (Analysis of Variance)
 
 **Explanation:**
@@ -1658,7 +2039,8 @@ group3 = [3.1, 3.5, 2.9, 3.6, 3.3]  # Data for condition 3
 f_stat, p_val = f_oneway(group1, group2, group3)
 print(f"F-statistic: {f_stat}, P-value: {p_val}")
 ```
-**Example Output:**
+
+**Output:**
 ```
 F-statistic: 3.151036525172754, P-value: 0.07944851235243751
 ```
@@ -1720,6 +2102,12 @@ f_stat, p_val = f_oneway(group1, group2, group3)
 print(f"F-statistic: {f_stat}, P-value: {p_val}")
 </code></pre>
 </details>
+
+<!-- #TODO After updating new practice problem, also add an ouput -->
+**Output**
+```python
+
+```
 
 ---
 
@@ -2123,13 +2511,15 @@ print("First SMILES string:", first_smiles)
 aromatic_rings = [ring for ring in Chem.GetSymmSSSR(molecule) if all(molecule.GetAtomWithIdx(atom).GetIsAromatic() for atom in ring)]
 print("Number of aromatic rings:", len(aromatic_rings))
 ```
-**Example Output**
+
+**Output**
 ```python
 Number of atoms: 13
 Number of bonds: 13
 First SMILES string: CC(=O)OC1=CC=CC=C1C(=O)O
 Number of aromatic rings: 1
 ```
+
 #### What the Code Does
 
 1. **SMILES Conversion to Molecule Object**:
@@ -2165,7 +2555,6 @@ Number of aromatic rings: 1
 - **Use Case**:
 - Researchers can use this script for analyzing molecular properties, storing chemical datasets in DataFrames, and identifying features like aromaticity for further studies.
 
-
 **Practice Problem:**
 
 **Context**: SMILES notation is a powerful tool for representing chemical structures. Understanding how to convert SMILES strings into molecular objects and extract information is crucial for cheminformatics applications.
@@ -2200,12 +2589,14 @@ print("Number of bonds:", molecule.GetNumBonds())
 aromatic_rings = [ring for ring in Chem.GetSymmSSSR(molecule) if all(molecule.GetAtomWithIdx(atom).GetIsAromatic() for atom in ring)]
 print("Number of aromatic rings:", len(aromatic_rings))
 ```
-**Result**
+
+**Output**
 ```python
 Number of atoms: 20
 Number of bonds: 20
 Number of aromatic rings: 2
 ```
+
 **Explanation**: This code loads the BBBP dataset and analyzes the first molecule by extracting its SMILES (Simplified Molecular Input Line Entry System) string, which is a text-based representation of its structure. It then converts that string into an RDKit molecule object to examine its properties. The output — number of atoms, bonds, and aromatic rings — describes the first molecule in the dataset, without applying any additional filters or conditions. The line identifying aromatic rings uses a list comprehension to find all rings in the molecule where every atom is aromatic. In short, the code gives a basic structural overview of the very first compound in the BBBP dataset.
 
 
@@ -2262,7 +2653,8 @@ df = pd.DataFrame(data)
 first_smiles = df['smiles'].iloc[0]
 print("First SMILES string:", first_smiles)
 ```
-**Example Output**
+
+**Output**
 ```python
 Does the molecule match the SMARTS pattern? True
 First SMILES string: C1=CC=CC=C1
@@ -2327,7 +2719,8 @@ for smiles in df['smiles']:
 
 print("Number of molecules with an amine group:", amine_count)
 ```
-**Example Output**
+
+**Output**
 ```python
 Number of molecules with an amine group: 555
 ```
@@ -2360,7 +2753,7 @@ Fingerprints are crucial for cheminformatics because they enable the rapid compa
 
 ```python
 from rdkit import Chem
-from rdkit.Chem import AllChem
+from rdkit.Chem import rdFingerprintGenerator
 
 # Example SMILES string for Aspirin
 smiles = 'CC(=O)OC1=CC=CC=C1C(=O)O'
@@ -2368,12 +2761,35 @@ smiles = 'CC(=O)OC1=CC=CC=C1C(=O)O'
 # Convert SMILES to a molecule object
 molecule = Chem.MolFromSmiles(smiles)
 
-# Generate a Morgan fingerprint (circular fingerprint)
-fingerprint = AllChem.GetMorganFingerprintAsBitVect(molecule, radius=2, nBits=1024)
+# Use the Morgan fingerprint generator
+generator = rdFingerprintGenerator.GetMorganGenerator(radius=2, fpSize=128)
+fingerprint = generator.GetFingerprint(molecule)
 
 # Display the fingerprint as a bit string
 print("Fingerprint:", fingerprint.ToBitString())
 ```
+
+**Output**
+```python
+Fingerprint: 00100100001101000000000100000000010000010000000100100001000010001100000110000000110000100000000000001000000000010000000001000100
+```
+
+**What the Code Does**
+1.	SMILES to Molecule Conversion:
+- The SMILES (Simplified Molecular Input Line Entry System) string 'CC(=O)OC1=CC=CC=C1C(=O)O' represents Aspirin.
+- Chem.MolFromSmiles(smiles) converts the SMILES string into an RDKit molecule object that can be processed computationally.
+
+2.	Fingerprint Generator Initialization:
+- rdFingerprintGenerator.GetMorganGenerator(radius=2, fpSize=128) initializes a Morgan fingerprint generator with:
+- radius=2: Defines the number of bond hops from each atom to consider when generating substructure patterns. (Common values: 2 (ECFP4), 3 (ECFP6), where the number represents the radius)
+- fpSize=128: The fingerprint is compressed into a 128-bit vector, which is shorter than the default 1024-bit vector, making it more compact. (Typical sizes: 128, 256, 512, 1024, 2048)
+
+3.	Fingerprint Generation:
+- generator.GetFingerprint(molecule) computes the circular fingerprint (Morgan fingerprint) of the molecule. This captures topological information about atom environments, encoding structural features into a binary format.
+
+4.	Fingerprint Representation:
+- fingerprint.ToBitString() converts the binary fingerprint into a readable string of 0s and 1s.
+- This 128-bit string can be used for molecular similarity, clustering, or as input features for machine learning models in cheminformatics.
 
 **Practice Problem 1:**
 
@@ -2387,26 +2803,35 @@ print("Fingerprint:", fingerprint.ToBitString())
 **Solution:**
 
 ```python
+from rdkit import Chem
+from rdkit.Chem import rdFingerprintGenerator
+import pandas as pd
+
 # Load the BBBP dataset
 url = 'https://raw.githubusercontent.com/Data-Chemist-Handbook/Data-Chemist-Handbook.github.io/refs/heads/master/_pages/BBBP.csv'
 df = pd.read_csv(url)
 
+# Initialize the Morgan fingerprint generator
+generator = rdFingerprintGenerator.GetMorganGenerator(radius=2, fpSize=20)  # You can increase fpSize
+
 # Generate Morgan fingerprints for the first five molecules
 for i in range(5):
-   smiles = df['smiles'].iloc[i]
-   molecule = Chem.MolFromSmiles(smiles)
-   fingerprint = AllChem.GetMorganFingerprintAsBitVect(molecule, radius=2, nBits=20) # can inncrease the number of bits up to 1024
-   print(f"Fingerprint for molecule {i+1}:", fingerprint.ToBitString())
+    smiles = df['smiles'].iloc[i]
+    molecule = Chem.MolFromSmiles(smiles)
+    fingerprint = generator.GetFingerprint(molecule)
+    print(f"Fingerprint for molecule {i+1}:", fingerprint.ToBitString())
 ```
-**Results and Interpretation**
 
+**Output**
 ```
 Fingerprint for molecule 1: 11001111111111111111
 Fingerprint for molecule 2: 11111111111010111101
 Fingerprint for molecule 3: 11111111111111111111
 Fingerprint for molecule 4: 11111011111111111111
 Fingerprint for molecule 5: 01111111111111011111
+```
 
+**Explanation**
 Morgan fingerprints encode substructures of a molecule based on atom neighborhoods and their connectivity. They’re widely used in chemoinformatics to compare molecule similarity.
 
 Each bit in the fingerprint represents the presence (1) or absence (0) of a specific molecular substructure.
@@ -2414,7 +2839,8 @@ Each bit in the fingerprint represents the presence (1) or absence (0) of a spec
 A 1 in position 500, for example, means a certain substructure exists in that molecule.
 
 The fingerprints show that all five molecules are highly similar, with each having at least 18 out of 20 bits set to 1, indicating a strong overlap in structural subfeatures. Molecule 3 has a perfect 20/20 bit presence, suggesting it shares all common substructures found in this bit space, while the others differ by only one or two bits. This close alignment implies that the molecules likely belong to the same chemical class or scaffold with only minor variations, which is consistent with typical datasets like BBBP that focus on drug-like compounds with similar biological properties.
-```
+
+---
 This section provides a comprehensive overview of Fingerprints, including their types, advantages, and practical applications in cheminformatics. The example code, practice problem, and solution demonstrate how to work with Fingerprints using RDKit, a popular cheminformatics toolkit, and leverage real data from the BBBP dataset.
 
 ### 2.3.4 3D Coordinate
@@ -2450,6 +2876,10 @@ smiles = 'CC(=O)OC1=CC=CC=C1C(=O)O'
 # Convert SMILES to a molecule object
 molecule = Chem.MolFromSmiles(smiles)
 
+# Add explicit Hs for accurate 3D geometry and force field optimization
+# Many force fields (like UFF or MMFF) require explicit hydrogens to correctly model hydrogen bonding, van der Waals interactions, and steric effects.
+molecule = Chem.AddHs(molecule)
+
 # Generate 3D coordinates
 AllChem.EmbedMolecule(molecule)
 AllChem.UFFOptimizeMolecule(molecule)
@@ -2458,6 +2888,31 @@ AllChem.UFFOptimizeMolecule(molecule)
 for atom in molecule.GetAtoms():
    pos = molecule.GetConformer().GetAtomPosition(atom.GetIdx())
    print(f"Atom {atom.GetSymbol()} - x: {pos.x}, y: {pos.y}, z: {pos.z}")
+```
+
+**Output**
+```python
+Atom C - x: -2.9602137130336317, y: -2.244244369859284, z: -0.03755263894158198
+Atom C - x: -2.081813552675457, y: -1.1288401779554096, z: -0.4917806541662798
+Atom O - x: -2.3678708306996388, y: -0.5048076476546006, z: -1.5493800374311684
+Atom O - x: -0.8947675936411983, y: -0.8658640232986141, z: 0.20399397235689196
+Atom C - x: -0.09767935871419463, y: 0.2800286031346998, z: 0.04741399742544099
+Atom C - x: -0.6768749948788666, y: 1.5237314253963112, z: -0.2730912436894417
+Atom C - x: 0.11718491971723731, y: 2.661948541836889, z: -0.413990652518431
+Atom C - x: 1.495048894900544, y: 2.5793292760218405, z: -0.22722670150747035
+Atom C - x: 2.084245513268246, y: 1.3599152024180774, z: 0.10999965045380647
+Atom C - x: 1.301934956971273, y: 0.19831075020759026, z: 0.25778454940170653
+Atom C - x: 1.9706981684129903, y: -1.078972919586459, z: 0.6189657660615706
+Atom O - x: 1.3110512249827728, y: -2.1463933351452837, z: 0.7375139969151011
+Atom O - x: 3.3469916277580434, y: -1.1106006952054706, z: 0.8312058349030256
+Atom H - x: -4.022354868755957, y: -2.0104000416428764, z: -0.2620380713957954
+Atom H - x: -2.849319533311744, y: -2.390342037434898, z: 1.0573145380298767
+Atom H - x: -2.671403880760883, y: -3.1790636324310144, z: -0.5612236658525168
+Atom H - x: -1.7477617867995798, y: 1.6239860337159173, z: -0.38555096371448283
+Atom H - x: -0.3386083187859474, y: 3.6125089516922033, z: -0.6596972415940491
+Atom H - x: 2.108518157964493, y: 3.4645231291929544, z: -0.33580321296969173
+Atom H - x: 3.156673455458238, y: 1.3292211344915548, z: 0.2556744888201748
+Atom H - x: 3.8163215126234404, y: -1.9739741678942233, z: 1.0774682894132512
 ```
 
 **Practice Problem 1:**
@@ -2477,13 +2932,16 @@ from rdkit import Chem
 from rdkit.Chem import AllChem
 
 # Load the BBBP dataset
-df = pd.read_csv('BBBP.csv')
-
+url = 'https://raw.githubusercontent.com/Data-Chemist-Handbook/Data-Chemist-Handbook.github.io/refs/heads/master/_pages/BBBP.csv'
+df = pd.read_csv(url)
 # Extract the first SMILES string
 first_smiles = df['smiles'].iloc[0]
 
 # Convert SMILES to a molecule object
 molecule = Chem.MolFromSmiles(first_smiles)
+
+# Add explicit hydrogens
+molecule = Chem.AddHs(molecule)
 
 # Generate 3D coordinates
 AllChem.EmbedMolecule(molecule)
@@ -2493,6 +2951,51 @@ AllChem.UFFOptimizeMolecule(molecule)
 for atom in molecule.GetAtoms():
    pos = molecule.GetConformer().GetAtomPosition(atom.GetIdx())
    print(f"Atom {atom.GetSymbol()} - x: {pos.x}, y: {pos.y}, z: {pos.z}")
+```
+
+**Output**
+```python
+Atom Cl - x: 0.0, y: 0.0, z: 0.0
+Atom C - x: 4.698833470561848, y: -0.6638108606140823, z: -1.055542338061213
+Atom C - x: 3.339574782563085, y: -1.3618755474497275, z: -0.9783256012136238
+Atom C - x: 3.489205983582852, y: -2.853116397616722, z: -1.3251839775882954
+Atom N - x: 2.3983659803817865, y: -0.6768073965293135, z: -1.8836498099809222
+Atom C - x: 0.9964570486944996, y: -1.0051484913653383, z: -1.5897269174209792
+Atom C - x: 0.06164184776771491, y: -0.0440935600672269, z: -2.3507770440380913
+Atom O - x: 0.33053586146257, y: 1.2992520996886667, z: -2.0329231364307994
+Atom C - x: -1.4217064711659975, y: -0.3842795828466551, z: -2.1168764615237303
+Atom O - x: -1.76522755548779, y: -0.35044420663967063, z: -0.7293920943958777
+Atom C - x: -2.1178897186890437, y: 0.7873471134515472, z: 0.020944170646602284
+Atom C - x: -2.347499026071935, y: 2.0417311037817063, z: -0.5805211971994562
+Atom C - x: -2.700184360053554, y: 3.148105840747208, z: 0.19395274041878272
+Atom C - x: -2.8336748656714708, y: 3.0283415377709635, z: 1.576252150207341
+Atom C - x: -2.613327594503825, y: 1.793666043602974, z: 2.2000258495962646
+Atom C - x: -2.7452406190633605, y: 1.670517175942401, z: 3.5921945105218844
+Atom C - x: -2.5221137009250394, y: 0.4397757610648915, z: 4.213037489170426
+Atom C - x: -2.1660310684203132, y: -0.6753933509678192, z: 3.452812127456849
+Atom C - x: -2.031299294343985, y: -0.5687964824651625, z: 2.0660324059168014
+Atom C - x: -2.253695773875255, y: 0.6632151061887986, z: 1.4211181685400176
+Atom H - x: 5.116356056877379, y: -0.7347631742028822, z: -2.082970176660208
+Atom H - x: 5.4129253809889075, y: -1.1278752985084024, z: -0.3419577127657467
+Atom H - x: 4.587233579051895, y: 0.408895968477888, z: -0.7891931742454342
+Atom H - x: 2.989999762757634, y: -1.276012789554975, z: 0.07540190879279975
+Atom H - x: 3.809465884025346, y: -2.981970026102553, z: -2.3811870235119246
+Atom H - x: 2.53009821936533, y: -3.3882687950634325, z: -1.1699585485625863
+Atom H - x: 4.246559973723205, y: -3.3251060914495314, z: -0.663460141623835
+Atom H - x: 2.6080572670183693, y: -0.9406797957527047, z: -2.875828193421924
+Atom H - x: 0.7746935231305219, y: -2.048662169490398, z: -1.90435209124392
+Atom H - x: 0.7977966233526177, y: -0.9168087812804832, z: -0.4981804420610945
+Atom H - x: 0.25679188469513287, y: -0.17338275010752768, z: -3.4378302294171714
+Atom H - x: 0.3820845718866005, y: 1.3767198253070523, z: -1.0449438205137322
+Atom H - x: -1.6011905940731432, y: -1.4172086705696407, z: -2.484162176103418
+Atom H - x: -2.084467937251792, y: 0.270988289609928, z: -2.7180593645467535
+Atom H - x: -2.2540857540962485, y: 2.1824683321770957, z: -1.6465636996952728
+Atom H - x: -2.8712532589319895, y: 4.105439342752448, z: -0.281512106955434
+Atom H - x: -3.1083303012358425, y: 3.9006290993037553, z: 2.1575593955012353
+Atom H - x: -3.0196949622856075, y: 2.5252054156433643, z: 4.199149694425834
+Atom H - x: -2.6246957597992897, y: 0.35029903938384616, z: 5.286828465329103
+Atom H - x: -1.9931377843813336, y: -1.6264209210721625, z: 3.9399232337930585
+Atom H - x: -1.7519313015513656, y: -1.451671955178641, z: 1.5045503064087944
 ```
 
 This section provides a comprehensive overview of 3D Coordinates, including their importance, advantages, and practical applications in cheminformatics. The example code, practice problem, and solution demonstrate how to work with 3D coordinates using RDKit, a popular cheminformatics toolkit, and leverage real data from the BBBP dataset.
@@ -2541,6 +3044,13 @@ print(f"logP: {logP}")
 print(f"Topological Polar Surface Area (TPSA): {tpsa}")
 ```
 
+**Output**
+```python
+Molecular Weight: 180.15899999999996
+logP: 1.3101
+Topological Polar Surface Area (TPSA): 63.60000000000001
+```
+
 **Practice Problem:**
 
 **Context**: RDKit is a powerful toolkit for cheminformatics applications. Understanding how to use RDKit to calculate molecular properties and perform substructure searches is crucial for data analysis and drug discovery.
@@ -2558,7 +3068,8 @@ from rdkit import Chem
 from rdkit.Chem import Descriptors
 
 # Load the BBBP dataset
-df = pd.read_csv('BBBP.csv')
+url = 'https://raw.githubusercontent.com/Data-Chemist-Handbook/Data-Chemist-Handbook.github.io/refs/heads/master/_pages/BBBP.csv'
+df = pd.read_csv(url)
 
 # Extract the first SMILES string
 first_smiles = df['smiles'].iloc[0]
@@ -2583,6 +3094,13 @@ print(f"logP: {logP}") # measures a molecule's lipophilicity, which describes ho
 print(f"Contains Benzene Ring: {contains_benzene}")
 ```
 
+**Output**
+```python
+Molecular Weight: 294.802
+logP: 3.267000000000002
+Contains Benzene Ring: True
+```
+
 This section provides a comprehensive overview of RDKit, including its capabilities, advantages, and practical applications in cheminformatics. The example code, practice problem, and solution demonstrate how to use RDKit for molecular property calculations and substructure searching, leveraging real data from the BBBP dataset.
 
 ### 2.3.6 Molecular Visualization
@@ -2591,31 +3109,56 @@ This section provides a comprehensive overview of RDKit, including its capabilit
 
 **Molecular visualization** is a crucial aspect of cheminformatics and computational chemistry, enabling researchers to understand complex molecular structures and interactions. Visualization tools allow chemists to explore molecular conformations, study structural interactions, and communicate findings effectively. This section covers two popular molecular visualization libraries: PyMOL and RDKit.
 
-#### Using PyMOL for Visualization
+#### Using py3Dmol for Visualization
 **WARNING**
-**PyMol** only runs on certain environments, and will not work on Google Colab. Instead, use an Anaconda Environment if you wish to test this section (2.1.1 Option 2).
+py3Dmol is designed for use within Jupyter Notebooks or Google Colab and does not work in standard Python scripts (.py files). It renders interactive 3D molecular visualizations directly in the notebook interface using HTML and JavaScript. No GUI or special setup is required beyond installing the package via pip. To run this section, use a Jupyter Notebook or Google Colab—not a standalone Python script.
 
 **Explanation:**
 
-**PyMOL** is a powerful molecular visualization system that allows users to view and analyze molecular structures in detail. It is particularly useful for studying structural interactions, visualizing conformations, and preparing publication-quality images. PyMOL supports a wide range of file formats, including PDB, and offers extensive customization options for rendering molecular structures.
+**py3Dmol** is a powerful molecular visualization system that allows users to view and analyze molecular structures in detail. It is particularly useful for studying structural interactions, visualizing conformations, and preparing publication-quality images. PyMOL supports a wide range of file formats, including PDB, and offers extensive customization options for rendering molecular structures.
 
 
 **Importance and Applications:**
 
-PyMOL is widely used in structural biology and drug discovery for its ability to render high-quality images and animations of molecular structures. It is essential for tasks such as protein-ligand interaction studies, structural analysis, and the preparation of figures for publications. PyMOL's scripting capabilities also allow for automation and customization of visualization tasks. For example, researchers use PyMOL to visualize how a drug molecule binds to a target protein, providing insights into its mechanism of action.
+py3Dmol is a lightweight, browser-based molecular visualization library widely used in cheminformatics and drug discovery for generating interactive 3D views of molecular structures. It is particularly useful for visualizing small molecules, proteins, and complexes directly in Jupyter notebooks or Google Colab without requiring any external software installation.
+
+py3Dmol is essential for tasks such as exploring conformations, studying protein-ligand interactions, and creating shareable, interactive visualizations for presentations or publications. Its Python interface and compatibility with RDKit make it an excellent tool for automating structure generation and visualization. For example, researchers use py3Dmol to display how a drug molecule fits into a protein’s binding pocket, offering valuable insights into molecular interactions and binding mechanisms.
 
 **Example Code:**
 
-```python
-import pymol2
+Install packages
 
-# Load a molecule (example: a sample protein or small molecule file in PDB format)
-with pymol2.PyMOL() as pymol:
-   pymol.cmd.load("sample_molecule.pdb")
-   pymol.cmd.show("cartoon")  # Show structure in cartoon form
-   pymol.cmd.zoom("all")
-   pymol.cmd.png("molecule_visualization.png")  # Save an image of the visualization
+```python
+!pip install py3Dmol
+!pip install rdkit
 ```
+
+Main code
+
+```python
+import py3Dmol
+from rdkit import Chem
+from rdkit.Chem import AllChem
+
+# Create 3D conformer of a molecule
+smiles = "CC(=O)OC1=CC=CC=C1C(=O)O"  # Aspirin
+mol = Chem.AddHs(Chem.MolFromSmiles(smiles))
+AllChem.EmbedMolecule(mol)
+AllChem.UFFOptimizeMolecule(mol)
+mb = Chem.MolToMolBlock(mol)
+
+# Visualize using py3Dmol
+view = py3Dmol.view(width=400, height=300)
+view.addModel(mb, "mol")
+view.setStyle({"stick": {}})
+view.zoomTo()
+view.show()
+```
+
+**Output**
+![py3dmol Example](../../resource/img/preliminaries/pre_2-3/2.3.6-1.png)
+
+**Note:** You can click and drag to rotate the 3D visualization interactively.
 
 #### Visualizing with RDKit
 
@@ -2642,6 +3185,9 @@ img = Draw.MolToImage(molecule, size=(300, 300))
 img.show()  # Display the image
 ```
 
+**Output**
+![RDKit Example](../../resource/img/preliminaries/pre_2-3/2.3.6-2.png)
+
 **Practice Problem:**
 
 **Context**: Visualizing molecular structures is essential for understanding their properties and interactions. RDKit provides tools for generating 2D images of molecules from SMILES strings.
@@ -2662,6 +3208,10 @@ ibuprofen = Chem.MolFromSmiles(ibuprofen_smiles)
 img = Draw.MolToImage(ibuprofen, size=(300, 300))
 img.save("ibuprofen.png")
 ```
+
+**Output**
+![RDKit ibuprofen Example](../../resource/img/preliminaries/pre_2-3/ibuprofen.png)
+
 This section provides a comprehensive overview of molecular visualization using PyMOL and RDKit, highlighting their capabilities and applications in cheminformatics. The example code, practice problem, and solution demonstrate how to visualize molecular structures effectively, leveraging real data and tools.
 
 ---
@@ -3095,6 +3645,13 @@ print(f"Variance of Molecular Weight: {variance_mw:.2f}")
 print(f"Correlation between Molecular Weight and LogP: {correlation:.2f}")
 ```
 
+**Output**
+```python
+Mean Molecular Weight: 220.26
+Variance of Molecular Weight: 4465.17
+Correlation between Molecular Weight and LogP: 0.97
+```
+
 #### Output Explanation
 For the sample dataset:
 - The **mean molecular weight** gives an idea of the average size of the compounds.
@@ -3148,6 +3705,13 @@ print(f"Variance of Boiling Point: {variance_bp:.2f}")
 print(f"Correlation between LogP and Boiling Point: {correlation_lp_bp:.2f}")
 </code></pre>
 </details>
+
+**Output**
+```python
+Mean Boiling Point: 111.00
+Variance of Boiling Point: 205.00
+Correlation between LogP and Boiling Point: 1.00
+```
 
 ---
 
@@ -3219,6 +3783,9 @@ plt.ylabel('Density')
 plt.show()
 ```
 
+**Output**
+![py3dmol Example](../../resource/img/preliminaries/pre_2-4/2.4.2-1.png)
+
 **Output Explanation:**
 - The histogram provides a clear view of how molecular weights are grouped.
 - The density plot shows the overall trend, highlighting where most molecular weights lie.
@@ -3270,6 +3837,11 @@ plt.show()
 </code></pre>
 </details>
 
+**Output**
+![Histogram of molecular weight](../../resource/img/preliminaries/pre_2-4/2.4.2-2.png)
+
+![Density plot of molecular weight](../../resource/img/preliminaries/pre_2-4/2.4.2-3.png)
+
 **Interpretation:**
 - The histogram provides a granular view, dividing molecular weights into discrete bins.
 - The density plot highlights the smooth distribution and allows chemists to identify where the majority of molecules lie.
@@ -3306,31 +3878,32 @@ Let's analyze a dataset by generating fingerprints for molecules, calculating pa
 
 ```python
 !pip install rdkit -q
-# Importing packages / might have to run it twice
-import pandas as pd
-import numpy as np
-from rdkit import Chem
-from rdkit.Chem import AllChem
-from rdkit import DataStructs
 ```
 
 ```python
-# Sample data
+import pandas as pd
+import numpy as np
+from rdkit import Chem
+from rdkit.Chem import rdFingerprintGenerator
+from rdkit import DataStructs
+
 data = {
     'Compound': ['Mol1', 'Mol2', 'Mol3', 'Mol4'],
     'SMILES': ['CCO', 'CCC', 'CNC', 'COC']
 }
 df = pd.DataFrame(data)
 
+# Initialize Morgan fingerprint generator
+generator = rdFingerprintGenerator.GetMorganGenerator(radius=2, fpSize=256)
+
 # Generate fingerprints
 fps = []
 for smi in df['SMILES']:
     mol = Chem.MolFromSmiles(smi)
     if mol:
-        fp = AllChem.GetMorganFingerprintAsBitVect(mol, radius=2, nBits=256)
-        fps.append(fp)
+        fps.append(generator.GetFingerprint(mol))
 
-# Compute similarity matrix (Tanimoto)
+# Compute Tanimoto similarity matrix
 n = len(fps)
 similarity_matrix = np.zeros((n, n))
 for i in range(n):
@@ -3341,6 +3914,17 @@ for i in range(n):
 sim_df = pd.DataFrame(similarity_matrix, columns=df['Compound'], index=df['Compound'])
 print("Tanimoto Similarity Matrix:")
 print(sim_df)
+```
+
+**Output**
+```python
+Tanimoto Similarity Matrix:
+Compound      Mol1      Mol2      Mol3      Mol4
+Compound                                        
+Mol1      1.000000  0.428571  0.111111  0.111111
+Mol2      0.428571  1.000000  0.142857  0.142857
+Mol3      0.111111  0.142857  1.000000  0.142857
+Mol4      0.111111  0.142857  0.142857  1.000000
 ```
 
 ---
@@ -3405,6 +3989,14 @@ plt.legend()
 plt.show()
 ```
 
+**Output**
+```python
+Mean Squared Error (MSE): 0.01
+R-squared (R²): 0.99
+```
+
+![Linear Regression Plot Example (Molecular Weight vs LogP)](../../resource/img/preliminaries/pre_2-4/2.4.4-1.png)
+
 **Explanation**:
 
 1. **Data**: Synthetic molecular weights and logP values are used to train the model.
@@ -3468,6 +4060,14 @@ plt.show()
 </code></pre>
 </details>
 
+**Output**
+```python
+Mean Squared Error (MSE): 1.17
+R-squared (R²): 1.00
+```
+
+![Linear Regression Plot Example (Molecular Weight vs Melting Point)](../../resource/img/preliminaries/pre_2-4/2.4.4-2.png)
+
 #### Key Takeaways
 
 - Regression models establish relationships between molecular descriptors and properties.
@@ -3511,6 +4111,9 @@ plt.ylabel('Molecules')
 plt.show()
 ```
 
+**Output**
+![Heatmap Example](../../resource/img/preliminaries/pre_2-4/2.4.5-1.png)
+
 **Explanation**:
 
 1. **Data**: A synthetic 5x5 similarity matrix is generated to simulate pairwise molecular comparisons.
@@ -3524,6 +4127,7 @@ Scatterplots help visualize relationships between molecular properties such as *
 ```python
 import pandas as pd
 import seaborn as sns
+import matplotlib.pyplot as plt
 
 # Example dataset (synthetic data)
 data = {
@@ -3541,6 +4145,9 @@ plt.legend(title='LogP')
 plt.show()
 ```
 
+**Output**
+![Scatterplot Example](../../resource/img/preliminaries/pre_2-4/2.4.5-2.png)
+
 **Explanation**:
 
 1. **Data**: A synthetic dataset of molecular weights and logP values is used.
@@ -3554,6 +4161,7 @@ Correlation matrices summarize pairwise relationships between molecular properti
 ```python
 import pandas as pd
 import seaborn as sns
+import matplotlib.pyplot as plt
 
 # Modified example dataset with less-than-perfect correlations
 data = {
@@ -3571,6 +4179,9 @@ sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', cbar=True)
 plt.title('Correlation Matrix of Molecular Properties')
 plt.show()
 ```
+
+**Output**
+![Correlation Matrix Example](../../resource/img/preliminaries/pre_2-4/2.4.5-3.png)
 
 **Explanation**:
 
@@ -3625,6 +4236,11 @@ plt.show()
 </code></pre>
 </details>
 
+**Output**
+![Heatmap of Synthetic Molecular Similarity](../../resource/img/preliminaries/pre_2-4/2.4.5-4.png)
+
+![Correlation matrix of Molecular Properties)](../../resource/img/preliminaries/pre_2-4/2.4.5-5.png)
+
 #### Key Takeaways
 
 - **Heatmaps** provide a quick overview of similarity or correlation matrices, revealing patterns and clusters.
@@ -3655,7 +4271,7 @@ Combining fingerprints, 3D coordinates, and descriptors involves preprocessing e
 ```python
 !pip install rdkit-pypi
 from rdkit import Chem
-from rdkit.Chem import AllChem, Descriptors
+from rdkit.Chem import AllChem, Descriptors, rdFingerprintGenerator
 import numpy as np
 
 # Example SMILES string for aspirin
@@ -3664,8 +4280,9 @@ molecule = Chem.MolFromSmiles(smiles)
 molecule = Chem.AddHs(molecule)
 
 # Generate fingerprint
-fingerprint = AllChem.GetMorganFingerprintAsBitVect(molecule, radius=2, nBits=1024)
-fingerprint_array = np.array(fingerprint)
+generator = rdFingerprintGenerator.GetMorganGenerator(radius=2, fpSize=1024)
+fingerprint = generator.GetFingerprint(molecule)
+fingerprint_array = np.array(list(map(int, fingerprint.ToBitString())))
 
 # Molecular descriptors
 molecular_weight = Descriptors.MolWt(molecule)
@@ -3694,6 +4311,16 @@ print(f"Fingerprint length: {fingerprint_array.shape[0]}")
 print(f"Number of descriptors: {descriptor_array.shape[0]}")
 print(f"3D coordinate array length (flattened): {coords_array.shape[0]}")
 print(f"Final feature vector shape: {feature_array.shape}")
+```
+
+**Output**
+```python
+Molecule SMILES: CC(=O)OC1=CC=CC=C1C(=O)O
+Number of atoms (including hydrogens): 21
+Fingerprint length: 1024
+Number of descriptors: 2
+3D coordinate array length (flattened): 63
+Final feature vector shape: (1089,)
 ```
 
 **Explanation**:
@@ -3737,11 +4364,7 @@ Predicting molecular properties using integrated representations is a common tas
 <pre><code class="language-python">
 import numpy as np
 from rdkit import Chem
-from rdkit.Chem import AllChem, Descriptors
-
-from rdkit import Chem
-from rdkit.Chem import AllChem, Descriptors
-import numpy as np
+from rdkit.Chem import AllChem, Descriptors, rdFingerprintGenerator
 
 # Example SMILES strings for three molecules
 smiles_list = [
@@ -3757,8 +4380,9 @@ for idx, smiles in enumerate(smiles_list):
     molecule = Chem.AddHs(molecule)  # Add hydrogens
 
     # Generate fingerprint
-    fingerprint = AllChem.GetMorganFingerprintAsBitVect(molecule, radius=2, nBits=1024)
-    fingerprint_array = np.array(fingerprint)
+    generator = rdFingerprintGenerator.GetMorganGenerator(radius=2, fpSize=1024)
+    fingerprint = generator.GetFingerprint(molecule)
+    fingerprint_array = np.array(list(map(int, fingerprint.ToBitString())))
 
     # Molecular descriptors
     molecular_weight = Descriptors.MolWt(molecule)
@@ -3794,6 +4418,34 @@ for i, features in enumerate(feature_arrays):
     print(f"Feature array for molecule {i + 1} (first 10 values): {features[:10]}")
 </code></pre>
 </details>
+
+**Output**
+```python
+Molecule 1: CC(=O)OC1=CC=CC=C1C(=O)O
+  Number of atoms (with Hs): 21
+  Fingerprint length: 1024
+  Descriptor count: 2
+  3D coordinate length: 63
+  Final feature vector shape: (1089,)
+
+Molecule 2: C1=CC=CC=C1
+  Number of atoms (with Hs): 12
+  Fingerprint length: 1024
+  Descriptor count: 2
+  3D coordinate length: 36
+  Final feature vector shape: (1062,)
+
+Molecule 3: CCO
+  Number of atoms (with Hs): 9
+  Fingerprint length: 1024
+  Descriptor count: 2
+  3D coordinate length: 27
+  Final feature vector shape: (1053,)
+
+Feature array for molecule 1 (first 10 values): [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Feature array for molecule 2 (first 10 values): [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Feature array for molecule 3 (first 10 values): [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+```
 
 #### Key Takeaways
 
