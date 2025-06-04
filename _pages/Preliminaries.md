@@ -578,7 +578,7 @@ df['yield'] = df['yield'].astype(int)
 
 print("the data types after conversion are " + str(df.dtypes))
 ```
-
+<!-- explain what a classification model is -->
 **Practice Problem:**
 In the BBBP dataset, the `num` column (compound number) should be treated as an integer, and the `p_np` column (permeability label) should be converted to categorical data.
 
@@ -619,7 +619,7 @@ If your data is organized the other way around (e.g., rows as wavenumbers), use 
 ***Note***: Not every chemical column should be re-scaled.  
 *Physical constants* such as boiling-point (°C/K), pH, melting-point, ΔHf, etc. already live on a meaningful, absolute scale; forcing them into 0-1 space can hide or even distort mechanistic trends.
 
-By contrast, **measurement-derived signals** (e.g. FTIR, Raman or UV-Vis intensities) and *vectorised descriptors* produced by software (atom counts, fragment fingerprints, Mordred/PaDEL descriptors, etc.) are unit-less abstractions. Re-scaling these routinely improves machine-learning performance and does **not** alter the underlying chemistry.
+By contrast, **measurement-derived signals** (e.g. FTIR, Raman or UV-Vis intensities) and *vectorised descriptors* produced by software (atom counts, fragment fingerprints, Mordred/PaDEL descriptors, etc.) are scalable. Re-scaling these routinely improves machine-learning performance and does **not** alter the underlying chemistry.
 
 **Example Code:**
 ```python
