@@ -53,6 +53,27 @@ A significant dimension yet to be fully addressed is empirical chemical knowledg
 
 ## 7.3 Seq2Seq LSTM 
 
+The first machine learning-based template-free approach to retrosynthesis we will discuss is the use of a Seq2Seq LSTM. This is a sequence-to-sequence architecture built using two LSTMs, one serving as the encoder and the other as the decoder.
+*(See Chapter 6 for information on RNN and LSTM, and Chapter 3 for information on neural networks.)*
+
+The Seq2Seq LSTM architecture is used for tasks where one sequence of data needs to be transformed into another sequence, especially when the input and output sequences can have different lengths. Retrosynthesis can be framed as a sequence-to-sequence task, a "translation" from product to reactant, when molecules are represented using SMILES strings.
+
+### 7.3.1 Choosing Seq2Seq LSTM for Retrosynthesis Tasks
+
+While Seq2Seq LSTM is generally considered inferior to more modern approaches like Transformers or Graph Neural Networks (also presented in this chapter), it does have certain advantages:
+
+- **Simple to implement and train:** Especially if working with tokenized SMILES strings (reactants >> product or vice versa).
+
+- **Captures sequence dependencies:** LSTMs are good at modeling dependencies in sequences, which helps with SMILES syntax.
+
+- **Works decently for small datasets:** On datasets like USPTO-50K, it gives reasonable results without huge compute.
+
+- **Useful in resource-constrained settings:** It can be useful for prototyping, building lightweight models, or if constrained by compute and dataset size, or applying post-processing (e.g., syntax correction, beam search) to improve outputs.
+
+Overall, Seq2Seq LSTM is a conceptually clean and easy-to-train baseline for retrosynthesis prediction using SMILES strings.
+
+### 7.3.2 Seq2Seq LSTM for Retrosynthesis: Application Code
+
 ## 7.4 Transformer
 
 ## 7.5 Graph Neural Networks
