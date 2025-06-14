@@ -231,7 +231,7 @@ Explicit output restrictions steer the model to a parsable answer.
 
 </details>
 
-
+---
 
 ## 10.3 Usage of LLM APIs
 
@@ -275,26 +275,26 @@ df = pd.read_csv(file_path)
 ```  
 5. **Make an API call:**  
 ```python
-from openai import OpenAI
-client = OpenAI()
-sample_data = df.to_csv(index=False)
-prompt = f"YOUR QUESTION HERE. Reference data:\n{sample_data}"
-completion = client.chat.completions.create(
-model="gpt-4o-mini",
-messages=[
-{"role": "system", "content": "You are an expert chemist. Respond in Markdown."},
-{"role": "user",   "content": prompt}
-],
-temperature=1,
-max_tokens=1000,
-top_p=1
-)
+   from openai import OpenAI
+   client = OpenAI()
+   sample_data = df.to_csv(index=False)
+   prompt = f"YOUR QUESTION HERE. Reference data:\n{sample_data}"
+   completion = client.chat.completions.create(
+      model="gpt-4o-mini",
+      messages=[
+         {"role": "system", "content": "You are an expert chemist. Respond in Markdown."},
+         {"role": "user",   "content": prompt}
+      ],
+      temperature=1,
+      max_tokens=1000,
+      top_p=1
+   )
 ```  
 6. **Evaluate:**  
 Call this function with two arguments, the model’s predicted answer and the ground-truth solution, to compute the model’s accuracy.
 ```python
 def similarity_score(expected, answer):
-return int(expected.lower() == answer.lower())
+   return int(expected.lower() == answer.lower())
 ```
 
 ### Section 10.3 – Quiz Questions
@@ -331,7 +331,7 @@ The key is stored as an environment variable so the SDK can read it without hard
 Which argument in `client.chat.completions.create()` *mainly* controls result length?  
 **A.** `temperature`  
 **B.** `top_p`  
-**C.** `max_tokens` 
+**C.** `max_tokens`   
 **D.** `model`  
 
 <details><summary>▶ Click to show answer</summary>
@@ -356,7 +356,7 @@ Which settings will make the response **identical** on every call?
 
 **A.** `temperature = 1.0`, `top_p = 1.0`  
 **B.** `temperature = 0.0`, `top_p = 1.0`  
-**C.** `temperature = 0.0`, `top_p = 0.0`
+**C.** `temperature = 0.0`, `top_p = 0.0`   
 **D.** `temperature = 0.5`, `top_p = 0.5`  
 
 <details><summary>▶ Click to show answer</summary>
@@ -377,7 +377,7 @@ Interactive programming means writing code incrementally with immediate feedback
 
 ### Colab Setup
 
-1. **Add secret:**  
+#### 1. Add secret:  
 - Sidebar → Secrets → Add new:  
 - Name: `OPENAI_API_KEY`  
 - Value: your key  
@@ -385,47 +385,48 @@ Interactive programming means writing code incrementally with immediate feedback
 
 ### Prepare Library 
 
-2. **Install libs:**  
-```bash
-!pip install -q openai
-!pip install -q pandas
+#### 2. Install libs:  
+```python
+   !pip install -q openai
+   !pip install -q pandas
 ```  
 
 ### Coding
 
-3. **Helper function:**  
+#### 3. **Helper function:**  
+
 ```python
-import os
-import pandas as pd
-from google.colab import userdata
-from openai import OpenAI
+   import os
+   import pandas as pd
+   from google.colab import userdata
+   from openai import OpenAI
 
-os.environ["OPENAI_API_KEY"] = userdata.get("OPENAI_API_KEY")
-client = OpenAI()
+   os.environ["OPENAI_API_KEY"] = userdata.get("OPENAI_API_KEY")
+   client = OpenAI()
 
-def gpt_query(prompt, file_path=None):
-data_info = ""
-if file_path and file_path.endswith(".csv"):
-df = pd.read_csv(file_path)
-data_info = f"\nDataset sample:\n{df.head()}\n"
-completion = client.chat.completions.create(
-model="gpt-4o-mini",
-messages=[
-{"role": "system", "content": "You are a helpful assistant. Respond in Markdown."},
-{"role": "user",   "content": prompt + data_info}
-],
-temperature=1,
-max_tokens=1000,
-top_p=1
-)
-return completion.choices[0].message.content.strip()
+   def gpt_query(prompt, file_path=None):
+      data_info = ""
+      if file_path and file_path.endswith(".csv"):
+         df = pd.read_csv(file_path)
+         data_info = f"\nDataset sample:\n{df.head()}\n"
+      completion = client.chat.completions.create(
+         model="gpt-4o-mini",
+         messages=[
+            {"role": "system", "content": "You are a helpful assistant. Respond in Markdown."},
+            {"role": "user",   "content": prompt + data_info}
+         ],
+         temperature=1,
+         max_tokens=1000,
+         top_p=1
+      )
+      return completion.choices[0].message.content.strip()
 ```
 
-4. **Run query:**  
+#### 4. **Run query:**  
 ```python
-from IPython.display import Markdown, display
-output = gpt_query(prompt=input("Enter a prompt: "))
-display(Markdown(output))
+   from IPython.display import Markdown, display
+   output = gpt_query(prompt=input("Enter a prompt: "))
+   display(Markdown(output))
 ```  
 
 ### Section 10.4 – Quiz Questions
@@ -435,7 +436,7 @@ display(Markdown(output))
 ##### Question 1  
 Storing the API key in Colab “Secrets” is safer than typing it in plain text because:  
 **A.** It shortens execution time.  
-**B.** The key is hidden in the notebook UI and not saved to revision history.
+**B.** The key is hidden in the notebook UI and not saved to revision history.  
 **C.** It gives you free credits.  
 **D.** The model runs locally.  
 

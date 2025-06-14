@@ -63,6 +63,81 @@ print("final training loss:", loss.item())
 print("first three predicted yields:", pred[:3].flatten().tolist())
 ```
 
+---
+
+### Section 8.1 – Quiz Questions
+
+#### 1) Factual Questions
+
+##### Question 1  
+
+Which PyTorch class provides a *recurrent* layer that processes one time-step at a time?**  
+**A.** `nn.Linear`   
+**B.** `nn.RNN`   
+**C.** `nn.Conv1d`   
+**D.** `nn.BatchNorm1d`   
+
+<details><summary>▶ Click to show answer</summary>Correct Answer: B </details>  
+<details><summary>▶ Click to show explanation</summary>`nn.RNN` is the basic recurrent layer in PyTorch.</details>
+
+---
+
+##### Question 2  
+
+The tensor `x` in the RNN demo has shape `(20, 10, 1)`.  
+What does the **middle dimension (10)** correspond to?  
+**A.** Batch size  
+**B.** Hidden-state size  
+**C.** Number of recorded time-steps per reaction  
+**D.** Number of engineered features  
+
+<details><summary>▶ Click to show answer</summary>Correct Answer: C</details>  
+<details><summary>▶ Click to show explanation</summary>Each reaction was logged hourly for 10 h, giving 10 sequential observations.</details>
+
+---
+
+##### Question 3  
+
+A common training problem with *vanilla* RNNs on very long sequences is:  
+**A.** Over-smoothing of graph topology  
+**B.** Vanishing or exploding gradients  
+**C.** Excessive GPU memory during inference  
+**D.** Mandatory one-hot encoding of inputs  
+
+<details><summary>▶ Click to show answer</summary>Correct Answer: B</details>  
+<details><summary>▶ Click to show explanation</summary>Gradients can shrink (or blow up) across many time-steps, making learning unstable.</details>
+
+---
+
+#### 2) Comprehension / Application Questions
+
+##### Question 4  
+
+Your data include a 30-hour temperature profile sampled every minute.  
+Which RNN variant is usually preferred to keep early information alive?  
+**A.** Simple RNN  
+**B.** GRU or LSTM  
+**C.** 1-D CNN  
+**D.** Random Forest  
+
+<details><summary>▶ Click to show answer</summary>Correct Answer: B</details>  
+<details><summary>▶ Click to show explanation</summary>Gated units (GRU/LSTM) mitigate vanishing gradients on long sequences.</details>
+
+---
+
+##### Question 5  
+
+If you change `hidden_size` from 32 → 8 without altering anything else, you primarily reduce:  
+**A.** The number of time-steps processed  
+**B.** Model capacity (fewer parameters)  
+**C.** Training epochs required  
+**D.** Sequence length  
+
+<details><summary>▶ Click to show answer</summary>Correct Answer: B</details>  
+<details><summary>▶ Click to show explanation</summary>Smaller hidden vectors mean fewer weights and less representational power.</details>
+
+---
+
 ## 8.2 Graph Neural Networks (GNNs)
 
 ### Why GNNs make chemical sense  
@@ -113,6 +188,80 @@ pred_yield = model(sample_mol)
 print("predicted yield for toy molecule:", pred_yield.item())
 ```
 
+---
+
+### Section 8.2 – Quiz Questions (Graph Neural Networks)
+
+#### 1) Factual Questions
+
+##### Question 1  
+
+In a molecular graph, **nodes** typically represent:  
+**A.** Bonds  
+**B.** Atoms  
+**C.** Ring systems  
+**D.** IR peaks  
+
+<details><summary>▶ Click to show answer</summary>Correct Answer: B</details>  
+<details><summary>▶ Click to show explanation</summary>Atoms are mapped to nodes; bonds form edges connecting them.</details>
+
+---
+
+##### Question 2  
+
+The **`edge_index`** tensor in PyTorch Geometric lists:  
+**A.** Node labels and hybridisations  
+**B.** Start- and end-atom indices for each bond  
+**C.** Atomic numbers only  
+**D.** 3-D coordinates  
+
+<details><summary>▶ Click to show answer</summary>Correct Answer: B</details>  
+<details><summary>▶ Click to show explanation</summary>`edge_index` encodes graph connectivity as pairs of node indices.</details>
+
+---
+
+##### Question 3  
+
+A key advantage of GNNs for chemistry is their ability to:  
+**A.** Ignore local atomic environments  
+**B.** Map variable-size molecules to fixed-length vectors  
+**C.** Require explicit reaction conditions  
+**D.** Operate only on tabular data  
+
+<details><summary>▶ Click to show answer</summary>Correct Answer: B</details>  
+<details><summary>▶ Click to show explanation</summary>Message passing aggregates information into a size-invariant embedding.</details>
+
+---
+
+#### 2) Comprehension / Application Questions
+
+##### Question 4  
+
+You have reaction SMILES *without* 3-D coordinates.  
+Can you still train a GNN?  
+**A.** Yes – connectivity alone often works  
+**B.** No – 3-D is mandatory  
+**C.** Only after DFT optimisation  
+**D.** Only with image data  
+
+<details><summary>▶ Click to show answer</summary>Correct Answer: A</details>  
+<details><summary>▶ Click to show explanation</summary>Most GNNs operate on 2-D graphs derived directly from SMILES.</details>
+
+---
+
+##### Question 5  
+
+If each node feature vector has length 10 and there are 4 atoms, the shape of `data.x` is:  
+**A.** `(10, 4)`  
+**B.** `(4, 10)`  
+**C.** `(4,)`  
+**D.** `(10,)`  
+
+<details><summary>▶ Click to show answer</summary>Correct Answer: B</details>  
+<details><summary>▶ Click to show explanation</summary>Format is `[num_nodes, num_features]` → 4 × 10.</details>
+
+---
+
 ## 8.3 Random Forests
 
 ### Concept
@@ -144,6 +293,76 @@ rf.fit(X, y)
 print("OOB R² (quick sanity check):", rf.oob_score_)
 print("sample prediction:", rf.predict(X[:1])[0])
 ```
+
+---
+
+### Section 8.3 – Quiz Questions (Random Forests)
+
+#### 1) Factual Questions
+
+##### Question 1  
+
+Random Forests are an ensemble of:  
+**A.** Linear regressors  
+**B.** Decision trees  
+**C.** k-Means clusters  
+**D.** Support-vector machines  
+
+<details><summary>▶ Click to show answer</summary>Correct Answer: B</details>
+
+---
+
+##### Question 2  
+
+The attribute `oob_score_` printed in the snippet reports:  
+**A.** Over-optimised benchmark  
+**B.** Out-of-bag R² estimate  
+**C.** Observed-only bias  
+**D.** Objective batching ratio  
+
+<details><summary>▶ Click to show answer</summary>Correct Answer: B</details>
+
+---
+
+##### Question 3  
+
+Which hyper-parameter chiefly controls tree diversity in a Random Forest?  
+**A.** `n_estimators`  
+**B.** `criterion`  
+**C.** `max_depth`  
+**D.** `random_state`  
+
+<details><summary>▶ Click to show answer</summary>Correct Answer: A</details>  
+<details><summary>▶ Click to show explanation</summary>More estimators = more trees, boosting ensemble variance reduction.</details>
+
+---
+
+#### 2) Comprehension / Application Questions
+
+##### Question 4  
+
+Why are Random Forests a popular *baseline* for small tabular datasets?  
+**A.** They need deep chemical insight  
+**B.** They train quickly with minimal tuning  
+**C.** They require sequential temperature data  
+**D.** They embed quantum mechanics  
+
+<details><summary>▶ Click to show answer</summary>Correct Answer: B</details>
+
+---
+
+##### Question 5  
+
+Your forest overfits. Which tweak most likely **reduces** overfitting?  
+**A.** Increase `max_depth`  
+**B.** Decrease `max_depth`  
+**C.** Disable bootstrapping  
+**D.** Remove feature engineering  
+
+<details><summary>▶ Click to show answer</summary>Correct Answer: B</details>  
+<details><summary>▶ Click to show explanation</summary>Shallow trees generalise better by limiting each tree’s complexity.</details>
+
+---
 
 ## 8.4 Neural Networks
 
@@ -187,110 +406,70 @@ print("final loss:", loss.item())
 print("predicted yield (first sample):", y_hat[0].item())
 ```
 
-## Section 8.5 Quiz – Yield Prediction Models  
+---
 
-### **Factual Questions**
+### Section 8.4 – Quiz Questions (Feed-forward Neural Networks)
 
-1. **Which data format is most naturally consumed by a Graph Neural Network (GNN)?**  
-   - A. Fixed‑length one‑hot vectors  
-   - B. Time‑stamped CSV logs  
-   - C. Graphs where nodes represent atoms and edges represent bonds 
-   - D. Pixel grids from reaction photos  
+#### 1) Factual Questions
 
-<details><summary>Answer</summary>
+##### Question 1  
 
-**C**
+Which activation function is explicitly used in the MLP snippet?  
+**A.** Sigmoid  
+**B.** Tanh  
+**C.** ReLU  
+**D.** Softmax  
 
-</details>
-
-<details><summary>Explanation</summary>
-
-GNN layers (e.g., `GCNConv`) propagate information along edges of a graph, matching the way chemists draw molecules.
-
-</details>
+<details><summary>▶ Click to show answer</summary>Correct Answer: C</details>
 
 ---
 
-2. An RNN is especially useful when your reaction **input features vary across time** because it:  
-   - A. Requires fewer floating‑point operations  
-   - B. Carries previous state from one time‑step to the next  
-   - C. Forces all sequences to the same length by padding  
-   - D. Automatically converts °C to K  
+##### Question 2  
 
-<details><summary>Answer</summary>
+The MLP architecture shown contains how many *hidden* layers?  
+**A.** 1  
+**B.** 2  
+**C.** 3  
+**D.** 0  
 
-**B**
-
-</details>
-
-<details><summary>Explanation</summary>
-
-The recurrent connection lets the network “remember” earlier steps like a temperature ramp or feed rate.
-
-</details>
+<details><summary>▶ Click to show answer</summary>Correct Answer: B</details>  
+<details><summary>▶ Click to show explanation</summary>Two `nn.Linear` layers sit between input and output.</details>
 
 ---
 
-3. In the PyTorch RNN demo, the tensor `x` has shape `(batch, seq_len, features)`.  
-   If `seq_len` = 10, what does “10” represent here?  
-   - A. Number of atoms in the molecule  
-   - B. Number of recorded time‑steps per reaction  
-   - C. Hidden‑layer size  
-   - D. Number of epochs  
+##### Question 3  
 
-<details><summary>Answer</summary>
+A key limitation of generic feed-forward NNs in chemistry is:  
+**A.** Inability to model non-linear relations  
+**B.** Need for large datasets to avoid overfitting  
+**C.** Zero computational cost  
+**D.** Mandatory graph inputs  
 
-**B**
-
-</details>
-
-<details><summary>Explanation</summary>
-
-Each reaction was logged every hour for 10 h, giving 10 sequential observations.
-
-</details>
+<details><summary>▶ Click to show answer</summary>Correct Answer: B</details>
 
 ---
 
-### **Comprehension / Application Questions**
+#### 2) Comprehension / Application Questions
 
-4. You have **300 reactions** described by eight tabular descriptors (no time series, no structural graphs).  
-   Which model is the most convenient **baseline**?  
-   - A. RNN  
-   - B. GNN  
-   - C. Random Forest
-   - D. Transformer LM  
+##### Question 4  
 
-<details><summary>Answer</summary>
+Doubling every hidden-layer size without adding data mainly risks:  
+**A.** Vanishing gradients  
+**B.** Underfitting  
+**C.** Overfitting  
+**D.** Slower I/O  
 
-**C**
-
-</details>
-
-<details><summary>Explanation</summary>
-
-Random Forests train fast, require little tuning, and handle small tabular datasets well.
-
-</details>
+<details><summary>▶ Click to show answer</summary>Correct Answer: C</details>
 
 ---
 
-5. Your chem‑E colleague says “Yield plummets whenever the temperature ramp overshoots.”  
-   Which model family is **most likely** to capture that time‑dependent failure?  
-   - A. Random Forest  
-   - B. RNN
-   - C. GNN  
-   - D. MLP with only molecular descriptors  
+##### Question 5  
 
-<details><summary>Answer</summary>
+Which loss function is appropriate for *continuous* yield prediction?  
+**A.** `nn.CrossEntropyLoss()`  
+**B.** `nn.MSELoss()`  
+**C.** `nn.BCELoss()`  
+**D.** `nn.NLLLoss()`  
 
-**B**
-
-</details>
-
-<details><summary>Explanation</summary>
-
-RNNs specialise in sequential data and can model the effect of overshoot at particular time‑steps.
-
-</details>
-
+<details><summary>▶ Click to show answer</summary>Correct Answer: B</details>  
+<details><summary>▶ Click to show explanation</summary>Mean-squared error is standard for regression targets such as reaction yield.</details>
