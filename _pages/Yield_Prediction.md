@@ -11,13 +11,13 @@ dataset: BH (https://jcheminf.biomedcentral.com/articles/10.1186/s13321-021-0057
 
 Yield prediction in chemistry involves estimating the outcomes of chemical reactions under specific conditions. Modern machine learning methods, including RNNs, GNNs, Random Forests, and Neural Networks, have significantly enhanced yield predictions by capturing complex reaction patterns from experimental data.
 
-Below you’ll meet four common model families, learn why chemists use them, see a **very small PyTorch demo** for each deep‑learning model, and get a feel for their strengths and trade‑offs.
+Below you’ll meet four common model families, learn why chemists use them, see a very small PyTorch demo for each deep‑learning model, and get a feel for their strengths and trade‑offs.
 
 
 ## 8.1 Recurrent Neural Networks (RNNs)
 
 ### Why RNNs make chemical sense  
-* Reaction conditions (temperature ramps, reagent feeds, pH drift) are **temporal sequences**.  
+* Reaction conditions (temperature ramps, reagent feeds, pH drift) are temporal sequences.  
 * An RNN “remembers” what happened at \(t-1\) when it predicts the yield trend at \(t\).  
 
 ### Concept
@@ -71,7 +71,7 @@ print("first three predicted yields:", pred[:3].flatten().tolist())
 
 ##### Question 1  
 
-Which PyTorch class provides a *recurrent* layer that processes one time-step at a time?**  
+Which PyTorch class provides a recurrent layer that processes one time-step at a time? 
 **A.** `nn.Linear`   
 **B.** `nn.RNN`   
 **C.** `nn.Conv1d`   
@@ -85,7 +85,7 @@ Which PyTorch class provides a *recurrent* layer that processes one time-step at
 ##### Question 2  
 
 The tensor `x` in the RNN demo has shape `(20, 10, 1)`.  
-What does the **middle dimension (10)** correspond to?  
+What does the middle dimension (10) correspond to?  
 **A.** Batch size  
 **B.** Hidden-state size  
 **C.** Number of recorded time-steps per reaction  
@@ -141,7 +141,7 @@ If you change `hidden_size` from 32 → 8 without altering anything else, you pr
 ## 8.2 Graph Neural Networks (GNNs)
 
 ### Why GNNs make chemical sense  
-Chemists already think of molecules as **graphs** (atoms = nodes, bonds = edges).  
+Chemists already think of molecules as graphs (atoms = nodes, bonds = edges).  
 A GNN learns *how* local structure influences yield under a given catalytic system.
 
 ### Concept
@@ -196,7 +196,7 @@ print("predicted yield for toy molecule:", pred_yield.item())
 
 ##### Question 1  
 
-In a molecular graph, **nodes** typically represent:  
+In a molecular graph, nodes typically represent:  
 **A.** Bonds  
 **B.** Atoms  
 **C.** Ring systems  
@@ -209,7 +209,7 @@ In a molecular graph, **nodes** typically represent:
 
 ##### Question 2  
 
-The **`edge_index`** tensor in PyTorch Geometric lists:  
+The edge_index tensor in PyTorch Geometric lists:  
 **A.** Node labels and hybridisations  
 **B.** Start- and end-atom indices for each bond  
 **C.** Atomic numbers only  
@@ -251,7 +251,7 @@ Can you still train a GNN?
 
 ##### Question 5  
 
-If each node feature vector has length 10 and there are 4 atoms, the shape of `data.x` is:  
+If each node feature vector has length 10 and there are 4 atoms, the shape of data.x is:  
 **A.** `(10, 4)`  
 **B.** `(4, 10)`  
 **C.** `(4,)`  
@@ -353,7 +353,7 @@ Why are Random Forests a popular *baseline* for small tabular datasets?
 
 ##### Question 5  
 
-Your forest overfits. Which tweak most likely **reduces** overfitting?  
+Your forest overfits. Which tweak most likely reduces overfitting?  
 **A.** Increase `max_depth`  
 **B.** Decrease `max_depth`  
 **C.** Disable bootstrapping  

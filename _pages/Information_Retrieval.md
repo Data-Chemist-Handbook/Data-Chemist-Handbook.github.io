@@ -351,8 +351,8 @@ Correct Answer: C
 #### 2) Comprehension / Application Questions
 
 ##### Question 3
-You call the Chat Completion API twice with the **exact same prompt** but get **different** answers each time.  
-Which settings will make the response **identical** on every call?
+You call the Chat Completion API twice with the exact same prompt but get different answers each time.  
+Which settings will make the response identical on every call?
 
 **A.** `temperature = 1.0`, `top_p = 1.0`  
 **B.** `temperature = 0.0`, `top_p = 1.0`  
@@ -361,7 +361,7 @@ Which settings will make the response **identical** on every call?
 
 <details><summary>▶ Click to show answer</summary>
 
-**C**
+Correct Answer: C
 
 </details>
 
@@ -393,7 +393,7 @@ Interactive programming means writing code incrementally with immediate feedback
 
 ### Coding
 
-#### 3. **Helper function:**  
+#### 3. Helper function:  
 
 ```python
    import os
@@ -422,7 +422,7 @@ Interactive programming means writing code incrementally with immediate feedback
       return completion.choices[0].message.content.strip()
 ```
 
-#### 4. **Run query:**  
+#### 4. Run query:
 ```python
    from IPython.display import Markdown, display
    output = gpt_query(prompt=input("Enter a prompt: "))
