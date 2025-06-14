@@ -369,7 +369,7 @@ Which settings will make the response **identical** on every call?
 Setting both temperature and top_p to 0 removes all randomness, forcing the model to choose the highest‑probability token at each step—so identical prompts yield identical outputs.
 </details>
 
-
+---
 
 ## 10.4 Interactive Programming
 
@@ -428,6 +428,8 @@ Interactive programming means writing code incrementally with immediate feedback
    output = gpt_query(prompt=input("Enter a prompt: "))
    display(Markdown(output))
 ```  
+
+---
 
 ### Section 10.4 – Quiz Questions
 
