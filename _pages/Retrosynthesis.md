@@ -166,7 +166,7 @@ print(train_y[0]+">>"+train_X[0]==train_rxns[0])
 With SMILES represntation, a single molecule can be represnted by more than one valid SMILES string. This means that the same molecule could appear multiple times in the dataset with different SMILES and models might overfit or mislearn due to inconsistent representations. To solve this issue, we use SMILES canonicalization, which converts different valid SMILES strings that represent the same molecule into a unique, standardized form (called canonical SMILES).
 
 ```python
-# Camonicalise SMILEs
+# Camonicalise SMILES
 def canonicalize(smiles):
     try:
         mol = Chem.MolFromSmiles(smiles)
@@ -204,6 +204,87 @@ test_X, test_y = canonicalize_pairs(test_X, test_y)
 
 # Sanity check
 print(train_X[0])
+```
+
+**Step 6: Tokenize SMILES**
+
+```python
+# Tokenize SMILES
+
+tokenizer = RobertaTokenizerFast.from_pretrained("seyonec/PubChem10M_SMILES_BPE_450k") # Or use other tokenizer of choice
+
+# Create function for tokenization
+def tokenize_smiles_bpe(smiles_list, tokenizer, max_length=600):
+    encodings = tokenizer(smiles_list,
+                          padding='max_length',
+                          truncation=True,
+                          max_length=max_length,
+                          return_tensors='pt')
+    return encodings['input_ids'] #, encodings['attention_mask'] use for transformer maybe
+
+# Tokenize encoder (product SMILES)
+train_enc_input = tokenize_smiles_bpe(train_X, tokenizer)
+val_enc_input   = tokenize_smiles_bpe(val_X, tokenizer)
+test_enc_input  = tokenize_smiles_bpe(test_X, tokenizer)
+
+# Tokenize decoder (reactant SMILES)
+train_dec_input = tokenize_smiles_bpe(train_y, tokenizer)
+val_dec_input   = tokenize_smiles_bpe(val_y, tokenizer)
+test_dec_input  = tokenize_smiles_bpe(test_y, tokenizer)
+
+# Sanity check
+print(train_enc_input.shape)
+print(train_dec_input.shape)
+```
+
+**Step 7: Define Some Helpful Helpers**
+
+`create_dataloader` is a utility function used to wrap input and target tensors into a DataLoader object which handles batching, shuffling etc. Additionally, this function ensures that both enc_inputs and dec_inputs are PyTorch tensors. If they're not already tensors, it converts them.
+
+```python
+# Dataset wrapper
+def create_dataloader(enc_inputs, dec_inputs, batch_size):
+    inputs = enc_inputs if isinstance(enc_inputs, torch.Tensor) else torch.tensor(enc_inputs, dtype=torch.long)
+    targets = dec_inputs if isinstance(dec_inputs, torch.Tensor) else torch.tensor(dec_inputs, dtype=torch.long)
+    dataset = TensorDataset(inputs, targets)
+    return DataLoader(dataset, batch_size=batch_size, shuffle=True)
+```
+
+Next, we define the `compute_accuracy` function which calculates token-level accuracy of predictions from the model, while ignoring padded positions. Token-level accuracy is used here during the training and evaluation loops as sequence-level comparisions may be too harsh for the model to learn. During testing, sequence-level checking may be used e.g., exact match or top-k accuracy.
+
+```python
+# Helper function
+def compute_accuracy(predictions, targets, pad_token_id=0):
+    preds = predictions.argmax(dim=2)  # shape: (batch_size, seq_len)
+    mask = targets != pad_token_id     # ignore padding
+    correct = (preds == targets) & mask
+    accuracy = correct.sum().float() / mask.sum().float()
+    return accuracy.item()
+```
+
+We also define `device` to define the appropriate device to run the model, specifically GPU or CPU.
+
+```python
+# Device config
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+```
+
+Finally, we may optionally use `wandb` to tune hyperparameters during training by setting several possible ranges for these as seen in the following code. Note that the sweep values shown are simply for demonstration purposes.
+
+```python
+# WandB Sweep Options Configuration (if tuning hyperparameters)
+sweep_config = {
+    'method': 'bayes',
+    'metric': {'name': 'val_loss', 'goal': 'minimize'},
+    'parameters': {
+        'learning_rate': {'distribution': 'uniform', 'min':0.0001, 'max': 0.01},
+        'embed_dim': {'values': [128, 256]},
+        'hidden_dim': {'values': [ 256, 512]},
+        'num_layers': {'values': [2,3,4]},
+        'dropout': {'distribution': 'uniform', 'min':0.2, 'max': 0.7},
+        'epochs': {'distribution': 'int_uniform', 'min': 2, 'max': 25},
+    }
+}
 ```
 
 
