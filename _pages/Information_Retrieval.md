@@ -133,28 +133,28 @@ _Example:_ “Given the reactants aspirin and hydrochloric acid...”
 7. **Output Explanation & Restrictions:** Desired response format and limits.  
 _Example:_ “Provide the reaction products in SMILES notation only.”
 
-8. **Few-shot Examples:** Demonstrate the expected format.  
-```text
+8. **Few-shot Examples:** Demonstrate the expected format.
+_Example:_ 
 Input: Reactants: aspirin + hydrochloric acid  
 Output (SMILES): <product_smiles>
 
 Input: Reactants: benzene + nitric acid  
 Output (SMILES): <product_smiles>
-```
 
-**Example Task and Prompt:**
+### Example Task and Prompt:
 
 **Task:** Analyze the interaction between hydrogen gas and water.  
-> “You are an expert chemist. Explain what happens when hydrogen gas (H₂) is introduced to water (H₂O) under standard conditions. Include:
-> -Physical and chemical properties of hydrogen in water  
-> -Possible reactions or interactions  
-> -Conditions for reaction  
-> -Energy changes or hazards  
-> -Explanation of why the reaction proceeds or not under normal conditions  
-> Provide relevant safety considerations.  
-> **Example:** Analyze the interaction between chlorine gas and water.  
-> **Answer:**  
-> Chlorine gas is a yellow‑green diatomic molecule with moderate solubility in water (≈0.7 g/L at 20 °C) and a strong oxidizing character. When Cl₂ dissolves, it undergoes a hydrolysis equilibrium:Cl₂(g) + H₂O(l) ⇌ HCl(aq) + HOCl(aq). Under ambient conditions this reaction is mildly exothermic, releasing enough heat to warm the solution but  not boil it. Hydrochloric acid and hypochlorous acid lower the pH, driving further Cl₂ uptake until equilibrium is reached. Hypochlorous acid is an effective disinfectant, owing to its oxidizing power. The reaction proceeds spontaneously because Cl₂ is a strong electrophile and water acts as a nucleophile, facilitating bond cleavage. Hazards include toxicity and corrosiveness of both gaseous Cl₂ and its acidic products; HOCl can bleach skin or materials. Always handle chlorine in a fume hood, wear acid‑resistant gloves, goggles, and respiratory protection, and neutralize any acidic effluent before disposal.”
+“You are an expert chemist. Explain what happens when hydrogen gas (H₂) is introduced to water (H₂O) under standard conditions. Include:  
+- Physical and chemical properties of hydrogen in water   
+- Possible reactions or interactions   
+- Conditions for reaction   
+- Energy changes or hazards   
+- Explanation of why the reaction proceeds or not under normal conditions  
+
+Provide relevant safety considerations.  
+**Example:** Analyze the interaction between chlorine gas and water.    
+**Answer:**   
+Chlorine gas is a yellow‑green diatomic molecule with moderate solubility in water (≈0.7 g/L at 20 °C) and a strong oxidizing character. When Cl₂ dissolves, it undergoes a hydrolysis equilibrium:Cl₂(g) + H₂O(l) ⇌ HCl(aq) + HOCl(aq). Under ambient conditions this reaction is mildly exothermic, releasing enough heat to warm the solution but  not boil it. Hydrochloric acid and hypochlorous acid lower the pH, driving further Cl₂ uptake until equilibrium is reached. Hypochlorous acid is an effective disinfectant, owing to its oxidizing power. The reaction proceeds spontaneously because Cl₂ is a strong electrophile and water acts as a nucleophile, facilitating bond cleavage. Hazards include toxicity and corrosiveness of both gaseous Cl₂ and its acidic products; HOCl can bleach skin or materials. Always handle chlorine in a fume hood, wear acid‑resistant gloves, goggles, and respiratory protection, and neutralize any acidic effluent before disposal.”
 
 ### Tips: 
 - **Clarity:** Be specific.  
@@ -296,6 +296,7 @@ Call this function with two arguments, the model’s predicted answer and the gr
 def similarity_score(expected, answer):
 return int(expected.lower() == answer.lower())
 ```
+
 ### Section 10.3 – Quiz Questions
 
 #### 1) Factual Questions
