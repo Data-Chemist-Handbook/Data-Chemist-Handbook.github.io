@@ -100,7 +100,7 @@ import torch.optim as optim
 from torch.utils.data import TensorDataset, DataLoader
 import wandb
 ```
-**Hyperparameter tuning**:
+**Hyperparameter tuning**: In machine learning, hyperparameters are configuration values that govern the training process of machine elarning models. They are used during the learning phase of the model, but they are not part of the final resulting model. Examples include the learning rate, number of layers, hidden dimensions, dropout rate, and batch size. As these values can have a significant impact on model performance, choosing the right set of hyperparameters is essential to achieving the optimal model. This process of selection is known as hyperparameter tuning.
 
 ***Note:*** *To use transformers library, add your HuggingFace token to the Colab notebook. The HuggingFace token can be found in "Settings>>Access Tokens" when logged in to HuggingFace (more information [here](https://huggingface.co/docs/hub/en/security-tokens)). To add the key to Colab, click on the key icon on the left side panel of the notebook and paste the token in the value field. Name the token "HF_TOKEN" and toggle notebook access for the key.* 
 
@@ -164,10 +164,10 @@ print(train_y[0]+">>"+train_X[0]==train_rxns[0])
 
 **Step 5: Canonicalize SMILES using RDKit**
 
-With SMILES represntation, a single molecule can be represnted by more than one valid SMILES string. This means that the same molecule could appear multiple times in the dataset with different SMILES and models might overfit or mislearn due to inconsistent representations. To solve this issue, we use SMILES canonicalization, which converts different valid SMILES strings that represent the same molecule into a unique, standardized form (called canonical SMILES).
+With SMILES representation, a single molecule can be represented by more than one valid SMILES string. This means that the same molecule could appear multiple times in the dataset with different SMILES and models might overfit or mislearn due to inconsistent representations. To solve this issue, we use SMILES canonicalization, which converts different valid SMILES strings that represent the same molecule into a unique, standardized form (called canonical SMILES).
 
 ```python
-# Camonicalise SMILES
+# Canonicalise SMILES
 def canonicalize(smiles):
     try:
         mol = Chem.MolFromSmiles(smiles)
@@ -182,7 +182,7 @@ def canonicalize_pairs(X, y):
     for prod, react in zip(X, y):
         # Canonicalize product
         canon_prod_parts = []
-        for p in prod.split('.'):
+        for p in prod.split('.'): # '.' is the delimiter used to separate multiple reactant or multiple products in SMILES representation
             c = canonicalize(p)
             if c:
                 canon_prod_parts.append(c)
@@ -212,7 +212,9 @@ print(train_X[0])
 ```python
 # Tokenize SMILES
 
-tokenizer = RobertaTokenizerFast.from_pretrained("seyonec/PubChem10M_SMILES_BPE_450k") # Or use other tokenizer of choice
+tokenizer = RobertaTokenizerFast.from_pretrained("seyonec/PubChem10M_SMILES_BPE_450k")
+# This is a fast tokenizer implementation of the RoBERTa tokenizer, specifically designed for use with SMILES strings
+# You may also use other tokenizer of choice
 
 # Create function for tokenization
 def tokenize_smiles_bpe(smiles_list, tokenizer, max_length=600):
