@@ -100,7 +100,7 @@ Only option B references elements specific to chemistry reports (procedure, haz
 
 </details>
 
-
+---
 
 ## 10.2 Prompt Engineering
 
