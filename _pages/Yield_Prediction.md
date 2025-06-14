@@ -32,7 +32,7 @@ RNNs have been used to model chemical reaction kinetics in continuous pharmaceut
 - Captures temporal dependencies (time-dependent conditions).
 
 ### Limitations
-- Difficulty in handling long sequences (long sequences can “forget” early events).  
+- Difficulty in handling long sequences (long sequences can “forget” early events) or usually being called vanish gradients.  
 - Complex for beginners in terms of mathematical understanding.
 
 ### Simple Python Snippet
@@ -71,7 +71,7 @@ print("first three predicted yields:", pred[:3].flatten().tolist())
 
 ##### Question 1  
 
-Which PyTorch class provides a recurrent layer that processes one time-step at a time? 
+Which PyTorch class provides a recurrent layer that processes one time-step at a time?   
 **A.** `nn.Linear`   
 **B.** `nn.RNN`   
 **C.** `nn.Conv1d`   
@@ -98,7 +98,7 @@ What does the middle dimension (10) correspond to?
 
 ##### Question 3  
 
-A common training problem with *vanilla* RNNs on very long sequences is:  
+A common training problem with vanilla RNNs on very long sequences is:  
 **A.** Over-smoothing of graph topology  
 **B.** Vanishing or exploding gradients  
 **C.** Excessive GPU memory during inference  
@@ -113,12 +113,11 @@ A common training problem with *vanilla* RNNs on very long sequences is:
 
 ##### Question 4  
 
-Your data include a 30-hour temperature profile sampled every minute.  
-Which RNN variant is usually preferred to keep early information alive?  
-**A.** Simple RNN  
-**B.** GRU or LSTM  
-**C.** 1-D CNN  
-**D.** Random Forest  
+Which of the following is an example application of RNNs?  
+**A.** Modeling atom-level interactions in molecular graphs  
+**B.** Modeling reaction kinetics in continuous pharmaceutical manufacturing  
+**C.** Classifying reaction product color from images  
+**D.** Embedding molecules using graph convolutional layers  
 
 <details><summary>▶ Click to show answer</summary>Correct Answer: B</details>  
 <details><summary>▶ Click to show explanation</summary>Gated units (GRU/LSTM) mitigate vanishing gradients on long sequences.</details>
@@ -142,7 +141,7 @@ If you change `hidden_size` from 32 → 8 without altering anything else, you pr
 
 ### Why GNNs make chemical sense  
 Chemists already think of molecules as graphs (atoms = nodes, bonds = edges).  
-A GNN learns *how* local structure influences yield under a given catalytic system.
+A GNN learns how local structure influences yield under a given catalytic system.
 
 ### Concept
 - GNNs handle data represented as graphs, perfect for chemical structures (atoms as nodes, bonds as edges).  
@@ -237,7 +236,7 @@ A key advantage of GNNs for chemistry is their ability to:
 
 ##### Question 4  
 
-You have reaction SMILES *without* 3-D coordinates.  
+You have reaction SMILES without 3-D coordinates.  
 Can you still train a GNN?  
 **A.** Yes – connectivity alone often works  
 **B.** No – 3-D is mandatory  
@@ -284,13 +283,13 @@ from sklearn.ensemble import RandomForestRegressor
 import numpy as np
 np.random.seed(0)
 
-X = np.random.rand(100, 6)   # 6 engineered features (e.g., MW, logP, base pKa…)
+X = np.random.rand(100, 6)   # 6 engineered features (e.g: MW, logP, base pKa…)
 y = np.random.rand(100)      # yields 0‑1
 
 rf = RandomForestRegressor(n_estimators=200, oob_score=True, random_state=0)
 rf.fit(X, y)
 
-print("OOB R² (quick sanity check):", rf.oob_score_)
+print("OOB R² :", rf.oob_score_)
 print("sample prediction:", rf.predict(X[:1])[0])
 ```
 
@@ -309,18 +308,20 @@ Random Forests are an ensemble of:
 **D.** Support-vector machines  
 
 <details><summary>▶ Click to show answer</summary>Correct Answer: B</details>
+<details><summary>▶ Click to show explanation</summary>They combine many decision trees to improve predictive accuracy and reduce overfitting compared to a single tree.</details>
 
 ---
 
 ##### Question 2  
 
-The attribute `oob_score_` printed in the snippet reports:  
+The attribute `oob_score_` printed in the snippet reports. What does oob stand for? :  
 **A.** Over-optimised benchmark  
 **B.** Out-of-bag R² estimate  
 **C.** Observed-only bias  
 **D.** Objective batching ratio  
 
 <details><summary>▶ Click to show answer</summary>Correct Answer: B</details>
+<details><summary>▶ Click to show explanation</summary>`oob_score_` uses the samples not included in each bootstrap (“out-of-bag” data) to compute an R² score, giving a built-in estimate of generalization without a separate validation set.</details>
 
 ---
 
@@ -341,13 +342,14 @@ Which hyper-parameter chiefly controls tree diversity in a Random Forest?
 
 ##### Question 4  
 
-Why are Random Forests a popular *baseline* for small tabular datasets?  
+Why are Random Forests a popular baseline for small tabular datasets?  
 **A.** They need deep chemical insight  
 **B.** They train quickly with minimal tuning  
 **C.** They require sequential temperature data  
 **D.** They embed quantum mechanics  
 
 <details><summary>▶ Click to show answer</summary>Correct Answer: B</details>
+<details><summary>▶ Click to show explanation</summary>Random Forests handle varied feature types, are robust to noise, and generally perform well out of the box with little hyperparameter tuning.</details>
 
 ---
 
@@ -421,12 +423,13 @@ Which activation function is explicitly used in the MLP snippet?
 **D.** Softmax  
 
 <details><summary>▶ Click to show answer</summary>Correct Answer: C</details>
+<details><summary>▶ Click to show explanation</summary>The code uses `nn.ReLU()` between layers to introduce non-linearities.</details>
 
 ---
 
 ##### Question 2  
 
-The MLP architecture shown contains how many *hidden* layers?  
+The MLP architecture shown contains how many hidden layers?  
 **A.** 1  
 **B.** 2  
 **C.** 3  
@@ -446,6 +449,7 @@ A key limitation of generic feed-forward NNs in chemistry is:
 **D.** Mandatory graph inputs  
 
 <details><summary>▶ Click to show answer</summary>Correct Answer: B</details>
+<details><summary>▶ Click to show explanation</summary>Neural networks have many parameters and can easily overfit small datasets, requiring large amounts of data for reliable generalization.</details>
 
 ---
 
@@ -460,16 +464,25 @@ Doubling every hidden-layer size without adding data mainly risks:
 **D.** Slower I/O  
 
 <details><summary>▶ Click to show answer</summary>Correct Answer: C</details>
+<details><summary>▶ Click to show explanation</summary>Increasing model capacity without more data often leads to overfitting, where the network memorizes noise instead of learning general patterns.</details>
 
 ---
 
 ##### Question 5  
 
-Which loss function is appropriate for *continuous* yield prediction?  
-**A.** `nn.CrossEntropyLoss()`  
-**B.** `nn.MSELoss()`  
-**C.** `nn.BCELoss()`  
-**D.** `nn.NLLLoss()`  
+What operation does `nn.MSELoss()` perform behind the scenes?  
+**A.** Computes cross-entropy between predicted probabilities and one-hot targets  
+**B.** Calculates the average of squared differences between predicted and actual values  
+**C.** Computes binary cross-entropy loss for binary classification  
+**D.** Calculates negative log-likelihood of predicted distributions  
 
 <details><summary>▶ Click to show answer</summary>Correct Answer: B</details>  
-<details><summary>▶ Click to show explanation</summary>Mean-squared error is standard for regression targets such as reaction yield.</details>
+<details><summary>▶ Click to show explanation</summary>MSELoss measures how far off your predictions are by taking each prediction’s error (prediction minus true value), squaring it (to penalize larger mistakes more), and then averaging all those squared errors into one overall score.</details>
+
+
+
+
+
+
+
+
