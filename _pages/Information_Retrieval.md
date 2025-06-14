@@ -44,13 +44,13 @@ LLM is an acronym for:
 **D.** Linear‑Loss Machine    
 
 <details>
-<summary>Click to show answer</summary>
+<summary>▶ Click to show answer</summary>
 
 Correct Answer: B
 </details>
 
 <details>
-<summary>Click to show explanation</summary>
+<summary>▶ Click to show explanation</summary>
 
 An LLM is a Large Language Model trained on vast text corpora to understand and generate human‑like language.
 </details>
@@ -65,12 +65,12 @@ Which capability is **not** typically associated with an LLM used in chemistry?
 **D.** Answering literature questions in natural language  
 
 <details>
-<summary>Click to show answer</summary>
+<summary>▶ Click to show answer</summary>
 Correct Answer: C
 </details>
 
 <details>
-<summary>Click to show explanation</summary>
+<summary>▶ Click to show explanation</summary>
 
 LLMs work with text; high‑level quantum calculations require specialised physics engines, not language models.
 
@@ -89,12 +89,12 @@ Which response below shows that the model has understood the chemistry context r
 **D.** Increase your font size to 14 pt.   
 
 <details>
-<summary>Click to show answer</summary>
+<summary>▶ Click to show answer</summary>
 Correct Answer: B
 </details>
 
 <details>
-<summary>Click to show explanation</summary>
+<summary>▶ Click to show explanation</summary>
 
 Only option B references elements specific to chemistry reports (procedure, hazards, ACS citations).
 
@@ -174,13 +174,13 @@ In a well‑structured prompt, the portion *“SMILES string: CCO”* is best l
 **C.** Relevant Domain   
 **D.** Few‑shot Example   
 
-<details><summary>Click to show answer</summary>
+<details><summary>▶ Click to show answer</summary>
 
 Correct Answer: B
 
 </details>
 
-<details><summary>Click to show explanation</summary>
+<details><summary>▶ Click to show explanation</summary>
 
 It supplies the concrete data instance the model must process.
 
@@ -195,13 +195,13 @@ Few‑shot examples are included primarily to:
 **C.** Hide the system instruction  
 **D.** Increase randomness  
 
-<details><summary>Click to show answer</summary>
+<details><summary>▶ Click to show answer</summary>
 
 Correct Answer: B
 
 </details>
 
-<details><summary>Click to show explanation</summary>
+<details><summary>▶ Click to show explanation</summary>
 
 By pattern‑matching the examples, the model generalises to the new query.
 
@@ -219,13 +219,13 @@ Your LLM responds with a 700‑word essay and no product structure. Which prompt
 **C.** Increase the temperature parameter to 2.   
 **D.** Split the prompt into two requests.   
 
-<details><summary>Click to show answer</summary>
+<details><summary>▶ Click to show answer</summary>
 
 Correct Answer: B
 
 </details>
 
-<details><summary>Click to show explanation</summary>
+<details><summary>▶ Click to show explanation</summary>
 
 Explicit output restrictions steer the model to a parsable answer.
 
@@ -312,13 +312,13 @@ is to:
 **C.**  Encrypt your code cell   
 **D.**  Select the GPT‑4 model   
 
-<details><summary>Click to show answer</summary>
+<details><summary>▶ Click to show answer</summary>
 
 Correct Answer: B
 
 </details>
 
-<details><summary>Click to show explanation</summary>
+<details><summary>▶ Click to show explanation</summary>
 
 The key is stored as an environment variable so the SDK can read it without hard‑coding.
 
@@ -333,13 +333,13 @@ Which argument in `client.chat.completions.create()` *mainly* controls result le
 **C.** `max_tokens` 
 **D.** `model`  
 
-<details><summary>Click to show answer</summary>
+<details><summary>▶ Click to show answer</summary>
 
 Correct Answer: C
 
 </details>
 
-<details><summary>Click to show explanation</summary>
+<details><summary>▶ Click to show explanation</summary>
 
 `max_tokens` sets the upper bound on generated tokens, limiting output size.
 
@@ -358,13 +358,13 @@ Which settings will make the response **identical** on every call?
 **C.** `temperature = 0.0`, `top_p = 0.0`
 **D.** `temperature = 0.5`, `top_p = 0.5`  
 
-<details><summary>Click to show answer</summary>
+<details><summary>▶ Click to show answer</summary>
 
 **C**
 
 </details>
 
-<details><summary>Click to show explanation</summary>
+<details><summary>▶ Click to show explanation</summary>
 Setting both temperature and top_p to 0 removes all randomness, forcing the model to choose the highest‑probability token at each step—so identical prompts yield identical outputs.
 </details>
 
@@ -438,13 +438,13 @@ Storing the API key in Colab “Secrets” is safer than typing it in plain text
 **C.** It gives you free credits.  
 **D.** The model runs locally.  
 
-<details><summary>Click to show answer</summary>
+<details><summary>▶ Click to show answer</summary>
 
 Correct Answer: B
 
 </details>
 
-<details><summary>Click to show explanation</summary>
+<details><summary>▶ Click to show explanation</summary>
 
 Secrets are masked and excluded from shared notebook diffs, reducing accidental leakage.
 
@@ -462,13 +462,13 @@ Why is showing the *head* helpful before the API call?
 **C.** To save network bandwidth.  
 **D.** To anonymise the dataset.  
 
-<details><summary>Click to show answer</summary>
+<details><summary>▶ Click to show answer</summary>
 
 Correct Answer: A
 
 </details>
 
-<details><summary>Click to show explanation</summary>
+<details><summary>▶ Click to show explanation</summary>
 
 A quick visual snapshot lets you verify data integrity before you embed it in a prompt.
 
