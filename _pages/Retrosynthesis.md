@@ -347,6 +347,156 @@ class Seq2Seq(nn.Module):
         return torch.cat(outputs, dim=1)
 ```
 
+**Step 9: Create the Training, Evaluation, and Test Functions**
+
+The `train_epoch` function handles one training pass over the training dataset (epoch).
+
+```python
+def train_epoch(model, dataloader, criterion, optimizer, vocab_size, max_len):
+    model.train()
+    total_loss = 0
+    total_acc = 0
+    for enc_input, dec_target in dataloader:
+        enc_input, dec_target = enc_input.to(device), dec_target.to(device)
+        optimizer.zero_grad()
+
+        batch_size = enc_input.size(0)
+        dec_input = torch.full((batch_size, 1), fill_value=tokenizer.bos_token_id, dtype=torch.long, device=device)
+        outputs = []
+
+        encoder_outputs, hidden = model.encoder(enc_input)
+        decoder_hidden = hidden
+
+        for t in range(max_len):
+            output, decoder_hidden = model.decoder(dec_input, decoder_hidden)
+            outputs.append(output)
+
+            # Greedy sampling (no teacher forcing)
+            top1 = output.argmax(2)  # (batch_size, 1)
+            dec_input = top1.detach()
+
+        outputs = torch.cat(outputs, dim=1)  # (batch_size, max_len, vocab_size)
+        loss = criterion(outputs.view(-1, vocab_size), dec_target.view(-1))
+        accuracy = compute_accuracy(outputs, dec_target)
+        loss.backward()
+        optimizer.step()
+
+        total_loss += loss.item()
+        total_acc += accuracy
+
+    return total_loss / len(dataloader), total_acc/len(dataloader)
+```
+
+Next, the `evaluate` function runs a validation pass over the validation dataset, and returns the average loss and accuracy over the evaluation set.
+
+```python
+def evaluate(model, dataloader, criterion, vocab_size, max_len):
+    model.eval()
+    total_loss = 0
+    total_acc = 0
+    with torch.no_grad():
+        for enc_input, dec_target in dataloader:
+            enc_input, dec_target = enc_input.to(device), dec_target.to(device)
+
+            batch_size = enc_input.size(0)
+            dec_input = torch.full((batch_size, 1), fill_value=tokenizer.bos_token_id, dtype=torch.long, device=device)
+            outputs = []
+
+            encoder_outputs, hidden = model.encoder(enc_input)
+            decoder_hidden = hidden
+
+            for t in range(max_len):
+                output, decoder_hidden = model.decoder(dec_input, decoder_hidden)
+                outputs.append(output)
+
+                top1 = output.argmax(2)
+                dec_input = top1.detach()
+
+            outputs = torch.cat(outputs, dim=1)
+            loss = criterion(outputs.view(-1, vocab_size), dec_target.view(-1))
+            accuracy = compute_accuracy(outputs, dec_target)
+            total_loss += loss.item()
+            total_acc += accuracy
+
+    return total_loss / len(dataloader), total_acc/ len(dataloader)
+```
+
+Finally, we have the `test_exactmatch` function which performs exact-match checking of the tested model's output against ground truth for the test dataset. This is a sequence-level accuracy check, as mentioned in Step 7, and is much stricter than the token-level checks used for training.
+```python
+code
+```
+
+**Step 10: Training Loop**
+
+The `train` function handles the complete training workflow for the Seq2Seq LSTM, with support for hyperparameter tuning via wandb. The function sets up the training, validation, and test data loaders. It loads hyperparameter values from the wandb.config object, which is defined through a sweep configuration (refer Step 7 for `sweep_config`). Alternatively, you may replace a parameter (`config.<param>` here) with fixed values to manually define your hyperparameters.
+
+For each epoch, the model is trained using `train_epoch()`, and validation is performed using `evaluate()`. The etst fucntion used is `test_exactmatch`. Key metrics are logged to wandb for tracking. After training completes, the final model is saved to disk and also uploaded to wandb for record-keeping or future use.
+
+```python
+# Training loop, with wandb
+def train():
+    wandb.init()
+    config = wandb.config
+
+    vocab_size = tokenizer.vocab_size
+    batch_size = 64 # Batch size can also be configurable and performance may change 
+    # but, parallelisation was used to utilise multiple GPUs and memory limitations restricted us to batch size of 64
+    
+    # Data loaders
+    train_loader = create_dataloader(train_enc_input, train_dec_input, batch_size)
+    val_loader = create_dataloader(val_enc_input, val_dec_input, batch_size)
+    test_loader = create_dataloader(val_enc_input, val_dec_input, batch_size=256) # testing doesn't rely
+    # Model
+    encoder = Encoder(
+        vocab_size=vocab_size,
+        embed_dim=config.embed_dim,
+        hidden_dim=config.hidden_dim,
+        num_layers=config.num_layers,
+        dropout=config.dropout,
+    )
+
+    decoder = Decoder(
+        vocab_size=vocab_size,
+        embed_dim=config.embed_dim,
+        hidden_dim=config.hidden_dim,
+        num_layers=config.num_layers,
+        dropout=config.dropout,
+    )
+
+    model = Seq2Seq(encoder, decoder, tokenizer).to(device)
+    optimizer = optim.Adam(model.parameters(), lr=config.learning_rate)
+    criterion = nn.CrossEntropyLoss(ignore_index=0)
+
+    for epoch in range(config.epochs):
+        train_loss, train_acc = train_epoch(model, train_loader, criterion, optimizer, vocab_size, max_len=600)
+        val_loss, val_acc = evaluate(model, val_loader, criterion, vocab_size, max_len=600)
+        test_acc=test_greedy(model, test_loader, tokenizer, max_len=600, pad_token_id=tokenizer.pad_token_id)
+        # Log metrics in wandb
+        # Remove/ comment out the following line if not suing wandb
+        wandb.log({
+            "epoch": epoch + 1,
+            "train_loss": train_loss,
+            "val_loss": val_loss,
+            "train_acc": train_acc,
+            "val_acc": val_acc,
+            "test_acc": test_acc
+        })
+
+        print(f"Epoch {epoch+1} | Train Loss: {train_loss:.4f} |Train Acc: {train_acc:.4f} | Val Loss: {val_loss:.4f} | Val Acc: {val_acc:.4f}")
+
+    # Save final model
+    torch.save(model.state_dict(), "model_final.pth")
+    wandb.save("model_final.pth")
+    return model
+```
+
+**(If using wandb) Step 11: Start wandb Sweep**
+
+```python
+wandb.login()
+sweep_id = wandb.sweep(sweep_config, project="retro-lstm")
+wandb.agent(sweep_id, function=train)
+```
 ## 7.4 Transformer
 
 ## 7.5 Graph Neural Networks
