@@ -1742,6 +1742,9 @@ Depth 3: Average similarity = 0.995
 Depth 5: Average similarity = 0.993
 Depth 10: Average similarity = 1.000
 ```
+![Over-smoothing in GNNs](resource/img/gnn/oversmoothing.png)
+
+*As shown above, as the number of message-passing layers increases, node representations converge. Initially distinct feature vectors (left) become nearly indistinguishable after several layers (right), resulting in the loss of structural information. This phenomenon is known as **over-smoothing** and is a critical limitation of deep GNNs.*
 
 **Interpretation**
 
