@@ -36,14 +36,12 @@ A recurrent neural network processes input sequentially, updating an internal hi
 
 There are variations like Long Short-Term Memory (LSTM) that address issues of standard (“vanilla”) RNNs, such as the tendency for gradients to vanish over long sequences, which means when you train the RNN by going backward through dozens of time-steps, the signals used to update the earliest weights become so tiny that the network “forgets” anything that happened at the start of the sequence. These gated RNNs can retain long-range information better, which is valuable if a reaction’s outcome depends on something that happened hours earlier. For typical laboratory reactions with sequences of moderate length (e.g. a 10-hour run logged hourly), vanilla RNNs can suffice, but more complex sequences may require LSTM/GRU to handle long-term memory.  
 
-IMAGE 1
-
 ### Example Application
 Imagine a reaction run in a flow reactor where we monitor the conversion % each hour for 8 hours. We want to predict the final isolated yield at the end of the process. An RNN can be trained on historical runs of the reactor: the input would be the time-series of conversion or other sensor readings, and the target is the final yield. By learning from many such sequences, the RNN can start to predict whether, say, a slow start in conversion is likely to lead to a low final yield, or if a certain pattern of spikes in temperature improves the yield.  
 For instance, RNN models have been applied in pharmaceutical process development to model reaction kinetics in continuous flow systems, where controlling the reaction over time is crucial to maximize yield. In these cases, the RNN effectively learns the dynamic relationship between time-dependent conditions and the ultimate yield, providing chemists with a tool to forecast final outcomes from partial progress data.  
 
 **RNN Diagram**  
-![RNN Diagram](../resource/img/yield_prediction/RNN.png)
+![RNN Diagram](../../resource/img/yield_prediction/RNN.png)
 
 ### Advantages
 - **Captures Temporal Patterns**: RNNs excel at modeling sequential data. They can learn how earlier time points in a reaction influence later time points and final results.  
@@ -230,7 +228,7 @@ Many chemical problems are best described by graphs: molecules are graphs of ato
 In summary, GNNs see molecules like a chemist does (as graphs) and thus make sense for chemistry. They have indeed been shown to improve reaction yield predictions by better capturing structural effects  
 
 **How a GNN Sees a Molecule and Outputs Yield**  
-![GNN Structure](../resource/img/yield_prediction/Gnn-structure.png)
+![GNN Structure](../../resource/img/yield_prediction/Gnn-structure.png)
 
 
 ### Concept
@@ -241,7 +239,7 @@ After updating node features, we need a readout or pooling step to get a fixed-s
 Think of a GNN as a way to compute molecular descriptors on the fly: instead of predefined fingerprints, the model learns its own features that are optimal for predicting yield. For example, a GNN might learn an embedding that captures a complicated structure without us explicitly coding that rule, it can infer it from data.
 
 **Inside a GNN: Message-Passing → Update → Read-out Pipeline**  
-![GNN Process](../resource/img/yield_prediction/GNN-process.png)
+![GNN Process](../../resource/img/yield_prediction/GNN-process.png)
 
 ### Example Application
 A GNN-based approach to predict yield could involve the following steps:
