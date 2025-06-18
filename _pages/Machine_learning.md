@@ -1533,8 +1533,6 @@ In PyTorch Geometric (PyG), the most basic GNN implementation is `GCNConv`. Let�
 | `GCNConv(in_channels, out_channels)` | A GCN layer that does: message passing + aggregation + update.                                    |
 | `conv(x, edge_index)`                | Applies one layer of graph convolution and returns updated node features.                         |
 
-以下是优化后的格式，兼顾 **Markdown 渲染兼容性** 和 **语义清晰度**，推荐用于如 MkDocs、Jupyter、Obsidian 或 GitHub 页面中：
-
 ---
 
 <details>
