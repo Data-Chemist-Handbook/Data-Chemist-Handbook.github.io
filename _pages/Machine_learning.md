@@ -1288,8 +1288,7 @@ Let’s break down the functions we’ll use:
 
 <details>
 <summary>▶ Click to see code: Basic molecule to graph conversion</summary>
-
-```python
+<pre><code class="language-python">
 from rdkit import Chem
 import numpy as np
 
@@ -1304,8 +1303,7 @@ water = Chem.AddHs(water)
 
 # Step 4: Count again — now we should see 3 atoms (1 O + 2 H)
 print(f"Number of atoms with H: {water.GetNumAtoms()}")  # Output: 3
-```
-
+</code></pre>
 </details>
 
 ---
@@ -1327,8 +1325,7 @@ Let’s break down the functions used here:
 
 <details>
 <summary>▶ Click to see code: Extracting graph connectivity</summary>
-
-```python
+<pre><code class="language-python">
 # Print all bonds in the molecule in the form: Atom(index) -- Atom(index)
 print("Water molecule connections:")
 for bond in water.GetBonds():
@@ -1342,8 +1339,7 @@ for bond in water.GetBonds():
 # Water molecule connections:
 #   O(0) -- H(1)
 #   O(0) -- H(2)
-```
-
+</code></pre>
 </details>
 
 ---
@@ -1365,8 +1361,7 @@ Here’s what each function does:
 
 <details>
 <summary>▶ Click to see code: Atom feature extraction</summary>
-
-```python
+<pre><code class="language-python">
 # For each atom, we print its atomic number
 def get_atom_features(atom):
     # Atomic number is a simple feature used in many models
@@ -1382,9 +1377,9 @@ for i, atom in enumerate(water.GetAtoms()):
 # Atom 0 (O): features = [8]
 # Atom 1 (H): features = [1]
 # Atom 2 (H): features = [1]
-```
-
+</code></pre>
 </details>
+
 
 ---
 
@@ -1399,8 +1394,7 @@ Functions involved:
 
 <details>
 <summary>▶ Click to see code: Edge extraction</summary>
-
-```python
+<pre><code class="language-python">
 def get_edge_list(mol):
     edges = []
     for bond in mol.GetBonds():
@@ -1416,8 +1410,7 @@ print("Water edges:", water_edges)
 
 # Output
 # Water edges: [[0, 1], [1, 0], [0, 2], [2, 0]]
-```
-
+</code></pre>
 </details>
 
 Each pair represents one connection (bond) between atoms. Including both directions ensures that during **message passing**, information can flow freely from each node to all its neighbors.
@@ -1533,12 +1526,9 @@ In PyTorch Geometric (PyG), the most basic GNN implementation is `GCNConv`. Let�
 | `GCNConv(in_channels, out_channels)` | A GCN layer that does: message passing + aggregation + update.                                    |
 | `conv(x, edge_index)`                | Applies one layer of graph convolution and returns updated node features.                         |
 
----
-
 <details>
 <summary>▶ Click to see code</summary>
-
-```python
+<pre><code class="language-python">
 import torch
 from torch_geometric.data import Data
 from torch_geometric.nn import GCNConv
@@ -1570,8 +1560,7 @@ output = conv(data.x, data.edge_index)
 # Print updated node features
 print("Updated Node Features After Message Passing:")
 print(output)
-```
-
+</code></pre>
 </details>
 
 This code outputs a tensor of shape `[4, 2]` — one **updated node representation** per node, after applying the GCN layer. For example:
@@ -1666,8 +1655,7 @@ We use a **6-node ring structure** as a simple molecular graph. Each node starts
 
 <details>
 <summary>▶ Click to see code: Constructing a simple cyclic graph</summary>
-
-```python
+<pre><code class="language-python">
 import torch
 from torch_geometric.data import Data
 
@@ -1682,8 +1670,7 @@ edge_index = torch.tensor([
 
 # Create PyTorch Geometric graph object
 data = Data(x=x, edge_index=edge_index)
-```
-
+</code></pre>
 </details>
 
 **Over-smoothing Analysis**
@@ -1692,9 +1679,10 @@ Now we apply the same GCN layer multiple times to simulate a deeper GNN. After e
 
 <details>
 <summary>▶ Click to see code: Demonstrating over-smoothing</summary>
-
-```python
+<pre><code class="language-python">
+import torch
 import torch.nn.functional as F
+import matplotlib.pyplot as plt
 from torch_geometric.nn import GCNConv
 
 def measure_smoothing(num_layers, data):
@@ -1721,18 +1709,21 @@ def measure_smoothing(num_layers, data):
     return avg_similarity
 
 # Run for different GNN depths
-for depth in [1, 3, 5, 10]:
+depths = [1, 3, 5, 10]
+sims = []
+for depth in depths:
     sim = measure_smoothing(depth, data)
+    sims.append(sim)
     print(f"Depth {depth}: Average similarity = {sim:.3f}")
 
+# Plot the smoothing effect
 plt.plot(depths, sims, marker='o')
 plt.xlabel("Number of GCN Layers")
 plt.ylabel("Average Cosine Similarity")
 plt.title("Over-smoothing Effect in GNNs")
 plt.grid(True)
 plt.show()
-```
-
+</code></pre>
 </details>
 
 **Output**
