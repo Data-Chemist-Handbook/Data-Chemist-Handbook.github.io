@@ -1794,36 +1794,47 @@ In contrast, GNNs work with molecules as they truly are - graphs where atoms are
 
 #### Setting Up the Environment
 
-To build our molecular property prediction system, we'll need several specialized libraries. Each serves a specific purpose in our pipeline:
+Before we begin building our GNN-based molecular property prediction system, we need to load a set of specialized Python libraries. These libraries fall into several functional categories:
+
+* **Deep Learning Core (PyTorch)**: We use PyTorch to define and train neural networks.
+* **Graph Neural Network Layers (PyTorch Geometric)**: These enable message passing and graph pooling, essential for processing molecular graphs.
+* **Chemical Representation (RDKit)**: RDKit provides SMILES parsing, hydrogen addition, and graph connectivity extraction from molecules.
+* **Data Processing and Visualization**: Standard tools like `pandas`, `numpy`, and `matplotlib` are used for loading data and plotting results.
+* **Model Evaluation**: Scikit-learn's metrics help assess our model's performance.
+* **I/O Utilities**: We use `requests` and `io` to fetch and process online datasets.
+
+These tools collectively allow us to transform raw molecular strings into structured graph data, feed them into a GNN, and evaluate the model's predictive power.
 
 <details>
-<summary>▶ Click to see code: Environment setup</summary>
+<summary>▶ Show Setup Code</summary>
+<pre><code class="language-python">
+# PyTorch: Core deep learning library
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
 
-```python
-# Deep learning foundation
-import torch                         # Main PyTorch library
-import torch.nn as nn                # Neural network modules
-import torch.nn.functional as F      # Activation functions
-
-# Graph neural network operations
+# PyTorch Geometric: GNN-specific operations
 from torch_geometric.nn import GCNConv, global_mean_pool
 from torch_geometric.data import Data, DataLoader
 
-# Chemistry and data processing
-from rdkit import Chem               # Molecular manipulation
-import numpy as np                   # Numerical operations
-import pandas as pd                  # Data handling
-import matplotlib.pyplot as plt      # Visualization
+# RDKit: Chemistry toolkit for molecular structures
+from rdkit import Chem
 
-# Additional utilities
-import requests                      # For downloading data
-import io                           # Data stream handling
+# Standard numerical/data libraries
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# I/O utilities
+import requests
+import io
+
+# Evaluation metrics
 from sklearn.metrics import mean_squared_error, r2_score
-```
-
+</code></pre>
 </details>
 
-PyTorch provides our deep learning foundation, while PyTorch Geometric adds graph-specific capabilities. RDKit, the Swiss Army knife of computational chemistry, handles molecular structures. Together, they form a powerful toolkit for molecular machine learning.
+This environment gives us everything needed to build, train, and evaluate a molecular graph neural network. Once initialized, we’ll move on to data loading and molecular graph construction.
 
 #### Understanding Molecular Data: The ESOL Dataset
 
@@ -1831,9 +1842,12 @@ For our example, we'll use the ESOL (Estimated SOLubility) dataset - a carefully
 
 <details>
 <summary>▶ Click to see code: Loading and exploring the ESOL dataset</summary>
-
-```python
+<pre><code class="language-python">
 # Load the ESOL dataset
+import requests
+import pandas as pd
+import io
+
 url = "https://raw.githubusercontent.com/deepchem/deepchem/master/datasets/delaney-processed.csv"
 response = requests.get(url)
 data = pd.read_csv(io.StringIO(response.text))
@@ -1849,8 +1863,7 @@ print(f"Solubility range: {min(solubility_values):.2f} to {max(solubility_values
 print("\nExample molecules:")
 for i in range(3):
     print(f"  {smiles_list[i]}: {solubility_values[i]:.2f} log S")
-```
-
+</code></pre>
 </details>
 
 The dataset spans an impressive range - from highly soluble small molecules like ethanol to essentially insoluble large organic compounds. This diversity challenges our model to learn general principles rather than memorizing specific cases.
@@ -1867,8 +1880,9 @@ Each atom in a molecule has properties that influence molecular behavior. We nee
 
 <details>
 <summary>▶ Click to see code: Atom feature extraction</summary>
+<pre><code class="language-python">
+from rdkit import Chem
 
-```python
 def get_atom_features(atom):
     """
     Extract numerical features from an atom.
@@ -1890,8 +1904,7 @@ print("Water atom features:")
 for i, atom in enumerate(water.GetAtoms()):
     features = get_atom_features(atom)
     print(f"  {atom.GetSymbol()}: {features}")
-```
-
+</code></pre>
 </details>
 
 These features capture essential chemical information:
@@ -1907,8 +1920,9 @@ The connections between atoms - the molecular skeleton - are equally important:
 
 <details>
 <summary>▶ Click to see code: Bond connectivity extraction</summary>
+<pre><code class="language-python">
+from rdkit import Chem
 
-```python
 def get_bond_connections(mol):
     """
     Extract the connectivity pattern of the molecule.
@@ -1929,8 +1943,7 @@ ethanol = Chem.MolFromSmiles("CCO")
 ethanol = Chem.AddHs(ethanol)
 connections = get_bond_connections(ethanol)
 print(f"Ethanol has {ethanol.GetNumAtoms()} atoms and {len(connections)//2} bonds")
-```
-
+</code></pre>
 </details>
 
 We represent each bond bidirectionally because chemical influence flows both ways - the oxygen affects the carbon it's bonded to, and vice versa.
@@ -1941,8 +1954,12 @@ Now we're ready to build our GNN. The architecture consists of three main compon
 
 <details>
 <summary>▶ Click to see code: GNN architecture definition</summary>
+<pre><code class="language-python">
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+from torch_geometric.nn import GCNConv, global_mean_pool
 
-```python
 class MolecularGNN(nn.Module):
     def __init__(self, num_features=5, hidden_dim=64, num_layers=3):
         """
@@ -1987,8 +2004,7 @@ class MolecularGNN(nn.Module):
         
         # Predict molecular property
         return self.predictor(x)
-```
-
+</code></pre>
 </details>
 
 The architecture embodies several key design decisions:
@@ -2007,8 +2023,11 @@ To use our GNN, we need to convert molecules into the appropriate data structure
 
 <details>
 <summary>▶ Click to see code: Molecule to graph conversion</summary>
+<pre><code class="language-python">
+from rdkit import Chem
+import torch
+from torch_geometric.data import Data
 
-```python
 def molecule_to_graph(smiles, solubility=None):
     """
     Convert a SMILES string to a graph data object.
@@ -2045,8 +2064,7 @@ def molecule_to_graph(smiles, solubility=None):
 # Test conversion
 test_graph = molecule_to_graph("CCO", -0.77)
 print(f"Ethanol graph: {test_graph.x.shape[0]} atoms, {test_graph.edge_index.shape[1]//2} bonds")
-```
-
+</code></pre>
 </details>
 
 This conversion process handles several important details:
@@ -2060,30 +2078,31 @@ With our architecture defined and data prepared, we can train the GNN to predict
 
 <details>
 <summary>▶ Click to see code: Training process</summary>
+<pre><code class="language-python">
+from torch_geometric.loader import DataLoader  # Note: Use loader, not data.DataLoader
 
-```python
-# Convert molecules to graphs
+# Step 1: Convert molecules to graphs (first 1000 for speed)
 graphs = []
 for smiles, solubility in zip(smiles_list[:1000], solubility_values[:1000]):
     graph = molecule_to_graph(smiles, solubility)
     if graph is not None:
         graphs.append(graph)
 
-# Split data
+# Step 2: Train/test split
 train_size = int(0.8 * len(graphs))
 train_graphs = graphs[:train_size]
 test_graphs = graphs[train_size:]
 
-# Create batched data loaders
+# Step 3: Wrap in data loaders
 train_loader = DataLoader(train_graphs, batch_size=32, shuffle=True)
 test_loader = DataLoader(test_graphs, batch_size=32, shuffle=False)
 
-# Initialize model and optimizer
+# Step 4: Initialize model, loss, optimizer
 model = MolecularGNN(num_features=5, hidden_dim=64)
 optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
 criterion = nn.MSELoss()
 
-# Training loop
+# Step 5: Training function
 def train_epoch(model, loader, optimizer, criterion):
     model.train()
     total_loss = 0
@@ -2098,14 +2117,13 @@ def train_epoch(model, loader, optimizer, criterion):
         
     return total_loss / len(loader.dataset)
 
-# Train for multiple epochs
+# Step 6: Run training loop
 print("Training GNN on ESOL dataset...")
 for epoch in range(50):
     train_loss = train_epoch(model, train_loader, optimizer, criterion)
     if epoch % 10 == 0:
         print(f"Epoch {epoch}: Loss = {train_loss:.3f}")
-```
-
+</code></pre>
 </details>
 
 The training process reveals how the model gradually learns to map molecular structure to solubility. The decreasing loss indicates that the model is finding patterns - perhaps learning that molecules with more polar groups tend to be more soluble, or that large hydrophobic regions decrease solubility.
@@ -2116,25 +2134,24 @@ Once trained, our model can predict the solubility of new molecules:
 
 <details>
 <summary>▶ Click to see code: Making predictions</summary>
-
-```python
+<pre><code class="language-python">
 def predict_solubility(smiles, model):
     """Predict solubility for a new molecule."""
     graph = molecule_to_graph(smiles)
     if graph is None:
         return None
-    
-    # Create batch index
+
+    # Create dummy batch index (single molecule)
     batch = torch.zeros(graph.x.size(0), dtype=torch.long)
-    
-    # Make prediction
+
+    # Predict in evaluation mode
     model.eval()
     with torch.no_grad():
         prediction = model(graph.x, graph.edge_index, batch)
     
     return prediction.item()
 
-# Test on some common molecules
+# Test on a few common molecules
 test_molecules = [
     ("O", "Water"),
     ("CCO", "Ethanol"),
@@ -2147,8 +2164,7 @@ print("\nPredictions for common molecules:")
 for smiles, name in test_molecules:
     pred = predict_solubility(smiles, model)
     print(f"  {name}: {pred:.2f} log S")
-```
-
+</code></pre>
 </details>
 
 The model's predictions should align with chemical intuition:
@@ -2162,9 +2178,8 @@ To truly evaluate our model, we need to look beyond individual predictions:
 
 <details>
 <summary>▶ Click to see code: Model evaluation</summary>
-
-```python
-# Evaluate on test set
+<pre><code class="language-python">
+# Evaluate the model on the test set
 model.eval()
 predictions = []
 true_values = []
@@ -2175,7 +2190,7 @@ with torch.no_grad():
         predictions.extend(pred.squeeze().tolist())
         true_values.extend(batch.y.tolist())
 
-# Calculate metrics
+# Compute evaluation metrics
 rmse = np.sqrt(mean_squared_error(true_values, predictions))
 r2 = r2_score(true_values, predictions)
 
@@ -2183,17 +2198,20 @@ print(f"\nModel Performance:")
 print(f"  RMSE: {rmse:.2f} log S units")
 print(f"  R² Score: {r2:.3f}")
 
-# Visualize predictions
+# Plot predicted vs. true values
 plt.figure(figsize=(8, 6))
 plt.scatter(true_values, predictions, alpha=0.5)
-plt.plot([min(true_values), max(true_values)], 
-         [min(true_values), max(true_values)], 'r--')
+plt.plot(
+    [min(true_values), max(true_values)],
+    [min(true_values), max(true_values)],
+    'r--'
+)
 plt.xlabel('True Solubility (log S)')
 plt.ylabel('Predicted Solubility (log S)')
 plt.title('GNN Solubility Predictions')
+plt.grid(True)
 plt.show()
-```
-
+</code></pre>
 </details>
 
 An R² score around 0.5 indicates that our simple model explains about half the variance in solubility - quite respectable given we're using only basic atomic features! The scatter plot reveals where the model excels and where it struggles, providing insights for future improvements.
