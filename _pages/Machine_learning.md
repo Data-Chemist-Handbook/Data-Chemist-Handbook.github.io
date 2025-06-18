@@ -1132,10 +1132,6 @@ Chemical toxicity often arises from complex, nonlinear interactions among molecu
 
 ---
 
-I'll rewrite section 3.3 with a more pedagogical approach, breaking down concepts step-by-step while keeping all the original code but presenting it in smaller, more digestible chunks.
-
----
-
 ## 3.3 Graph Neural Network
 
 Graph Neural Networks (GNNs) are a revolutionary approach to analyzing molecular data. Unlike traditional neural networks that work with fixed-size inputs like images or sequences, GNNs can directly process the natural graph structure of molecules. This section will guide you through understanding why molecules are graphs, how GNNs process them, and how to build your own molecular property prediction models.
