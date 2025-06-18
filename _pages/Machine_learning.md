@@ -1533,17 +1533,19 @@ In PyTorch Geometric (PyG), the most basic GNN implementation is `GCNConv`. Let�
 | `GCNConv(in_channels, out_channels)` | A GCN layer that does: message passing + aggregation + update.                                    |
 | `conv(x, edge_index)`                | Applies one layer of graph convolution and returns updated node features.                         |
 
+以下是优化后的格式，兼顾 **Markdown 渲染兼容性** 和 **语义清晰度**，推荐用于如 MkDocs、Jupyter、Obsidian 或 GitHub 页面中：
+
 ---
 
 <details>
-<summary>▶ Click to see code: Simple message passing implementation</summary>
+<summary>▶ Click to see code</summary>
 
 ```python
 import torch
 from torch_geometric.data import Data
 from torch_geometric.nn import GCNConv
 
-# Define node features: 4 nodes, each with 3 features (like atom types)
+# Define node features: 4 nodes, each with 3 features (e.g., atom types)
 x = torch.tensor([
     [1, 0, 0],  # Node 0
     [0, 1, 0],  # Node 1
@@ -1551,7 +1553,7 @@ x = torch.tensor([
     [0, 0, 1]   # Node 3
 ], dtype=torch.float)
 
-# Define edges: undirected graph, so each edge appears twice (i -> j and j -> i)
+# Define edges: undirected graph, so each edge appears twice (i → j and j → i)
 edge_index = torch.tensor([
     [0, 1, 1, 2, 2, 3, 3, 0],  # Source nodes
     [1, 0, 2, 1, 3, 2, 0, 3]   # Target nodes
@@ -1560,28 +1562,29 @@ edge_index = torch.tensor([
 # Build the graph using PyG's Data structure
 data = Data(x=x, edge_index=edge_index)
 
-# Define a GCN layer: input dim = 3 (features), output dim = 2
+# Define a Graph Convolutional Network (GCN) layer:
+# input_dim = 3 (features), output_dim = 2
 conv = GCNConv(in_channels=3, out_channels=2)
 
-# Apply the graph convolution (message passing + update)
+# Apply the GCN (i.e., message passing)
 output = conv(data.x, data.edge_index)
 
-# Output the new node representations
+# Print updated node features
 print("Updated Node Features After Message Passing:")
 print(output)
-
-
-# Output
-# Updated Node Features After Message Passing:
-# tensor([[ 0.2851, -0.0017],
-#         [ 0.6568, -0.4519],
-#         [ 0.6180,  0.1266],
-#         [ 0.2807, -0.3559]], grad_fn=<AddBackward0>)
 ```
 
 </details>
 
-This code will output a `[4, 2]` matrix — one updated feature vector for each of the 4 nodes.
+This code outputs a tensor of shape `[4, 2]` — one **updated node representation** per node, after applying the GCN layer. For example:
+
+```
+Updated Node Features After Message Passing:
+tensor([[ 0.2851, -0.0017],
+        [ 0.6568, -0.4519],
+        [ 0.6180,  0.1266],
+        [ 0.2807, -0.3559]], grad_fn=<AddBackward0>)
+```
 
 **Variants of Graph Convolutions**
 
