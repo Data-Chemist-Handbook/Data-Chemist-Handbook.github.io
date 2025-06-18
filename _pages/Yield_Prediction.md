@@ -34,7 +34,7 @@ sequence of inputs.
 ### Concept of RNNs
 A recurrent neural network processes input sequentially, updating an internal hidden state at each step. At a given time step, an RNN takes the current input (e.g. a measurement at time t) and the hidden state from time t–1, and produces an output and a new hidden state. This design enables RNNs to capture temporal dependencies because an early event in the sequence can affect the prediction at a later time. Chemists find this useful for modeling reaction profiles because the network can, for example, learn that a temperature spike at the beginning might lead to a higher yield at the end.  
 
-There are variations like Long Short-Term Memory (LSTM) that address issues of standard (“vanilla”) RNNs, such as the tendency for gradients to vanish over long sequences, which means when you train the RNN by going backward through dozens of time-steps, the signals used to update the earliest weights become so tiny that the network “forgets” anything that happened at the start of the sequence. These gated RNNs can retain long-range information better, which is valuable if a reaction’s outcome depends on something that happened hours earlier. For typical laboratory reactions with sequences of moderate length (e.g. a 10-hour run logged hourly), vanilla RNNs can suffice, but more complex sequences may require LSTM/GRU to handle long-term memory.  
+There are variations like Long Short-Term Memory (LSTM) that address issues of standard (“vanilla”) RNNs, such as the tendency for gradients to vanish over long sequences, which means when you train the RNN by going backward through dozens of time-steps, the signals used to update the earliest weights become so tiny that the network “forgets” anything that happened at the start of the sequence. These gated RNNs can retain long-range information better, which is valuable if a reaction’s outcome depends on something that happened hours earlier. For typical laboratory reactions with sequences of moderate length , vanilla RNNs can suffice, but more complex sequences may require LSTM to handle long-term memory.  
 
 ### Example Application
 Imagine a reaction run in a flow reactor where we monitor the conversion % each hour for 8 hours. We want to predict the final isolated yield at the end of the process. An RNN can be trained on historical runs of the reactor: the input would be the time-series of conversion or other sensor readings, and the target is the final yield. By learning from many such sequences, the RNN can start to predict whether, say, a slow start in conversion is likely to lead to a low final yield, or if a certain pattern of spikes in temperature improves the yield.  
@@ -46,7 +46,7 @@ For instance, RNN models have been applied in pharmaceutical process development
 ### Advantages
 - **Captures Temporal Patterns**: RNNs excel at modeling sequential data. They can learn how earlier time points in a reaction influence later time points and final results.  
 - **Dynamic Prediction**: As the RNN processes each new measurement (e.g. hourly temperature or conversion), you can “pause” the sequence and ask it for a yield estimate based on what it’s seen so far. For instance, after 2 hours of data the RNN might predict a 40 % final yield; by hour 4 it updates that to 55 %; and at hour 8 it refines to 65 %. This lets you make in fast decisions like add more catalyst or change temperature before the reaction finishes.  
-- **Flexible Input Length**: RNNs can handle sequences of varying length (e.g. a reaction monitored for 5 hours vs. 10 hours) by processing one step at a time, making them versatile for different processes.  
+- **Flexible Input Length**: RNNs can handle sequences of varying length by processing one step at a time, making them versatile for different processes.  
 
 ### Limitations
 - **Data Requirements**: Training RNNs typically requires a substantial amount of sequential data. If most reactions in your dataset are only recorded as final yields (no time series of intermediate data), RNNs can’t be directly applied.  
@@ -174,7 +174,7 @@ Which PyTorch class provides a fully connected layer that applies a linear trans
 ---
 
 
-##### Question 3  
+##### Question 2
 
 A common training problem with vanilla RNNs on very long sequences is:  
 **A.** Over-smoothing of graph topology  
@@ -189,7 +189,7 @@ A common training problem with vanilla RNNs on very long sequences is:
 
 #### 2) Comprehension / Application Questions
 
-##### Question 4  
+##### Question 3
 
 Which of the following is an example application of RNNs?  
 **A.** Modeling atom-level interactions in molecular graphs  
@@ -202,7 +202,7 @@ Which of the following is an example application of RNNs?
 
 ---
 
-##### Question 5  
+##### Question 4
 
 If you change `hidden_dim` from 64 → 32 without altering anything else, you primarily reduce:  
 **A.** The number of time-steps processed  
