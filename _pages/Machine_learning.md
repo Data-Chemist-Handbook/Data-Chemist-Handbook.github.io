@@ -1867,9 +1867,25 @@ for i in range(3):
 </code></pre>
 </details>
 
-The dataset spans an impressive range – from highly soluble small molecules like ethanol to essentially insoluble large organic compounds. This diversity challenges our model to learn general principles rather than memorizing specific cases.
+**Results**
 
-Solubility is expressed in log units (log S, where S is molar solubility). A difference of one log unit represents a 10-fold change in solubility. The 13+ log unit range in our dataset represents over a 10-trillion-fold variation in solubility – capturing everything from molecules that readily dissolve to those that are essentially insoluble.
+Dataset contains 1128 molecules
+Solubility range: -11.60 to 1.58 log S
+
+Example molecules:
+    OCC3OC(OCC2OC(OC(C#N)c1ccccc1)C(O)C(O)C2O)C(O)C(O)C3O : -0.77 log S
+    Cc1occc1C(=O)Nc2ccccc2 : -3.30 log S
+    CC(C)=CCCC(C)=CC(=O) : -2.06 log S
+
+This dataset covers a wide dynamic range of water solubility. The log S values span more than 13 units, corresponding to a solubility difference of over 10 trillion times between the most and least soluble compounds. This range challenges the model to generalize across diverse structural and chemical properties.
+
+For example:
+
+* The first molecule, though large and containing polar groups, has moderate solubility (−0.77 log S).
+* The second includes aromatic and amide groups but is still quite insoluble (−3.30 log S), likely due to hydrophobicity.
+* The third is mostly hydrocarbon with a ketone, and also poorly soluble (−2.06 log S).
+
+Such variation ensures that the model must learn meaningful structure-property relationships, not just memorize molecular patterns.
 
 #### Converting Molecules to Graph Representations
 
