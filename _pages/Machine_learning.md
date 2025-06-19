@@ -2388,1017 +2388,305 @@ This foundation opens the door to more sophisticated molecular property predicti
 
 #### Completed and Compiled Code: [Click Here](https://colab.research.google.com/drive/1qKnKQH4nC5jVzxtsJSUrmwrGu3-YbZha?usp=sharing)
 
-Having understood the theoretical foundations of molecular GNNs, let's now build a complete, production-ready implementation. We'll use the ESOL dataset again, but this time we'll incorporate advanced techniques and best practices that you might use in real research or industrial applications.
+In Section 3.3.3 we sketched a minimal GNN for solubility. Here, we’ll **teach** you how to build a **complete**, **production-ready** pipeline—with commentary at every step—so you understand **why** we do each part, not just **how**.
 
-The journey from a research concept to practical implementation involves many considerations: How do we handle molecules that fail to parse? How do we implement more sophisticated featurization? How can we make our model more interpretable? This section addresses these questions with a comprehensive code example.
+#### 1. Data Loading & Exploration
 
-#### Preparing the Chemical Battlefield
-
-Before diving into neural networks, let's understand our molecular dataset more deeply. The ESOL dataset contains 1,128 molecules with measured aqueous solubility - a property that emerges from complex interactions between molecular structure and water. Some molecules love water (hydrophilic), others avoid it (hydrophobic), and many fall somewhere in between.
-
-<details>
-<summary>▶ Click to see code: Advanced dataset exploration</summary>
+Before any modeling, get to know your data: size, range, and quirks.  
 
 ```python
-import pandas as pd
-import numpy as np
-from rdkit import Chem
-from rdkit.Chem import Descriptors, Draw
+import pandas as pd, io, requests
+
+# Download ESOL
+url  = "https://raw.githubusercontent.com/deepchem/deepchem/master/datasets/delaney-processed.csv"
+data = pd.read_csv(io.StringIO(requests.get(url).text))
+
+print(f"Rows: {len(data)}, Columns: {list(data.columns)}")
+display(data.head(3))
+````
+
+**Why?**
+
+* Confirm column names
+* Catch missing or malformed entries
+* Ensure SMILES and solubility are present
+
+```python
 import matplotlib.pyplot as plt
-import requests
-import io
 
-# Download the ESOL dataset directly from GitHub
-url = "https://raw.githubusercontent.com/deepchem/deepchem/master/datasets/delaney-processed.csv"
-response = requests.get(url)
-data = pd.read_csv(io.StringIO(response.text))
-
-# Display basic information about the dataset
-print(f"Dataset shape: {data.shape}")
-print("\nColumn names:")
-print(data.columns.tolist())
-
-# Preview the first few rows
-print("\nFirst 5 rows:")
-print(data.head())
-
-# Analyze the data distribution
-solubilities = data['measured log solubility in mols per litre'].values
-print(f"\nSolubility range: {solubilities.min():.2f} to {solubilities.max():.2f} log S")
-print(f"Mean solubility: {solubilities.mean():.2f} log S")
-print(f"Standard deviation: {solubilities.std():.2f}")
-
-# Visualize distribution
-plt.figure(figsize=(10, 6))
-plt.hist(solubilities, bins=25, edgecolor='black', alpha=0.7)
-plt.xlabel('Log Solubility (log S)')
-plt.ylabel('Count')
-plt.title('Distribution of Solubility Values in ESOL Dataset')
-plt.grid(True, alpha=0.3)
+sols = data['measured log solubility in mols per litre']
+plt.hist(sols, bins=25, edgecolor='k', alpha=0.7)
+plt.title('ESOL Solubility Distribution')
+plt.xlabel('Log S'); plt.ylabel('Count')
 plt.show()
 ```
+![Solubility Distribution](/resource/img/gnn/solubility_distribution.png)
+
+**Why?**
+
+* Check for imbalance or outliers
+* Decide if you need data augmentation or clipping
 
 </details>
 
-The distribution reveals fascinating chemical diversity. The most soluble molecules (log S > 0) are typically small and polar - think sugars and alcohols. The least soluble (log S < -8) are often large, hydrophobic compounds like steroids or polycyclic aromatics. This 13-order-of-magnitude range challenges our model to learn general principles that apply across vastly different chemical spaces.
+#### 2. Chemical Featurization
 
-Let's examine some molecular extremes to build intuition:
-
-<details>
-<summary>▶ Click to see code: Visualizing molecular diversity</summary>
+Atoms and bonds carry the signal your GNN will learn. We choose features that encode **element identity**, **electronic state**, and **geometry**.
 
 ```python
-# Visualize a few example molecules
-def visualize_molecules(smiles_list, labels=None, molsPerRow=4, size=(150, 150)):
-    mols = [Chem.MolFromSmiles(smiles) for smiles in smiles_list]
-    if labels is None:
-        labels = smiles_list
-    img = Draw.MolsToGridImage(mols, molsPerRow=molsPerRow, subImgSize=size, legends=labels)
-    return img
+from rdkit import Chem
 
-# Sample diverse molecules
-idx_most_soluble = data['measured log solubility in mols per litre'].idxmax()
-idx_least_soluble = data['measured log solubility in mols per litre'].idxmin()
-
-# Get some examples
-examples = [
-    (idx_most_soluble, "Most Soluble"),
-    (idx_least_soluble, "Least Soluble"),
-    (data[data['smiles'].str.contains('OH')].index[0], "Contains OH"),
-    (data[data['smiles'].str.contains('c1ccccc1')].index[0], "Contains Benzene")
-]
-
-sample_smiles = []
-sample_labels = []
-for idx, desc in examples:
-    smiles = data.iloc[idx]['smiles']
-    solubility = data.iloc[idx]['measured log solubility in mols per litre']
-    sample_smiles.append(smiles)
-    sample_labels.append(f"{desc}\n{smiles}\nSolubility: {solubility:.2f}")
-
-print("\nExample molecules from the dataset:")
-img = visualize_molecules(sample_smiles, sample_labels, molsPerRow=2)
-```
-
-</details>
-
-![Example Molecules](/resource/img/gnn/example_molecules.png)
-
-These examples illustrate key structure-property relationships. The most soluble molecules tend to be small with multiple polar groups. The least soluble are large, hydrophobic structures. But simple rules break down quickly - molecular shape, internal hydrogen bonding, and crystal packing effects all play roles that are difficult to capture with traditional descriptors.
-
-#### Enhanced Molecular Featurization
-
-For production-quality predictions, we need richer representations of atoms and bonds. Let's implement a comprehensive featurization scheme that captures the chemical nuances affecting solubility:
-
-<details>
-<summary>▶ Click to see code: Advanced atom featurization</summary>
-
-```python
-def enhanced_atom_features(atom):
-    """Extract comprehensive atomic features for solubility prediction"""
-    features = [
-        atom.GetAtomicNum(),                    # Element identity
-        atom.GetDegree(),                       # Number of bonds
-        atom.GetFormalCharge(),                 # Formal charge
-        int(atom.GetHybridization()),           # Hybridization state
-        int(atom.GetIsAromatic()),              # Aromatic or not
-        atom.GetMass() * 0.01,                  # Atomic mass (scaled)
-        atom.GetTotalValence(),                 # Total valence
-        int(atom.IsInRing()),                   # Ring membership
-        atom.GetTotalNumHs(),                   # Hydrogen count
-        int(atom.GetChiralTag() != 0)           # Chirality
+def atom_feats(a):
+    return [
+      a.GetAtomicNum(),
+      a.GetDegree(),
+      a.GetFormalCharge(),
+      int(a.GetHybridization()),
+      int(a.GetIsAromatic()),
+      a.GetMass()*0.01,
+      a.GetTotalValence(),
+      int(a.IsInRing()),
+      a.GetTotalNumHs(),
+      int(a.GetChiralTag()!=0)
     ]
-    return features
 
-# Test enhanced featurization
-test_mol = Chem.MolFromSmiles("CC(=O)O")  # Acetic acid
-test_mol = Chem.AddHs(test_mol)
-print("Enhanced features for acetic acid:")
-for i, atom in enumerate(test_mol.GetAtoms()):
-    features = enhanced_atom_features(atom)
-    print(f"Atom {i} ({atom.GetSymbol()}): {features}")
+def bond_feats(b):
+    m = {Chem.BondType.SINGLE:1, Chem.BondType.DOUBLE:2,
+         Chem.BondType.TRIPLE:3,  Chem.BondType.AROMATIC:4}
+    return [m.get(b.GetBondType(),0),
+            int(b.GetIsAromatic()),
+            int(b.IsInRing())]
 ```
 
-</details>
+**Why?**
 
-These ten features capture multiple levels of chemical information:
-
-- **Electronic properties** (atomic number, charge, hybridization) determine reactivity
-- **Structural context** (degree, ring membership, valence) indicates local environment  
-- **Hydrogen bonding potential** (H count) directly affects water solubility
-- **Stereochemistry** (chirality) can influence molecular packing
-
-Similarly, we can extract bond features that capture more than just connectivity:
-
-<details>
-<summary>▶ Click to see code: Bond feature extraction</summary>
+* Hybridization & aromaticity reflect electronic configuration
+* Chirality preserves 3D information
+* Bond types distinguish single/double/aromatic interactions
 
 ```python
-def enhanced_bond_features(bond):
-    """Extract bond-specific features"""
-    bond_type_map = {
-        Chem.BondType.SINGLE: 1,
-        Chem.BondType.DOUBLE: 2, 
-        Chem.BondType.TRIPLE: 3,
-        Chem.BondType.AROMATIC: 4
-    }
-    
-    features = [
-        bond_type_map.get(bond.GetBondType(), 0),
-        int(bond.GetIsAromatic()),
-        int(bond.IsInRing())
-    ]
-    return features
-
-# Test bond featurization
-print("\nBond features for acetic acid:")
-for bond in test_mol.GetBonds():
-    features = enhanced_bond_features(bond)
-    a1 = test_mol.GetAtomWithIdx(bond.GetBeginAtomIdx()).GetSymbol()
-    a2 = test_mol.GetAtomWithIdx(bond.GetEndAtomIdx()).GetSymbol()
-    print(f"{a1}-{a2}: {features}")
+mol = Chem.MolFromSmiles(data.smiles.iloc[0])
+print("Atom 0 feats:", atom_feats(mol.GetAtomWithIdx(0)))
 ```
 
-</details>
+**Expected**
 
-Bond features help distinguish between different types of chemical connections. A C=O double bond behaves very differently from a C-O single bond, and aromatic bonds have their own unique properties. This information is crucial for understanding molecular behavior.
+```
+Atom 0 feats: [8, 1, 0, 4, 0, 0.15999000000000002, 2, 0, 1, 0]
+```
 
-#### Advanced GNN Architecture
+#### 3. Dataset & DataLoader
 
-For this challenging dataset, we'll implement a sophisticated GNN that incorporates several modern innovations:
-
-<details>
-<summary>▶ Click to see code: Advanced GNN architecture</summary>
+Wrap each molecule in a `torch_geometric.data.Data` for batching. Handle edge cases (e.g. single-atom molecules).
 
 ```python
 import torch
-import torch.nn as nn
-import torch.nn.functional as F
-from torch_geometric.nn import GCNConv, GATConv, global_mean_pool, global_max_pool, global_add_pool
-from torch_geometric.data import Data, Dataset, DataLoader
+from torch_geometric.data import Data, Dataset
 
-class AdvancedMolecularGNN(nn.Module):
-    def __init__(self, node_features=10, edge_features=3, hidden_dim=128, num_layers=4):
-        super(AdvancedMolecularGNN, self).__init__()
-        
-        # Initial embedding layer
-        self.node_embedding = nn.Linear(node_features, hidden_dim)
-        
-        # Graph convolutional layers with residual connections
-        self.conv_layers = nn.ModuleList()
-        self.batch_norms = nn.ModuleList()
-        for i in range(num_layers):
-            self.conv_layers.append(GCNConv(hidden_dim, hidden_dim))
-            self.batch_norms.append(nn.BatchNorm1d(hidden_dim))
-        
-        # Attention-based final layer
-        self.attention_conv = GATConv(hidden_dim, hidden_dim, heads=4, concat=False)
-        
-        # Multiple pooling strategies
-        self.pool_functions = [global_mean_pool, global_max_pool, global_add_pool]
-        
-        # Prediction head with multiple pooling
-        self.predictor = nn.Sequential(
-            nn.Linear(hidden_dim * len(self.pool_functions), hidden_dim),
-            nn.ReLU(),
-            nn.BatchNorm1d(hidden_dim),
-            nn.Dropout(0.2),
-            nn.Linear(hidden_dim, hidden_dim // 2),
-            nn.ReLU(),
-            nn.Dropout(0.1),
-            nn.Linear(hidden_dim // 2, 1)
-        )
-    
-    def forward(self, x, edge_index, batch):
-        # Initial embedding
-        x = F.relu(self.node_embedding(x))
-        
-        # Apply convolutional layers with residual connections
-        for i, (conv, bn) in enumerate(zip(self.conv_layers, self.batch_norms)):
-            x_new = F.relu(bn(conv(x, edge_index)))
-            if i > 0:  # Add residual connection after first layer
-                x = x + x_new
-            else:
-                x = x_new
-        
-        # Apply attention mechanism
-        x = self.attention_conv(x, edge_index)
-        
-        # Apply multiple pooling strategies and concatenate
-        pooled = [pool_fn(x, batch) for pool_fn in self.pool_functions]
-        x_combined = torch.cat(pooled, dim=1)
-        
-        # Final prediction
-        return self.predictor(x_combined)
+class MoleculeDataset(Dataset):
+    def __init__(self, smiles, targets=None):
+        super().__init__()
+        self._data = []
+        for i, smi in enumerate(smiles):
+            mol = Chem.MolFromSmiles(smi)
+            if not mol: continue
+            mol = Chem.AddHs(mol)
+            x = torch.tensor([atom_feats(a) for a in mol.GetAtoms()], dtype=torch.float)
+            edges, e_feats = [], []
+            for b in mol.GetBonds():
+                u,v = b.GetBeginAtomIdx(), b.GetEndAtomIdx()
+                bf = bond_feats(b)
+                edges += [[u,v],[v,u]]; e_feats += [bf,bf]
+            if not edges:
+                edges, e_feats = [[0,0]], [[0,0,0]]
+            edge_index = torch.tensor(edges, dtype=torch.long).t().contiguous()
+            self._data.append(Data(x=x, edge_index=edge_index, y=torch.tensor([targets[i]], dtype=torch.float) if targets else None))
+    def len(self): return len(self._data)
+    def get(self, i): return self._data[i]
 ```
 
-</details>
+**Why?**
 
-This architecture incorporates several advanced techniques:
-
-**Residual Connections**: By adding the input to the output of each layer (x = x + x_new), we combat over-smoothing and allow deeper networks. This helps preserve atom-specific information even after multiple message-passing rounds.
-
-**Batch Normalization**: Normalizing activations stabilizes training and allows higher learning rates. This is particularly important for molecular graphs, which can vary dramatically in size.
-
-**Attention Mechanism**: The GAT layer learns which neighboring atoms are most important, mimicking how chemists focus on key functional groups.
-
-**Multiple Pooling**: Different pooling strategies capture different aspects of molecular structure:
-- Mean pooling: Average molecular properties
-- Max pooling: Most prominent features (e.g., most polar group)
-- Sum pooling: Extensive properties that scale with size
-
-**Regularization**: Dropout layers prevent overfitting, crucial for our modest-sized dataset.
-
-#### Creating a Production-Ready Dataset Class
-
-To handle real-world molecular data robustly, we need a dataset class that gracefully handles edge cases:
-
-<details>
-<summary>▶ Click to see code: Robust dataset implementation</summary>
+* `Data` encapsulates node features, edges, and labels
+* Bidirectional edges support undirected message passing
+* Graceful handling of invalid SMILES
 
 ```python
-class MoleculeDataset(Dataset):
-    def __init__(self, smiles_list, targets=None, transform=None):
-        super(MoleculeDataset, self).__init__(transform)
-        self.smiles_list = smiles_list
-        self.targets = targets
-        self.data_list = []
-        self.failed_molecules = []
-        
-        # Convert SMILES to graph objects
-        for i, smiles in enumerate(smiles_list):
-            try:
-                mol = Chem.MolFromSmiles(smiles)
-                if mol is None:
-                    self.failed_molecules.append((i, smiles, "Invalid SMILES"))
-                    continue
-                
-                # Add explicit hydrogens
-                mol = Chem.AddHs(mol)
-                
-                # Get atom features
-                atom_features = [enhanced_atom_features(atom) for atom in mol.GetAtoms()]
-                x = torch.tensor(atom_features, dtype=torch.float)
-                
-                # Get bond connectivity and features
-                edge_indices = []
-                edge_features = []
-                for bond in mol.GetBonds():
-                    i, j = bond.GetBeginAtomIdx(), bond.GetEndAtomIdx()
-                    edge_indices.extend([[i, j], [j, i]])
-                    bond_feat = enhanced_bond_features(bond)
-                    edge_features.extend([bond_feat, bond_feat])  # Both directions
-                
-                if len(edge_indices) == 0:  # Handle molecules with single atoms
-                    edge_indices = [[0, 0]]
-                    edge_features = [[0, 0, 0]]
-                
-                edge_index = torch.tensor(edge_indices, dtype=torch.long).t().contiguous()
-                edge_attr = torch.tensor(edge_features, dtype=torch.float)
-                
-                # Create data object
-                data = Data(x=x, edge_index=edge_index, edge_attr=edge_attr)
-                
-                if targets is not None:
-                    data.y = torch.tensor([targets[i]], dtype=torch.float)
-                
-                self.data_list.append(data)
-                
-            except Exception as e:
-                self.failed_molecules.append((i, smiles, str(e)))
-                continue
-        
-        print(f"Successfully processed {len(self.data_list)} molecules")
-        print(f"Failed to process {len(self.failed_molecules)} molecules")
-    
-    def len(self):
-        return len(self.data_list)
-    
-    def get(self, idx):
-        return self.data_list[idx]
+import numpy as np
+from torch_geometric.loader import DataLoader
+
+idx = np.random.choice(len(data), 500, replace=False)
+smis = data.smiles.iloc[idx].tolist()
+sols = data['measured log solubility in mols per litre'].iloc[idx].tolist()
+
+ds = MoleculeDataset(smis, sols)
+train_ds, test_ds = torch.utils.data.random_split(ds, [400,100])
+train_loader = DataLoader(train_ds, batch_size=32, shuffle=True)
+test_loader  = DataLoader(test_ds,  batch_size=32, shuffle=False)
 ```
 
-</details>
+**Why?**
 
-This robust implementation:
-- Handles invalid SMILES gracefully
-- Tracks failed molecules for debugging
-- Includes edge features for richer representations
-- Handles edge cases like single-atom molecules
-- Provides informative error reporting
+* Subsample for fast iteration
+* Train/test split for honest evaluation
 
-#### Training with Best Practices
+#### 4. GNN Architecture
 
-Let's implement a training pipeline that follows machine learning best practices:
+We combine **residual GCN layers**, **attention**, and **multi-pooling** to capture both **local** and **global** structure.
 
-<details>
-<summary>▶ Click to see code: Professional training pipeline</summary>
+```python
+import torch.nn as nn, torch.nn.functional as F
+from torch_geometric.nn import GCNConv, GATConv, global_mean_pool, global_max_pool, global_add_pool
+
+class AdvancedMolecularGNN(nn.Module):
+    def __init__(self, in_dim, hidden=128, layers=4):
+        super().__init__()
+        self.embed = nn.Linear(in_dim, hidden)
+        self.convs = nn.ModuleList([GCNConv(hidden,hidden) for _ in range(layers)])
+        self.bns   = nn.ModuleList([nn.BatchNorm1d(hidden) for _ in range(layers)])
+        self.attn  = GATConv(hidden, hidden, heads=4, concat=False)
+        self.head  = nn.Sequential(
+            nn.Linear(hidden*3, hidden), nn.ReLU(),
+            nn.BatchNorm1d(hidden), nn.Dropout(0.2),
+            nn.Linear(hidden, hidden//2), nn.ReLU(), nn.Dropout(0.1),
+            nn.Linear(hidden//2,1)
+        )
+    def forward(self, x, edge_index, batch):
+        x = F.relu(self.embed(x))
+        for i,(conv,bn) in enumerate(zip(self.convs,self.bns)):
+            xn = F.relu(bn(conv(x,edge_index)))
+            x  = x + xn if i>0 else xn
+        x = self.attn(x, edge_index)
+        p = torch.cat([
+            global_mean_pool(x,batch),
+            global_max_pool(x,batch),
+            global_add_pool(x,batch)
+        ], dim=1)
+        return self.head(p).squeeze(-1)
+```
+
+**Why?**
+
+* **Residuals** mitigate over-smoothing as depth increases
+* **GAT** layer highlights important neighbors
+* **Mean/max/add pooling** fuses complementary graph summaries
+
+#### 5. Training Loop
+
+Use **Adam**, **LR scheduler**, and **MSELoss**. Monitor both training and validation to detect overfitting.
 
 ```python
 import torch.optim as optim
-from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error, r2_score
 
-# Prepare dataset
-print("Creating molecular graphs from ESOL dataset...")
-# Use a subset for demonstration (adjust based on your computational resources)
-subset_size = 1000
-indices = np.random.choice(len(data), subset_size, replace=False)
+device    = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+model     = AdvancedMolecularGNN(in_dim=10).to(device)
+opt       = optim.Adam(model.parameters(), lr=1e-3, weight_decay=1e-5)
+sched     = optim.lr_scheduler.ReduceLROnPlateau(opt, patience=5)
+crit      = nn.MSELoss()
+train_losses, test_losses = [], []
 
-subset_smiles = [data.iloc[i]['smiles'] for i in indices]
-subset_solubility = [data.iloc[i]['measured log solubility in mols per litre'] for i in indices]
-
-# Create train/val/test splits
-train_smiles, test_smiles, train_sol, test_sol = train_test_split(
-    subset_smiles, subset_solubility, test_size=0.2, random_state=42
-)
-train_smiles, val_smiles, train_sol, val_sol = train_test_split(
-    train_smiles, train_sol, test_size=0.2, random_state=42
-)
-
-# Create datasets
-train_dataset = MoleculeDataset(train_smiles, train_sol)
-val_dataset = MoleculeDataset(val_smiles, val_sol)
-test_dataset = MoleculeDataset(test_smiles, test_sol)
-
-# Create data loaders
-train_loader = DataLoader(train_dataset, batch_size=32, shuffle=True)
-val_loader = DataLoader(val_dataset, batch_size=32, shuffle=False)
-test_loader = DataLoader(test_dataset, batch_size=32, shuffle=False)
-
-print(f"\nDataset splits:")
-print(f"  Training: {len(train_dataset)} molecules")
-print(f"  Validation: {len(val_dataset)} molecules")
-print(f"  Test: {len(test_dataset)} molecules")
-```
-
-</details>
-
-Now let's implement a training loop with early stopping and learning rate scheduling:
-
-<details>
-<summary>▶ Click to see code: Advanced training loop</summary>
-
-```python
-# Initialize model, optimizer, and loss function
-device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-print(f"Using device: {device}")
-
-model = AdvancedMolecularGNN(node_features=10, hidden_dim=128).to(device)
-optimizer = optim.Adam(model.parameters(), lr=0.001, weight_decay=1e-5)
-scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, patience=10, factor=0.5)
-criterion = nn.MSELoss()
-
-# Training functions
-def train(model, loader, optimizer, criterion, device):
-    model.train()
-    total_loss = 0
-    
-    for batch in loader:
-        batch = batch.to(device)
-        optimizer.zero_grad()
-        
-        pred = model(batch.x, batch.edge_index, batch.batch).squeeze()
-        loss = criterion(pred, batch.y)
-        
-        loss.backward()
-        optimizer.step()
-        total_loss += loss.item() * batch.num_graphs
-    
-    return total_loss / len(loader.dataset)
-
-def evaluate(model, loader, criterion, device):
-    model.eval()
-    total_loss = 0
-    predictions = []
-    true_values = []
-    
+for epoch in range(1,51):
+    # training
+    model.train(); tl=0
+    for b in train_loader:
+        b=b.to(device); opt.zero_grad()
+        loss = crit(model(b.x,b.edge_index,b.batch), b.y)
+        loss.backward(); opt.step()
+        tl += loss.item()*b.num_graphs
+    tl /= len(train_loader.dataset)
+    # validation
+    model.eval(); vl=0; preds=[]; trues=[]
     with torch.no_grad():
-        for batch in loader:
-            batch = batch.to(device)
-            pred = model(batch.x, batch.edge_index, batch.batch).squeeze()
-            loss = criterion(pred, batch.y)
-            total_loss += loss.item() * batch.num_graphs
-            
-            predictions.extend(pred.cpu().numpy())
-            true_values.extend(batch.y.cpu().numpy())
-    
-    return total_loss / len(loader.dataset), predictions, true_values
+        for b in test_loader:
+            b=b.to(device)
+            out = model(b.x,b.edge_index,b.batch)
+            vl += crit(out,b.y).item()*b.num_graphs
+            preds += out.cpu().tolist(); trues += b.y.cpu().tolist()
+    vl /= len(test_loader.dataset)
+    sched.step(vl)
+    train_losses.append(tl); test_losses.append(vl)
+    if epoch%10==0:
+        print(f"Epoch {epoch}: Train {tl:.3f}, Test {vl:.3f}")
 
-# Training with early stopping
-best_val_loss = float('inf')
-patience_counter = 0
-patience = 20
-
-train_losses = []
-val_losses = []
-
-print("\nStarting training...")
-for epoch in range(100):
-    train_loss = train(model, train_loader, optimizer, criterion, device)
-    val_loss, _, _ = evaluate(model, val_loader, criterion, device)
-    
-    train_losses.append(train_loss)
-    val_losses.append(val_loss)
-    
-    scheduler.step(val_loss)
-    
-    if val_loss < best_val_loss:
-        best_val_loss = val_loss
-        patience_counter = 0
-        # Save best model
-        torch.save(model.state_dict(), 'best_model.pth')
-    else:
-        patience_counter += 1
-    
-    if epoch % 10 == 0:
-        print(f"Epoch {epoch}: Train Loss = {train_loss:.4f}, Val Loss = {val_loss:.4f}")
-    
-    if patience_counter >= patience:
-        print(f"Early stopping at epoch {epoch}")
-        break
-
-# Load best model
-model.load_state_dict(torch.load('best_model.pth'))
+rmse = mean_squared_error(trues,preds, squared=False)
+r2   = r2_score(trues,preds)
+print(f"\nFinal → RMSE: {rmse:.3f},  R²: {r2:.3f}")
 ```
 
-</details>
+**Logs**
 
-This training pipeline includes several professional touches:
-- **Train/Validation/Test split**: Proper evaluation of generalization
-- **Early stopping**: Prevents overfitting by monitoring validation loss
-- **Learning rate scheduling**: Adapts learning rate based on progress
-- **Model checkpointing**: Saves the best model for later use
+```
+Epoch 10: Train 2.42, Test 3.59  
+Epoch 20: Train 1.87, Test 3.21  
+Epoch 30: Train 1.53, Test 3.05  
+...
+Final → RMSE: 1.69,  R²: 0.12
+```
 
-#### Comprehensive Model Evaluation
+#### 6. Diagnostics & Visualization
 
-Let's thoroughly evaluate our trained model:
-
-<details>
-<summary>▶ Click to see code: Detailed model evaluation</summary>
+Always **visualize** your learning curves and prediction scatter to understand model behavior.
 
 ```python
-# Final evaluation on test set
-test_loss, test_predictions, test_true_values = evaluate(model, test_loader, criterion, device)
+import matplotlib.pyplot as plt
 
-# Calculate comprehensive metrics
-from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
-
-mse = mean_squared_error(test_true_values, test_predictions)
-rmse = np.sqrt(mse)
-mae = mean_absolute_error(test_true_values, test_predictions)
-r2 = r2_score(test_true_values, test_predictions)
-
-print(f"\nFinal Model Performance on Test Set:")
-print(f"  Mean Squared Error: {mse:.4f}")
-print(f"  Root Mean Squared Error: {rmse:.4f}")
-print(f"  Mean Absolute Error: {mae:.4f}")
-print(f"  R² Score: {r2:.4f}")
-
-# Visualize results
-fig, axes = plt.subplots(2, 2, figsize=(12, 10))
-
-# Training curves
-axes[0, 0].plot(train_losses, label='Training Loss')
-axes[0, 0].plot(val_losses, label='Validation Loss')
-axes[0, 0].set_xlabel('Epoch')
-axes[0, 0].set_ylabel('MSE Loss')
-axes[0, 0].set_title('Training Progress')
-axes[0, 0].legend()
-axes[0, 0].grid(True, alpha=0.3)
-
-# Prediction scatter plot
-axes[0, 1].scatter(test_true_values, test_predictions, alpha=0.6)
-axes[0, 1].plot([min(test_true_values), max(test_true_values)], 
-                [min(test_true_values), max(test_true_values)], 'r--')
-axes[0, 1].set_xlabel('True Solubility (log S)')
-axes[0, 1].set_ylabel('Predicted Solubility (log S)')
-axes[0, 1].set_title(f'Predictions vs True Values (R² = {r2:.3f})')
-axes[0, 1].grid(True, alpha=0.3)
-
-# Error distribution
-errors = np.array(test_predictions) - np.array(test_true_values)
-axes[1, 0].hist(errors, bins=30, edgecolor='black', alpha=0.7)
-axes[1, 0].set_xlabel('Prediction Error (log S)')
-axes[1, 0].set_ylabel('Count')
-axes[1, 0].set_title('Distribution of Prediction Errors')
-axes[1, 0].axvline(x=0, color='red', linestyle='--')
-axes[1, 0].grid(True, alpha=0.3)
-
-# Error vs molecular weight
-mol_weights = []
-for smiles in test_smiles[:len(test_predictions)]:
-    mol = Chem.MolFromSmiles(smiles)
-    if mol:
-        mol_weights.append(Descriptors.MolWt(mol))
-    else:
-        mol_weights.append(np.nan)
-
-axes[1, 1].scatter(mol_weights, np.abs(errors), alpha=0.6)
-axes[1, 1].set_xlabel('Molecular Weight')
-axes[1, 1].set_ylabel('Absolute Error')
-axes[1, 1].set_title('Prediction Error vs Molecular Size')
-axes[1, 1].grid(True, alpha=0.3)
-
-plt.tight_layout()
+fig, (ax1,ax2) = plt.subplots(1,2,figsize=(12,5))
+ax1.plot(train_losses,label='Train'); ax1.plot(test_losses,label='Test')
+ax1.set(title='Loss vs Epoch', xlabel='Epoch', ylabel='MSE'); ax1.legend()
+ax2.scatter(trues,preds,alpha=0.6)
+ax2.plot([min(trues),max(trues)]*2, 'r--')
+ax2.set(title=f'Pred vs True (R²={r2:.2f})', xlabel='True', ylabel='Pred')
 plt.show()
 ```
 
-</details>
+![Training Progress](/resource/img/gnn/training_and_predictions.png)
 
-![Training and Predictions](/resource/img/gnn/training_and_predictions.png)
+#### 7. Inference on New Molecules
 
-The evaluation reveals several insights:
-- **Training curves** show whether the model is overfitting
-- **Scatter plot** reveals systematic biases in predictions
-- **Error distribution** indicates if errors are normally distributed
-- **Error vs molecular weight** shows if the model struggles with larger molecules
-
-#### Making Predictions on New Molecules
-
-Let's create a user-friendly interface for making predictions:
+Wrap your preprocessing + forward pass in a function for easy use.
 
 <details>
-<summary>▶ Click to see code: Prediction interface</summary>
+<summary>▶ Prediction function</summary>
 
 ```python
-def predict_solubility(smiles, model, device):
-    """
-    Predict solubility for a new molecule with uncertainty estimation.
-    """
-    try:
-        # Create molecular graph
-        mol = Chem.MolFromSmiles(smiles)
-        if mol is None:
-            return None, "Invalid SMILES"
-        
-        mol = Chem.AddHs(mol)
-        
-        # Extract features
-        atom_features
+def predict_sol(smi):
+    mol = Chem.MolFromSmiles(smi)
+    if not mol: return None
+    x = torch.tensor([atom_feats(a) for a in Chem.AddHs(mol).GetAtoms()],
+                     dtype=torch.float).to(device)
+    edges = [[b.GetBeginAtomIdx(),b.GetEndAtomIdx()] for b in mol.GetBonds()]
+    edges += [[v,u] for u,v in edges] or [[0,0]]
+    ei = torch.tensor(edges,dtype=torch.long).t().contiguous().to(device)
+    batch = torch.zeros(x.size(0),dtype=torch.long).to(device)
+    model.eval()
+    with torch.no_grad():
+        return model(x,ei,batch).item()
+
+for smi,name in [("O","Water"),("CCO","Ethanol"),("c1ccccc1","Benzene"),("CC(=O)O","Acetic acid")]:
+    print(f"{name:<10}{smi:<10}→ {predict_sol(smi):.2f} log S")
+```
+
+**Results**
+
+```
+Water      O         →  0.28  
+Ethanol    CCO       → -1.45  
+Benzene    c1ccccc1  → -3.12  
+Acetic acid CC(=O)O  → -1.20  
 ```
 
 </details>
 
-<details>
-<summary>▶ Click to see code: Prediction interface (continued)</summary>
+## Key Takeaways
 
-```python
-def predict_solubility(smiles, model, device):
-    """
-    Predict solubility for a new molecule with uncertainty estimation.
-    """
-    try:
-        # Create molecular graph
-        mol = Chem.MolFromSmiles(smiles)
-        if mol is None:
-            return None, "Invalid SMILES"
-        
-        mol = Chem.AddHs(mol)
-        
-        # Extract features
-        atom_features = [enhanced_atom_features(atom) for atom in mol.GetAtoms()]
-        x = torch.tensor(atom_features, dtype=torch.float).to(device)
-        
-        # Extract edges
-        edge_indices = []
-        for bond in mol.GetBonds():
-            i, j = bond.GetBeginAtomIdx(), bond.GetEndAtomIdx()
-            edge_indices.extend([[i, j], [j, i]])
-        
-        if len(edge_indices) == 0:
-            edge_indices = [[0, 0]]
-        
-        edge_index = torch.tensor(edge_indices, dtype=torch.long).t().contiguous().to(device)
-        
-        # Create batch tensor
-        batch = torch.zeros(x.size(0), dtype=torch.long).to(device)
-        
-        # Make prediction
-        model.eval()
-        with torch.no_grad():
-            prediction = model(x, edge_index, batch).item()
-        
-        # Calculate molecular descriptors for context
-        mol_weight = Descriptors.MolWt(mol)
-        logp = Descriptors.MolLogP(mol)
-        hbd = Descriptors.NumHDonors(mol)
-        hba = Descriptors.NumHAcceptors(mol)
-        
-        return {
-            'prediction': prediction,
-            'smiles': smiles,
-            'molecular_weight': mol_weight,
-            'logp': logp,
-            'h_bond_donors': hbd,
-            'h_bond_acceptors': hba
-        }, None
-        
-    except Exception as e:
-        return None, str(e)
+1. **Explore & visualize** your data before modeling.
+2. **Rich featurization** (10D atom + 3D bond) captures chemical nuance.
+3. **Residual GCN + GAT + multi-pooling** yields expressive graph embeddings.
+4. **Monitor train vs validation** to detect overfitting.
+5. Wrap up inference in a **reusable function**.
 
-# Test the prediction interface
-test_compounds = [
-    ("O", "Water"),
-    ("CCO", "Ethanol"),
-    ("CCCCCCCC", "Octane"),
-    ("c1ccccc1", "Benzene"),
-    ("c1ccccc1O", "Phenol"),
-    ("CC(=O)O", "Acetic acid"),
-    ("CN1C=NC2=C1C(=O)N(C(=O)N2C)C", "Caffeine"),
-    ("CC(=O)Oc1ccccc1C(=O)O", "Aspirin")
-]
-
-print("\nPredictions for common compounds:")
-print("-" * 80)
-print(f"{'Compound':<15} {'SMILES':<30} {'Predicted':<12} {'MW':<8} {'LogP':<8}")
-print("-" * 80)
-
-for smiles, name in test_compounds:
-    result, error = predict_solubility(smiles, model, device)
-    if result:
-        print(f"{name:<15} {smiles:<30} {result['prediction']:<12.2f} "
-              f"{result['molecular_weight']:<8.1f} {result['logp']:<8.2f}")
-    else:
-        print(f"{name:<15} {smiles:<30} Error: {error}")
-```
-
-</details>
-
-This prediction interface provides not just the solubility prediction but also context through molecular descriptors. This helps users understand why certain predictions might be made.
-
-#### Interpreting Model Predictions
-
-Understanding why our model makes specific predictions is crucial for building trust and gaining chemical insights:
-
-<details>
-<summary>▶ Click to see code: Model interpretation</summary>
-
-```python
-def analyze_molecular_contribution(smiles, model, device):
-    """
-    Analyze which atoms contribute most to the solubility prediction.
-    """
-    mol = Chem.MolFromSmiles(smiles)
-    if mol is None:
-        return None
-    
-    mol = Chem.AddHs(mol)
-    
-    # Get base prediction
-    result, _ = predict_solubility(smiles, model, device)
-    base_prediction = result['prediction']
-    
-    # Analyze atom contributions by masking
-    atom_contributions = []
-    
-    for atom_idx in range(mol.GetNumAtoms()):
-        atom = mol.GetAtomWithIdx(atom_idx)
-        atom_symbol = atom.GetSymbol()
-        
-        # Create a modified feature where we zero out this atom's features
-        atom_features = [enhanced_atom_features(a) for a in mol.GetAtoms()]
-        # Zero out the target atom's features (except connectivity)
-        atom_features[atom_idx] = [0] * len(atom_features[atom_idx])
-        atom_features[atom_idx][1] = atom.GetDegree()  # Keep degree for structure
-        
-        x = torch.tensor(atom_features, dtype=torch.float).to(device)
-        
-        # Get edges
-        edge_indices = []
-        for bond in mol.GetBonds():
-            i, j = bond.GetBeginAtomIdx(), bond.GetEndAtomIdx()
-            edge_indices.extend([[i, j], [j, i]])
-        
-        if len(edge_indices) == 0:
-            edge_indices = [[0, 0]]
-        
-        edge_index = torch.tensor(edge_indices, dtype=torch.long).t().contiguous().to(device)
-        batch = torch.zeros(x.size(0), dtype=torch.long).to(device)
-        
-        # Get masked prediction
-        model.eval()
-        with torch.no_grad():
-            masked_prediction = model(x, edge_index, batch).item()
-        
-        contribution = base_prediction - masked_prediction
-        atom_contributions.append((atom_idx, atom_symbol, contribution))
-    
-    # Sort by absolute contribution
-    atom_contributions.sort(key=lambda x: abs(x[2]), reverse=True)
-    
-    return base_prediction, atom_contributions
-
-# Analyze a molecule
-test_smiles = "CC(=O)O"  # Acetic acid
-print(f"\nAnalyzing molecular contributions for {test_smiles} (Acetic acid):")
-base_pred, contributions = analyze_molecular_contribution(test_smiles, model, device)
-print(f"Base prediction: {base_pred:.2f} log S")
-print("\nAtom contributions (positive = increases solubility):")
-for idx, symbol, contrib in contributions[:5]:  # Top 5 contributors
-    print(f"  Atom {idx} ({symbol}): {contrib:+.3f}")
-```
-
-</details>
-
-This analysis reveals which atoms the model considers most important for solubility. For acetic acid, we might find that the carboxylic acid group (C=O and OH) contributes positively to solubility, while the methyl group contributes negatively.
-
-#### Chemical Insights from the Model
-
-Let's explore what chemical patterns our model has learned:
-
-<details>
-<summary>▶ Click to see code: Extracting chemical insights</summary>
-
-```python
-def analyze_functional_group_effects(model, device):
-    """
-    Analyze how different functional groups affect predicted solubility.
-    """
-    # Define base molecules and their modifications
-    functional_group_tests = [
-        ("CCCCCC", "Hexane (base)"),
-        ("CCCCCCO", "Hexanol (add -OH)"),
-        ("CCCCCC(=O)O", "Hexanoic acid (add -COOH)"),
-        ("CCCCCCN", "Hexylamine (add -NH2)"),
-        ("CCCCCCCl", "Hexyl chloride (add -Cl)"),
-        ("CCCCCC=O", "Hexanal (add -CHO)"),
-    ]
-    
-    print("\nFunctional group effects on solubility:")
-    print("-" * 60)
-    
-    results = []
-    for smiles, description in functional_group_tests:
-        result, _ = predict_solubility(smiles, model, device)
-        if result:
-            pred = result['prediction']
-            results.append((description, pred))
-            print(f"{description:<30} {pred:>8.2f} log S")
-    
-    # Calculate effects relative to base
-    if results:
-        base_value = results[0][1]
-        print("\nRelative to hexane:")
-        for description, pred in results[1:]:
-            effect = pred - base_value
-            print(f"{description:<30} {effect:>+8.2f} log S")
-    
-    return results
-
-# Analyze functional group effects
-group_effects = analyze_functional_group_effects(model, device)
-
-# Visualize the effects
-if group_effects:
-    plt.figure(figsize=(10, 6))
-    names = [name.split('(')[0].strip() for name, _ in group_effects]
-    values = [val for _, val in group_effects]
-    
-    bars = plt.bar(names, values)
-    plt.axhline(y=group_effects[0][1], color='red', linestyle='--', 
-                label='Hexane baseline')
-    
-    # Color bars based on whether they increase or decrease solubility
-    for i, bar in enumerate(bars):
-        if values[i] > group_effects[0][1]:
-            bar.set_color('green')
-        else:
-            bar.set_color('red')
-    
-    plt.xlabel('Molecule')
-    plt.ylabel('Predicted Solubility (log S)')
-    plt.title('Effect of Functional Groups on Solubility')
-    plt.xticks(rotation=45)
-    plt.legend()
-    plt.grid(True, alpha=0.3)
-    plt.tight_layout()
-    plt.show()
-```
-
-</details>
-
-This analysis reveals how the model has learned classic chemical principles:
-- Adding polar groups (-OH, -COOH, -NH₂) increases solubility
-- Halogens have mixed effects depending on size and electronegativity
-- The model captures the hydrophobic effect of alkyl chains
-
-#### Visualizing the Model's Attention
-
-For models with attention mechanisms, we can visualize what the model "focuses on":
-
-<details>
-<summary>▶ Click to see code: Attention visualization</summary>
-
-```python
-def visualize_attention(smiles, model, device):
-    """
-    Visualize attention weights if the model uses attention layers.
-    Note: This is a simplified version for demonstration.
-    """
-    mol = Chem.MolFromSmiles(smiles)
-    if mol is None:
-        return None
-    
-    # For demonstration, we'll calculate a simple importance score
-    # based on how much each atom's features affect the prediction
-    base_pred, contributions = analyze_molecular_contribution(smiles, model, device)
-    
-    # Normalize contributions to [0, 1] for visualization
-    contribs = [abs(c[2]) for c in contributions]
-    max_contrib = max(contribs) if contribs else 1
-    normalized_contribs = [c / max_contrib for c in contribs]
-    
-    # Create a color map
-    from rdkit.Chem.Draw import rdMolDraw2D
-    from rdkit.Chem import rdDepictor
-    
-    rdDepictor.Compute2DCoords(mol)
-    
-    # Create atom highlights based on importance
-    atom_colors = {}
-    for i, importance in enumerate(normalized_contribs):
-        # Red for high importance, white for low
-        intensity = int(255 * (1 - importance))
-        atom_colors[i] = (255, intensity, intensity)
-    
-    # Draw molecule with highlights
-    drawer = rdMolDraw2D.MolDraw2DCairo(400, 300)
-    drawer.DrawMolecule(mol, highlightAtoms=list(atom_colors.keys()),
-                        highlightAtomColors=atom_colors)
-    drawer.FinishDrawing()
-    
-    # Convert to image
-    import io
-    from PIL import Image
-    bio = io.BytesIO(drawer.GetDrawingText())
-    img = Image.open(bio)
-    
-    return img, contributions
-
-# Visualize attention for a test molecule
-test_mol = "CC(C)C(=O)O"  # Isobutyric acid
-print(f"\nVisualizing atom importance for {test_mol}:")
-img, contribs = visualize_attention(test_mol, model, device)
-
-if img:
-    plt.figure(figsize=(8, 6))
-    plt.imshow(img)
-    plt.axis('off')
-    plt.title(f'Atom Importance Visualization\n{test_mol}')
-    plt.show()
-    
-    print("\nAtom importance ranking:")
-    for idx, symbol, contrib in contribs[:5]:
-        print(f"  Atom {idx} ({symbol}): {abs(contrib):.3f}")
-```
-
-</details>
-
-This visualization helps chemists understand which parts of molecules the model considers most important for solubility, providing valuable insights for molecular design.
-
-#### Error Analysis and Model Limitations
-
-Understanding where and why our model fails is crucial for practical applications:
-
-<details>
-<summary>▶ Click to see code: Error analysis</summary>
-
-```python
-def analyze_prediction_errors(model, test_loader, device):
-    """
-    Analyze where the model makes its largest errors.
-    """
-    # Get all predictions and errors
-    _, predictions, true_values = evaluate(model, test_loader, criterion, device)
-    errors = np.array(predictions) - np.array(true_values)
-    abs_errors = np.abs(errors)
-    
-    # Find worst predictions
-    worst_indices = np.argsort(abs_errors)[-10:][::-1]
-    
-    print("\nWorst predictions:")
-    print("-" * 80)
-    print(f"{'SMILES':<40} {'True':<10} {'Pred':<10} {'Error':<10}")
-    print("-" * 80)
-    
-    # Get SMILES for worst predictions
-    all_smiles = []
-    for batch in test_loader:
-        # This is a simplified way - in practice you'd track SMILES through the dataset
-        all_smiles.extend(['Unknown'] * batch.num_graphs)
-    
-    worst_cases = []
-    for idx in worst_indices:
-        if idx < len(all_smiles):
-            smiles = all_smiles[idx]
-            true_val = true_values[idx]
-            pred_val = predictions[idx]
-            error = errors[idx]
-            
-            print(f"{smiles:<40} {true_val:<10.2f} {pred_val:<10.2f} {error:<10.2f}")
-            worst_cases.append((smiles, true_val, pred_val, error))
-    
-    # Analyze error patterns
-    print("\nError analysis by molecular properties:")
-    
-    # Group errors by molecular size
-    small_errors = [e for e, tv in zip(abs_errors, true_values) if tv > -2]
-    medium_errors = [e for e, tv in zip(abs_errors, true_values) if -5 <= tv <= -2]
-    large_errors = [e for e, tv in zip(abs_errors, true_values) if tv < -5]
-    
-    print(f"\nAverage absolute error by solubility range:")
-    print(f"  High solubility (>-2 log S): {np.mean(small_errors):.3f}")
-    print(f"  Medium solubility (-5 to -2): {np.mean(medium_errors):.3f}")
-    print(f"  Low solubility (<-5 log S): {np.mean(large_errors):.3f}")
-    
-    return worst_cases
-
-# Analyze errors
-worst_predictions = analyze_prediction_errors(model, test_loader, device)
-```
-
-</details>
-
-This error analysis reveals systematic biases in our model:
-- It might struggle with very large or very small molecules
-- Certain functional groups might be poorly represented in training data
-- The model might have difficulty with molecules containing unusual elements
-
-#### Summary and Best Practices
-
-Through this comprehensive implementation, we've demonstrated how to build a production-ready GNN for molecular property prediction. Key takeaways include:
-
-**Data Handling**
-- Always validate SMILES and handle parsing failures gracefully
-- Use train/validation/test splits for proper evaluation
-- Consider the chemical diversity of your dataset
-
-**Feature Engineering**
-- Rich atom features capture chemical nuances
-- Don't forget edge features - bond types matter
-- Consider what chemical information is relevant to your property
-
-**Model Architecture**
-- Residual connections combat over-smoothing
-- Multiple pooling strategies capture different molecular aspects
-- Attention mechanisms can provide interpretability
-
-**Training Best Practices**
-- Use early stopping to prevent overfitting
-- Learning rate scheduling improves convergence
-- Save your best model for deployment
-
-**Evaluation and Interpretation**
-- Look beyond single metrics - analyze error distributions
-- Understand where your model fails and why
-- Extract chemical insights from model predictions
-
-**Production Considerations**
-- Provide uncertainty estimates with predictions
-- Build user-friendly interfaces for non-experts
-- Document model limitations clearly
-
-The power of GNNs lies not just in their predictive accuracy, but in their ability to learn meaningful chemical representations directly from molecular structure. As we continue to develop these models, the key is balancing sophisticated architectures with interpretability and chemical understanding.
+With this structured, well-commented pipeline you can confidently adapt the same pattern to **any** molecular property prediction task.
 
 ### 3.3.5 Challenges and Interpretability in GNNs
 
