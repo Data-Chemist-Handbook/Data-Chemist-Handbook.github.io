@@ -1869,13 +1869,15 @@ for i in range(3):
 
 **Results**
 
-Dataset contains 1128 molecules
+```
+Dataset contains 1128 molecules  
 Solubility range: -11.60 to 1.58 log S
 
 Example molecules:
-    OCC3OC(OCC2OC(OC(C#N)c1ccccc1)C(O)C(O)C2O)C(O)C(O)C3O : -0.77 log S
-    Cc1occc1C(=O)Nc2ccccc2 : -3.30 log S
-    CC(C)=CCCC(C)=CC(=O) : -2.06 log S
+    OCC3OC(OCC2OC(OC(C#N)c1ccccc1)C(O)C(O)C2O)C(O)C(O)C3O : -0.77 log S
+    Cc1occc1C(=O)Nc2ccccc2 : -3.30 log S
+    CC(C)=CCCC(C)=CC(=O) : -2.06 log S
+```
 
 This dataset covers a wide dynamic range of water solubility. The log S values span more than 13 units, corresponding to a solubility difference of over 10 trillion times between the most and least soluble compounds. This range challenges the model to generalize across diverse structural and chemical properties.
 
@@ -1905,32 +1907,44 @@ Each atom must be encoded into a numerical vector capturing its basic properties
 from rdkit import Chem
 
 # Define a function to extract chemical features from an atom
+
 # These features are chosen for their relevance to chemical reactivity and structure
 
-def get_atom_features(atom):
-    features = [
-        atom.GetAtomicNum(),        # Atomic number (C=6, N=7, O=8, etc.)
-        atom.GetDegree(),           # Number of directly bonded atoms
-        atom.GetFormalCharge(),     # Formal electric charge
-        int(atom.GetIsAromatic()),  # Is the atom part of an aromatic ring?
-        atom.GetTotalNumHs()        # Number of hydrogen atoms bonded
-    ]
-    return features
+def get\_atom\_features(atom):
+features = \[
+atom.GetAtomicNum(),        # Atomic number (C=6, N=7, O=8, etc.)
+atom.GetDegree(),           # Number of directly bonded atoms
+atom.GetFormalCharge(),     # Formal electric charge
+int(atom.GetIsAromatic()),  # Is the atom part of an aromatic ring?
+atom.GetTotalNumHs()        # Number of hydrogen atoms bonded
+]
+return features
 
 # Test on water (H2O)
+
 water = Chem.MolFromSmiles("O")
 water = Chem.AddHs(water)  # Add hydrogen atoms explicitly
 print("Water atom features:")
 for i, atom in enumerate(water.GetAtoms()):
-    features = get_atom_features(atom)
-    print(f"  {atom.GetSymbol()}: {features}")
-</code></pre>
+features = get\_atom\_features(atom)
+print(f"  {atom.GetSymbol()}: {features}") </code></pre>
+
 </details>
 
-These features help the GNN differentiate atoms by their type and role:
-- **Atomic number** identifies the element
-- **Degree** and **total hydrogens** reflect atomic connectivity
-- **Charge** and **aromaticity** affect electronic behavior and solubility
+**Results**
+
+```
+Water atom features:
+  O: [8, 2, 0, 0, 0]
+  H: [1, 1, 0, 0, 0]
+  H: [1, 1, 0, 0, 0]
+```
+
+In this example:
+
+* The oxygen atom has atomic number 8, is bonded to 2 hydrogens, and is non-aromatic.
+* Each hydrogen has atomic number 1 and is bonded to 1 atom (the oxygen).
+* These feature vectors form the **node features** for the GNN.
 
 ##### Bond Connectivity
 
@@ -1942,25 +1956,34 @@ To complete the molecular graph, we also need the edges – the bonds that conne
 from rdkit import Chem
 
 # Extract pairwise bond connections as edge list for graph representation
+
 # Each bond is stored twice (i->j and j->i) for undirected graph processing
 
-def get_bond_connections(mol):
-    edges = []
-    for bond in mol.GetBonds():
-        i = bond.GetBeginAtomIdx()
-        j = bond.GetEndAtomIdx()
-        edges.extend([[i, j], [j, i]])
-    return edges
+def get\_bond\_connections(mol):
+edges = \[]
+for bond in mol.GetBonds():
+i = bond.GetBeginAtomIdx()
+j = bond.GetEndAtomIdx()
+edges.extend(\[\[i, j], \[j, i]])
+return edges
 
 # Test on ethanol (CH3CH2OH)
+
 ethanol = Chem.MolFromSmiles("CCO")
 ethanol = Chem.AddHs(ethanol)
-connections = get_bond_connections(ethanol)
-print(f"Ethanol has {ethanol.GetNumAtoms()} atoms and {len(connections)//2} bonds")
-</code></pre>
+connections = get\_bond\_connections(ethanol)
+print(f"Ethanol has {ethanol.GetNumAtoms()} atoms and {len(connections)//2} bonds") </code></pre>
+
 </details>
 
-By adding both directions of each bond, we ensure that information can flow freely in both directions across the molecular graph. This is important for message-passing GNN architectures.
+**Results**
+
+```
+Ethanol has 9 atoms and 8 bonds
+```
+
+This confirms that the fully hydrogenated ethanol molecule contains 9 atoms and 8 bonds (16 directed edges for GNN input).
+Each bond appears **twice** to support **bidirectional message passing**, a key mechanism in GNN architectures.
 
 #### The Graph Neural Network Architecture
 
@@ -2182,6 +2205,19 @@ for epoch in range(50):
 * `.squeeze()` flattens predictions to align with `batch.y`.
 * The training loop prints loss every 10 epochs for monitoring.
 
+**Results**
+
+```
+Training GNN on ESOL dataset...
+Epoch 0: Loss = 7.583
+Epoch 10: Loss = 3.824
+Epoch 20: Loss = 3.767
+Epoch 30: Loss = 3.584
+Epoch 40: Loss = 3.396
+```
+
+Over the course of 50 epochs, the training loss steadily decreases from **7.583** to **3.396**, showing that the model is learning to fit the solubility data. While the improvement slows after epoch 20, the continued decline suggests the model is gradually refining its predictions. The relatively high starting loss reflects the complexity of the task and the broad range of solubility values (over 13 log units). Further training or tuning (e.g., more epochs, dropout, better features) could yield additional improvements.
+
 #### Making Predictions
 
 Once the GNN has been trained, we can use it to estimate the solubility of molecules that the model has never seen before. This demonstrates its ability to generalize.
@@ -2228,9 +2264,30 @@ for smiles, name in test_molecules:
 </details>
 
 This test set includes:
-- **Water** and **Ethanol**, which are small and highly polar (high solubility)
-- **Benzene**, a non-polar aromatic compound (low solubility)
-- **Acetone** and **Acetic acid**, which are moderately soluble due to polarity and functional groups
+
+* **Water** and **Ethanol**, which are small and highly polar (high solubility)
+* **Benzene**, a non-polar aromatic compound (low solubility)
+* **Acetone** and **Acetic acid**, which are moderately soluble due to polarity and functional groups
+
+**Results**
+
+```
+Predictions for common molecules:
+  Water: 0.32 log S
+  Ethanol: -1.59 log S
+  Acetone: -1.76 log S
+  Benzene: -3.44 log S
+  Acetic acid: -1.30 log S
+```
+
+The predictions align well with chemical intuition:
+
+* **Water** is predicted to be highly soluble (**0.32 log S**), which is consistent with its strong polarity and hydrogen bonding capacity.
+* **Ethanol** also shows good solubility (**−1.59 log S**), reflecting its polar hydroxyl group and small molecular size.
+* **Acetone** (**−1.76**) and **Acetic acid** (**−1.30**) fall in a moderate solubility range, as expected due to their polar functional groups (ketone and carboxyl).
+* **Benzene** is correctly predicted as poorly soluble (**−3.44**), consistent with its non-polar aromatic structure.
+
+These results suggest the model has learned to distinguish basic solubility trends based on molecular structure, even for molecules it did not see during training. Though not perfect, the outputs are **chemically plausible** and demonstrate the GNN’s capacity to generalize.
 
 #### Understanding Model Performance
 
@@ -2276,15 +2333,17 @@ plt.show()
 </code></pre>
 </details>
 
-The RMSE tells us how far off our predictions are in log S units. The $R^2$ score (coefficient of determination) is defined as:
+The RMSE quantifies the average deviation between predicted and true solubility values, expressed in **log S units**. In our case, the model achieved an RMSE of **1.84**, which indicates moderate prediction error across the test set.
+
+The \$R^2\$ score (coefficient of determination) is defined as:
 
 $$
 R^2 = 1 - \frac{\sum_i (y_i - \hat{y}_i)^2}{\sum_i (y_i - \bar{y})^2}
 $$
 
-An $R^2$ score around 0.5 implies the model explains roughly 50% of the variance — not perfect, but impressive given only basic atom features were used.
+Our model obtained an \$R^2\$ score of **0.288**, meaning it explains approximately **28.8% of the variance** in solubility. While this is far from perfect, it is still meaningful considering the simplicity of the model and the limited input features (only five per atom). There is clear room for improvement, but the results confirm that the GNN is capturing **non-trivial structure–property relationships**.
 
-The scatter plot is equally important. Points near the diagonal line indicate good predictions, while vertical deviations show errors. This visual can help identify where the model struggles — often with large or unusual molecules.
+The scatter plot of predicted vs. true values remains a valuable diagnostic tool. Points near the diagonal indicate accurate predictions, while vertical scatter reveals prediction error. Outliers often correspond to **large**, **structurally complex**, or **unusual** molecules—highlighting where the model may need more expressive power or richer input features.
 
 #### The Power of Learned Representations
 
