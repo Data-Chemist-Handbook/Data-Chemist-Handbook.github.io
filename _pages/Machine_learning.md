@@ -1871,8 +1871,6 @@ The dataset spans an impressive range – from highly soluble small molecules li
 
 Solubility is expressed in log units (log S, where S is molar solubility). A difference of one log unit represents a 10-fold change in solubility. The 13+ log unit range in our dataset represents over a 10-trillion-fold variation in solubility – capturing everything from molecules that readily dissolve to those that are essentially insoluble.
 
----
-
 #### Converting Molecules to Graph Representations
 
 To use GNNs, we must first convert molecular structures into graph form. In a molecular graph:
@@ -1948,8 +1946,6 @@ print(f"Ethanol has {ethanol.GetNumAtoms()} atoms and {len(connections)//2} bond
 
 By adding both directions of each bond, we ensure that information can flow freely in both directions across the molecular graph. This is important for message-passing GNN architectures.
 
-
-
 #### The Graph Neural Network Architecture
 
 In this section, we define the GNN model that will predict molecular properties based on graph structure. The model has three main building blocks:
@@ -1957,8 +1953,6 @@ In this section, we define the GNN model that will predict molecular properties 
 1. **Graph convolutional layers** – to propagate information across atoms and bonds
 2. **Global pooling** – to summarize the whole molecule
 3. **Prediction head** – to output a numerical property value
-
----
 
 We first import the required modules:
 
@@ -1974,8 +1968,6 @@ from torch_geometric.nn import GCNConv, global_mean_pool
 
 * `GCNConv` is a graph convolution layer from PyTorch Geometric.
 * `global_mean_pool` is used to average node embeddings to get a graph-level representation.
-
----
 
 Next, we define the GNN model as a subclass of `torch.nn.Module`. We'll call it `MolecularGNN`.
 
@@ -2019,8 +2011,6 @@ class MolecularGNN(nn.Module):
 * `hidden_dim` controls how much information each atom can hold after transformation.
 * We use `nn.ModuleList` so we can define a variable number of GCN layers (`num_layers`).
 
----
-
 The `forward` method defines how the input graph is processed. It takes in:
 
 * `x`: the matrix of atom features
@@ -2063,15 +2053,11 @@ The `forward` method defines how the input graph is processed. It takes in:
 * `global_mean_pool`: This compresses a variable-size set of atom vectors into one fixed-size vector per molecule.
 * `self.predictor`: Finally, a fully connected layer maps this vector to a scalar (e.g., solubility).
 
----
-
 **Why this design works well:**
 
 * Three GCN layers = each atom’s feature gets updated based on neighbors up to 3 bonds away.
 * Pooling = handles molecules of any size and preserves permutation invariance (atom order doesn’t matter).
 * The model is intentionally simple to reduce overfitting on small datasets.
-
----
 
 To train a GNN on molecular data, we must first convert each molecule from its SMILES string into a graph structure compatible with PyTorch Geometric. This means we need to provide:
 
@@ -2136,8 +2122,6 @@ print(f"Ethanol graph: {test_graph.x.shape[0]} atoms, {test_graph.edge_index.sha
   * `x`: atom features
   * `edge_index`: graph connectivity
   * `y`: solubility label (optional)
-
----
 
 #### Training the Model
 
@@ -2205,8 +2189,6 @@ for epoch in range(50):
 * `.squeeze()` flattens predictions to align with `batch.y`.
 * The training loop prints loss every 10 epochs for monitoring.
 
----
-
 #### Making Predictions
 
 Once the GNN has been trained, we can use it to estimate the solubility of molecules that the model has never seen before. This demonstrates its ability to generalize.
@@ -2256,8 +2238,6 @@ This test set includes:
 - **Water** and **Ethanol**, which are small and highly polar (high solubility)
 - **Benzene**, a non-polar aromatic compound (low solubility)
 - **Acetone** and **Acetic acid**, which are moderately soluble due to polarity and functional groups
-
----
 
 #### Understanding Model Performance
 
