@@ -2345,6 +2345,8 @@ Our model obtained an \$R^2\$ score of **0.288**, meaning it explains approximat
 
 The scatter plot of predicted vs. true values remains a valuable diagnostic tool. Points near the diagonal indicate accurate predictions, while vertical scatter reveals prediction error. Outliers often correspond to **large**, **structurally complex**, or **unusual** molecules—highlighting where the model may need more expressive power or richer input features.
 
+![GNN Solubility Predictions](/resource/img/gnn/solubility.png)
+
 #### The Power of Learned Representations
 
 What makes GNNs particularly powerful is their ability to learn task-specific molecular representations. Unlike fixed molecular descriptors, the GNN learns which structural patterns matter for solubility:
