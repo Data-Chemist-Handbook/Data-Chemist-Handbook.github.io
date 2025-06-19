@@ -2263,7 +2263,7 @@ This test set includes:
 
 Evaluating the model on a held-out test set gives us a more objective view of performance. We’ll compute:
 - **RMSE**: Root Mean Square Error between predicted and true values
-- **\( R^2 \)**: Coefficient of determination (variance explained)
+- **$R^2$**: Coefficient of determination (variance explained)
 
 <details>
 <summary>▶ Click to see code: Model evaluation</summary>
@@ -2303,13 +2303,13 @@ plt.show()
 </code></pre>
 </details>
 
-The RMSE tells us how far off our predictions are in log S units. The \( R^2 \) score (coefficient of determination) is defined as:
+The RMSE tells us how far off our predictions are in log S units. The $R^2$ score (coefficient of determination) is defined as:
 
 $$
 R^2 = 1 - \frac{\sum_i (y_i - \hat{y}_i)^2}{\sum_i (y_i - \bar{y})^2}
 $$
 
-An \( R^2 \) score around 0.5 implies the model explains roughly 50% of the variance — not perfect, but impressive given only basic atom features were used.
+An $R^2$ score around 0.5 implies the model explains roughly 50% of the variance — not perfect, but impressive given only basic atom features were used.
 
 The scatter plot is equally important. Points near the diagonal line indicate good predictions, while vertical deviations show errors. This visual can help identify where the model struggles — often with large or unusual molecules.
 
