@@ -1974,60 +1974,53 @@ Next, we define the GNN model as a subclass of `torch.nn.Module`. We'll call it 
 <details>
 <summary>▶ Click to see code: GNN class definition</summary>
 <pre><code class="language-python">
-import torch
-import torch.nn as nn
-import torch.nn.functional as F
-from torch_geometric.nn import GCNConv, global_mean_pool
-
 class MolecularGNN(nn.Module):
-def **init**(self, num\_features=5, hidden\_dim=64, num\_layers=3):
-"""
-Initialize a GNN for molecular property prediction.
+    def __init__(self, num_features=5, hidden_dim=64, num_layers=3):
+        """
+        Initialize a GNN for molecular property prediction.
 
-```
-    Args:
-        num_features: Number of input features per atom
-        hidden_dim: Size of hidden representations
-        num_layers: Number of message passing rounds
-    """
-    super(MolecularGNN, self).__init__()
-    
-    # Create a list of GCN layers
-    self.gnn_layers = nn.ModuleList()
-    
-    # First layer maps raw features to hidden space
-    self.gnn_layers.append(GCNConv(num_features, hidden_dim))
-    
-    # Add intermediate GCN layers for deeper message passing
-    for _ in range(num_layers - 1):
-        self.gnn_layers.append(GCNConv(hidden_dim, hidden_dim))
-    
-    # Final prediction head: maps graph embedding to scalar output
-    self.predictor = nn.Linear(hidden_dim, 1)
+        Args:
+            num_features (int): Number of input features per atom
+            hidden_dim (int): Size of hidden representations
+            num_layers (int): Number of message passing rounds
+        """
+        super(MolecularGNN, self).__init__()
+        
+        # Create a list of GCN layers
+        self.gnn_layers = nn.ModuleList()
 
-def forward(self, x, edge_index, batch):
-    """
-    Process molecular graphs through the network.
+        # First layer: map input features to hidden dim
+        self.gnn_layers.append(GCNConv(num_features, hidden_dim))
 
-    Args:
-        x: Atom features
-        edge_index: Bond connectivity
-        batch: Molecule assignment for each atom
-    """
-    # Apply graph convolutions with ReLU activation
-    for layer in self.gnn_layers:
-        x = layer(x, edge_index)
-        x = F.relu(x)  # Apply non-linearity
-    
-    # Pool all atom representations to a single vector per molecule
-    x = global_mean_pool(x, batch)
-    
-    # Predict the molecular property
-    return self.predictor(x).squeeze(-1)
-```
+        # Intermediate layers: message passing
+        for _ in range(num_layers - 1):
+            self.gnn_layers.append(GCNConv(hidden_dim, hidden_dim))
 
+        # Final prediction layer: hidden vector → scalar output
+        self.predictor = nn.Linear(hidden_dim, 1)
+
+    def forward(self, x, edge_index, batch):
+        """
+        Forward pass through the GNN.
+
+        Args:
+            x (Tensor): Node feature matrix
+            edge_index (Tensor): Graph connectivity (edges)
+            batch (Tensor): Batch vector assigning nodes to graphs
+
+        Returns:
+            Tensor: Predicted scalar property (e.g., solubility)
+        """
+        for layer in self.gnn_layers:
+            x = layer(x, edge_index)
+            x = torch.relu(x)
+
+        # Pool node features to get graph-level embedding
+        graph_embedding = global_mean_pool(x, batch)
+
+        # Predict property from graph embedding
+        return self.predictor(graph_embedding).squeeze(-1)
 </code></pre>
-
 </details>
 
 **Core ideas:**
