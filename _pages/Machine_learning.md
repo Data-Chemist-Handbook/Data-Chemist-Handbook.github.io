@@ -1974,10 +1974,15 @@ Next, we define the GNN model as a subclass of `torch.nn.Module`. We'll call it 
 <details>
 <summary>▶ Click to see code: GNN class definition</summary>
 <pre><code class="language-python">
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+from torch_geometric.nn import GCNConv, global_mean_pool
+
 class MolecularGNN(nn.Module):
-    def __init__(self, num_features=5, hidden_dim=64, num_layers=3):
-        """
-        Initialize a GNN for molecular property prediction.
+def **init**(self, num\_features=5, hidden\_dim=64, num\_layers=3):
+"""
+Initialize a GNN for molecular property prediction.
 
 ```
     Args:
@@ -1999,32 +2004,11 @@ class MolecularGNN(nn.Module):
     
     # Final prediction head: maps graph embedding to scalar output
     self.predictor = nn.Linear(hidden_dim, 1)
-```
 
-</code></pre>
+def forward(self, x, edge_index, batch):
+    """
+    Process molecular graphs through the network.
 
-</details>
-
-**Explanation:**
-
-* `num_features` is 5 because we use 5 atom-level features (from previous steps).
-* `hidden_dim` controls how much information each atom can hold after transformation.
-* We use `nn.ModuleList` so we can define a variable number of GCN layers (`num_layers`).
-
-The `forward` method defines how the input graph is processed. It takes in:
-
-* `x`: the matrix of atom features
-* `edge_index`: the adjacency list (bonds)
-* `batch`: a vector assigning each atom to a molecule (needed for pooling)
-
-<details>
-<summary>▶ Click to see code: Forward pass logic</summary>
-<pre><code class="language-python">
-    def forward(self, x, edge_index, batch):
-        """
-        Process molecular graphs through the network.
-
-```
     Args:
         x: Atom features
         edge_index: Bond connectivity
@@ -2039,14 +2023,14 @@ The `forward` method defines how the input graph is processed. It takes in:
     x = global_mean_pool(x, batch)
     
     # Predict the molecular property
-    return self.predictor(x)
+    return self.predictor(x).squeeze(-1)
 ```
 
 </code></pre>
 
 </details>
 
-**Explanation of core ideas:**
+**Core ideas:**
 
 * `GCNConv`: Each layer performs message passing — it updates each atom’s feature based on its neighbors.
 * `ReLU`: After each layer, we apply a non-linearity to allow more flexible function approximation.
