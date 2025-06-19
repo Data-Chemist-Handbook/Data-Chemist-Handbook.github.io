@@ -162,7 +162,7 @@ For instance, RNN models have been applied in pharmaceutical process development
 
 ##### Question 1  
 
-Which PyTorch class provides a fully connected layer that applies a linear transformation to input data?
+Which PyTorch class provides a fully connected layer that applies a linear transformation to input data?  
 **A.** `nn.Linear`   
 **B.** `nn.RNN`   
 **C.** `nn.Conv1d`   
