@@ -155,11 +155,12 @@ def extract_pairs(reaction_series):
             continue  # skip malformed lines
     return inputs, outputs
 
+# Call extract_pairs for train, validation, and test sets, and store reactants and products separately
 train_X, train_y = extract_pairs(train_rxns)
 val_X, val_y = extract_pairs(val_rxns)
 test_X, test_y = extract_pairs(test_rxns)
 
-# Sanity check: 
+# Sanity check: Expecetd True
 print(train_y[0]+">>"+train_X[0]==train_rxns[0])
 ```
 
@@ -184,7 +185,8 @@ def canonicalize_pairs(X, y):
         # Canonicalize product
         canon_prod_parts = []
         for p in prod.split('.'):
-            # '.' is the delimiter used to separate multiple reactants/ multiple products in SMILES representation
+            # '.' is the delimiter used to separate multiple reactants/
+            # multiple products in SMILES representation
             c = canonicalize(p)
             if c:
                 canon_prod_parts.append(c)
@@ -201,6 +203,7 @@ def canonicalize_pairs(X, y):
             canon_y.append(c_react)
     return canon_X, canon_y
 
+# Replace train, test, eval product-reactant pairs with canonicalized forms
 train_X, train_y = canonicalize_pairs(train_X, train_y)
 val_X, val_y = canonicalize_pairs(val_X, val_y)
 test_X, test_y = canonicalize_pairs(test_X, test_y)
