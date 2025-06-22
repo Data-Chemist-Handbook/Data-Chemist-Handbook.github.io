@@ -1629,6 +1629,21 @@ Each part of our code works according to this *Flowchart*:
 
 ![GCN codeflow](../../../../../resource/img/gnn/workflow.png)
 
+**Algorithmic Idea**
+
+1. **Molecular Graph Representation**  
+   - **Nodes** = atoms (e.g. carbon, oxygen, nitrogen)  
+   - **Edges** = chemical bonds between atoms  
+   - Each atom carries a **feature vector** (here one-hot encoding of atom type).
+
+2. **Message Passing (= “Forward Propagation”)**  
+   - Each atom (node) gathers “messages” from its bonded neighbors.  
+   - A learnable weight matrix \(W\) transforms and mixes its own features and those of its neighbors.  
+   - A small nonlinearity (e.g. ReLU) can be applied to the sum.
+
+3. **Normalization**  
+   - To avoid high-degree atoms dominating, we scale each neighbor contribution by \(\tfrac{1}{\sqrt{d_i\,d_j}}\), where \(d\) is the number of bonds (degree).
+
 <details>
 <summary>▶ Click to see code</summary>
 <pre><code class="language-python">
@@ -1666,7 +1681,7 @@ print(output)
 </code></pre>
 </details>
 
-This code outputs a tensor of shape `[4, 2]` — one **updated node representation** per node, after applying the GCN layer. For example:
+This code outputs a tensor of shape `[4, 2]` — one **updated node representation** per node, after applying the GCN layer. Result:
 
 ```
 Updated Node Features After Message Passing:
@@ -1675,9 +1690,57 @@ tensor([[ 0.2851, -0.0017],
         [ 0.6180,  0.1266],
         [ 0.2807, -0.3559]], grad_fn=<AddBackward0>)
 ```
+What does the result tells us:
+
+1. **Shape `[4, 2]`**
+
+   * **4** rows → 4 atoms
+   * **2** columns → each atom’s new 2-dimensional embedding
+
+2. **Row = Atom Representation**
+
+   * Row 0 `[0.2851, -0.0017]`: Atom 0’s updated features
+   * Row 1 `[0.6568, -0.4519]`: Atom 1’s updated features
+   * … and so on.
+
+3. **Chemical Significance**
+
+   * These embeddings capture each atom’s **local environment**:
+
+     * Its own type
+     * Which neighbors it’s bonded to
+     * Neighbor types and bonding patterns
+   * Downstream, you can
+
+     * **Classify atoms** (e.g. reactive vs. inert)
+     * **Predict molecular properties** (by pooling all atom embeddings)
+     * **Visualize reaction sites** based on embedding clusters
+
+4. **`grad_fn=<AddBackward0>`**
+
+   * Indicates this output is part of the PyTorch computation graph.
+   * During training, you can call `output.backward()` to compute gradients for $W$.
+   
 However, in real chemistry, **not all neighbors are equally important**:
 * A **double bond** may influence differently than a single bond
 * An **oxygen atom** might carry more weight than a hydrogen atom
+
+**Review**
+
+1. **Flowchart Recap**
+
+   * You start with **raw features** → build a **graph object** → apply **GCN layer** → obtain **updated features**.
+   * The flowchart you drew corresponds exactly to these four steps.
+
+2. **Why It Matters**
+
+   * In chemistry, learning a compact, informative embedding for each atom helps models understand:
+
+     * **Bonding patterns**
+     * **Local electronic environments**
+     * **Potential reaction hotspots**
+
+By combining your flowchart, code snippet, and this result interpretation, your readers should now see **both** how the GCN works in practice and why its output is meaningful for molecular/chemical analysis.
 
 ![degreenormalize](../../../../../resource/img/gnn/degreenormalize.png)
 
