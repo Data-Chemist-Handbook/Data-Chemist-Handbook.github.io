@@ -1538,9 +1538,6 @@ This is exactly the kind of **structural propagation** that message passing in G
 Even though the idea sounds intuitive, we need a well-defined set of mathematical steps for the computer to execute.
 In a GNN, each layer usually follows **three standard steps**:
 
-![Message Passing Three Steps](../../../../../resource/img/gnn/message_passing_three_steps.png)
-**Figure 3.3.8:** *The three standard steps of message passing in GNNs: (1) Message Construction - neighbors create messages based on their features and edge properties, (2) Message Aggregation - all incoming messages are combined using sum, mean, or attention, (3) State Update - nodes combine their current state with aggregated messages to produce new representations.*
-
 #### Step 1: **Message Construction**
 
 For every node $i$, we consider all its neighbors $j$ and create a message $m_{ij}$ to describe what information node $j$ wants to send to node $i$.
@@ -1571,6 +1568,9 @@ However, in real chemistry, **not all neighbors are equally important**:
 * An **oxygen atom** might carry more weight than a hydrogen atom
 
 That’s why advanced GNNs often use **weighted aggregation** or **attention mechanisms** to adjust how each neighbor contributes.
+
+![Message Passing Three Steps](../../../../../resource/img/gnn/message_passing_three_steps.png)
+**Figure 3.3.8:** *The three standard steps of message passing in GNNs: (1) Message Construction - neighbors create messages based on their features and edge properties, (2) Message Aggregation - all incoming messages are combined using sum, mean, or attention, (3) State Update - nodes combine their current state with aggregated messages to produce new representations.*
 
 #### Step 3: **State Update**
 
@@ -1607,6 +1607,8 @@ $$
 * $d_i$: Degree (number of neighbors) of node $i$
 * $\sigma$: Activation function (e.g. ReLU)
 * This formula **averages and transforms** neighbor features while normalizing based on node degrees.
+* 
+![GCN Formula Breakdown](../../../../../resource/img/gnn/aggregate.png)
 
 In PyTorch Geometric (PyG), the most basic GNN implementation is `GCNConv`. Let’s go through each part of the code.
 
@@ -1620,6 +1622,8 @@ In PyTorch Geometric (PyG), the most basic GNN implementation is `GCNConv`. Let�
 | `torch_geometric.data.Data`          | Creates a graph object holding `x`, `edge_index`, and optionally edge/node labels.                |
 | `GCNConv(in_channels, out_channels)` | A GCN layer that does: message passing + aggregation + update.                                    |
 | `conv(x, edge_index)`                | Applies one layer of graph convolution and returns updated node features.                         |
+
+![GCN codeflow](../../../../../resource/img/gnn/workflow.pdf)
 
 <details>
 <summary>▶ Click to see code</summary>
@@ -1658,6 +1662,8 @@ print(output)
 </code></pre>
 </details>
 
+![gcn4steps](../../../../../resource/img/gnn/gcn4steps.png)
+
 This code outputs a tensor of shape `[4, 2]` — one **updated node representation** per node, after applying the GCN layer. For example:
 
 ```
@@ -1670,6 +1676,8 @@ tensor([[ 0.2851, -0.0017],
 However, in real chemistry, **not all neighbors are equally important**:
 * A **double bond** may influence differently than a single bond
 * An **oxygen atom** might carry more weight than a hydrogen atom
+
+![degreenormalize](../../../../../resource/img/gnn/degreenormalize.png)
 
 That's why advanced GNNs often use **weighted aggregation** or **attention mechanisms** to adjust how each neighbor contributes.
 
@@ -1723,18 +1731,6 @@ Chemically speaking, this setup forms a classic "push-pull" system: the nitro gr
 
 ![GNN Layer Expansion](../../../../../resource/img/gnn/layer_expansion.png)
 **Figure 3.3.11:** *Receptive field expansion in GNNs. Each layer increases a node's awareness by one hop. Starting from self-awareness (Layer 0), nodes progressively integrate information from 1-hop neighbors, 2-hop neighbors, and eventually the entire molecular graph.*
-
-At the initial step (layer 0), each atom only knows itself: for example, the nitrogen in the nitro group knows it is positively charged, the hydroxyl oxygen knows it’s bonded to a hydrogen, and the aromatic carbons know their local type. No context is shared yet.
-
-In the first message passing layer, atoms begin exchanging information with their direct neighbors. The nitro nitrogen learns it is connected to two electron-withdrawing oxygens. The ortho carbon next to the nitro group receives this message and begins to "realize" it’s adjacent to a strong puller. On the other side of the ring, the carbon bonded to the hydroxyl group starts picking up signals from the electron-donating OH.
-
-By the second layer, this influence propagates further. Carbons that are not directly attached to NO₂ or OH now begin receiving mixed signals. The meta carbons, for instance, integrate messages from both sides — they now reflect the competing effects of withdrawal and donation. The model begins to reconstruct the kind of electronic delocalization and inductive influence that chemists would traditionally describe with resonance structures or Hammett constants.
-
-As we add more layers, each atom eventually integrates information from the entire molecule. At this point, the model can “understand” the global distribution of electronic effects. It learns that this is a conjugated aromatic system with competing substituents and adjusts each atom’s representation accordingly. This is not just structural information, but **functional** understanding — the kind that predicts acid dissociation, reactivity sites, or electronic transition behavior.
-
-From a computational point of view, each additional GNN layer expands an atom’s receptive field by one hop. By the third or fourth layer, the atom embeddings encode not only local geometry but also the broader chemical environment. Modern architectures like GAT can further modulate this process by weighting important neighbors more heavily (e.g., polar bonds, charged atoms), and MPNNs can include edge features like bond types or bond orders to enrich the message content.
-
-In short, message passing enables the model to capture what chemists know intuitively: that an atom’s behavior is shaped not just by its identity, but by its **context** within the molecule. This is how GNNs bridge raw structure and chemical insight — atom by atom, bond by bond.
 
 #### Summary
 
