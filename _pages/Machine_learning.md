@@ -1138,11 +1138,17 @@ Chemical toxicity often arises from complex, nonlinear interactions among molecu
 
 Unlike images or text, molecules do not follow a regular shape or order. This makes it hard for conventional neural networks to process them effectively. Convolutional neural networks (CNNs) are designed for image data, and recurrent neural networks (RNNs) are built for sequences, but neither is suited to the irregular and highly connected structure of molecules. As a result, older models often fail to capture how atoms are truly linked inside a molecule.
 
+![GNN Overview - Traditional Methods vs Graph Neural Networks](../../../../../resource/img/gnn/gnn_overview_flowchart.png)
+**Figure 1:** *Comparison between traditional neural network approaches and Graph Neural Networks for molecular machine learning. The flowchart illustrates why molecules require graph-based methods and how GNNs preserve structural information that traditional methods lose.*
+
 Before GNNs were introduced, chemists used what are known as **molecular descriptors**. These are numerical features based on molecular structure, such as how many functional groups a molecule has or how its atoms are arranged in space. These descriptors were used as input for machine learning models. However, they often **lose important information** about the exact way atoms are connected. This loss of detail limits how well the models can predict molecular behavior.
 
 GNNs solve this problem by learning directly from the molecular graph. Instead of relying on handcrafted features, GNNs use the structure itself to learn what matters. Each atom gathers information from its neighbors in the graph, which helps the model understand the molecule as a whole. This approach leads to **more accurate predictions** and also makes the results **easier to interpret**.
 
 In short, GNNs allow researchers to build models that reflect the true structure of molecules. They avoid the limitations of older methods by directly using the connections between atoms, offering a more natural and powerful way to predict molecular properties.
+
+![GNN Processing Pipeline](../../../../../resource/img/gnn/gnn_processing_pipeline.png)
+**Figure 2:** *Step-by-step visualization of how Graph Neural Networks process molecular graphs. The pipeline shows the flow from input molecular graph through message passing and aggregation to final property prediction.*
 
 ### 3.3.1 What Are Graph Neural Networks?
 
@@ -1162,6 +1168,9 @@ This is already a graph! Let's break it down:
 
 - **Nodes (vertices)**: The atoms - one oxygen (O) and two hydrogens (H)
 - **Edges (connections)**: The chemical bonds - two O-H bonds
+
+![Molecules as Graphs Concept](../../../../../resource/img/gnn/molecules_as_graphs.png)
+**Figure 3.3.1:** *Visualization showing how molecules naturally form graph structures. Water (H₂O) and ethanol (C₂H₆O) are shown in both chemical notation and graph representation, demonstrating that atoms are nodes and bonds are edges.*
 
 Now consider a slightly more complex molecule - ethanol (drinking alcohol):
 
@@ -1190,6 +1199,9 @@ Before GNNs, how did computers predict molecular properties like solubility, tox
 - Surface area
 
 But this approach has a fundamental flaw. Consider these two molecules:
+
+![Traditional Descriptors vs Graph Neural Networks](../../../../../resource/img/gnn/traditional_vs_gnn.png)
+**Figure 3.3.2:** *Comparison between traditional molecular descriptors and Graph Neural Networks. Traditional methods lose connectivity information by converting molecules into numerical features, while GNNs preserve the full molecular structure through direct graph processing.*
 
 ```
 Molecule A:  H-O-C-C-C-C-O-H     (linear structure)
@@ -1221,6 +1233,9 @@ GNNs solve this problem elegantly. They process molecules as they truly are - gr
 #### How GNNs Learn from Molecular Graphs
 
 The magic of GNNs lies in **message passing** - atoms "talk" to their neighbors through bonds. Let's see how this works step by step:
+
+![Message Passing in Graph Neural Networks](../../../../../resource/img/gnn/message_passing_visualization.png)
+**Figure 3.3.3:** *Step-by-step visualization of the message passing mechanism in GNNs. The figure shows how information propagates through the molecular graph over multiple iterations, allowing each atom to understand its role within the larger molecular context.*
 
 **Step 1: Initial State**
 Each atom starts knowing only about itself:
@@ -1255,6 +1270,9 @@ After enough message passing, each atom understands its role in the entire molec
 
 Molecular property prediction is at the heart of modern drug discovery and materials science. Consider these real-world applications:
 
+![GNN Applications in Science and Industry](../../../../../resource/img/gnn/gnn_applications.png)
+**Figure 3.3.4:** *Real-world applications of molecular property prediction using GNNs across six domains: drug discovery, environmental science, materials design, toxicity prediction, battery research, and agriculture.*
+
 1. **Drug Discovery**: Will this molecule pass through the blood-brain barrier?
 2. **Environmental Science**: How long will this chemical persist in water?
 3. **Materials Design**: What's the melting point of this new polymer?
@@ -1274,6 +1292,9 @@ We’ll walk step-by-step through a basic molecular graph construction pipeline 
 #### 1. Load a molecule and include hydrogen atoms
 
 To start, we need to load a molecule using **RDKit**. RDKit provides a function `Chem.MolFromSmiles()` to create a molecule object from a **SMILES string** (a standard text representation of molecules). However, by default, hydrogen atoms are not included explicitly in the molecule. To use GNNs effectively, we want **all atoms explicitly shown**, so we also call `Chem.AddHs()` to add them in.
+
+![Feature Extraction Pipeline](../../../../../resource/img/gnn/feature_extraction_pipeline.png)
+**Figure 3.3.5:** *Complete pipeline for converting molecular SMILES strings into graph representations suitable for GNN processing. The workflow shows six stages: from SMILES input through RDKit molecule creation, node/edge feature extraction, to final graph object construction.*
 
 Let’s break down the functions we’ll use:
 
@@ -1386,6 +1407,9 @@ for i, atom in enumerate(water.GetAtoms()):
 #### 4. Build the undirected edge list
 
 Now we extract the **list of bonds as pairs of indices**. Since GNNs typically use **undirected graphs**, we store each bond in both directions (i → j and j → i).
+
+![RDKit Molecular Structures](../../../../../resource/img/gnn/rdkit_molecules.png)
+**Figure 3.3.6:** *Chemical structures and corresponding graph statistics for common molecules (water, ethanol, benzene, and aspirin). Each molecule is shown with its 2D structure alongside graph metrics including node count, edge count, and atom type distribution.*
 
 Functions involved:
 
