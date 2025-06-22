@@ -1425,7 +1425,7 @@ for i, atom in enumerate(water.GetAtoms()):
 </details>
 
 ![Feature Vector Visualization](../../../../../resource/img/gnn/atom_features_visualization.png)
-**Figure 3.4.6:** *Atom-to-feature mapping. The atomic number provides a simple yet effective initial representation for each node in the molecular graph.*
+*Atom-to-feature mapping. The atomic number provides a simple yet effective initial representation for each node in the molecular graph.*
 
 1. **Feature Extraction Function**:
    - The `get_atom_features(atom)` function extracts the atomic number of each atom using `atom.GetAtomicNum()`. This is a simple yet powerful feature for distinguishing between different elements.
@@ -1607,7 +1607,7 @@ $$
 * $d_i$: Degree (number of neighbors) of node $i$
 * $\sigma$: Activation function (e.g. ReLU)
 * This formula **averages and transforms** neighbor features while normalizing based on node degrees.
-* 
+
 ![GCN Formula Breakdown](../../../../../resource/img/gnn/aggregate.png)
 
 In PyTorch Geometric (PyG), the most basic GNN implementation is `GCNConv`. Let’s go through each part of the code.
@@ -1623,7 +1623,7 @@ In PyTorch Geometric (PyG), the most basic GNN implementation is `GCNConv`. Let�
 | `GCNConv(in_channels, out_channels)` | A GCN layer that does: message passing + aggregation + update.                                    |
 | `conv(x, edge_index)`                | Applies one layer of graph convolution and returns updated node features.                         |
 
-![GCN codeflow](../../../../../resource/img/gnn/workflow.pdf)
+![GCN codeflow](../../../../../resource/img/gnn/workflow.png)
 
 <details>
 <summary>▶ Click to see code</summary>
