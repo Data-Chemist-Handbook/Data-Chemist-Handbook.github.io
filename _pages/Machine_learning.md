@@ -1720,8 +1720,6 @@ Different GNN architectures (GCN, GraphSAGE, GAT, MPNN) offer various approaches
 
 The power of message passing lies in its ability to bridge **structure and function**. By allowing atoms to "communicate" through bonds, GNNs learn representations that encode not just molecular topology, but also the chemical behaviors that emerge from that structure — acidity, reactivity, electronic distribution, and more. This makes GNNs particularly well-suited for molecular property prediction and drug discovery tasks where understanding chemical context is crucial.
 
-I'll help you simplify the content to focus on a single, complete framework with detailed explanations for each code segment. Let me restructure section 3.3.3 with a cleaner approach:
-
 ### 3.3.3 GNNs for Molecular Property Prediction
 
 #### Completed and Compiled Code: [Click Here](https://colab.research.google.com/drive/1IemDJyiQuDwBK-iTkaHBgqqfAiM065_b?usp=sharing)
