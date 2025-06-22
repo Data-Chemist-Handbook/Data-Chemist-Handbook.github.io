@@ -1238,7 +1238,7 @@ The magic of GNNs lies in **message passing** - atoms "talk" to their neighbors 
 ![Message Passing in Graph Neural Networks](../../../../../resource/img/gnn/message_passing_visualization.png)
 **Figure 3.3.3:** *Step-by-step visualization of the message passing mechanism in GNNs. The figure shows how information propagates through the molecular graph over multiple iterations, allowing each atom to understand its role within the larger molecular context.*
 
-**Step 1: Initial State**
+**Step 0: Initial State**
 Each atom starts knowing only about itself:
 
 ```
@@ -1247,7 +1247,7 @@ Carbon-2: "I'm carbon with 4 bonds"
 Oxygen:   "I'm oxygen with 2 bonds"
 ```
 
-**Step 2: First Message Pass**
+**Step 1: First Message Pass**
 Atoms share information with neighbors:
 
 ```
@@ -1256,7 +1256,7 @@ Carbon-2: "I'm carbon between another carbon and an oxygen"
 Oxygen:   "I'm oxygen connected to a carbon and a hydrogen"
 ```
 
-**Step 3: Second Message Pass**
+**Step 2: Second Message Pass**
 Information spreads further:
 
 ```
