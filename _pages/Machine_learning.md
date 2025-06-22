@@ -1610,6 +1610,8 @@ $$
 
 ![GCN Formula Breakdown](../../../../../resource/img/gnn/aggregate.png)
 
+![gcn4steps](../../../../../resource/img/gnn/gcn4steps.png)
+
 In PyTorch Geometric (PyG), the most basic GNN implementation is `GCNConv`. Let’s go through each part of the code.
 
 **PyTorch Geometric Components**
@@ -1663,8 +1665,6 @@ print("Updated Node Features After Message Passing:")
 print(output)
 </code></pre>
 </details>
-
-![gcn4steps](../../../../../resource/img/gnn/gcn4steps.png)
 
 This code outputs a tensor of shape `[4, 2]` — one **updated node representation** per node, after applying the GCN layer. For example:
 
