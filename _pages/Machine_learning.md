@@ -1330,6 +1330,12 @@ print(f"Number of atoms with H: {water.GetNumAtoms()}")  # Output: 3
 </code></pre>
 </details>
 
+1. **Initial Atom Count**: Initially, the molecule object only includes the oxygen atom, as hydrogen atoms are not explicitly represented by default. Therefore, `GetNumAtoms()` returns `1`.
+2. **Adding Hydrogen Atoms**: After calling `Chem.AddHs(water)`, the molecule object is updated to include explicit hydrogen atoms. This is essential for a complete representation of the molecule.
+3. **Final Atom Count**: The final count of atoms is `3`, which includes one oxygen atom and two hydrogen atoms. This accurately reflects the molecular structure of water (H₂O).
+
+By explicitly adding hydrogen atoms, we ensure that the molecular graph representation is comprehensive and suitable for further processing in GNNs.
+
 ---
 
 #### 2. Access the bond structure (graph edges)
@@ -1365,6 +1371,15 @@ for bond in water.GetBonds():
 #   O(0) -- H(2)
 </code></pre>
 </details>
+
+1. **Bond Retrieval**: The `mol.GetBonds()` function returns a list of bond objects in the molecule. Each bond object represents a connection between two atoms.
+2. **Atom Indices**: For each bond, `bond.GetBeginAtomIdx()` and `bond.GetEndAtomIdx()` return the indices of the two atoms connected by the bond. These indices correspond to the positions of the atoms in the molecule object.
+3. **Atom Symbols**: The `mol.GetAtomWithIdx(idx).GetSymbol()` function retrieves the chemical symbol (e.g., "H" for hydrogen, "O" for oxygen) of the atom at a given index. This helps in identifying the types of atoms involved in each bond.
+4. **Connectivity Representation**: The output shows the connectivity of the water molecule as:
+   - `O(0) -- H(1)`
+   - `O(0) -- H(2)`
+
+This indicates that the oxygen atom (index 0) is bonded to two hydrogen atoms (indices 1 and 2). This connectivity information is crucial for constructing the graph representation of the molecule, where atoms are nodes and bonds are edges.
 
 ---
 
@@ -1404,6 +1419,25 @@ for i, atom in enumerate(water.GetAtoms()):
 </code></pre>
 </details>
 
+1. **Feature Extraction Function**:
+   - The `get_atom_features(atom)` function extracts the atomic number of each atom using `atom.GetAtomicNum()`. This is a simple yet powerful feature for distinguishing between different elements.
+   - The atomic number is a unique identifier for each element: 1 for hydrogen (H) and 8 for oxygen (O).
+
+2. **Iterating Over Atoms**:
+   - The `mol.GetAtoms()` function returns a generator that iterates over all `Atom` objects in the molecule.
+   - For each atom, we retrieve its atomic number and store it as a feature vector (a list containing a single element).
+
+3. **Output Explanation**:
+   - The output lists each atom in the molecule along with its atomic number:
+     - `Atom 0 (O): features = [8]`: The oxygen atom (index 0) has an atomic number of 8.
+     - `Atom 1 (H): features = [1]`: The first hydrogen atom (index 1) has an atomic number of 1.
+     - `Atom 2 (H): features = [1]`: The second hydrogen atom (index 2) also has an atomic number of 1.
+
+4. **Significance**:
+   - These atomic numbers serve as the initial node features for the molecular graph. In more advanced models, additional features (e.g., degree, hybridization, electronegativity) can be included to capture more complex chemical properties.
+   - By representing each atom with its atomic number, we provide a basic yet meaningful input for graph neural networks to learn from the structural and chemical properties of the molecule.
+
+In summary, this code demonstrates how to extract simple yet essential features from each atom in a molecule, laying the foundation for constructing informative node attributes in molecular graphs.
 
 ---
 
@@ -1436,6 +1470,23 @@ print("Water edges:", water_edges)
 # Water edges: [[0, 1], [1, 0], [0, 2], [2, 0]]
 </code></pre>
 </details>
+
+1. **Function Definition**:
+   - `get_edge_list(mol)`: This function takes an RDKit molecule object (`mol`) as input and returns a list of edges representing the connectivity between atoms.
+   
+2. **Edge Extraction**:
+   - `mol.GetBonds()`: This method retrieves a list of bond objects from the molecule. Each bond object represents a connection between two atoms.
+   - For each bond, `bond.GetBeginAtomIdx()` and `bond.GetEndAtomIdx()` are used to get the indices of the two atoms connected by the bond. These indices are integers that uniquely identify atoms within the molecule.
+   - The edge list is constructed by appending both `[i, j]` and `[j, i]` to the `edges` list. This ensures that the graph is undirected, which is essential for GNNs. In an undirected graph, the relationship between nodes is bidirectional, meaning that if atom `i` is connected to atom `j`, then atom `j` is also connected to atom `i`.
+
+3. **Output**:
+   - The function returns the complete edge list, which includes all pairs of connected atoms in both directions.
+   - For the water molecule (H₂O), the output is:
+     ```
+     Water edges: [[0, 1], [1, 0], [0, 2], [2, 0]]
+     ```
+     - `[0, 1]` and `[1, 0]`: These pairs represent the bond between the oxygen atom (index 0) and the first hydrogen atom (index 1).
+     - `[0, 2]` and `[2, 0]`: These pairs represent the bond between the oxygen atom (index 0) and the second hydrogen atom (index 2).
 
 Each pair represents one connection (bond) between atoms. Including both directions ensures that during **message passing**, information can flow freely from each node to all its neighbors.
 
