@@ -1514,10 +1514,16 @@ In the next section, we'll dive deep into how message passing actually works, bu
 At the core of a Graph Neural Network (GNN) is the idea of **message passing**.
 The goal is to simulate an important phenomenon in chemistry: **how electronic effects propagate through molecular structures via chemical bonds**. This is something that happens in real molecules, and GNNs try to mimic it through mathematical and computational means.
 
+![Message Passing Three Steps](../../../../../resource/img/gnn/message_passing_three_steps.png)
+**Figure 3.3.7:** *The three standard steps of message passing in GNNs: (1) Message Construction - neighbors create messages based on their features and edge properties, (2) Message Aggregation - all incoming messages are combined using sum, mean, or attention, (3) State Update - nodes combine their current state with aggregated messages to produce new representations.*
+
 Let’s first look at a chemistry example.
-When a **fluorine atom** is added to a molecule, its **high electronegativity** doesn’t just affect the atom it is directly bonded to. It causes that **carbon atom** to become slightly positive, which in turn affects its other bonds, and so on. The effect ripples outward through the structure.
+When a **fluorine atom** is added to a molecule, its **high electronegativity** doesn't just affect the atom it is directly bonded to. It causes that **carbon atom** to become slightly positive, which in turn affects its other bonds, and so on. The effect ripples outward through the structure.
 
 This is exactly the kind of **structural propagation** that message passing in GNNs is designed to model.
+
+![Chemical Effects Propagation](../../../../../resource/img/gnn/chemical_propagation.png)
+**Figure 3.3.8:** *Comparison of electronic effects propagation in real molecules (left) versus GNN simulation (right). The fluorine atom's electronegativity creates a ripple effect through the carbon chain, which GNNs capture through iterative message passing.*
 
 #### The structure of message passing: what happens at each GNN layer?
 
@@ -1572,6 +1578,9 @@ This update is usually implemented with a small neural network, such as a **mult
 
 In summary, at each GNN layer, **every atom (node) listens to its neighbors and updates its understanding of the molecule**.
 After several layers of message passing, each node's embedding captures not just its local features, but also the broader context of the molecular structure.
+
+![GNN Layer Expansion](../../../../../resource/img/gnn/layer_expansion.png)
+**Figure 3.3.9:** *Receptive field expansion in GNNs. Each layer increases a node's awareness by one hop. Starting from self-awareness (Layer 0), nodes progressively integrate information from 1-hop neighbors, 2-hop neighbors, and eventually the entire molecular graph.*
 
 ---
 
@@ -1650,6 +1659,14 @@ tensor([[ 0.2851, -0.0017],
         [ 0.6180,  0.1266],
         [ 0.2807, -0.3559]], grad_fn=<AddBackward0>)
 ```
+However, in real chemistry, **not all neighbors are equally important**:
+* A **double bond** may influence differently than a single bond
+* An **oxygen atom** might carry more weight than a hydrogen atom
+
+That's why advanced GNNs often use **weighted aggregation** or **attention mechanisms** to adjust how each neighbor contributes.
+
+![Aggregation Functions](../../../../../resource/img/gnn/aggregation_functions.png)
+**Figure 3.3.10:** *Different aggregation functions in GNNs. Sum preserves total signal strength, Mean normalizes by node degree, Max captures the strongest signal, and Attention weights messages by learned importance scores.*
 
 **Variants of Graph Convolutions**
 
@@ -1666,6 +1683,9 @@ Use attention to assign **different weights** to different neighbors. This is ve
 
 **Message Passing Neural Networks (MPNNs)**
 A general and expressive framework. Can use **edge features**, which is important in molecules (e.g. bond type, aromaticity). Many SOTA chemistry models (e.g., D-MPNN) are built on this.
+
+![GNN Variants](../../../../../resource/img/gnn/gnn_variants.png)
+**Figure 3.3.11:** *Comparison of different GNN architectures. GCN uses simple normalized averaging, GraphSAGE samples neighbors for scalability, GAT employs attention mechanisms for weighted aggregation, and MPNN provides a general framework incorporating edge features.*
 
 #### Chemical Intuition Behind Message Passing
 
