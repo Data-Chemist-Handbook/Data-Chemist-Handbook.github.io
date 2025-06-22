@@ -1297,6 +1297,9 @@ We’ll walk step-by-step through a basic molecular graph construction pipeline 
 
 #### 1. Load a molecule and include hydrogen atoms
 
+![Molecule Loading Process](../../../../../resource/img/gnn/mol_loading_visualization.png)
+**Figure 3.4.1:** *Loading a molecule from SMILES and adding explicit hydrogen atoms. Left: Initial molecule object contains only heavy atoms (oxygen). Right: After AddHs(), all atoms including hydrogens are explicitly represented with unique indices.*
+
 To start, we need to load a molecule using **RDKit**. RDKit provides a function `Chem.MolFromSmiles()` to create a molecule object from a **SMILES string** (a standard text representation of molecules). However, by default, hydrogen atoms are not included explicitly in the molecule. To use GNNs effectively, we want **all atoms explicitly shown**, so we also call `Chem.AddHs()` to add them in.
 
 Let’s break down the functions we’ll use:
@@ -1330,6 +1333,9 @@ print(f"Number of atoms with H: {water.GetNumAtoms()}")  # Output: 3
 </code></pre>
 </details>
 
+![Molecule Loading Steps](../../../../../resource/img/gnn/mol_loading_steps.png)
+**Figure 3.4.2:** *Step-by-step visualization of molecule loading. The transformation from implicit to explicit hydrogen representation is crucial for GNN processing.*
+
 1. **Initial Atom Count**: Initially, the molecule object only includes the oxygen atom, as hydrogen atoms are not explicitly represented by default. Therefore, `GetNumAtoms()` returns `1`.
 2. **Adding Hydrogen Atoms**: After calling `Chem.AddHs(water)`, the molecule object is updated to include explicit hydrogen atoms. This is essential for a complete representation of the molecule.
 3. **Final Atom Count**: The final count of atoms is `3`, which includes one oxygen atom and two hydrogen atoms. This accurately reflects the molecular structure of water (H₂O).
@@ -1339,6 +1345,9 @@ By explicitly adding hydrogen atoms, we ensure that the molecular graph represen
 ---
 
 #### 2. Access the bond structure (graph edges)
+
+![Bond Structure Extraction](../../../../../resource/img/gnn/bond_structure_visualization.png)
+**Figure 3.4.3:** *Extracting bond connectivity from RDKit molecule object. Each bond connects two atoms identified by their indices, forming the edges of our molecular graph.*
 
 Once we have the molecule, we want to know **which atoms are connected**—this is the basis for constructing a graph. RDKit stores this as a list of `Bond` objects, which we can retrieve using `mol.GetBonds()`.
 
@@ -1372,6 +1381,9 @@ for bond in water.GetBonds():
 </code></pre>
 </details>
 
+![Bond Connectivity Diagram](../../../../../resource/img/gnn/bond_connectivity.png)
+**Figure 3.4.4:** *Visual representation of water molecule bonds. The GetBonds() function returns bond objects that encode the graph connectivity between atoms.*
+
 1. **Bond Retrieval**: The `mol.GetBonds()` function returns a list of bond objects in the molecule. Each bond object represents a connection between two atoms.
 2. **Atom Indices**: For each bond, `bond.GetBeginAtomIdx()` and `bond.GetEndAtomIdx()` return the indices of the two atoms connected by the bond. These indices correspond to the positions of the atoms in the molecule object.
 3. **Atom Symbols**: The `mol.GetAtomWithIdx(idx).GetSymbol()` function retrieves the chemical symbol (e.g., "H" for hydrogen, "O" for oxygen) of the atom at a given index. This helps in identifying the types of atoms involved in each bond.
@@ -1384,6 +1396,9 @@ This indicates that the oxygen atom (index 0) is bonded to two hydrogen atoms (i
 ---
 
 #### 3. Extract simple atom-level features
+
+![Atom Features Extraction](../../../../../resource/img/gnn/atom_features_visualization.png)
+**Figure 3.4.5:** *Extracting atomic features for GNN nodes. Each atom's atomic number serves as its initial feature vector, distinguishing different elements in the molecular graph.*
 
 Each atom will become a **node** in our graph, and we often associate it with a **feature vector**. To keep things simple, we start with just the **atomic number**.
 
@@ -1419,6 +1434,9 @@ for i, atom in enumerate(water.GetAtoms()):
 </code></pre>
 </details>
 
+![Feature Vector Visualization](../../../../../resource/img/gnn/feature_vectors.png)
+**Figure 3.4.6:** *Atom-to-feature mapping. The atomic number provides a simple yet effective initial representation for each node in the molecular graph.*
+
 1. **Feature Extraction Function**:
    - The `get_atom_features(atom)` function extracts the atomic number of each atom using `atom.GetAtomicNum()`. This is a simple yet powerful feature for distinguishing between different elements.
    - The atomic number is a unique identifier for each element: 1 for hydrogen (H) and 8 for oxygen (O).
@@ -1442,6 +1460,9 @@ In summary, this code demonstrates how to extract simple yet essential features 
 ---
 
 #### 4. Build the undirected edge list
+
+![Edge List Construction](../../../../../resource/img/gnn/edge_list_visualization.png)
+**Figure 3.4.7:** *Building an undirected edge list from molecular bonds. Each bond generates two directed edges (i→j and j→i) to ensure bidirectional message passing in the GNN.*
 
 Now we extract the **list of bonds as pairs of indices**. Since GNNs typically use **undirected graphs**, we store each bond in both directions (i → j and j → i).
 
@@ -1470,6 +1491,9 @@ print("Water edges:", water_edges)
 # Water edges: [[0, 1], [1, 0], [0, 2], [2, 0]]
 </code></pre>
 </details>
+
+![Undirected Graph Representation](../../../../../resource/img/gnn/undirected_graph.png)
+**Figure 3.4.8:** *The complete edge list for water molecule. Bidirectional edges enable information flow in both directions during GNN message passing.*
 
 1. **Function Definition**:
    - `get_edge_list(mol)`: This function takes an RDKit molecule object (`mol`) as input and returns a list of edges representing the connectivity between atoms.
@@ -1579,9 +1603,6 @@ This update is usually implemented with a small neural network, such as a **mult
 In summary, at each GNN layer, **every atom (node) listens to its neighbors and updates its understanding of the molecule**.
 After several layers of message passing, each node's embedding captures not just its local features, but also the broader context of the molecular structure.
 
-![GNN Layer Expansion](../../../../../resource/img/gnn/layer_expansion.png)
-**Figure 3.3.9:** *Receptive field expansion in GNNs. Each layer increases a node's awareness by one hop. Starting from self-awareness (Layer 0), nodes progressively integrate information from 1-hop neighbors, 2-hop neighbors, and eventually the entire molecular graph.*
-
 ---
 
 #### Graph Convolutions: Making It Concrete
@@ -1666,7 +1687,7 @@ However, in real chemistry, **not all neighbors are equally important**:
 That's why advanced GNNs often use **weighted aggregation** or **attention mechanisms** to adjust how each neighbor contributes.
 
 ![Aggregation Functions](../../../../../resource/img/gnn/aggregation_functions.png)
-**Figure 3.3.10:** *Different aggregation functions in GNNs. Sum preserves total signal strength, Mean normalizes by node degree, Max captures the strongest signal, and Attention weights messages by learned importance scores.*
+**Figure 3.3.9:** *Different aggregation functions in GNNs. Sum preserves total signal strength, Mean normalizes by node degree, Max captures the strongest signal, and Attention weights messages by learned importance scores.*
 
 **Variants of Graph Convolutions**
 
@@ -1685,7 +1706,7 @@ Use attention to assign **different weights** to different neighbors. This is ve
 A general and expressive framework. Can use **edge features**, which is important in molecules (e.g. bond type, aromaticity). Many SOTA chemistry models (e.g., D-MPNN) are built on this.
 
 ![GNN Variants](../../../../../resource/img/gnn/gnn_variants.png)
-**Figure 3.3.11:** *Comparison of different GNN architectures. GCN uses simple normalized averaging, GraphSAGE samples neighbors for scalability, GAT employs attention mechanisms for weighted aggregation, and MPNN provides a general framework incorporating edge features.*
+**Figure 3.3.10:** *Comparison of different GNN architectures. GCN uses simple normalized averaging, GraphSAGE samples neighbors for scalability, GAT employs attention mechanisms for weighted aggregation, and MPNN provides a general framework incorporating edge features.*
 
 #### Chemical Intuition Behind Message Passing
 
@@ -1712,7 +1733,9 @@ Chemically speaking, this setup forms a classic "push-pull" system: the nitro gr
 - Layer 4+: Global context (Full molecule representation)
   - Every atom integrates information from the entire molecule
   - Final features encode global electronic and structural effects
-
+  - 
+![GNN Layer Expansion](../../../../../resource/img/gnn/layer_expansion.png)
+**Figure 3.3.11:** *Receptive field expansion in GNNs. Each layer increases a node's awareness by one hop. Starting from self-awareness (Layer 0), nodes progressively integrate information from 1-hop neighbors, 2-hop neighbors, and eventually the entire molecular graph.*
 At the initial step (layer 0), each atom only knows itself: for example, the nitrogen in the nitro group knows it is positively charged, the hydroxyl oxygen knows it’s bonded to a hydrogen, and the aromatic carbons know their local type. No context is shared yet.
 
 In the first message passing layer, atoms begin exchanging information with their direct neighbors. The nitro nitrogen learns it is connected to two electron-withdrawing oxygens. The ortho carbon next to the nitro group receives this message and begins to "realize" it’s adjacent to a strong puller. On the other side of the ring, the carbon bonded to the hydroxyl group starts picking up signals from the electron-donating OH.
