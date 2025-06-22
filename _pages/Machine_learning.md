@@ -1514,21 +1514,21 @@ In the next section, we'll dive deep into how message passing actually works, bu
 At the core of a Graph Neural Network (GNN) is the idea of **message passing**.
 The goal is to simulate an important phenomenon in chemistry: **how electronic effects propagate through molecular structures via chemical bonds**. This is something that happens in real molecules, and GNNs try to mimic it through mathematical and computational means.
 
-![Message Passing Three Steps](../../../../../resource/img/gnn/message_passing_three_steps.png)
-**Figure 3.3.7:** *The three standard steps of message passing in GNNs: (1) Message Construction - neighbors create messages based on their features and edge properties, (2) Message Aggregation - all incoming messages are combined using sum, mean, or attention, (3) State Update - nodes combine their current state with aggregated messages to produce new representations.*
-
 Let’s first look at a chemistry example.
 When a **fluorine atom** is added to a molecule, its **high electronegativity** doesn't just affect the atom it is directly bonded to. It causes that **carbon atom** to become slightly positive, which in turn affects its other bonds, and so on. The effect ripples outward through the structure.
 
 This is exactly the kind of **structural propagation** that message passing in GNNs is designed to model.
 
 ![Chemical Effects Propagation](../../../../../resource/img/gnn/chemical_propagation.png)
-**Figure 3.3.8:** *Comparison of electronic effects propagation in real molecules (left) versus GNN simulation (right). The fluorine atom's electronegativity creates a ripple effect through the carbon chain, which GNNs capture through iterative message passing.*
+**Figure 3.3.7:** *Comparison of electronic effects propagation in real molecules (left) versus GNN simulation (right). The fluorine atom's electronegativity creates a ripple effect through the carbon chain, which GNNs capture through iterative message passing.*
 
 #### The structure of message passing: what happens at each GNN layer?
 
 Even though the idea sounds intuitive, we need a well-defined set of mathematical steps for the computer to execute.
 In a GNN, each layer usually follows **three standard steps**:
+
+![Message Passing Three Steps](../../../../../resource/img/gnn/message_passing_three_steps.png)
+**Figure 3.3.8:** *The three standard steps of message passing in GNNs: (1) Message Construction - neighbors create messages based on their features and edge properties, (2) Message Aggregation - all incoming messages are combined using sum, mean, or attention, (3) State Update - nodes combine their current state with aggregated messages to produce new representations.*
 
 #### Step 1: **Message Construction**
 
