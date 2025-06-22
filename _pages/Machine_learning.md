@@ -1284,6 +1284,8 @@ Traditional experiments to measure these properties are expensive and time-consu
 - Identify promising drug candidates faster
 - Avoid creating harmful compounds
 
+#### Representing Molecules as Graphs: A Step-by-Step Guide
+
 Let's implement a simple example to see how we represent molecules as graphs in code.
 
 We’ll walk step-by-step through a basic molecular graph construction pipeline using **RDKit**, a popular cheminformatics toolkit in Python. You’ll learn how to load molecules, add hydrogens, inspect atoms and bonds, and prepare graph-based inputs for further learning.
