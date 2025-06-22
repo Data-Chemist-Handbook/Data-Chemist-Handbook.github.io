@@ -1631,18 +1631,34 @@ Each part of our code works according to this *Flowchart*:
 
 **Algorithmic Idea**
 
-1. **Molecular Graph Representation**  
-   - **Nodes** = atoms (e.g. carbon, oxygen, nitrogen)  
-   - **Edges** = chemical bonds between atoms  
-   - Each atom carries a **feature vector** (here one-hot encoding of atom type).
+The vertical flowchart above illustrates how a single Graph Convolutional Network (GCN) layer transforms raw atomic data into chemically meaningful embeddings:
 
-2. **Message Passing (= “Forward Propagation”)**  
-   - Each atom (node) gathers “messages” from its bonded neighbors.  
-   - A learnable weight matrix \(W\) transforms and mixes its own features and those of its neighbors.  
-   - A small nonlinearity (e.g. ReLU) can be applied to the sum.
+1. **Node Features**  
+   - Start with a one-hot encoding for each atom (e.g. C, O, N) → a 3-dimensional feature vector per node.
 
-3. **Normalization**  
-   - To avoid high-degree atoms dominating, we scale each neighbor contribution by \(\tfrac{1}{\sqrt{d_i\,d_j}}\), where \(d\) is the number of bonds (degree).
+2. **Edge Index**  
+   - List every chemical bond twice (i→j and j→i) so messages can flow in both directions.
+
+3. **Graph Data**  
+   - Bundle node features and edge list into a `Data(x, edge_index)` object understood by PyTorch Geometric.
+
+4. **GCN Layer**  
+   - For each atom \(i\), gather its own features and those of bonded neighbors \(j\).  
+   - Apply a learnable weight matrix \(W\) and normalize by \(\tfrac{1}{\sqrt{d_i\,d_j}}\) to balance different bond counts:
+     
+     \[
+       h_i' = \sum_{j\in\mathcal{N}(i)\cup\{i\}} \frac{1}{\sqrt{d_i\,d_j}}\;W\,h_j
+     \]
+
+5. **Forward Pass**  
+   - Execute this “message passing” in one call:  
+     ```python
+     output = conv(data.x, data.edge_index)
+     ```
+
+6. **Output Features**  
+   - Produce a tensor of shape **[4, 2]**: a new 2-dimensional embedding for each of the 4 atoms.  
+   - These embeddings now encode both **atom type** and **local bonding environment**.
 
 <details>
 <summary>▶ Click to see code</summary>
