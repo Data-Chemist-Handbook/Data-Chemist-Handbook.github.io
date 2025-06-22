@@ -1288,14 +1288,14 @@ Let's implement a simple example to see how we represent molecules as graphs in 
 
 We’ll walk step-by-step through a basic molecular graph construction pipeline using **RDKit**, a popular cheminformatics toolkit in Python. You’ll learn how to load molecules, add hydrogens, inspect atoms and bonds, and prepare graph-based inputs for further learning.
 
+![Feature Extraction Pipeline](../../../../../resource/img/gnn/feature_extraction_pipeline.png)
+**Figure 3.3.5:** *Complete pipeline for converting molecular SMILES strings into graph representations suitable for GNN processing. The workflow shows six stages: from SMILES input through RDKit molecule creation, node/edge feature extraction, to final graph object construction.*
+
 ---
 
 #### 1. Load a molecule and include hydrogen atoms
 
 To start, we need to load a molecule using **RDKit**. RDKit provides a function `Chem.MolFromSmiles()` to create a molecule object from a **SMILES string** (a standard text representation of molecules). However, by default, hydrogen atoms are not included explicitly in the molecule. To use GNNs effectively, we want **all atoms explicitly shown**, so we also call `Chem.AddHs()` to add them in.
-
-![Feature Extraction Pipeline](../../../../../resource/img/gnn/feature_extraction_pipeline.png)
-**Figure 3.3.5:** *Complete pipeline for converting molecular SMILES strings into graph representations suitable for GNN processing. The workflow shows six stages: from SMILES input through RDKit molecule creation, node/edge feature extraction, to final graph object construction.*
 
 Let’s break down the functions we’ll use:
 
@@ -1409,9 +1409,6 @@ for i, atom in enumerate(water.GetAtoms()):
 
 Now we extract the **list of bonds as pairs of indices**. Since GNNs typically use **undirected graphs**, we store each bond in both directions (i → j and j → i).
 
-![RDKit Molecular Structures](../../../../../resource/img/gnn/rdkit_molecules.png)
-**Figure 3.3.6:** *Chemical structures and corresponding graph statistics for common molecules (water, ethanol, benzene, and aspirin). Each molecule is shown with its 2D structure alongside graph metrics including node count, edge count, and atom type distribution.*
-
 Functions involved:
 
 * `bond.GetBeginAtomIdx()`, `bond.GetEndAtomIdx()` (as above)
@@ -1439,6 +1436,9 @@ print("Water edges:", water_edges)
 </details>
 
 Each pair represents one connection (bond) between atoms. Including both directions ensures that during **message passing**, information can flow freely from each node to all its neighbors.
+
+![RDKit Molecular Structures](../../../../../resource/img/gnn/rdkit_molecules.png)
+**Figure 3.3.6:** *Using RDKit, we can get the chemical structures and corresponding graph statistics for common molecules (water, ethanol, benzene, and aspirin). Each molecule is shown with its 2D structure alongside graph metrics including node count, edge count, and atom type distribution.*
 
 ---
 
