@@ -3085,9 +3085,8 @@ For continuous property prediction (regression), we need to pool node features t
 </details>
 
 <details>
-<summary>▶ Show Solution Code</summary>
-
-```python
+<summary>▶ Click to see code: Complete GNN architecture for solubility prediction</summary>
+<pre><code class="language-python">
 # Complete GNN for solubility prediction
 class SolubilityGNN(nn.Module):
     def __init__(self, node_features, hidden_dim=64):
@@ -3101,8 +3100,7 @@ class SolubilityGNN(nn.Module):
         x = F.relu(self.conv2(x, edge_index))
         x = global_mean_pool(x, batch)  # Pool to molecular level
         return self.predictor(x)        # Single continuous output
-```
-
+</code></pre>
 </details>
 
 ---
@@ -3130,9 +3128,8 @@ This scenario describes distribution shift, where the model was trained on one c
 </details>
 
 <details>
-<summary>▶ Show Solution Code</summary>
-
-```python
+<summary>▶ Click to see code: Data augmentation for chemical space diversity</summary>
+<pre><code class="language-python">
 # Data augmentation to improve generalization
 def augment_chemical_space(original_smiles_list):
     """Expand training data with structural diversity"""
@@ -3157,6 +3154,5 @@ diverse_training_data = combine_datasets([
     'natural_products.csv', 
     'synthetic_compounds.csv'
 ])
-```
-
+</code></pre>
 </details>
