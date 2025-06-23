@@ -1541,7 +1541,7 @@ In a GNN, each layer usually follows **three standard steps**:
 ![Message Passing Three Steps](../../../../../resource/img/gnn/message_passing_three_steps.png)
 *The three standard steps of message passing in GNNs: (1) Message Construction - neighbors create messages based on their features and edge properties, (2) Message Aggregation - all incoming messages are combined using sum, mean, or attention, (3) State Update - nodes combine their current state with aggregated messages to produce new representations.*
 
-#### Step 1: **Message Construction**
+**Step 1: Message Construction**
 
 For every node $i$, we consider all its neighbors $j$ and create a message $m_{ij}$ to describe what information node $j$ wants to send to node $i$.
 
@@ -1552,7 +1552,7 @@ This message often includes:
 
 Importantly, we don’t just pass raw features. Instead, we use **learnable functions** (like neural networks) to transform the input into something more meaningful for the task.
 
-#### Step 2: **Message Aggregation**
+**Step 2: Message Aggregation**
 
 Once node $i$ receives messages from all neighbors, it aggregates them into a single combined message $m_i$.
 
@@ -1576,7 +1576,7 @@ That's why advanced GNNs often use **weighted aggregation** or **attention mecha
 ![Aggregation Functions](../../../../../resource/img/gnn/aggregation_functions.png)
 *Different aggregation functions in GNNs. Sum preserves total signal strength, Mean normalizes by node degree, Max captures the strongest signal, and Attention weights messages by learned importance scores.*
 
-#### Step 3: **State Update**
+**Step 3: State Update**
 
 Finally, node $i$ uses two inputs:
 
