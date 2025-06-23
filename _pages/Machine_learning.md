@@ -2336,8 +2336,8 @@ Benzene (c1ccccc1):
 <div style="background-color:#fff3e0; padding:10px; border-radius:5px;">
     <p><b>PyTorch Geometric Data Format:</b></p>
     <ul>
-        <li><b>$\mathbf{x}$</b>: Node feature matrix $[\text{num\_atoms}, \text{num\_features}]$</li>
-        <li><b>edge\_index</b>: COO format edges $[2, \text{num\_edges}]$</li>
+        <li><b>$\mathbf{x}$</b>: Node feature matrix $[\text{num_atoms}, \text{num_features}]$</li>
+        <li><b>edge_index</b>: COO format edges $[2, \text{num_edges}]$</li>
         <li><b>$\mathbf{y}$</b>: Target property (solubility)</li>
     </ul>
     <p><b>Example - Benzene:</b></p>
