@@ -1834,7 +1834,61 @@ The power of message passing lies in its ability to bridge **structure and funct
 
 #### Experimental Pipeline Overview
 
-<div style="background-color:#f0f7ff; border:2px solid #1976d2; border-radius:10px; padding:20px; margin:20px 0;"> <h4>What We're Building: A Molecular Solubility Predictor</h4> <table style="width:100%; border-collapse:collapse;"> <tr style="background-color:#e3f2fd;"> <th style="padding:10px; border:1px solid #90caf9;">Stage</th> <th style="padding:10px; border:1px solid #90caf9;">Input</th> <th style="padding:10px; border:1px solid #90caf9;">Process</th> <th style="padding:10px; border:1px solid #90caf9;">Output</th> </tr> <tr> <td style="padding:10px; border:1px solid #90caf9; background-color:#fff3e0;"><b>1. Data Loading</b></td> <td style="padding:10px; border:1px solid #90caf9;">ESOL CSV file</td> <td style="padding:10px; border:1px solid #90caf9;">pandas parsing</td> <td style="padding:10px; border:1px solid #90caf9;">SMILES + log S values</td> </tr> <tr> <td style="padding:10px; border:1px solid #90caf9; background-color:#f3e5f5;"><b>2. Molecular Encoding</b></td> <td style="padding:10px; border:1px solid #90caf9;">SMILES strings</td> <td style="padding:10px; border:1px solid #90caf9;">RDKit → Graph conversion</td> <td style="padding:10px; border:1px solid #90caf9;">Node features + Edge indices</td> </tr> <tr> <td style="padding:10px; border:1px solid #90caf9; background-color:#e8f5e9;"><b>3. Model Building</b></td> <td style="padding:10px; border:1px solid #90caf9;">Graph structures</td> <td style="padding:10px; border:1px solid #90caf9;">3-layer GCN</td> <td style="padding:10px; border:1px solid #90caf9;">Molecular embeddings</td> </tr> <tr> <td style="padding:10px; border:1px solid #90caf9; background-color:#fce4ec;"><b>4. Training</b></td> <td style="padding:10px; border:1px solid #90caf9;">Batched graphs</td> <td style="padding:10px; border:1px solid #90caf9;">Adam optimizer + MSE loss</td> <td style="padding:10px; border:1px solid #90caf9;">Trained parameters</td> </tr> <tr> <td style="padding:10px; border:1px solid #90caf9; background-color:#e1f5fe;"><b>5. Prediction</b></td> <td style="padding:10px; border:1px solid #90caf9;">New SMILES</td> <td style="padding:10px; border:1px solid #90caf9;">Forward pass</td> <td style="padding:10px; border:1px solid #90caf9;">Solubility (log S)</td> </tr> </table> <h4>Key Metrics We'll Track:</h4> <ul> <li><span style="color:#d32f2f; font-weight:bold;">RMSE</span>: Root Mean Squared Error (expect ~1.9 log S)</li> <li><span style="color:#388e3c; font-weight:bold;">R²</span>: Variance explained (expect ~0.22)</li> <li><span style="color:#1976d2; font-weight:bold;">MAE</span>: Mean Absolute Error (expect ~1.6 log S)</li> </ul> </div>
+<div style="background-color:#f0f7ff; border:2px solid #1976d2; border-radius:10px; padding:20px; margin:20px 0;">
+    <h4>What We're Building: A Molecular Solubility Predictor</h4>
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#e3f2fd;">
+            <th style="padding:10px; border:1px solid #90caf9;">Stage</th>
+            <th style="padding:10px; border:1px solid #90caf9;">Input</th>
+            <th style="padding:10px; border:1px solid #90caf9;">Process</th>
+            <th style="padding:10px; border:1px solid #90caf9;">Output</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #90caf9; background-color:#fff3e0;"><b>1. Data Loading</b></td>
+            <td style="padding:10px; border:1px solid #90caf9;">ESOL CSV file</td>
+            <td style="padding:10px; border:1px solid #90caf9;">pandas parsing</td>
+            <td style="padding:10px; border:1px solid #90caf9;">SMILES + log S values</td>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #90caf9; background-color:#f3e5f5;"><b>2. Molecular Encoding</b></td>
+            <td style="padding:10px; border:1px solid #90caf9;">SMILES strings</td>
+            <td style="padding:10px; border:1px solid #90caf9;">RDKit → Graph conversion</td>
+            <td style="padding:10px; border:1px solid #90caf9;">Node features + Edge indices</td>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #90caf9; background-color:#e8f5e9;"><b>3. Model Building</b></td>
+            <td style="padding:10px; border:1px solid #90caf9;">Graph structures</td>
+            <td style="padding:10px; border:1px solid #90caf9;">3-layer GCN</td>
+            <td style="padding:10px; border:1px solid #90caf9;">Molecular embeddings</td>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #90caf9; background-color:#fce4ec;"><b>4. Training</b></td>
+            <td style="padding:10px; border:1px solid #90caf9;">Batched graphs</td>
+            <td style="padding:10px; border:1px solid #90caf9;">Adam optimizer + MSE loss</td>
+            <td style="padding:10px; border:1px solid #90caf9;">Trained parameters</td>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #90caf9; background-color:#e1f5fe;"><b>5. Prediction</b></td>
+            <td style="padding:10px; border:1px solid #90caf9;">New SMILES</td>
+            <td style="padding:10px; border:1px solid #90caf9;">Forward pass</td>
+            <td style="padding:10px; border:1px solid #90caf9;">Solubility (log S)</td>
+        </tr>
+    </table>
+    
+    <h4>Key Metrics We'll Track:</h4>
+    <ul>
+        <li><span style="color:#d32f2f; font-weight:bold;">RMSE</span>: Root Mean Squared Error (expect ~1.9 log S)</li>
+        <li><span style="color:#388e3c; font-weight:bold;">R²</span>: Variance explained (expect ~0.22)</li>
+        <li><span style="color:#1976d2; font-weight:bold;">MAE</span>: Mean Absolute Error (expect ~1.6 log S)</li>
+    </ul>
+    
+    <h4 style="text-align:center;">Solubility Formula</h4>
+    <p style="text-align:center; font-size:20px;">
+        <b>
+            $ \text{Solubility} \propto \frac{\text{Solute-Solvent interactions}}{\text{Solute-Solute interactions}} $
+        </b>
+    </p>
+</div>
 
 #### Step 1: Understanding Molecular Solubility as a Graph Learning Problem
 
@@ -1963,7 +2017,20 @@ Dataset contains 1128 molecules
 Solubility range: -11.60 to 1.58 log S
 ```
 
-<div style="background-color:#ffebee; padding:10px; border-radius:5px; margin:10px 0;"> <p><b>What do these numbers mean?</b></p> <ul> <li>log S = -11.60 → Solubility = 10⁻¹¹·⁶ mol/L (extremely insoluble)</li> <li>log S = 1.58 → Solubility = 10¹·⁵⁸ mol/L (very soluble)</li> <li>Range: 13.18 log units = 10¹³·¹⁸ ≈ 15 trillion-fold difference!</li> </ul> </div>
+<div style="background-color:#ffebee; padding:10px; border-radius:5px; margin:10px 0;">
+    <p><b>What do these numbers mean?</b></p>
+    <ul>
+        <li>
+            $ \log S = -11.60 \rightarrow \text{Solubility} = 10^{-11.60} \, \text{mol/L} \, \text{(extremely insoluble)} $
+        </li>
+        <li>
+            $ \log S = 1.58 \rightarrow \text{Solubility} = 10^{1.58} \, \text{mol/L} \, \text{(very soluble)} $
+        </li>
+        <li>
+            $ \text{Range: } 13.18 \text{ log units} = 10^{13.18} \approx 15 \text{ trillion-fold difference!} $
+        </li>
+    </ul>
+</div>
 
 #### Examining Example Molecules
 
@@ -1993,7 +2060,15 @@ c1ccc2c(c1)ccc3c2ccc4c5ccccc5ccc43       -7.87
 c1ccsc1                                  -1.33               
 ```
 
-<div style="background-color:#e3f2fd; padding:10px; border-radius:5px;"> <p><b>Chemical Interpretation:</b></p> <ul> <li>Row 1: Complex sugar derivative with multiple -OH groups → relatively soluble (-0.77 log S)</li> <li>Row 4: Large polycyclic aromatic hydrocarbon → very insoluble (-7.87 log S)</li> <li>Row 5: Small thiophene heterocycle → moderate solubility (-1.33 log S)</li> </ul> <p>The dataset covers a wide range of molecular complexity and functional groups.</p> </div>
+<div style="background-color:#e3f2fd; padding:10px; border-radius:5px;">
+    <p><b>Chemical Interpretation:</b></p>
+    <ul>
+        <li>Row 1: Complex sugar derivative with multiple -OH groups → relatively soluble ($\log S = -0.77$)</li>
+        <li>Row 4: Large polycyclic aromatic hydrocarbon → very insoluble ($\log S = -7.87$)</li>
+        <li>Row 5: Small thiophene heterocycle → moderate solubility ($\log S = -1.33$)</li>
+    </ul>
+    <p>The dataset covers a wide range of molecular complexity and functional groups.</p>
+</div>
 
 #### Visualizing Solubility Distribution
 
@@ -2048,7 +2123,25 @@ Atom 1 (H): [1, 1, 0, 0, 0]
 Atom 2 (H): [1, 1, 0, 0, 0]
 ```
 
-<div style="background-color:#f3e5f5; padding:10px; border-radius:5px;"> <p><b>Feature Vector Breakdown:</b></p> <p><b>Oxygen [8, 2, 0, 0, 0]:</b></p> <ul> <li>8 = Atomic number (element oxygen)</li> <li>2 = Degree (bonded to 2 hydrogen atoms)</li> <li>0 = No formal charge (neutral)</li> <li>0 = Not aromatic (water is not aromatic)</li> <li>0 = No implicit hydrogens (all are explicit)</li> </ul> <p><b>Hydrogen [1, 1, 0, 0, 0]:</b></p> <ul> <li>1 = Atomic number (element hydrogen)</li> <li>1 = Degree (bonded to 1 oxygen atom)</li> <li>Remaining features are all zero</li> </ul> </div>
+<div style="background-color:#f3e5f5; padding:10px; border-radius:5px;">
+    <p><b>Feature Vector Breakdown:</b></p>
+    
+    <p><b>Oxygen: </b> $[8, 2, 0, 0, 0]$</p>
+    <ul>
+        <li>$8$ = Atomic number (element oxygen)</li>
+        <li>$2$ = Degree (bonded to 2 hydrogen atoms)</li>
+        <li>$0$ = No formal charge (neutral)</li>
+        <li>$0$ = Not aromatic (water is not aromatic)</li>
+        <li>$0$ = No implicit hydrogens (all are explicit)</li>
+    </ul>
+
+    <p><b>Hydrogen: </b> $[1, 1, 0, 0, 0]$</p>
+    <ul>
+        <li>$1$ = Atomic number (element hydrogen)</li>
+        <li>$1$ = Degree (bonded to 1 oxygen atom)</li>
+        <li>Remaining features are all zero</li>
+    </ul>
+</div>
 
 **Testing Bond Extraction on Ethanol**
 
@@ -2105,7 +2198,38 @@ First few connections (atom index pairs):
 
 **Implementation Strategy**:
 
-<table style="width:100%; border-collapse:collapse; margin:20px 0;"> <tr style="background-color:#e8f5e9;"> <th style="padding:10px; border:1px solid #66bb6a;">Step</th> <th style="padding:10px; border:1px solid #66bb6a;">Process</th> <th style="padding:10px; border:1px solid #66bb6a;">Output</th> </tr> <tr> <td style="padding:10px; border:1px solid #66bb6a;">1</td> <td style="padding:10px; border:1px solid #66bb6a;">SMILES String → RDKit Molecule</td> <td style="padding:10px; border:1px solid #66bb6a;">Molecule object</td> </tr> <tr> <td style="padding:10px; border:1px solid #66bb6a;">2</td> <td style="padding:10px; border:1px solid #66bb6a;">Add Hydrogens</td> <td style="padding:10px; border:1px solid #66bb6a;">Complete molecule</td> </tr> <tr> <td style="padding:10px; border:1px solid #66bb6a;">3</td> <td style="padding:10px; border:1px solid #66bb6a;">Extract Features</td> <td style="padding:10px; border:1px solid #66bb6a;">Node feature matrix</td> </tr> <tr> <td style="padding:10px; border:1px solid #66bb6a;">4</td> <td style="padding:10px; border:1px solid #66bb6a;">Extract Bonds</td> <td style="padding:10px; border:1px solid #66bb6a;">Edge index</td> </tr> <tr> <td style="padding:10px; border:1px solid #66bb6a;">5</td> <td style="padding:10px; border:1px solid #66bb6a;">Create PyG Data</td> <td style="padding:10px; border:1px solid #66bb6a;">Graph object</td> </tr> </table>
+<table style="width:100%; border-collapse:collapse; margin:20px 0;">
+    <tr style="background-color:#e8f5e9;">
+        <th style="padding:10px; border:1px solid #66bb6a;">Step</th>
+        <th style="padding:10px; border:1px solid #66bb6a;">Process</th>
+        <th style="padding:10px; border:1px solid #66bb6a;">Output</th>
+    </tr>
+    <tr>
+        <td style="padding:10px; border:1px solid #66bb6a;">1</td>
+        <td style="padding:10px; border:1px solid #66bb6a;">SMILES String $\rightarrow$ RDKit Molecule</td>
+        <td style="padding:10px; border:1px solid #66bb6a;">Molecule object</td>
+    </tr>
+    <tr>
+        <td style="padding:10px; border:1px solid #66bb6a;">2</td>
+        <td style="padding:10px; border:1px solid #66bb6a;">Add Hydrogens</td>
+        <td style="padding:10px; border:1px solid #66bb6a;">Complete molecule</td>
+    </tr>
+    <tr>
+        <td style="padding:10px; border:1px solid #66bb6a;">3</td>
+        <td style="padding:10px; border:1px solid #66bb6a;">Extract Features</td>
+        <td style="padding:10px; border:1px solid #66bb6a;">Node feature matrix</td>
+    </tr>
+    <tr>
+        <td style="padding:10px; border:1px solid #66bb6a;">4</td>
+        <td style="padding:10px; border:1px solid #66bb6a;">Extract Bonds</td>
+        <td style="padding:10px; border:1px solid #66bb6a;">Edge index</td>
+    </tr>
+    <tr>
+        <td style="padding:10px; border:1px solid #66bb6a;">5</td>
+        <td style="padding:10px; border:1px solid #66bb6a;">Create PyG Data</td>
+        <td style="padding:10px; border:1px solid #66bb6a;">Graph object</td>
+    </tr>
+</table>
 
 ```python
 def molecule_to_graph(smiles, solubility=None):
@@ -2209,13 +2333,42 @@ Benzene (c1ccccc1):
   Graph object: Data(x=[12, 5], edge_index=[2, 24], y=[1])
 ```
 
-<div style="background-color:#fff3e0; padding:10px; border-radius:5px;"> <p><b>PyTorch Geometric Data Format:</b></p> <ul> <li><b>x</b>: Node feature matrix [num_atoms, num_features]</li> <li><b>edge_index</b>: COO format edges [2, num_edges]</li> <li><b>y</b>: Target property (solubility)</li> </ul> <p><b>Example - Benzene:</b></p> <ul> <li>6 carbon atoms + 6 hydrogen atoms = 12 nodes</li> <li>6 C-C bonds + 6 C-H bonds = 12 undirected bonds</li> <li>12 undirected bonds × 2 directions = 24 directed edges</li> </ul> </div>
+<div style="background-color:#fff3e0; padding:10px; border-radius:5px;">
+    <p><b>PyTorch Geometric Data Format:</b></p>
+    <ul>
+        <li><b>$\mathbf{x}$</b>: Node feature matrix $[\text{num\_atoms}, \text{num\_features}]$</li>
+        <li><b>edge\_index</b>: COO format edges $[2, \text{num\_edges}]$</li>
+        <li><b>$\mathbf{y}$</b>: Target property (solubility)</li>
+    </ul>
+    <p><b>Example - Benzene:</b></p>
+    <ul>
+        <li>$6$ carbon atoms + $6$ hydrogen atoms = $12$ nodes</li>
+        <li>$6$ C-C bonds + $6$ C-H bonds = $12$ undirected bonds</li>
+        <li>$12$ undirected bonds $\times 2$ directions = $24$ directed edges</li>
+    </ul>
+</div>
 
 #### Step 4: Building the Graph Neural Network Architecture
 
 **GNN Design Principles**
 
-<div style="background-color:#e8eaf6; padding:15px; border-radius:8px; margin:10px 0;"> <p><b>Message Passing Framework:</b></p> <p>Each GCN layer performs the following operation:</p> <p style="text-align:center; font-size:18px;"> <b>h<sub>i</sub><sup>(l+1)</sup> = σ(W<sup>(l)</sup> · AGG({h<sub>j</sub><sup>(l)</sup> : j ∈ N(i) ∪ {i}}))</b> </p> <p>Where:</p> <ul> <li>h<sub>i</sub><sup>(l)</sup> = features of atom i at layer l</li> <li>N(i) = neighbors of atom i</li> <li>W<sup>(l)</sup> = learnable weight matrix</li> <li>AGG = aggregation function (mean)</li> <li>σ = activation function (ReLU)</li> </ul> </div>
+<div style="background-color:#e8eaf6; padding:15px; border-radius:8px; margin:10px 0;">
+    <p><b>Message Passing Framework:</b></p>
+    <p>Each GCN layer performs the following operation:</p>
+    <p style="text-align:center; font-size:18px;">
+        <b>
+            $ h_{i}^{(l+1)} = \sigma \left( W^{(l)} \cdot \text{AGG}\left( \{ h_{j}^{(l)} : j \in N(i) \cup \{i\} \}\right) \right) $
+        </b> 
+    </p>
+    <p>Where:</p>
+    <ul>
+        <li>$h_{i}^{(l)}$ = features of atom $i$ at layer $l$</li>
+        <li>$N(i)$ = neighbors of atom $i$</li>
+        <li>$W^{(l)}$ = learnable weight matrix</li>
+        <li>AGG = aggregation function (mean)</li>
+        <li>$\sigma$ = activation function (ReLU)</li>
+    </ul>
+</div>
 
 **Model Architecture**
 
@@ -2337,7 +2490,17 @@ Layer-by-layer breakdown:
   predictor.bias: torch.Size([1])
 ```
 
-<div style="background-color:#f5f5f5; padding:10px; border-radius:5px;"> <p><b>Parameter Calculation:</b></p> <ul> <li>Layer 1 (GCN): (64 × 5) + 64 = 384 parameters</li> <li>Layer 2 (GCN): (64 × 64) + 64 = 4,160 parameters</li> <li>Layer 3 (GCN): (64 × 64) + 64 = 4,160 parameters</li> <li>Predictor: 64 + 1 = 65 parameters</li> <li><b>Total: 8,769 parameters</b></li> </ul> <p>This is remarkably small compared to other deep learning models!</p> </div>
+<div style="background-color:#f5f5f5; padding:10px; border-radius:5px;">
+    <p><b>Parameter Calculation:</b></p>
+    <ul>
+        <li>Layer 1 (GCN): $(64 \times 5) + 64 = 384$ parameters</li>
+        <li>Layer 2 (GCN): $(64 \times 64) + 64 = 4,160$ parameters</li>
+        <li>Layer 3 (GCN): $(64 \times 64) + 64 = 4,160$ parameters</li>
+        <li>Predictor: $64 + 1 = 65$ parameters</li>
+        <li><b>Total: $8,769$ parameters</b></li>
+    </ul>
+    <p>This is remarkably small compared to other deep learning models!</p>
+</div>
 
 #### Step 5: Preparing Training Data
 
@@ -2450,7 +2613,16 @@ Example batch:
   Edge index shape: torch.Size([2, 1744])
 ```
 
-<div style="background-color:#e1f5fe; padding:10px; border-radius:5px;"> <p><b>Batching Mechanism Explained:</b></p> <ul> <li>32 molecules contain 864 atoms total (average ~27 atoms/molecule)</li> <li>Batch tensor: [0,0,0,...,1,1,1,...,31,31,31]</li> <li>Maps each atom to its parent molecule (0-31)</li> <li>Edge index combines all molecular graphs into one large disconnected graph</li> <li>Enables efficient parallel processing on GPU</li> </ul> </div>
+<div style="background-color:#e1f5fe; padding:10px; border-radius:5px;">
+    <p><b>Batching Mechanism Explained:</b></p>
+    <ul>
+        <li>$32$ molecules contain $864$ atoms total (average $\approx 27$ atoms/molecule)</li>
+        <li>Batch tensor: $[0, 0, 0, \ldots, 1, 1, 1, \ldots, 31, 31, 31]$</li>
+        <li>Maps each atom to its parent molecule ($0-31$)</li>
+        <li>Edge index combines all molecular graphs into one large disconnected graph</li>
+        <li>Enables efficient parallel processing on GPU</li>
+    </ul>
+</div>
 
 #### Step 6: Training the Model
 
@@ -2458,7 +2630,18 @@ Example batch:
 
 **Optimization Theory**:
 
-<div style="background-color:#f0f4c3; padding:10px; border-radius:5px; margin:10px 0;"> <p><b>Adam Optimizer</b>: Combines momentum with adaptive learning rates</p> <p style="text-align:center;"> m<sub>t</sub> = β₁m<sub>t-1</sub> + (1-β₁)g<sub>t</sub><br> v<sub>t</sub> = β₂v<sub>t-1</sub> + (1-β₂)g<sub>t</sub>²<br> θ<sub>t</sub> = θ<sub>t-1</sub> - α(m<sub>t</sub>/√(v<sub>t</sub> + ε)) </p> <p><b>MSE Loss</b>: For regression tasks</p> <p style="text-align:center;"> L = (1/n)Σ(y<sub>pred,i</sub> - y<sub>true,i</sub>)² </p> </div>
+<div style="background-color:#f0f4c3; padding:10px; border-radius:5px; margin:10px 0;">
+    <p><b>Adam Optimizer</b>: Combines momentum with adaptive learning rates</p>
+    <p style="text-align:center;">
+        $m_t = \beta_1 m_{t-1} + (1 - \beta_1) g_t$<br>
+        $v_t = \beta_2 v_{t-1} + (1 - \beta_2) g_t^2$<br>
+        $\theta_t = \theta_{t-1} - \alpha \left( \frac{m_t}{\sqrt{v_t} + \epsilon} \right)$
+    </p>
+    <p><b>MSE Loss</b>: For regression tasks</p>
+    <p style="text-align:center;">
+        $L = \frac{1}{n} \sum (y_{\text{pred},i} - y_{\text{true},i})^2$
+    </p>
+</div>
 
 ```python
 # Initialize components
@@ -2590,7 +2773,15 @@ Epoch  50 | Train Loss: 3.4851 | Test Loss: 3.7270
 Training completed!
 ```
 
-<div style="background-color:#c8e6c9; padding:10px; border-radius:5px;"> <p><b>Training Analysis:</b></p> <ul> <li>Initial loss ~10 (not shown) → Final loss ~3.5</li> <li>Test loss closely follows training loss (good generalization)</li> <li>Loss of 3.7 corresponds to RMSE = √3.7 ≈ 1.92 log S</li> <li>Small train-test gap (3.49 vs 3.73) indicates appropriate model capacity</li> </ul> </div>
+<div style="background-color:#c8e6c9; padding:10px; border-radius:5px;">
+    <p><b>Training Analysis:</b></p>
+    <ul>
+        <li>Initial loss $\approx 10$ (not shown) $\rightarrow$ Final loss $\approx 3.5$</li>
+        <li>Test loss closely follows training loss (good generalization)</li>
+        <li>Loss of $3.7$ corresponds to RMSE $= \sqrt{3.7} \approx 1.92 \log S$</li>
+        <li>Small train-test gap ($3.49$ vs $3.73$) indicates appropriate model capacity</li>
+    </ul>
+</div>
 
 **Visualizing Training Progress**
 
@@ -2622,7 +2813,28 @@ plt.show()
 
 **Evaluation Metrics Explained**:
 
-<table style="border-collapse:collapse; width:100%;"> <tr style="background-color:#bbdefb;"> <th style="border:1px solid #64b5f6; padding:8px;">Metric</th> <th style="border:1px solid #64b5f6; padding:8px;">Formula</th> <th style="border:1px solid #64b5f6; padding:8px;">Interpretation</th> </tr> <tr> <td style="border:1px solid #64b5f6; padding:8px;">RMSE</td> <td style="border:1px solid #64b5f6; padding:8px;">√[(1/n)Σ(y<sub>pred</sub>-y<sub>true</sub>)²]</td> <td style="border:1px solid #64b5f6; padding:8px;">Average error magnitude</td> </tr> <tr> <td style="border:1px solid #64b5f6; padding:8px;">MAE</td> <td style="border:1px solid #64b5f6; padding:8px;">(1/n)Σ|y<sub>pred</sub>-y<sub>true</sub>|</td> <td style="border:1px solid #64b5f6; padding:8px;">Typical prediction error</td> </tr> <tr> <td style="border:1px solid #64b5f6; padding:8px;">R²</td> <td style="border:1px solid #64b5f6; padding:8px;">1 - (SS<sub>res</sub>/SS<sub>tot</sub>)</td> <td style="border:1px solid #64b5f6; padding:8px;">Variance explained (0-1)</td> </tr> </table>
+<table style="border-collapse:collapse; width:100%;">
+    <tr style="background-color:#bbdefb;">
+        <th style="border:1px solid #64b5f6; padding:8px;">Metric</th>
+        <th style="border:1px solid #64b5f6; padding:8px;">Formula</th>
+        <th style="border:1px solid #64b5f6; padding:8px;">Interpretation</th>
+    </tr>
+    <tr>
+        <td style="border:1px solid #64b5f6; padding:8px;">RMSE</td>
+        <td style="border:1px solid #64b5f6; padding:8px;">$\sqrt{\frac{1}{n} \sum (y_{\text{pred}} - y_{\text{true}})^2}$</td>
+        <td style="border:1px solid #64b5f6; padding:8px;">Average error magnitude</td>
+    </tr>
+    <tr>
+        <td style="border:1px solid #64b5f6; padding:8px;">MAE</td>
+        <td style="border:1px solid #64b5f6; padding:8px;">$\frac{1}{n} \sum |y_{\text{pred}} - y_{\text{true}}|$</td>
+        <td style="border:1px solid #64b5f6; padding:8px;">Typical prediction error</td>
+    </tr>
+    <tr>
+        <td style="border:1px solid #64b5f6; padding:8px;">R²</td>
+        <td style="border:1px solid #64b5f6; padding:8px;">$1 - \frac{SS_{\text{res}}}{SS_{\text{tot}}}$</td>
+        <td style="border:1px solid #64b5f6; padding:8px;">Variance explained (0-1)</td>
+    </tr>
+</table>
 
 **Prediction Extraction Function**:
 
@@ -2676,7 +2888,20 @@ Interpretation:
   - The model explains 21.9% of the variance in solubility
 ```
 
-<div style="background-color:#ffcdd2; padding:10px; border-radius:5px;"> <p><b>Performance Reality Check:</b></p> <ul> <li>MAE = 1.6 log units → 10¹·⁶ ≈ 40× error in concentration</li> <li>R² = 0.22 means model explains only 22% of variance</li> <li>Why seemingly poor performance?</li> <ul> <li>Only 5 simple atomic features</li> <li>No bond features or 3D information</li> <li>Solubility spans 13 orders of magnitude!</li> </ul> <li>State-of-art models achieve R² ~ 0.9 with richer features</li> </ul> </div>
+<div style="background-color:#ffcdd2; padding:10px; border-radius:5px;">
+    <p><b>Performance Reality Check:</b></p>
+    <ul>
+        <li>MAE $= 1.6$ log units $\rightarrow 10^{1.6} \approx 40 \times$ error in concentration</li>
+        <li>R² $= 0.22$ means the model explains only $22\%$ of variance</li>
+        <li>Why seemingly poor performance?</li>
+        <ul>
+            <li>Only $5$ simple atomic features</li>
+            <li>No bond features or $3D$ information</li>
+            <li>Solubility spans $13$ orders of magnitude!</li>
+        </ul>
+        <li>State-of-the-art models achieve R² $\approx 0.9$ with richer features</li>
+    </ul>
+</div>
 
 **Prediction Visualization**
 
@@ -2773,7 +2998,16 @@ Error Statistics:
   95% of errors within: ±3.480 log S
 ```
 
-<div style="background-color:#fff9c4; padding:10px; border-radius:5px;"> <p><b>Error Pattern Analysis:</b></p> <ul> <li><b>Negative bias</b> (-0.368): Model slightly underpredicts solubility</li> <li><b>Normal distribution</b>: No systematic failures</li> <li><b>Heteroscedasticity</b>: Larger errors at extreme solubilities</li> <li><b>95% confidence</b>: Most errors within ±3.5 log units</li> </ul> <p>For drug discovery screening, this accuracy is often sufficient to filter candidates.</p> </div>
+<div style="background-color:#fff9c4; padding:10px; border-radius:5px;">
+    <p><b>Error Pattern Analysis:</b></p>
+    <ul>
+        <li><b>Negative bias</b> (-0.368): The model slightly underpredicts solubility</li>
+        <li><b>Normal distribution</b>: No systematic failures detected</li>
+        <li><b>Heteroscedasticity</b>: Larger errors occur at extreme solubilities</li>
+        <li><b>95% confidence</b>: Most errors are within ±3.5 log units</li>
+    </ul>
+    <p>For drug discovery screening, this level of accuracy is often sufficient to filter candidates.</p>
+</div>
 
 #### Step 8: Making Predictions on New Molecules
 
@@ -2973,13 +3207,48 @@ Benzene (aromatic)                  c1ccccc1                   -4.061
 Cyclohexane (aliphatic)             C1CCCCC1                   -3.037
 ```
 
-<div style="background-color:#ffebee; padding:15px; border-radius:8px;"> <p><b>Key Findings:</b></p> <ol> <li><b>Weak Functional Group Effects:</b><br> • Hexane → Hexanol: Only 0.049 log unit improvement<br> • Expected: -OH should increase solubility by ~1-2 log units<br> • <b>Limitation</b>: Our 5 features don't capture hydrogen bonding strength</li> <li><b>Clear Size Trend:</b><br> • C2 (-2.458) → C4 (-2.710) → C6 (-2.808) → C8 (-2.861)<br> • Δlog S ≈ -0.05 per CH₂ group<br> • <b>Success</b>: Model learned hydrophobic effect of alkyl chains</li> <li><b>Strong Aromaticity Effect:</b><br> • Benzene vs Cyclohexane: 1.024 log unit difference<br> • <b>Success</b>: Model recognizes π-system hydrophobicity<br> • Aromatic feature in our encoding is highly informative</li> </ol> </div>
+<div style="background-color:#ffebee; padding:15px; border-radius:8px;">
+    <p><b>Key Findings:</b></p>
+    <ol>
+        <li><b>Weak Functional Group Effects:</b><br>
+            • Hexane $\rightarrow$ Hexanol: Only $0.049$ log unit improvement<br>
+            • Expected: -OH should increase solubility by $\sim 1-2$ log units<br>
+            • <b>Limitation:</b> Our $5$ features don't capture hydrogen bonding strength
+        </li>
+        <li><b>Clear Size Trend:</b><br>
+            • C₂ $(-2.458)$ $\rightarrow$ C₄ $(-2.710)$ $\rightarrow$ C₆ $(-2.808)$ $\rightarrow$ C₈ $(-2.861)$<br>
+            • $\Delta \log S \approx -0.05$ per CH₂ group<br>
+            • <b>Success:</b> Model learned hydrophobic effect of alkyl chains
+        </li>
+        <li><b>Strong Aromaticity Effect:</b><br>
+            • Benzene vs. Cyclohexane: $1.024$ log unit difference<br>
+            • <b>Success:</b> Model recognizes $\pi$-system hydrophobicity<br>
+            • Aromatic feature in our encoding is highly informative
+        </li>
+    </ol>
+</div>
 
 #### Summary and Conclusions
 
 **What We Built**
 
-<div style="background-color:#e3f2fd; padding:15px; border-radius:8px;"> <p><b>Complete GNN Pipeline:</b></p> <ol> <li><b>Data Processing</b>: SMILES → Graph conversion with RDKit</li> <li><b>Feature Engineering</b>: 5 atomic features + bidirectional edges</li> <li><b>Model Architecture</b>: 3-layer GCN with 8,769 parameters</li> <li><b>Training</b>: 800 molecules, 50 epochs, Adam optimizer</li> <li><b>Deployment</b>: Prediction function for new molecules</li> </ol> <p><b>Performance Metrics:</b></p> <ul> <li>RMSE: 1.93 log S</li> <li>MAE: 1.60 log S</li> <li>R²: 0.22</li> <li>95% predictions within ±3.5 log units</li> </ul> </div>
+<div style="background-color:#e3f2fd; padding:15px; border-radius:8px;">
+    <p><b>Complete GNN Pipeline:</b></p>
+    <ol>
+        <li><b>Data Processing:</b> SMILES $\rightarrow$ Graph conversion with RDKit</li>
+        <li><b>Feature Engineering:</b> $5$ atomic features + bidirectional edges</li>
+        <li><b>Model Architecture:</b> $3$-layer GCN with $8,769$ parameters</li>
+        <li><b>Training:</b> $800$ molecules, $50$ epochs, Adam optimizer</li>
+        <li><b>Deployment:</b> Prediction function for new molecules</li>
+    </ol>
+    <p><b>Performance Metrics:</b></p>
+    <ul>
+        <li>RMSE: $1.93$ log S</li>
+        <li>MAE: $1.60$ log S</li>
+        <li>R²: $0.22$</li>
+        <li>$95\%$ predictions within ±$3.5$ log units</li>
+    </ul>
+</div>
 
 **Limitations and Future Improvements**
 
