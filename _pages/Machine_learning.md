@@ -2071,6 +2071,32 @@ import requests
 import io
 from sklearn.metrics import mean_squared_error, r2_score
 ```
+<svg width="500" height="140" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .mod { rx:6; ry:6; stroke:#333; stroke-width:1; font: bold 12px sans-serif; fill-opacity:0.9; }
+    .arrow { fill:none; stroke:#555; stroke-width:2; marker-end:url(#head); }
+    .label { font: 12px sans-serif; fill:#333; text-anchor:middle; }
+    .cylinder { fill:#FFEB3B; stroke:#FBC02D; stroke-width:2; rx:20; ry:20; }
+  </style>
+  <defs>
+    <marker id="head" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0,8 3,0 6" fill="#555"/>
+    </marker>
+  </defs>
+
+  <!-- Modules -->
+  <rect x="20" y="20" width="100" height="40" class="mod" fill="#EF5350"/><text x="70" y="45" class="label" fill="#FFF">torch</text>
+  <rect x="140" y="20" width="100" height="40" class="mod" fill="#26A69A"/><text x="190" y="45" class="label" fill="#FFF">torch_geometric</text>
+  <rect x="260" y="20" width="100" height="40" class="mod" fill="#7E57C2"/><text x="310" y="45" class="label" fill="#FFF">RDKit</text>
+  <rect x="380" y="20" width="100" height="40" class="mod" fill="#8BC34A"/><text x="430" y="45" class="label" fill="#FFF">pandas</text>
+
+  <!-- Arrow to pipeline -->
+  <path d="M170,70 L170,100 L330,100 L330,70" class="arrow"/>
+
+  <!-- Pipeline cylinder -->
+  <rect x="200" y="100" width="100" height="40" class="cylinder"/>
+  <text x="250" y="125" class="label">Unified Pipeline</text>
+</svg>
 
 **Feature Extraction Functions**
 
