@@ -1850,7 +1850,7 @@ Traditional approaches to solubility prediction relied on empirical rules like "
 
 #### Setting Up the Environment
 
-Before we begin building our GNN-based molecular property prediction system, we need to load a set of specialized Python libraries. As we have learned in the subsections before, let`s recall what each library does and why we need it:
+Before we begin building our GNN-based molecular property prediction system, we need to load a set of specialized Python libraries. As we have learned in the subsections before, let’s recall what each library does and why we need it:
 
 **Deep Learning Core (PyTorch)**
 - `torch`: The main PyTorch library for tensor operations and automatic differentiation
