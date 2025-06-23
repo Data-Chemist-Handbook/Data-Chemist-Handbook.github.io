@@ -1836,6 +1836,17 @@ The power of message passing lies in its ability to bridge **structure and funct
 
 <div style="background-color:#f0f7ff; border:2px solid #1976d2; border-radius:10px; padding:20px; margin:20px 0;">
     <h4>What We're Building: A Molecular Solubility Predictor</h4>
+    
+    <div style="background-color:#fff3e0; padding:15px; border-radius:8px; margin-bottom:15px;">
+        <p><b>🎯 Why Predict Molecular Solubility?</b></p>
+        <ul>
+            <li><b>Drug Discovery:</b> 90% of drug candidates fail due to poor solubility - we need to predict this early!</li>
+            <li><b>Cost Savings:</b> Lab testing costs $1000+/molecule, our model predicts in milliseconds</li>
+            <li><b>Real Impact:</b> Better solubility = better drug absorption = more effective medicines</li>
+        </ul>
+        <p><b>What you'll learn:</b> How to turn molecules into graphs and use AI to predict their properties</p>
+    </div>
+    
     <table style="width:100%; border-collapse:collapse;">
         <tr style="background-color:#e3f2fd;">
             <th style="padding:10px; border:1px solid #90caf9;">Stage</th>
@@ -1851,9 +1862,9 @@ The power of message passing lies in its ability to bridge **structure and funct
         </tr>
         <tr>
             <td style="padding:10px; border:1px solid #90caf9; background-color:#f3e5f5;"><b>2. Molecular Encoding</b></td>
-            <td style="padding:10px; border:1px solid #90caf9;">SMILES strings</td>
+            <td style="padding:10px; border:1px solid #90caf9;">SMILES strings<br><span style="color:#666; font-size:0.9em;">(text representation)</span></td>
             <td style="padding:10px; border:1px solid #90caf9;">RDKit → Graph conversion</td>
-            <td style="padding:10px; border:1px solid #90caf9;">Node features + Edge indices</td>
+            <td style="padding:10px; border:1px solid #90caf9;">Node features + Edge indices<br><span style="color:#666; font-size:0.9em;">(atoms + bonds)</span></td>
         </tr>
         <tr>
             <td style="padding:10px; border:1px solid #90caf9; background-color:#e8f5e9;"><b>3. Model Building</b></td>
@@ -1890,6 +1901,37 @@ The power of message passing lies in its ability to bridge **structure and funct
     </p>
 </div>
 
+<div style="background-color:#ffebee; padding:15px; border-radius:8px; margin:20px 0;">
+    <h4>⚠️ Key Terms Explained</h4>
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#ffcdd2;">
+            <th style="padding:8px; border:1px solid #ef9a9a;">Term</th>
+            <th style="padding:8px; border:1px solid #ef9a9a;">Simple Explanation</th>
+            <th style="padding:8px; border:1px solid #ef9a9a;">Why It Matters</th>
+        </tr>
+        <tr>
+            <td style="padding:8px; border:1px solid #ef9a9a;"><b>SMILES</b></td>
+            <td style="padding:8px; border:1px solid #ef9a9a;">Text code for molecules (like "H2O" but more detailed)</td>
+            <td style="padding:8px; border:1px solid #ef9a9a;">Computers can't see molecules, so we use text</td>
+        </tr>
+        <tr>
+            <td style="padding:8px; border:1px solid #ef9a9a;"><b>Node Features</b></td>
+            <td style="padding:8px; border:1px solid #ef9a9a;">Properties of each atom (like element type, charge)</td>
+            <td style="padding:8px; border:1px solid #ef9a9a;">AI needs numbers to work with</td>
+        </tr>
+        <tr>
+            <td style="padding:8px; border:1px solid #ef9a9a;"><b>Edge Indices</b></td>
+            <td style="padding:8px; border:1px solid #ef9a9a;">Which atoms are connected by bonds</td>
+            <td style="padding:8px; border:1px solid #ef9a9a;">Structure determines properties</td>
+        </tr>
+        <tr>
+            <td style="padding:8px; border:1px solid #ef9a9a;"><b>GCN</b></td>
+            <td style="padding:8px; border:1px solid #ef9a9a;">Graph Convolutional Network - AI for graph data</td>
+            <td style="padding:8px; border:1px solid #ef9a9a;">Molecules are naturally graphs!</td>
+        </tr>
+    </table>
+</div>
+
 #### Step 1: Understanding Molecular Solubility as a Graph Learning Problem
 
 **The Chemistry Behind Solubility**
@@ -1902,6 +1944,17 @@ The power of message passing lies in its ability to bridge **structure and funct
             $ \text{Solubility} \propto \frac{\text{Solute-Solvent interactions}}{\text{Solute-Solute interactions}} $
         </b>
     </p>
+    
+    <div style="background-color:#f5f5f5; padding:10px; border-radius:5px; margin:10px 0;">
+        <p><b>🔍 What This Formula Really Means:</b></p>
+        <ul>
+            <li><b>Numerator (top):</b> How well the molecule "likes" water</li>
+            <li><b>Denominator (bottom):</b> How much the molecule "likes" itself</li>
+            <li><b>Result:</b> If molecules prefer water over themselves → high solubility!</li>
+        </ul>
+        <p><b>Example:</b> Sugar dissolves because it forms hydrogen bonds with water better than with other sugar molecules</p>
+    </div>
+    
     <p>Key factors:</p>
     <ul>
         <li><b>Hydrogen bonding</b>: -OH, -NH groups increase water solubility</li>
@@ -1915,13 +1968,67 @@ The power of message passing lies in its ability to bridge **structure and funct
 
 Traditional machine learning uses fixed-size molecular fingerprints, losing structural information. GNNs preserve the full molecular graph:
 
-<div style="background-color:#fff9c4; padding:10px; border-radius:5px; margin:10px 0;"> <p><b>Molecule as Graph:</b></p> <ul> <li><b>Nodes</b>: Atoms with features (element, charge, aromaticity)</li> <li><b>Edges</b>: Chemical bonds (single, double, triple, aromatic)</li> <li><b>Message Passing</b>: Atoms "communicate" through bonds</li> </ul> </div>
+<div style="background-color:#fff9c4; padding:10px; border-radius:5px; margin:10px 0;"> 
+    <p><b>Molecule as Graph:</b></p> 
+    <ul> 
+        <li><b>Nodes</b>: Atoms with features (element, charge, aromaticity)</li> 
+        <li><b>Edges</b>: Chemical bonds (single, double, triple, aromatic)</li> 
+        <li><b>Message Passing</b>: Atoms "communicate" through bonds</li> 
+    </ul> 
+    
+    <div style="background-color:#f0f4c3; padding:10px; border-radius:5px; margin-top:10px;">
+        <p><b>💡 Intuition:</b> Just like social networks!</p>
+        <ul>
+            <li>People (atoms) have properties (age, interests)</li>
+            <li>Friendships (bonds) connect people</li>
+            <li>Information spreads through connections</li>
+            <li>Your friends influence your behavior!</li>
+        </ul>
+    </div>
+</div>
 
 **Package Imports and Setup**
 
 **Implementation Strategy**: We need several specialized libraries to handle different aspects of the pipeline:
 
-<table style="width:100%; border-collapse:collapse; margin:20px 0;"> <tr style="background-color:#e3f2fd;"> <th style="padding:10px; border:1px solid #90caf9;">Step</th> <th style="padding:10px; border:1px solid #90caf9;">Library</th> <th style="padding:10px; border:1px solid #90caf9;">Purpose</th> </tr> <tr> <td style="padding:10px; border:1px solid #90caf9;">1</td> <td style="padding:10px; border:1px solid #90caf9;">PyTorch</td> <td style="padding:10px; border:1px solid #90caf9;">Deep Learning Core</td> </tr> <tr> <td style="padding:10px; border:1px solid #90caf9;">2</td> <td style="padding:10px; border:1px solid #90caf9;">PyTorch Geometric</td> <td style="padding:10px; border:1px solid #90caf9;">Graph Operations</td> </tr> <tr> <td style="padding:10px; border:1px solid #90caf9;">3</td> <td style="padding:10px; border:1px solid #90caf9;">RDKit</td> <td style="padding:10px; border:1px solid #90caf9;">Chemistry Processing</td> </tr> <tr> <td style="padding:10px; border:1px solid #90caf9;">4</td> <td style="padding:10px; border:1px solid #90caf9;">NumPy/Pandas</td> <td style="padding:10px; border:1px solid #90caf9;">Data Handling</td> </tr> <tr> <td style="padding:10px; border:1px solid #90caf9;">5</td> <td style="padding:10px; border:1px solid #90caf9;">Scikit-learn</td> <td style="padding:10px; border:1px solid #90caf9;">Evaluation Metrics</td> </tr> </table>
+<table style="width:100%; border-collapse:collapse; margin:20px 0;"> 
+    <tr style="background-color:#e3f2fd;"> 
+        <th style="padding:10px; border:1px solid #90caf9;">Step</th> 
+        <th style="padding:10px; border:1px solid #90caf9;">Library</th> 
+        <th style="padding:10px; border:1px solid #90caf9;">Purpose</th> 
+        <th style="padding:10px; border:1px solid #90caf9;">Why We Need It</th>
+    </tr> 
+    <tr> 
+        <td style="padding:10px; border:1px solid #90caf9;">1</td> 
+        <td style="padding:10px; border:1px solid #90caf9;">PyTorch</td> 
+        <td style="padding:10px; border:1px solid #90caf9;">Deep Learning Core</td> 
+        <td style="padding:10px; border:1px solid #90caf9;">Handles neural networks and gradients</td>
+    </tr> 
+    <tr> 
+        <td style="padding:10px; border:1px solid #90caf9;">2</td> 
+        <td style="padding:10px; border:1px solid #90caf9;">PyTorch Geometric</td> 
+        <td style="padding:10px; border:1px solid #90caf9;">Graph Operations</td> 
+        <td style="padding:10px; border:1px solid #90caf9;">Special tools for graph neural networks</td>
+    </tr> 
+    <tr> 
+        <td style="padding:10px; border:1px solid #90caf9;">3</td> 
+        <td style="padding:10px; border:1px solid #90caf9;">RDKit</td> 
+        <td style="padding:10px; border:1px solid #90caf9;">Chemistry Processing</td> 
+        <td style="padding:10px; border:1px solid #90caf9;">Understands molecules and bonds</td>
+    </tr> 
+    <tr> 
+        <td style="padding:10px; border:1px solid #90caf9;">4</td> 
+        <td style="padding:10px; border:1px solid #90caf9;">NumPy/Pandas</td> 
+        <td style="padding:10px; border:1px solid #90caf9;">Data Handling</td> 
+        <td style="padding:10px; border:1px solid #90caf9;">Efficient array and table operations</td>
+    </tr> 
+    <tr> 
+        <td style="padding:10px; border:1px solid #90caf9;">5</td> 
+        <td style="padding:10px; border:1px solid #90caf9;">Scikit-learn</td> 
+        <td style="padding:10px; border:1px solid #90caf9;">Evaluation Metrics</td> 
+        <td style="padding:10px; border:1px solid #90caf9;">Measure how good our predictions are</td>
+    </tr> 
+</table>
 
 ```python
 # Deep Learning Framework
@@ -1949,7 +2056,44 @@ from sklearn.metrics import mean_squared_error, r2_score
 
 **Chemical Principle**: Each atom's properties influence molecular behavior. We encode 5 key atomic features:
 
-<table style="border-collapse:collapse; width:100%;"> <tr style="background-color:#e1bee7;"> <th style="border:1px solid #ce93d8; padding:8px;">Feature</th> <th style="border:1px solid #ce93d8; padding:8px;">Chemical Meaning</th> <th style="border:1px solid #ce93d8; padding:8px;">Value Range</th> </tr> <tr> <td style="border:1px solid #ce93d8; padding:8px;">Atomic Number</td> <td style="border:1px solid #ce93d8; padding:8px;">Element identity (C=6, N=7, O=8)</td> <td style="border:1px solid #ce93d8; padding:8px;">1-118</td> </tr> <tr> <td style="border:1px solid #ce93d8; padding:8px;">Degree</td> <td style="border:1px solid #ce93d8; padding:8px;">Number of bonds</td> <td style="border:1px solid #ce93d8; padding:8px;">0-4 (typically)</td> </tr> <tr> <td style="border:1px solid #ce93d8; padding:8px;">Formal Charge</td> <td style="border:1px solid #ce93d8; padding:8px;">Electronic state</td> <td style="border:1px solid #ce93d8; padding:8px;">-2 to +2</td> </tr> <tr> <td style="border:1px solid #ce93d8; padding:8px;">Aromaticity</td> <td style="border:1px solid #ce93d8; padding:8px;">In aromatic ring?</td> <td style="border:1px solid #ce93d8; padding:8px;">0 or 1</td> </tr> <tr> <td style="border:1px solid #ce93d8; padding:8px;">H Count</td> <td style="border:1px solid #ce93d8; padding:8px;">Hydrogen bonding potential</td> <td style="border:1px solid #ce93d8; padding:8px;">0-4</td> </tr> </table>
+<table style="border-collapse:collapse; width:100%;"> 
+    <tr style="background-color:#e1bee7;"> 
+        <th style="border:1px solid #ce93d8; padding:8px;">Feature</th> 
+        <th style="border:1px solid #ce93d8; padding:8px;">Chemical Meaning</th> 
+        <th style="border:1px solid #ce93d8; padding:8px;">Value Range</th> 
+        <th style="border:1px solid #ce93d8; padding:8px;">Why It Affects Solubility</th>
+    </tr> 
+    <tr> 
+        <td style="border:1px solid #ce93d8; padding:8px;">Atomic Number</td> 
+        <td style="border:1px solid #ce93d8; padding:8px;">Element identity (C=6, N=7, O=8)</td> 
+        <td style="border:1px solid #ce93d8; padding:8px;">1-118</td> 
+        <td style="border:1px solid #ce93d8; padding:8px;">O, N form H-bonds with water</td>
+    </tr> 
+    <tr> 
+        <td style="border:1px solid #ce93d8; padding:8px;">Degree</td> 
+        <td style="border:1px solid #ce93d8; padding:8px;">Number of bonds</td> 
+        <td style="border:1px solid #ce93d8; padding:8px;">0-4 (typically)</td> 
+        <td style="border:1px solid #ce93d8; padding:8px;">More bonds = less flexible</td>
+    </tr> 
+    <tr> 
+        <td style="border:1px solid #ce93d8; padding:8px;">Formal Charge</td> 
+        <td style="border:1px solid #ce93d8; padding:8px;">Electronic state</td> 
+        <td style="border:1px solid #ce93d8; padding:8px;">-2 to +2</td> 
+        <td style="border:1px solid #ce93d8; padding:8px;">Charged = water-loving</td>
+    </tr> 
+    <tr> 
+        <td style="border:1px solid #ce93d8; padding:8px;">Aromaticity</td> 
+        <td style="border:1px solid #ce93d8; padding:8px;">In aromatic ring?</td> 
+        <td style="border:1px solid #ce93d8; padding:8px;">0 or 1</td> 
+        <td style="border:1px solid #ce93d8; padding:8px;">Aromatic = water-fearing</td>
+    </tr> 
+    <tr> 
+        <td style="border:1px solid #ce93d8; padding:8px;">H Count</td> 
+        <td style="border:1px solid #ce93d8; padding:8px;">Hydrogen bonding potential</td> 
+        <td style="border:1px solid #ce93d8; padding:8px;">0-4</td> 
+        <td style="border:1px solid #ce93d8; padding:8px;">More H = more H-bonds</td>
+    </tr> 
+</table>
 
 **Implementation**: The `get_atom_features` function extracts these properties from RDKit atom objects:
 
@@ -1958,15 +2102,29 @@ def get_atom_features(atom):
     """
     Extract numerical features from RDKit atom object.
     These features capture the chemical environment of each atom.
+    
+    Think of this as creating an "ID card" for each atom with 5 key facts!
     """
     return [
-        atom.GetAtomicNum(),        # Element type
-        atom.GetDegree(),           # Connectivity  
-        atom.GetFormalCharge(),     # Charge state
-        int(atom.GetIsAromatic()),  # Aromaticity
-        atom.GetTotalNumHs()        # H-bonding capability
+        atom.GetAtomicNum(),        # What element? (C=6, N=7, O=8, etc.)
+        atom.GetDegree(),           # How many bonds? (connectivity)
+        atom.GetFormalCharge(),     # Is it charged? (+1, 0, -1, etc.)
+        int(atom.GetIsAromatic()),  # In benzene-like ring? (0=no, 1=yes)
+        atom.GetTotalNumHs()        # How many hydrogens attached?
     ]
 ```
+
+<div style="background-color:#e1f5fe; padding:10px; border-radius:5px; margin:10px 0;">
+    <p><b>📊 Why These 5 Features?</b></p>
+    <ul>
+        <li><b>Atomic Number:</b> Oxygen atoms love water, carbon atoms don't</li>
+        <li><b>Degree (Connectivity):</b> Highly connected atoms are "buried" in the molecule</li>
+        <li><b>Formal Charge:</b> Charged molecules dissolve like salt in water</li>
+        <li><b>Aromaticity:</b> Benzene rings are oily, not watery</li>
+        <li><b>H Count:</b> More hydrogens = more hydrogen bonding with water</li>
+    </ul>
+    <p><b>Limitation:</b> We're missing some important features (like H-bond donors/acceptors), which is why our model won't be perfect!</p>
+</div>
 
 **Bond Connectivity Extraction**: Chemical bonds are bidirectional - electrons are shared between atoms. We need to represent this bidirectionality:
 
@@ -1975,12 +2133,14 @@ def get_bond_connections(mol):
     """
     Convert molecular bonds to directed edges.
     Bidirectional to allow information flow in both directions.
+    
+    Why bidirectional? In real molecules, electrons flow both ways!
     """
     edges = []
     for bond in mol.GetBonds():
         i = bond.GetBeginAtomIdx()
         j = bond.GetEndAtomIdx()
-        edges.extend([[i, j], [j, i]])  # Bidirectional
+        edges.extend([[i, j], [j, i]])  # Add both directions
     return edges
 ```
 
@@ -2030,6 +2190,16 @@ Solubility range: -11.60 to 1.58 log S
             $ \text{Range: } 13.18 \text{ log units} = 10^{13.18} \approx 15 \text{ trillion-fold difference!} $
         </li>
     </ul>
+    
+    <div style="background-color:#fff3e0; padding:10px; border-radius:5px; margin-top:10px;">
+        <p><b>🌊 Real-World Context:</b></p>
+        <ul>
+            <li><b>Very soluble (log S > 0):</b> Like sugar in water - dissolves easily</li>
+            <li><b>Moderately soluble (-3 < log S < 0):</b> Like alcohol - mixes well</li>
+            <li><b>Poorly soluble (log S < -3):</b> Like oil - forms separate layer</li>
+            <li><b>Practically insoluble (log S < -6):</b> Like plastic - never dissolves</li>
+        </ul>
+    </div>
 </div>
 
 #### Examining Example Molecules
@@ -2346,6 +2516,16 @@ Benzene (c1ccccc1):
         <li>$6$ C-C bonds + $6$ C-H bonds = $12$ undirected bonds</li>
         <li>$12$ undirected bonds $\times 2$ directions = $24$ directed edges</li>
     </ul>
+    
+    <div style="background-color:#e8f5e9; padding:10px; border-radius:5px; margin-top:10px;">
+        <p><b>🤔 What is COO Format?</b></p>
+        <p>COO (COOrdinate) format stores edges as pairs of node indices:</p>
+        <ul>
+            <li>First row: source nodes [0, 1, 1, 2, ...]</li>
+            <li>Second row: target nodes [1, 0, 2, 1, ...]</li>
+            <li>Each column is one edge: (0→1), (1→0), (1→2), (2→1), ...</li>
+        </ul>
+    </div>
 </div>
 
 #### Step 4: Building the Graph Neural Network Architecture
@@ -2360,6 +2540,19 @@ Benzene (c1ccccc1):
             $ h_{i}^{(l+1)} = \sigma \left( W^{(l)} \cdot \text{AGG}\left( \{ h_{j}^{(l)} : j \in N(i) \cup \{i\} \}\right) \right) $
         </b> 
     </p>
+    
+    <div style="background-color:#fff9c4; padding:10px; border-radius:5px; margin:10px 0;">
+        <p><b>🧩 Breaking Down This Scary Formula:</b></p>
+        <ul>
+            <li><b>$h_{i}^{(l)}$</b> = "What atom $i$ knows at layer $l$"</li>
+            <li><b>$N(i)$</b> = "Atom $i$'s neighbors (bonded atoms)"</li>
+            <li><b>AGG</b> = "Combine information from neighbors (usually average)"</li>
+            <li><b>$W^{(l)}$</b> = "Learnable transformation (the 'smart' part)"</li>
+            <li><b>$\sigma$</b> = "Activation function (adds non-linearity)"</li>
+        </ul>
+        <p><b>In Plain English:</b> Each atom collects information from its neighbors, combines it, transforms it with learnable weights, and updates its own representation!</p>
+    </div>
+    
     <p>Where:</p>
     <ul>
         <li>$h_{i}^{(l)}$ = features of atom $i$ at layer $l$</li>
@@ -2378,6 +2571,15 @@ Benzene (c1ccccc1):
 - **64 hidden dimensions**: Balances expressiveness vs overfitting
 - **Global mean pooling**: Aggregates variable-sized molecules to fixed representation
 - **Single output**: Predicts scalar solubility value
+
+<div style="background-color:#f0f4c3; padding:10px; border-radius:5px; margin:10px 0;">
+    <p><b>🏗️ Architecture Intuition:</b></p>
+    <ul>
+        <li><b>Why 3 layers?</b> Most chemical effects happen within 3 bonds</li>
+        <li><b>Why 64 dimensions?</b> Enough to capture complexity, not too much to overfit</li>
+        <li><b>Why mean pooling?</b> Average all atom features to get molecule feature</li>
+    </ul>
+</div>
 
 **Class Definition and Initialization**:
 
@@ -2440,6 +2642,19 @@ class MolecularGNN(nn.Module):
         # Predict property
         return self.predictor(x)
 ```
+
+<div style="background-color:#ffcdd2; padding:15px; border-radius:8px; margin:10px 0;">
+    <h4>⚠️ What Actually Happens in Forward Pass?</h4>
+    <ol>
+        <li><b>Input:</b> Each atom starts with 5 features</li>
+        <li><b>Layer 1:</b> Atoms exchange info with neighbors, transform to 64 features</li>
+        <li><b>Layer 2:</b> Exchange again, refine understanding</li>
+        <li><b>Layer 3:</b> Final exchange, atoms now "know" their 3-hop neighborhood</li>
+        <li><b>Pooling:</b> Average all atoms to get one molecule representation</li>
+        <li><b>Prediction:</b> Transform 64 features to 1 solubility value</li>
+    </ol>
+    <p><b>Key Point:</b> The network learns WHAT information to exchange and HOW to transform it!</p>
+</div>
 
 **Model Analysis**
 
@@ -2566,6 +2781,16 @@ Dataset split:
   Testing: 200 molecules
 ```
 
+<div style="background-color:#e8f5e9; padding:10px; border-radius:5px; margin:10px 0;">
+    <p><b>🎯 Why Train/Test Split?</b></p>
+    <ul>
+        <li><b>Training set:</b> Model learns patterns from these molecules</li>
+        <li><b>Test set:</b> We check if model works on NEW molecules it hasn't seen</li>
+        <li><b>80/20 split:</b> Common ratio - enough to train, enough to test</li>
+    </ul>
+    <p><b>Important:</b> Never let the model see test data during training - that's cheating!</p>
+</div>
+
 **Creating DataLoaders**
 
 **PyTorch Geometric Innovation**: DataLoader automatically batches variable-sized graphs:
@@ -2622,6 +2847,16 @@ Example batch:
         <li>Edge index combines all molecular graphs into one large disconnected graph</li>
         <li>Enables efficient parallel processing on GPU</li>
     </ul>
+    
+    <div style="background-color:#f0f4c3; padding:10px; border-radius:5px; margin-top:10px;">
+        <p><b>💡 Clever Trick:</b> PyTorch Geometric treats a batch of graphs as one big disconnected graph!</p>
+        <ul>
+            <li>Molecule 1: atoms 0-20</li>
+            <li>Molecule 2: atoms 21-35</li>
+            <li>No edges between molecules</li>
+            <li>Process all at once = FAST!</li>
+        </ul>
+    </div>
 </div>
 
 #### Step 6: Training the Model
@@ -2637,10 +2872,31 @@ Example batch:
         $v_t = \beta_2 v_{t-1} + (1 - \beta_2) g_t^2$<br>
         $\theta_t = \theta_{t-1} - \alpha \left( \frac{m_t}{\sqrt{v_t} + \epsilon} \right)$
     </p>
+    
+    <div style="background-color:#fff9c4; padding:10px; border-radius:5px; margin-top:10px;">
+        <p><b>🚀 Adam in Plain English:</b></p>
+        <ul>
+            <li><b>$m_t$:</b> "Momentum" - like a ball rolling downhill, builds up speed</li>
+            <li><b>$v_t$:</b> "Adaptive learning" - goes slow in steep areas, fast in flat areas</li>
+            <li><b>$\alpha = 0.001$:</b> "Step size" - how big each update is</li>
+        </ul>
+        <p><b>Why Adam over simple gradient descent?</b> It's like having a smart GPS that adjusts speed based on traffic!</p>
+    </div>
+    
     <p><b>MSE Loss</b>: For regression tasks</p>
     <p style="text-align:center;">
         $L = \frac{1}{n} \sum (y_{\text{pred},i} - y_{\text{true},i})^2$
     </p>
+    
+    <div style="background-color:#e8f5e9; padding:10px; border-radius:5px; margin-top:10px;">
+        <p><b>📏 Why MSE for Regression?</b></p>
+        <ul>
+            <li>Measures average squared error</li>
+            <li>Penalizes big mistakes more than small ones</li>
+            <li>Always positive (squares remove negatives)</li>
+            <li>Has nice mathematical properties for optimization</li>
+        </ul>
+    </div>
 </div>
 
 ```python
@@ -2667,6 +2923,28 @@ Training setup:
   Loss function: MSE
   Device: cpu
 ```
+
+<div style="background-color:#ffcdd2; padding:15px; border-radius:8px; margin:10px 0;">
+    <h4>⚠️ Critical Missing Explanations</h4>
+    
+    <p><b>1. How does the model actually learn?</b></p>
+    <ul>
+        <li><b>Forward pass:</b> Input → Model → Prediction</li>
+        <li><b>Loss calculation:</b> How wrong was the prediction?</li>
+        <li><b>Backward pass:</b> Compute gradients (derivatives) using chain rule</li>
+        <li><b>Update:</b> Adjust weights to reduce loss</li>
+    </ul>
+    
+    <p><b>2. What is a gradient?</b></p>
+    <p>The gradient tells us "which way to adjust each parameter to reduce error". Think of it like hiking - the gradient points uphill, so we go the opposite way to reach the valley (minimum loss).</p>
+    
+    <p><b>3. Why learning rate = 0.001?</b></p>
+    <ul>
+        <li>Too large (0.1): Might overshoot the minimum</li>
+        <li>Too small (0.00001): Training takes forever</li>
+        <li>0.001: Good default for Adam optimizer</li>
+    </ul>
+</div>
 
 **Training Function Implementation**
 
@@ -2709,6 +2987,31 @@ def train_epoch(model, loader, optimizer, criterion, device):
     
     return total_loss / len(loader.dataset)
 ```
+
+<div style="background-color:#e1f5fe; padding:15px; border-radius:8px; margin:10px 0;">
+    <h4>🔍 What Each Line Actually Does</h4>
+    
+    <p><b>optimizer.zero_grad()</b></p>
+    <ul>
+        <li>PyTorch accumulates gradients by default</li>
+        <li>Without this, gradients would add up across batches</li>
+        <li>Like clearing a calculator before new calculation</li>
+    </ul>
+    
+    <p><b>loss.backward()</b></p>
+    <ul>
+        <li>Computes gradient of loss w.r.t. each parameter</li>
+        <li>Uses automatic differentiation (chain rule)</li>
+        <li>Fills .grad attribute of each parameter</li>
+    </ul>
+    
+    <p><b>optimizer.step()</b></p>
+    <ul>
+        <li>Updates parameters using computed gradients</li>
+        <li>Applies Adam update rule</li>
+        <li>Parameters move in direction that reduces loss</li>
+    </ul>
+</div>
 
 **Evaluation Function**
 
@@ -2807,6 +3110,15 @@ plt.show()
 - **Epochs 30-50**: Plateau (approaching model capacity)
 - **No overfitting**: Test loss doesn't increase
 
+<div style="background-color:#f0f4c3; padding:10px; border-radius:5px; margin:10px 0;">
+    <p><b>📊 Reading Training Curves:</b></p>
+    <ul>
+        <li><b>Good sign:</b> Test loss follows training loss</li>
+        <li><b>Bad sign:</b> Test loss increases while training decreases (overfitting)</li>
+        <li><b>Our case:</b> Slight gap but both decrease = healthy learning!</li>
+    </ul>
+</div>
+
 #### Step 7: Model Evaluation
 
 **Computing Performance Metrics**
@@ -2818,23 +3130,45 @@ plt.show()
         <th style="border:1px solid #64b5f6; padding:8px;">Metric</th>
         <th style="border:1px solid #64b5f6; padding:8px;">Formula</th>
         <th style="border:1px solid #64b5f6; padding:8px;">Interpretation</th>
+        <th style="border:1px solid #64b5f6; padding:8px;">What It Tells Us</th>
     </tr>
     <tr>
         <td style="border:1px solid #64b5f6; padding:8px;">RMSE</td>
         <td style="border:1px solid #64b5f6; padding:8px;">$\sqrt{\frac{1}{n} \sum (y_{\text{pred}} - y_{\text{true}})^2}$</td>
         <td style="border:1px solid #64b5f6; padding:8px;">Average error magnitude</td>
+        <td style="border:1px solid #64b5f6; padding:8px;">Typical prediction error in log S units</td>
     </tr>
     <tr>
         <td style="border:1px solid #64b5f6; padding:8px;">MAE</td>
         <td style="border:1px solid #64b5f6; padding:8px;">$\frac{1}{n} \sum |y_{\text{pred}} - y_{\text{true}}|$</td>
         <td style="border:1px solid #64b5f6; padding:8px;">Typical prediction error</td>
+        <td style="border:1px solid #64b5f6; padding:8px;">Less sensitive to outliers than RMSE</td>
     </tr>
     <tr>
         <td style="border:1px solid #64b5f6; padding:8px;">R²</td>
         <td style="border:1px solid #64b5f6; padding:8px;">$1 - \frac{SS_{\text{res}}}{SS_{\text{tot}}}$</td>
         <td style="border:1px solid #64b5f6; padding:8px;">Variance explained (0-1)</td>
+        <td style="border:1px solid #64b5f6; padding:8px;">% of data variation our model captures</td>
     </tr>
 </table>
+
+<div style="background-color:#fff3e0; padding:15px; border-radius:8px; margin:10px 0;">
+    <h4>📐 Understanding R² in Detail</h4>
+    <p>The R² formula: $R^2 = 1 - \frac{SS_{\text{res}}}{SS_{\text{tot}}}$</p>
+    <ul>
+        <li><b>$SS_{\text{tot}}$</b> = Total variance = $\sum (y_i - \bar{y})^2$</li>
+        <li><b>$SS_{\text{res}}$</b> = Residual variance = $\sum (y_i - \hat{y}_i)^2$</li>
+        <li><b>$\bar{y}$</b> = Mean of true values</li>
+        <li><b>$\hat{y}_i$</b> = Our predictions</li>
+    </ul>
+    <p><b>Interpretation:</b></p>
+    <ul>
+        <li>R² = 1.0: Perfect predictions</li>
+        <li>R² = 0.5: Model explains 50% of variance</li>
+        <li>R² = 0.0: No better than predicting the mean</li>
+        <li>R² < 0.0: Worse than predicting the mean!</li>
+    </ul>
+</div>
 
 **Prediction Extraction Function**:
 
@@ -2901,6 +3235,16 @@ Interpretation:
         </ul>
         <li>State-of-the-art models achieve R² $\approx 0.9$ with richer features</li>
     </ul>
+    
+    <div style="background-color:#e8f5e9; padding:10px; border-radius:5px; margin-top:10px;">
+        <p><b>🎯 Is R² = 0.22 Actually Bad?</b></p>
+        <ul>
+            <li><b>For production:</b> Yes, too low for drug development</li>
+            <li><b>For learning:</b> No! Shows our simple model captures real patterns</li>
+            <li><b>Context:</b> Random guessing would give R² ≈ 0</li>
+            <li><b>Improvement potential:</b> Adding more features could reach R² > 0.8</li>
+        </ul>
+    </div>
 </div>
 
 **Prediction Visualization**
@@ -2939,6 +3283,16 @@ plt.show()
 - **High variance**: Significant scatter around ideal line
 - **Regression to mean**: Extreme values pulled toward center
 - **±1 log band**: Most predictions within acceptable error range
+
+<div style="background-color:#f0f4c3; padding:10px; border-radius:5px; margin:10px 0;">
+    <p><b>📈 How to Read This Plot:</b></p>
+    <ul>
+        <li><b>Perfect model:</b> All points on red dashed line</li>
+        <li><b>Good model:</b> Points clustered near line</li>
+        <li><b>Our model:</b> General trend but wide spread</li>
+        <li><b>Gray band:</b> ±1 log S is ~10× error in real concentration</li>
+    </ul>
+</div>
 
 **Error Analysis**
 
@@ -3290,6 +3644,26 @@ Cyclohexane (aliphatic)             C1CCCCC1                   -3.037
 <li>Reaction outcome prediction (with reaction graphs)</li>
 </ul>
 
+</div>
+
+<div style="background-color:#fff3e0; padding:15px; border-radius:8px; margin:20px 0;">
+    <h4>🎓 What We Learned About Deep Learning</h4>
+    
+    <p><b>Key Concepts Demystified:</b></p>
+    <ul>
+        <li><b>Backpropagation:</b> Automatic calculation of gradients using chain rule</li>
+        <li><b>Optimization:</b> Iteratively adjusting parameters to minimize loss</li>
+        <li><b>Message Passing:</b> Atoms sharing information through bonds</li>
+        <li><b>Batching:</b> Processing multiple graphs simultaneously for efficiency</li>
+    </ul>
+    
+    <p><b>What We Didn't Cover (But Should Know):</b></p>
+    <ul>
+        <li><b>Parameter Initialization:</b> How weights start (Xavier, He initialization)</li>
+        <li><b>Learning Rate Scheduling:</b> Adjusting learning rate during training</li>
+        <li><b>Regularization:</b> Preventing overfitting (dropout, weight decay)</li>
+        <li><b>Advanced GNN Issues:</b> Over-smoothing, gradient vanishing (covered in next section)</li>
+    </ul>
 </div>
 
 The beauty of GNNs for chemistry lies in their natural alignment with molecular structure. While our simple model achieves modest performance, it demonstrates the complete pipeline from molecules to predictions. This foundation, enhanced with richer features and advanced architectures, powers modern drug discovery and materials design platforms.
