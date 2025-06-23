@@ -1738,10 +1738,6 @@ tensor([[ 0.2851, -0.0017],
 
    * Indicates this output is part of the PyTorch computation graph.
    * During training, you can call `output.backward()` to compute gradients for $W$.
-   
-However, in real chemistry, **not all neighbors are equally important**:
-* A **double bond** may influence differently than a single bond
-* An **oxygen atom** might carry more weight than a hydrogen atom
 
 **Review**
 
@@ -1759,6 +1755,10 @@ However, in real chemistry, **not all neighbors are equally important**:
      * **Potential reaction hotspots**
 
 By combining your flowchart, code snippet, and this result interpretation, your readers should now see **both** how the GCN works in practice and why its output is meaningful for molecular/chemical analysis.
+
+However, in real chemistry, **not all neighbors are equally important**:
+* A **double bond** may influence differently than a single bond
+* An **oxygen atom** might carry more weight than a hydrogen atom
 
 ![degreenormalize](../../../../../resource/img/gnn/degreenormalize.png)
 
