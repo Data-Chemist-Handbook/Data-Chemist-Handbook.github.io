@@ -1834,7 +1834,7 @@ The power of message passing lies in its ability to bridge **structure and funct
 
 #### Experimental Pipeline Overview
 
-<div style="background-color:#f0f7ff; border:2px solid #1976d2; border-radius:10px; padding:20px; margin:20px 0;"> <h3>What We're Building: A Molecular Solubility Predictor</h3> <table style="width:100%; border-collapse:collapse;"> <tr style="background-color:#e3f2fd;"> <th style="padding:10px; border:1px solid #90caf9;">Stage</th> <th style="padding:10px; border:1px solid #90caf9;">Input</th> <th style="padding:10px; border:1px solid #90caf9;">Process</th> <th style="padding:10px; border:1px solid #90caf9;">Output</th> </tr> <tr> <td style="padding:10px; border:1px solid #90caf9; background-color:#fff3e0;"><b>1. Data Loading</b></td> <td style="padding:10px; border:1px solid #90caf9;">ESOL CSV file</td> <td style="padding:10px; border:1px solid #90caf9;">pandas parsing</td> <td style="padding:10px; border:1px solid #90caf9;">SMILES + log S values</td> </tr> <tr> <td style="padding:10px; border:1px solid #90caf9; background-color:#f3e5f5;"><b>2. Molecular Encoding</b></td> <td style="padding:10px; border:1px solid #90caf9;">SMILES strings</td> <td style="padding:10px; border:1px solid #90caf9;">RDKit → Graph conversion</td> <td style="padding:10px; border:1px solid #90caf9;">Node features + Edge indices</td> </tr> <tr> <td style="padding:10px; border:1px solid #90caf9; background-color:#e8f5e9;"><b>3. Model Building</b></td> <td style="padding:10px; border:1px solid #90caf9;">Graph structures</td> <td style="padding:10px; border:1px solid #90caf9;">3-layer GCN</td> <td style="padding:10px; border:1px solid #90caf9;">Molecular embeddings</td> </tr> <tr> <td style="padding:10px; border:1px solid #90caf9; background-color:#fce4ec;"><b>4. Training</b></td> <td style="padding:10px; border:1px solid #90caf9;">Batched graphs</td> <td style="padding:10px; border:1px solid #90caf9;">Adam optimizer + MSE loss</td> <td style="padding:10px; border:1px solid #90caf9;">Trained parameters</td> </tr> <tr> <td style="padding:10px; border:1px solid #90caf9; background-color:#e1f5fe;"><b>5. Prediction</b></td> <td style="padding:10px; border:1px solid #90caf9;">New SMILES</td> <td style="padding:10px; border:1px solid #90caf9;">Forward pass</td> <td style="padding:10px; border:1px solid #90caf9;">Solubility (log S)</td> </tr> </table> <h3>Key Metrics We'll Track:</h3> <ul> <li><span style="color:#d32f2f; font-weight:bold;">RMSE</span>: Root Mean Squared Error (expect ~1.9 log S)</li> <li><span style="color:#388e3c; font-weight:bold;">R²</span>: Variance explained (expect ~0.22)</li> <li><span style="color:#1976d2; font-weight:bold;">MAE</span>: Mean Absolute Error (expect ~1.6 log S)</li> </ul> </div>
+<div style="background-color:#f0f7ff; border:2px solid #1976d2; border-radius:10px; padding:20px; margin:20px 0;"> <h5>What We're Building: A Molecular Solubility Predictor</h5> <table style="width:100%; border-collapse:collapse;"> <tr style="background-color:#e3f2fd;"> <th style="padding:10px; border:1px solid #90caf9;">Stage</th> <th style="padding:10px; border:1px solid #90caf9;">Input</th> <th style="padding:10px; border:1px solid #90caf9;">Process</th> <th style="padding:10px; border:1px solid #90caf9;">Output</th> </tr> <tr> <td style="padding:10px; border:1px solid #90caf9; background-color:#fff3e0;"><b>1. Data Loading</b></td> <td style="padding:10px; border:1px solid #90caf9;">ESOL CSV file</td> <td style="padding:10px; border:1px solid #90caf9;">pandas parsing</td> <td style="padding:10px; border:1px solid #90caf9;">SMILES + log S values</td> </tr> <tr> <td style="padding:10px; border:1px solid #90caf9; background-color:#f3e5f5;"><b>2. Molecular Encoding</b></td> <td style="padding:10px; border:1px solid #90caf9;">SMILES strings</td> <td style="padding:10px; border:1px solid #90caf9;">RDKit → Graph conversion</td> <td style="padding:10px; border:1px solid #90caf9;">Node features + Edge indices</td> </tr> <tr> <td style="padding:10px; border:1px solid #90caf9; background-color:#e8f5e9;"><b>3. Model Building</b></td> <td style="padding:10px; border:1px solid #90caf9;">Graph structures</td> <td style="padding:10px; border:1px solid #90caf9;">3-layer GCN</td> <td style="padding:10px; border:1px solid #90caf9;">Molecular embeddings</td> </tr> <tr> <td style="padding:10px; border:1px solid #90caf9; background-color:#fce4ec;"><b>4. Training</b></td> <td style="padding:10px; border:1px solid #90caf9;">Batched graphs</td> <td style="padding:10px; border:1px solid #90caf9;">Adam optimizer + MSE loss</td> <td style="padding:10px; border:1px solid #90caf9;">Trained parameters</td> </tr> <tr> <td style="padding:10px; border:1px solid #90caf9; background-color:#e1f5fe;"><b>5. Prediction</b></td> <td style="padding:10px; border:1px solid #90caf9;">New SMILES</td> <td style="padding:10px; border:1px solid #90caf9;">Forward pass</td> <td style="padding:10px; border:1px solid #90caf9;">Solubility (log S)</td> </tr> </table> <h3>Key Metrics We'll Track:</h3> <ul> <li><span style="color:#d32f2f; font-weight:bold;">RMSE</span>: Root Mean Squared Error (expect ~1.9 log S)</li> <li><span style="color:#388e3c; font-weight:bold;">R²</span>: Variance explained (expect ~0.22)</li> <li><span style="color:#1976d2; font-weight:bold;">MAE</span>: Mean Absolute Error (expect ~1.6 log S)</li> </ul> </div>
 
 #### Step 1: Understanding Molecular Solubility as a Graph Learning Problem
 
@@ -1994,7 +1994,7 @@ plt.grid(True, alpha=0.3)
 plt.show()
 ```
 
-![Distribution of Solubility Values in ESOL Dataset](https://claude.ai/resource/img/gnn/solubility_distribution.png)
+![Distribution of Solubility Values in ESOL Dataset](../../../../../resource/img/gnn/solubility_distribution.png)
 
 **Result Interpretation**:
 
@@ -2592,7 +2592,7 @@ plt.tight_layout()
 plt.show()
 ```
 
-![Training Progress](https://claude.ai/resource/img/gnn/training_progress.png)
+![Training Progress](../../../../../resource/img/gnn/training_progress.png)
 
 **Curve Interpretation**:
 
@@ -2691,7 +2691,7 @@ plt.tight_layout()
 plt.show()
 ```
 
-![GNN Predictions vs True Values](https://claude.ai/resource/img/gnn/predictions_scatter.png)
+![GNN Predictions vs True Values](../../../../../resource/img/gnn/predictions_scatter.png)
 
 **Scatter Plot Interpretation**:
 
@@ -2736,7 +2736,7 @@ plt.tight_layout()
 plt.show()
 ```
 
-![Error Distribution and Analysis](https://claude.ai/resource/img/gnn/error_analysis.png)
+![Error Distribution and Analysis](../../../../../resource/img/gnn/error_analysis.png)
 
 **Error Statistics**:
 
@@ -2894,7 +2894,7 @@ plt.tight_layout()
 plt.show()
 ```
 
-![GNN Solubility Predictions for Common Molecules](https://claude.ai/resource/img/gnn/molecule_predictions.png)
+![GNN Solubility Predictions for Common Molecules](../../../../../resource/img/gnn/molecule_predictions.png)
 
 **Bar Chart Interpretation**:
 
