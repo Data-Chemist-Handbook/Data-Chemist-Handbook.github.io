@@ -1838,7 +1838,7 @@ The power of message passing lies in its ability to bridge **structure and funct
     <h4>What We're Building: A Molecular Solubility Predictor</h4>
     
     <div style="background-color:#fff3e0; padding:15px; border-radius:8px; margin-bottom:15px;">
-        <p><b>🎯 Why Predict Molecular Solubility?</b></p>
+        <p><b>Why Predict Molecular Solubility?</b></p>
         <ul>
             <li><b>Drug Discovery:</b> 90% of drug candidates fail due to poor solubility - we need to predict this early!</li>
             <li><b>Cost Savings:</b> Lab testing costs $1000+/molecule, our model predicts in milliseconds</li>
@@ -1895,14 +1895,12 @@ The power of message passing lies in its ability to bridge **structure and funct
     
     <h4 style="text-align:center;">Solubility Formula</h4>
     <p style="text-align:center; font-size:20px;">
-        <b>
-            $ \text{Solubility} \propto \frac{\text{Solute-Solvent interactions}}{\text{Solute-Solute interactions}} $
-        </b>
+        <b>Solubility ∝ (Solute-Solvent interactions) / (Solute-Solute interactions)</b>
     </p>
 </div>
 
 <div style="background-color:#ffebee; padding:15px; border-radius:8px; margin:20px 0;">
-    <h4>⚠️ Key Terms Explained</h4>
+    <h4>Key Terms Explained</h4>
     <table style="width:100%; border-collapse:collapse;">
         <tr style="background-color:#ffcdd2;">
             <th style="padding:8px; border:1px solid #ef9a9a;">Term</th>
@@ -1940,13 +1938,11 @@ The power of message passing lies in its ability to bridge **structure and funct
     <p><b>Why is solubility prediction hard?</b></p>
     <p>Solubility emerges from a delicate balance of intermolecular forces:</p>
     <p style="text-align:center; font-size:18px;">
-        <b>
-            $ \text{Solubility} \propto \frac{\text{Solute-Solvent interactions}}{\text{Solute-Solute interactions}} $
-        </b>
+        <b>Solubility ∝ (Solute-Solvent interactions) / (Solute-Solute interactions)</b>
     </p>
     
     <div style="background-color:#f5f5f5; padding:10px; border-radius:5px; margin:10px 0;">
-        <p><b>🔍 What This Formula Really Means:</b></p>
+        <p><b>What This Formula Really Means:</b></p>
         <ul>
             <li><b>Numerator (top):</b> How well the molecule "likes" water</li>
             <li><b>Denominator (bottom):</b> How much the molecule "likes" itself</li>
@@ -1960,7 +1956,7 @@ The power of message passing lies in its ability to bridge **structure and funct
         <li><b>Hydrogen bonding</b>: -OH, -NH groups increase water solubility</li>
         <li><b>Hydrophobic effect</b>: Long carbon chains decrease solubility</li>
         <li><b>Molecular size</b>: Larger molecules → harder to solvate</li>
-        <li><b>Aromaticity</b>: $\pi\text{-systems}$ are hydrophobic</li>
+        <li><b>Aromaticity</b>: π-systems are hydrophobic</li>
     </ul>
 </div>
 
@@ -1977,7 +1973,7 @@ Traditional machine learning uses fixed-size molecular fingerprints, losing stru
     </ul> 
     
     <div style="background-color:#f0f4c3; padding:10px; border-radius:5px; margin-top:10px;">
-        <p><b>💡 Intuition:</b> Just like social networks!</p>
+        <p><b>Intuition:</b> Just like social networks!</p>
         <ul>
             <li>People (atoms) have properties (age, interests)</li>
             <li>Friendships (bonds) connect people</li>
@@ -2029,6 +2025,32 @@ Traditional machine learning uses fixed-size molecular fingerprints, losing stru
         <td style="padding:10px; border:1px solid #90caf9;">Measure how good our predictions are</td>
     </tr> 
 </table>
+
+<div style="background-color:#e3f2fd; padding:15px; border-radius:8px; margin:15px 0;">
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#bbdefb;">
+            <th style="padding:10px; border:1px solid #42a5f5; text-align:center;" colspan="4">Library Import Process</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #90caf9; background-color:#ffffff;">
+                <b>Step 1:</b> Import PyTorch Core<br>
+                <span style="font-size:0.9em;">torch, nn, F</span>
+            </td>
+            <td style="padding:10px; border:1px solid #90caf9; background-color:#ffffff;">
+                <b>Step 2:</b> Import Graph Tools<br>
+                <span style="font-size:0.9em;">GCNConv, DataLoader</span>
+            </td>
+            <td style="padding:10px; border:1px solid #90caf9; background-color:#ffffff;">
+                <b>Step 3:</b> Import Chemistry<br>
+                <span style="font-size:0.9em;">RDKit Chem module</span>
+            </td>
+            <td style="padding:10px; border:1px solid #90caf9; background-color:#ffffff;">
+                <b>Step 4:</b> Import Utilities<br>
+                <span style="font-size:0.9em;">numpy, pandas, sklearn</span>
+            </td>
+        </tr>
+    </table>
+</div>
 
 ```python
 # Deep Learning Framework
@@ -2097,6 +2119,36 @@ from sklearn.metrics import mean_squared_error, r2_score
 
 **Implementation**: The `get_atom_features` function extracts these properties from RDKit atom objects:
 
+<div style="background-color:#f3e5f5; padding:15px; border-radius:8px; margin:15px 0;">
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#e1bee7;">
+            <th style="padding:10px; border:1px solid #ba68c8; text-align:center;" colspan="3">Atom Feature Extraction Process</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #ce93d8; background-color:#ffffff; width:30%;">
+                <b>Input:</b><br>
+                RDKit Atom Object<br>
+                <span style="font-size:0.9em; color:#666;">Contains all chemical info</span>
+            </td>
+            <td style="padding:10px; border:1px solid #ce93d8; background-color:#f3e5f5; width:40%; text-align:center;">
+                <b>→ Extract 5 Features →</b><br>
+                <span style="font-size:0.9em;">
+                1. Element type<br>
+                2. Bond count<br>
+                3. Charge state<br>
+                4. Aromaticity<br>
+                5. H-bond potential
+                </span>
+            </td>
+            <td style="padding:10px; border:1px solid #ce93d8; background-color:#ffffff; width:30%;">
+                <b>Output:</b><br>
+                List of 5 numbers<br>
+                <span style="font-size:0.9em; color:#666;">[8, 2, 0, 0, 0] for oxygen</span>
+            </td>
+        </tr>
+    </table>
+</div>
+
 ```python
 def get_atom_features(atom):
     """
@@ -2115,7 +2167,7 @@ def get_atom_features(atom):
 ```
 
 <div style="background-color:#e1f5fe; padding:10px; border-radius:5px; margin:10px 0;">
-    <p><b>📊 Why These 5 Features?</b></p>
+    <p><b>Why These 5 Features?</b></p>
     <ul>
         <li><b>Atomic Number:</b> Oxygen atoms love water, carbon atoms don't</li>
         <li><b>Degree (Connectivity):</b> Highly connected atoms are "buried" in the molecule</li>
@@ -2127,6 +2179,36 @@ def get_atom_features(atom):
 </div>
 
 **Bond Connectivity Extraction**: Chemical bonds are bidirectional - electrons are shared between atoms. We need to represent this bidirectionality:
+
+<div style="background-color:#e8f5e9; padding:15px; border-radius:8px; margin:15px 0;">
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#a5d6a7;">
+            <th style="padding:10px; border:1px solid #66bb6a; text-align:center;" colspan="4">Bond Extraction Process</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #81c784; background-color:#ffffff;">
+                <b>Step 1:</b><br>
+                Loop through bonds<br>
+                <span style="font-size:0.9em; color:#666;">mol.GetBonds()</span>
+            </td>
+            <td style="padding:10px; border:1px solid #81c784; background-color:#ffffff;">
+                <b>Step 2:</b><br>
+                Get atom indices<br>
+                <span style="font-size:0.9em; color:#666;">i = start, j = end</span>
+            </td>
+            <td style="padding:10px; border:1px solid #81c784; background-color:#ffffff;">
+                <b>Step 3:</b><br>
+                Create bidirectional<br>
+                <span style="font-size:0.9em; color:#666;">[i→j] and [j→i]</span>
+            </td>
+            <td style="padding:10px; border:1px solid #81c784; background-color:#ffffff;">
+                <b>Result:</b><br>
+                Edge list<br>
+                <span style="font-size:0.9em; color:#666;">[[0,1], [1,0], ...]</span>
+            </td>
+        </tr>
+    </table>
+</div>
 
 ```python
 def get_bond_connections(mol):
@@ -2156,6 +2238,36 @@ def get_bond_connections(mol):
 
 **Data Loading Implementation**:
 
+<div style="background-color:#fff3e0; padding:15px; border-radius:8px; margin:15px 0;">
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#ffe082;">
+            <th style="padding:10px; border:1px solid #ffc107; text-align:center;" colspan="4">Data Loading Pipeline</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #ffd54f; background-color:#ffffff;">
+                <b>Step 1:</b><br>
+                Fetch from GitHub<br>
+                <span style="font-size:0.9em; color:#666;">requests.get(url)</span>
+            </td>
+            <td style="padding:10px; border:1px solid #ffd54f; background-color:#ffffff;">
+                <b>Step 2:</b><br>
+                Parse CSV<br>
+                <span style="font-size:0.9em; color:#666;">pd.read_csv()</span>
+            </td>
+            <td style="padding:10px; border:1px solid #ffd54f; background-color:#ffffff;">
+                <b>Step 3:</b><br>
+                Extract SMILES<br>
+                <span style="font-size:0.9em; color:#666;">data['smiles']</span>
+            </td>
+            <td style="padding:10px; border:1px solid #ffd54f; background-color:#ffffff;">
+                <b>Step 4:</b><br>
+                Extract log S<br>
+                <span style="font-size:0.9em; color:#666;">data['measured log solubility']</span>
+            </td>
+        </tr>
+    </table>
+</div>
+
 ```python
 # Download ESOL dataset from DeepChem repository
 url = "https://raw.githubusercontent.com/deepchem/deepchem/master/datasets/delaney-processed.csv"
@@ -2180,19 +2292,13 @@ Solubility range: -11.60 to 1.58 log S
 <div style="background-color:#ffebee; padding:10px; border-radius:5px; margin:10px 0;">
     <p><b>What do these numbers mean?</b></p>
     <ul>
-        <li>
-            $ \log S = -11.60 \rightarrow \text{Solubility} = 10^{-11.60} \, \text{mol/L} \, \text{(extremely insoluble)} $
-        </li>
-        <li>
-            $ \log S = 1.58 \rightarrow \text{Solubility} = 10^{1.58} \, \text{mol/L} \, \text{(very soluble)} $
-        </li>
-        <li>
-            $ \text{Range: } 13.18 \text{ log units} = 10^{13.18} \approx 15 \text{ trillion-fold difference!} $
-        </li>
+        <li>log S = -11.60 → Solubility = 10^(-11.60) mol/L (extremely insoluble)</li>
+        <li>log S = 1.58 → Solubility = 10^(1.58) mol/L (very soluble)</li>
+        <li>Range: 13.18 log units = 10^(13.18) ≈ 15 trillion-fold difference!</li>
     </ul>
     
     <div style="background-color:#fff3e0; padding:10px; border-radius:5px; margin-top:10px;">
-        <p><b>🌊 Real-World Context:</b></p>
+        <p><b>Real-World Context:</b></p>
         <ul>
             <li><b>Very soluble (log S > 0):</b> Like sugar in water - dissolves easily</li>
             <li><b>Moderately soluble (-3 < log S < 0):</b> Like alcohol - mixes well</li>
@@ -2205,6 +2311,31 @@ Solubility range: -11.60 to 1.58 log S
 #### Examining Example Molecules
 
 **Implementation**: Let's examine some specific molecules to understand the dataset diversity:
+
+<div style="background-color:#f5f5f5; padding:15px; border-radius:8px; margin:15px 0;">
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#e0e0e0;">
+            <th style="padding:10px; border:1px solid #bdbdbd; text-align:center;" colspan="3">Data Exploration Process</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #bdbdbd; background-color:#ffffff; width:33%;">
+                <b>Purpose:</b><br>
+                Understand dataset<br>
+                <span style="font-size:0.9em; color:#666;">Check molecular diversity</span>
+            </td>
+            <td style="padding:10px; border:1px solid #bdbdbd; background-color:#ffffff; width:33%;">
+                <b>Method:</b><br>
+                Print first 5 molecules<br>
+                <span style="font-size:0.9em; color:#666;">SMILES + solubility</span>
+            </td>
+            <td style="padding:10px; border:1px solid #bdbdbd; background-color:#ffffff; width:33%;">
+                <b>Insight:</b><br>
+                Complexity varies<br>
+                <span style="font-size:0.9em; color:#666;">Simple to complex structures</span>
+            </td>
+        </tr>
+    </table>
+</div>
 
 ```python
 print("\nExample molecules from the dataset:")
@@ -2233,9 +2364,9 @@ c1ccsc1                                  -1.33
 <div style="background-color:#e3f2fd; padding:10px; border-radius:5px;">
     <p><b>Chemical Interpretation:</b></p>
     <ul>
-        <li>Row 1: Complex sugar derivative with multiple -OH groups → relatively soluble ($\log S = -0.77$)</li>
-        <li>Row 4: Large polycyclic aromatic hydrocarbon → very insoluble ($\log S = -7.87$)</li>
-        <li>Row 5: Small thiophene heterocycle → moderate solubility ($\log S = -1.33$)</li>
+        <li>Row 1: Complex sugar derivative with multiple -OH groups → relatively soluble (log S = -0.77)</li>
+        <li>Row 4: Large polycyclic aromatic hydrocarbon → very insoluble (log S = -7.87)</li>
+        <li>Row 5: Small thiophene heterocycle → moderate solubility (log S = -1.33)</li>
     </ul>
     <p>The dataset covers a wide range of molecular complexity and functional groups.</p>
 </div>
@@ -2243,6 +2374,31 @@ c1ccsc1                                  -1.33
 #### Visualizing Solubility Distribution
 
 **Implementation**: Understanding the distribution helps us assess potential modeling challenges:
+
+<div style="background-color:#e1f5fe; padding:15px; border-radius:8px; margin:15px 0;">
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#81d4fa;">
+            <th style="padding:10px; border:1px solid #29b6f6; text-align:center;" colspan="3">Visualization Purpose</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #4fc3f7; background-color:#ffffff;">
+                <b>What:</b><br>
+                Histogram of solubility<br>
+                <span style="font-size:0.9em; color:#666;">50 bins</span>
+            </td>
+            <td style="padding:10px; border:1px solid #4fc3f7; background-color:#ffffff;">
+                <b>Why:</b><br>
+                See data distribution<br>
+                <span style="font-size:0.9em; color:#666;">Identify skewness</span>
+            </td>
+            <td style="padding:10px; border:1px solid #4fc3f7; background-color:#ffffff;">
+                <b>Insight:</b><br>
+                Most molecules poorly soluble<br>
+                <span style="font-size:0.9em; color:#666;">Left-skewed distribution</span>
+            </td>
+        </tr>
+    </table>
+</div>
 
 ```python
 plt.figure(figsize=(10, 6))
@@ -2268,6 +2424,36 @@ plt.show()
 **Testing Feature Extraction on Water**
 
 **Principle**: We validate our feature extraction by testing on water (H₂O), the simplest molecule:
+
+<div style="background-color:#f3e5f5; padding:15px; border-radius:8px; margin:15px 0;">
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#e1bee7;">
+            <th style="padding:10px; border:1px solid #ba68c8; text-align:center;" colspan="4">Water Molecule Test Process</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #ce93d8; background-color:#ffffff;">
+                <b>Input:</b><br>
+                SMILES: "O"<br>
+                <span style="font-size:0.9em; color:#666;">Oxygen only</span>
+            </td>
+            <td style="padding:10px; border:1px solid #ce93d8; background-color:#ffffff;">
+                <b>Step 1:</b><br>
+                Parse SMILES<br>
+                <span style="font-size:0.9em; color:#666;">Create mol object</span>
+            </td>
+            <td style="padding:10px; border:1px solid #ce93d8; background-color:#ffffff;">
+                <b>Step 2:</b><br>
+                Add H atoms<br>
+                <span style="font-size:0.9em; color:#666;">O → H-O-H</span>
+            </td>
+            <td style="padding:10px; border:1px solid #ce93d8; background-color:#ffffff;">
+                <b>Step 3:</b><br>
+                Extract features<br>
+                <span style="font-size:0.9em; color:#666;">For O, H, H</span>
+            </td>
+        </tr>
+    </table>
+</div>
 
 ```python
 # Parse water molecule
@@ -2296,19 +2482,19 @@ Atom 2 (H): [1, 1, 0, 0, 0]
 <div style="background-color:#f3e5f5; padding:10px; border-radius:5px;">
     <p><b>Feature Vector Breakdown:</b></p>
     
-    <p><b>Oxygen: </b> $[8, 2, 0, 0, 0]$</p>
+    <p><b>Oxygen: </b> [8, 2, 0, 0, 0]</p>
     <ul>
-        <li>$8$ = Atomic number (element oxygen)</li>
-        <li>$2$ = Degree (bonded to 2 hydrogen atoms)</li>
-        <li>$0$ = No formal charge (neutral)</li>
-        <li>$0$ = Not aromatic (water is not aromatic)</li>
-        <li>$0$ = No implicit hydrogens (all are explicit)</li>
+        <li>8 = Atomic number (element oxygen)</li>
+        <li>2 = Degree (bonded to 2 hydrogen atoms)</li>
+        <li>0 = No formal charge (neutral)</li>
+        <li>0 = Not aromatic (water is not aromatic)</li>
+        <li>0 = No implicit hydrogens (all are explicit)</li>
     </ul>
 
-    <p><b>Hydrogen: </b> $[1, 1, 0, 0, 0]$</p>
+    <p><b>Hydrogen: </b> [1, 1, 0, 0, 0]</p>
     <ul>
-        <li>$1$ = Atomic number (element hydrogen)</li>
-        <li>$1$ = Degree (bonded to 1 oxygen atom)</li>
+        <li>1 = Atomic number (element hydrogen)</li>
+        <li>1 = Degree (bonded to 1 oxygen atom)</li>
         <li>Remaining features are all zero</li>
     </ul>
 </div>
@@ -2316,6 +2502,31 @@ Atom 2 (H): [1, 1, 0, 0, 0]
 **Testing Bond Extraction on Ethanol**
 
 **Implementation**: Test on a more complex molecule to see bond connectivity:
+
+<div style="background-color:#e8f5e9; padding:15px; border-radius:8px; margin:15px 0;">
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#a5d6a7;">
+            <th style="padding:10px; border:1px solid #66bb6a; text-align:center;" colspan="3">Ethanol Bond Analysis</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #81c784; background-color:#ffffff;">
+                <b>Molecule:</b><br>
+                Ethanol (CCO)<br>
+                <span style="font-size:0.9em; color:#666;">CH₃-CH₂-OH</span>
+            </td>
+            <td style="padding:10px; border:1px solid #81c784; background-color:#ffffff;">
+                <b>Expected:</b><br>
+                9 atoms total<br>
+                <span style="font-size:0.9em; color:#666;">2C + 1O + 6H</span>
+            </td>
+            <td style="padding:10px; border:1px solid #81c784; background-color:#ffffff;">
+                <b>Bonds:</b><br>
+                8 undirected<br>
+                <span style="font-size:0.9em; color:#666;">16 directed edges</span>
+            </td>
+        </tr>
+    </table>
+</div>
 
 ```python
 # Test on ethanol
@@ -2341,6 +2552,28 @@ Ethanol molecule (C2H6O):
 ```
 
 **Detailed Edge Analysis**:
+
+<div style="background-color:#fff9c4; padding:15px; border-radius:8px; margin:15px 0;">
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#fff176;">
+            <th style="padding:10px; border:1px solid #ffd600; text-align:center;" colspan="2">Edge Directionality Explanation</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #ffeb3b; background-color:#ffffff;">
+                <b>Why Bidirectional?</b><br>
+                • Electrons flow both ways<br>
+                • Message passing needs it<br>
+                • Reflects chemical reality
+            </td>
+            <td style="padding:10px; border:1px solid #ffeb3b; background-color:#ffffff;">
+                <b>Example:</b><br>
+                C-C bond becomes:<br>
+                • Edge 0: C→C<br>
+                • Edge 1: C←C
+            </td>
+        </tr>
+    </table>
+</div>
 
 ```python
 print("\nFirst few connections (atom index pairs):")
@@ -2376,7 +2609,7 @@ First few connections (atom index pairs):
     </tr>
     <tr>
         <td style="padding:10px; border:1px solid #66bb6a;">1</td>
-        <td style="padding:10px; border:1px solid #66bb6a;">SMILES String $\rightarrow$ RDKit Molecule</td>
+        <td style="padding:10px; border:1px solid #66bb6a;">SMILES String → RDKit Molecule</td>
         <td style="padding:10px; border:1px solid #66bb6a;">Molecule object</td>
     </tr>
     <tr>
@@ -2401,6 +2634,32 @@ First few connections (atom index pairs):
     </tr>
 </table>
 
+<div style="background-color:#e3f2fd; padding:15px; border-radius:8px; margin:15px 0;">
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#90caf9;">
+            <th style="padding:10px; border:1px solid #42a5f5; text-align:center;" colspan="2">Main Conversion Function Structure</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #64b5f6; background-color:#ffffff; width:50%;">
+                <b>Function Inputs:</b><br>
+                • SMILES string<br>
+                • Solubility value (optional)
+            </td>
+            <td style="padding:10px; border:1px solid #64b5f6; background-color:#ffffff; width:50%;">
+                <b>Function Outputs:</b><br>
+                • PyG Data object<br>
+                • None if parsing fails
+            </td>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #64b5f6; background-color:#e3f2fd; text-align:center;" colspan="2">
+                <b>Processing Steps:</b><br>
+                Parse → Add H → Extract features → Extract bonds → Package
+            </td>
+        </tr>
+    </table>
+</div>
+
 ```python
 def molecule_to_graph(smiles, solubility=None):
     """
@@ -2419,6 +2678,31 @@ def molecule_to_graph(smiles, solubility=None):
 
 **Feature Extraction Part**:
 
+<div style="background-color:#f3e5f5; padding:15px; border-radius:8px; margin:15px 0;">
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#e1bee7;">
+            <th style="padding:10px; border:1px solid #ba68c8; text-align:center;" colspan="3">Feature Extraction Loop</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #ce93d8; background-color:#ffffff;">
+                <b>For each atom:</b><br>
+                Call get_atom_features()<br>
+                <span style="font-size:0.9em; color:#666;">Returns list of 5 numbers</span>
+            </td>
+            <td style="padding:10px; border:1px solid #ce93d8; background-color:#ffffff;">
+                <b>Collect all:</b><br>
+                atom_features list<br>
+                <span style="font-size:0.9em; color:#666;">[[f1], [f2], ...]</span>
+            </td>
+            <td style="padding:10px; border:1px solid #ce93d8; background-color:#ffffff;">
+                <b>Convert:</b><br>
+                To PyTorch tensor<br>
+                <span style="font-size:0.9em; color:#666;">Shape: [n_atoms, 5]</span>
+            </td>
+        </tr>
+    </table>
+</div>
+
 ```python
     # Extract atom features
     atom_features = []
@@ -2431,6 +2715,31 @@ def molecule_to_graph(smiles, solubility=None):
 
 **Edge Construction Part**:
 
+<div style="background-color:#e8f5e9; padding:15px; border-radius:8px; margin:15px 0;">
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#a5d6a7;">
+            <th style="padding:10px; border:1px solid #66bb6a; text-align:center;" colspan="3">Edge Index Construction</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #81c784; background-color:#ffffff;">
+                <b>Get bonds:</b><br>
+                Call get_bond_connections<br>
+                <span style="font-size:0.9em; color:#666;">Returns [[i,j], ...]</span>
+            </td>
+            <td style="padding:10px; border:1px solid #81c784; background-color:#ffffff;">
+                <b>Handle edge case:</b><br>
+                Single atoms<br>
+                <span style="font-size:0.9em; color:#666;">Add self-loop [0,0]</span>
+            </td>
+            <td style="padding:10px; border:1px solid #81c784; background-color:#ffffff;">
+                <b>Format for PyG:</b><br>
+                Transpose to COO<br>
+                <span style="font-size:0.9em; color:#666;">Shape: [2, n_edges]</span>
+            </td>
+        </tr>
+    </table>
+</div>
+
 ```python
     # Extract bonds
     edge_list = get_bond_connections(mol)
@@ -2442,6 +2751,26 @@ def molecule_to_graph(smiles, solubility=None):
 ```
 
 **Data Object Creation**:
+
+<div style="background-color:#fff3e0; padding:15px; border-radius:8px; margin:15px 0;">
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#ffe082;">
+            <th style="padding:10px; border:1px solid #ffc107; text-align:center;" colspan="2">PyG Data Object Assembly</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #ffd54f; background-color:#ffffff;">
+                <b>Required fields:</b><br>
+                • x: node features<br>
+                • edge_index: connectivity
+            </td>
+            <td style="padding:10px; border:1px solid #ffd54f; background-color:#ffffff;">
+                <b>Optional fields:</b><br>
+                • y: target value<br>
+                • Other properties
+            </td>
+        </tr>
+    </table>
+</div>
 
 ```python
     # Create Data object
@@ -2457,6 +2786,31 @@ def molecule_to_graph(smiles, solubility=None):
 **Testing the Conversion Pipeline**
 
 **Implementation**: Test on molecules of varying complexity:
+
+<div style="background-color:#f5f5f5; padding:15px; border-radius:8px; margin:15px 0;">
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#e0e0e0;">
+            <th style="padding:10px; border:1px solid #bdbdbd; text-align:center;" colspan="3">Test Strategy</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #bdbdbd; background-color:#ffffff;">
+                <b>Test 1:</b><br>
+                Water (O)<br>
+                <span style="font-size:0.9em; color:#666;">3 atoms, 2 bonds</span>
+            </td>
+            <td style="padding:10px; border:1px solid #bdbdbd; background-color:#ffffff;">
+                <b>Test 2:</b><br>
+                Ethanol (CCO)<br>
+                <span style="font-size:0.9em; color:#666;">9 atoms, 8 bonds</span>
+            </td>
+            <td style="padding:10px; border:1px solid #bdbdbd; background-color:#ffffff;">
+                <b>Test 3:</b><br>
+                Benzene (c1ccccc1)<br>
+                <span style="font-size:0.9em; color:#666;">12 atoms, 12 bonds</span>
+            </td>
+        </tr>
+    </table>
+</div>
 
 ```python
 test_molecules = [
@@ -2506,19 +2860,19 @@ Benzene (c1ccccc1):
 <div style="background-color:#fff3e0; padding:10px; border-radius:5px;">
     <p><b>PyTorch Geometric Data Format:</b></p>
     <ul>
-        <li><b>$\mathbf{x}$</b>: Node feature matrix $[\text{num_atoms}, \text{num_features}]$</li>
-        <li><b>edge_index</b>: COO format edges $[2, \text{num_edges}]$</li>
-        <li><b>$\mathbf{y}$</b>: Target property (solubility)</li>
+        <li><b>x</b>: Node feature matrix [num_atoms, num_features]</li>
+        <li><b>edge_index</b>: COO format edges [2, num_edges]</li>
+        <li><b>y</b>: Target property (solubility)</li>
     </ul>
     <p><b>Example - Benzene:</b></p>
     <ul>
-        <li>$6$ carbon atoms + $6$ hydrogen atoms = $12$ nodes</li>
-        <li>$6$ C-C bonds + $6$ C-H bonds = $12$ undirected bonds</li>
-        <li>$12$ undirected bonds $\times 2$ directions = $24$ directed edges</li>
+        <li>6 carbon atoms + 6 hydrogen atoms = 12 nodes</li>
+        <li>6 C-C bonds + 6 C-H bonds = 12 undirected bonds</li>
+        <li>12 undirected bonds × 2 directions = 24 directed edges</li>
     </ul>
     
     <div style="background-color:#e8f5e9; padding:10px; border-radius:5px; margin-top:10px;">
-        <p><b>🤔 What is COO Format?</b></p>
+        <p><b>What is COO Format?</b></p>
         <p>COO (COOrdinate) format stores edges as pairs of node indices:</p>
         <ul>
             <li>First row: source nodes [0, 1, 1, 2, ...]</li>
@@ -2536,30 +2890,28 @@ Benzene (c1ccccc1):
     <p><b>Message Passing Framework:</b></p>
     <p>Each GCN layer performs the following operation:</p>
     <p style="text-align:center; font-size:18px;">
-        <b>
-            $ h_{i}^{(l+1)} = \sigma \left( W^{(l)} \cdot \text{AGG}\left( \{ h_{j}^{(l)} : j \in N(i) \cup \{i\} \}\right) \right) $
-        </b> 
+        <b>h_i^(l+1) = σ(W^(l) · AGG({h_j^(l) : j ∈ N(i) ∪ {i}}))</b>
     </p>
     
     <div style="background-color:#fff9c4; padding:10px; border-radius:5px; margin:10px 0;">
-        <p><b>🧩 Breaking Down This Scary Formula:</b></p>
+        <p><b>Breaking Down This Scary Formula:</b></p>
         <ul>
-            <li><b>$h_{i}^{(l)}$</b> = "What atom $i$ knows at layer $l$"</li>
-            <li><b>$N(i)$</b> = "Atom $i$'s neighbors (bonded atoms)"</li>
+            <li><b>h_i^(l)</b> = "What atom i knows at layer l"</li>
+            <li><b>N(i)</b> = "Atom i's neighbors (bonded atoms)"</li>
             <li><b>AGG</b> = "Combine information from neighbors (usually average)"</li>
-            <li><b>$W^{(l)}$</b> = "Learnable transformation (the 'smart' part)"</li>
-            <li><b>$\sigma$</b> = "Activation function (adds non-linearity)"</li>
+            <li><b>W^(l)</b> = "Learnable transformation (the 'smart' part)"</li>
+            <li><b>σ</b> = "Activation function (adds non-linearity)"</li>
         </ul>
         <p><b>In Plain English:</b> Each atom collects information from its neighbors, combines it, transforms it with learnable weights, and updates its own representation!</p>
     </div>
     
     <p>Where:</p>
     <ul>
-        <li>$h_{i}^{(l)}$ = features of atom $i$ at layer $l$</li>
-        <li>$N(i)$ = neighbors of atom $i$</li>
-        <li>$W^{(l)}$ = learnable weight matrix</li>
+        <li>h_i^(l) = features of atom i at layer l</li>
+        <li>N(i) = neighbors of atom i</li>
+        <li>W^(l) = learnable weight matrix</li>
         <li>AGG = aggregation function (mean)</li>
-        <li>$\sigma$ = activation function (ReLU)</li>
+        <li>σ = activation function (ReLU)</li>
     </ul>
 </div>
 
@@ -2573,7 +2925,7 @@ Benzene (c1ccccc1):
 - **Single output**: Predicts scalar solubility value
 
 <div style="background-color:#f0f4c3; padding:10px; border-radius:5px; margin:10px 0;">
-    <p><b>🏗️ Architecture Intuition:</b></p>
+    <p><b>Architecture Intuition:</b></p>
     <ul>
         <li><b>Why 3 layers?</b> Most chemical effects happen within 3 bonds</li>
         <li><b>Why 64 dimensions?</b> Enough to capture complexity, not too much to overfit</li>
@@ -2582,6 +2934,31 @@ Benzene (c1ccccc1):
 </div>
 
 **Class Definition and Initialization**:
+
+<div style="background-color:#e3f2fd; padding:15px; border-radius:8px; margin:15px 0;">
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#90caf9;">
+            <th style="padding:10px; border:1px solid #42a5f5; text-align:center;" colspan="3">Model Architecture Components</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #64b5f6; background-color:#ffffff;">
+                <b>Component 1:</b><br>
+                GCN Layers<br>
+                <span style="font-size:0.9em; color:#666;">3 layers in ModuleList</span>
+            </td>
+            <td style="padding:10px; border:1px solid #64b5f6; background-color:#ffffff;">
+                <b>Component 2:</b><br>
+                Predictor<br>
+                <span style="font-size:0.9em; color:#666;">Linear layer (64→1)</span>
+            </td>
+            <td style="padding:10px; border:1px solid #64b5f6; background-color:#ffffff;">
+                <b>Flow:</b><br>
+                Atoms→GCN→Pool→Predict<br>
+                <span style="font-size:0.9em; color:#666;">Variable→Fixed size</span>
+            </td>
+        </tr>
+    </table>
+</div>
 
 ```python
 class MolecularGNN(nn.Module):
@@ -2592,6 +2969,7 @@ class MolecularGNN(nn.Module):
     Atoms (5 features) → GCN layers → Molecular embedding (64) → Solubility (1)
     """
     
+    ```python
     def __init__(self, num_features=5, hidden_dim=64, num_layers=3):
         super(MolecularGNN, self).__init__()
         
@@ -2604,6 +2982,31 @@ class MolecularGNN(nn.Module):
 ```
 
 **Layer Construction**:
+
+<div style="background-color:#f3e5f5; padding:15px; border-radius:8px; margin:15px 0;">
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#e1bee7;">
+            <th style="padding:10px; border:1px solid #ba68c8; text-align:center;" colspan="3">Layer Construction Process</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #ce93d8; background-color:#ffffff;">
+                <b>Layer 1:</b><br>
+                Input → Hidden<br>
+                <span style="font-size:0.9em; color:#666;">5 features → 64 dims</span>
+            </td>
+            <td style="padding:10px; border:1px solid #ce93d8; background-color:#ffffff;">
+                <b>Layers 2-3:</b><br>
+                Hidden → Hidden<br>
+                <span style="font-size:0.9em; color:#666;">64 dims → 64 dims</span>
+            </td>
+            <td style="padding:10px; border:1px solid #ce93d8; background-color:#ffffff;">
+                <b>Output Layer:</b><br>
+                Hidden → Prediction<br>
+                <span style="font-size:0.9em; color:#666;">64 dims → 1 value</span>
+            </td>
+        </tr>
+    </table>
+</div>
 
 ```python
         # First layer: 5 → 64
@@ -2620,6 +3023,36 @@ class MolecularGNN(nn.Module):
 **Forward Pass Implementation**
 
 **Principle**: The forward pass implements message passing followed by pooling:
+
+<div style="background-color:#e8f5e9; padding:15px; border-radius:8px; margin:15px 0;">
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#a5d6a7;">
+            <th style="padding:10px; border:1px solid #66bb6a; text-align:center;" colspan="4">Forward Pass Flow</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #81c784; background-color:#ffffff;">
+                <b>Step 1:</b><br>
+                Message Passing<br>
+                <span style="font-size:0.9em; color:#666;">3 GCN layers</span>
+            </td>
+            <td style="padding:10px; border:1px solid #81c784; background-color:#ffffff;">
+                <b>Step 2:</b><br>
+                Activation<br>
+                <span style="font-size:0.9em; color:#666;">ReLU after each</span>
+            </td>
+            <td style="padding:10px; border:1px solid #81c784; background-color:#ffffff;">
+                <b>Step 3:</b><br>
+                Pooling<br>
+                <span style="font-size:0.9em; color:#666;">Atoms → Molecule</span>
+            </td>
+            <td style="padding:10px; border:1px solid #81c784; background-color:#ffffff;">
+                <b>Step 4:</b><br>
+                Prediction<br>
+                <span style="font-size:0.9em; color:#666;">64 → 1 value</span>
+            </td>
+        </tr>
+    </table>
+</div>
 
 ```python
     def forward(self, x, edge_index, batch):
@@ -2644,7 +3077,7 @@ class MolecularGNN(nn.Module):
 ```
 
 <div style="background-color:#ffcdd2; padding:15px; border-radius:8px; margin:10px 0;">
-    <h4>⚠️ What Actually Happens in Forward Pass?</h4>
+    <h4>What Actually Happens in Forward Pass?</h4>
     <ol>
         <li><b>Input:</b> Each atom starts with 5 features</li>
         <li><b>Layer 1:</b> Atoms exchange info with neighbors, transform to 64 features</li>
@@ -2659,6 +3092,28 @@ class MolecularGNN(nn.Module):
 **Model Analysis**
 
 **Implementation**: Let's analyze the model architecture:
+
+<div style="background-color:#f5f5f5; padding:15px; border-radius:8px; margin:15px 0;">
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#e0e0e0;">
+            <th style="padding:10px; border:1px solid #bdbdbd; text-align:center;" colspan="2">Model Analysis Process</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #bdbdbd; background-color:#ffffff;">
+                <b>What we're doing:</b><br>
+                • Create model instance<br>
+                • Count parameters<br>
+                • Analyze complexity
+            </td>
+            <td style="padding:10px; border:1px solid #bdbdbd; background-color:#ffffff;">
+                <b>Why it matters:</b><br>
+                • Understand model size<br>
+                • Compare to other DNNs<br>
+                • Check if overfitting risk
+            </td>
+        </tr>
+    </table>
+</div>
 
 ```python
 # Create model instance
@@ -2685,6 +3140,26 @@ Model architecture: MolecularGNN
 
 **Detailed Parameter Breakdown**:
 
+<div style="background-color:#e1f5fe; padding:15px; border-radius:8px; margin:15px 0;">
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#81d4fa;">
+            <th style="padding:10px; border:1px solid #29b6f6; text-align:center;" colspan="2">Parameter Breakdown Analysis</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #4fc3f7; background-color:#ffffff;">
+                <b>Purpose:</b><br>
+                See where parameters are<br>
+                <span style="font-size:0.9em; color:#666;">Weights vs biases</span>
+            </td>
+            <td style="padding:10px; border:1px solid #4fc3f7; background-color:#ffffff;">
+                <b>Insight:</b><br>
+                Most params in hidden layers<br>
+                <span style="font-size:0.9em; color:#666;">64×64 = 4096 each</span>
+            </td>
+        </tr>
+    </table>
+</div>
+
 ```python
 print("\nLayer-by-layer breakdown:")
 for name, param in model.named_parameters():
@@ -2708,11 +3183,11 @@ Layer-by-layer breakdown:
 <div style="background-color:#f5f5f5; padding:10px; border-radius:5px;">
     <p><b>Parameter Calculation:</b></p>
     <ul>
-        <li>Layer 1 (GCN): $(64 \times 5) + 64 = 384$ parameters</li>
-        <li>Layer 2 (GCN): $(64 \times 64) + 64 = 4,160$ parameters</li>
-        <li>Layer 3 (GCN): $(64 \times 64) + 64 = 4,160$ parameters</li>
-        <li>Predictor: $64 + 1 = 65$ parameters</li>
-        <li><b>Total: $8,769$ parameters</b></li>
+        <li>Layer 1 (GCN): (64 × 5) + 64 = 384 parameters</li>
+        <li>Layer 2 (GCN): (64 × 64) + 64 = 4,160 parameters</li>
+        <li>Layer 3 (GCN): (64 × 64) + 64 = 4,160 parameters</li>
+        <li>Predictor: 64 + 1 = 65 parameters</li>
+        <li><b>Total: 8,769 parameters</b></li>
     </ul>
     <p>This is remarkably small compared to other deep learning models!</p>
 </div>
@@ -2722,6 +3197,36 @@ Layer-by-layer breakdown:
 **Dataset Conversion Strategy**
 
 **Implementation**: Convert all molecules to graphs, handling potential failures:
+
+<div style="background-color:#fff3e0; padding:15px; border-radius:8px; margin:15px 0;">
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#ffe082;">
+            <th style="padding:10px; border:1px solid #ffc107; text-align:center;" colspan="4">Dataset Conversion Pipeline</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #ffd54f; background-color:#ffffff;">
+                <b>Step 1:</b><br>
+                Loop molecules<br>
+                <span style="font-size:0.9em; color:#666;">1000 total</span>
+            </td>
+            <td style="padding:10px; border:1px solid #ffd54f; background-color:#ffffff;">
+                <b>Step 2:</b><br>
+                Convert each<br>
+                <span style="font-size:0.9em; color:#666;">SMILES → Graph</span>
+            </td>
+            <td style="padding:10px; border:1px solid #ffd54f; background-color:#ffffff;">
+                <b>Step 3:</b><br>
+                Handle failures<br>
+                <span style="font-size:0.9em; color:#666;">Track bad SMILES</span>
+            </td>
+            <td style="padding:10px; border:1px solid #ffd54f; background-color:#ffffff;">
+                <b>Result:</b><br>
+                List of graphs<br>
+                <span style="font-size:0.9em; color:#666;">Ready for training</span>
+            </td>
+        </tr>
+    </table>
+</div>
 
 ```python
 num_molecules = 1000  # Use subset for faster training
@@ -2743,6 +3248,26 @@ for i in range(num_molecules):
 
 **Conversion Results**:
 
+<div style="background-color:#e8f5e9; padding:15px; border-radius:8px; margin:15px 0;">
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#a5d6a7;">
+            <th style="padding:10px; border:1px solid #66bb6a; text-align:center;" colspan="2">Conversion Quality Check</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #81c784; background-color:#ffffff;">
+                <b>Success Rate:</b><br>
+                100% (1000/1000)<br>
+                <span style="font-size:0.9em; color:#666;">All SMILES valid</span>
+            </td>
+            <td style="padding:10px; border:1px solid #81c784; background-color:#ffffff;">
+                <b>Meaning:</b><br>
+                High quality dataset<br>
+                <span style="font-size:0.9em; color:#666;">Well-curated ESOL</span>
+            </td>
+        </tr>
+    </table>
+</div>
+
 ```python
 print(f"Successfully converted: {len(graphs)} molecules")
 print(f"Failed conversions: {len(failed_molecules)} molecules")
@@ -2761,6 +3286,31 @@ Failed conversions: 0 molecules
 **Train-Test Split**
 
 **ML Principle**: Always evaluate on unseen data to assess generalization. We use 80/20 split:
+
+<div style="background-color:#e3f2fd; padding:15px; border-radius:8px; margin:15px 0;">
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#90caf9;">
+            <th style="padding:10px; border:1px solid #42a5f5; text-align:center;" colspan="3">Train-Test Split Strategy</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #64b5f6; background-color:#ffffff;">
+                <b>Training Set (80%):</b><br>
+                800 molecules<br>
+                <span style="font-size:0.9em; color:#666;">Model learns from these</span>
+            </td>
+            <td style="padding:10px; border:1px solid #64b5f6; background-color:#ffffff;">
+                <b>Test Set (20%):</b><br>
+                200 molecules<br>
+                <span style="font-size:0.9em; color:#666;">Never seen during training</span>
+            </td>
+            <td style="padding:10px; border:1px solid #64b5f6; background-color:#ffffff;">
+                <b>Purpose:</b><br>
+                Prevent overfitting<br>
+                <span style="font-size:0.9em; color:#666;">Test generalization</span>
+            </td>
+        </tr>
+    </table>
+</div>
 
 ```python
 # 80/20 split (standard in ML)
@@ -2782,7 +3332,7 @@ Dataset split:
 ```
 
 <div style="background-color:#e8f5e9; padding:10px; border-radius:5px; margin:10px 0;">
-    <p><b>🎯 Why Train/Test Split?</b></p>
+    <p><b>Why Train/Test Split?</b></p>
     <ul>
         <li><b>Training set:</b> Model learns patterns from these molecules</li>
         <li><b>Test set:</b> We check if model works on NEW molecules it hasn't seen</li>
@@ -2794,6 +3344,31 @@ Dataset split:
 **Creating DataLoaders**
 
 **PyTorch Geometric Innovation**: DataLoader automatically batches variable-sized graphs:
+
+<div style="background-color:#f3e5f5; padding:15px; border-radius:8px; margin:15px 0;">
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#e1bee7;">
+            <th style="padding:10px; border:1px solid #ba68c8; text-align:center;" colspan="3">DataLoader Configuration</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #ce93d8; background-color:#ffffff;">
+                <b>Batch Size:</b><br>
+                32 molecules/batch<br>
+                <span style="font-size:0.9em; color:#666;">Process together</span>
+            </td>
+            <td style="padding:10px; border:1px solid #ce93d8; background-color:#ffffff;">
+                <b>Shuffle:</b><br>
+                True for training<br>
+                <span style="font-size:0.9em; color:#666;">Random order helps</span>
+            </td>
+            <td style="padding:10px; border:1px solid #ce93d8; background-color:#ffffff;">
+                <b>Result:</b><br>
+                25 train batches<br>
+                <span style="font-size:0.9em; color:#666;">7 test batches</span>
+            </td>
+        </tr>
+    </table>
+</div>
 
 ```python
 # Batch size 32 is typical for molecular property prediction
@@ -2816,6 +3391,30 @@ Data loaders created:
 ```
 
 **Batch Structure Analysis**:
+
+<div style="background-color:#fff9c4; padding:15px; border-radius:8px; margin:15px 0;">
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#fff176;">
+            <th style="padding:10px; border:1px solid #ffd600; text-align:center;" colspan="2">Understanding Batch Structure</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #ffeb3b; background-color:#ffffff;">
+                <b>Challenge:</b><br>
+                Molecules have different sizes<br>
+                • Water: 3 atoms<br>
+                • Aspirin: 21 atoms<br>
+                How to batch?
+            </td>
+            <td style="padding:10px; border:1px solid #ffeb3b; background-color:#ffffff;">
+                <b>Solution:</b><br>
+                Combine into one big graph<br>
+                • All atoms together<br>
+                • Batch tensor tracks ownership<br>
+                • No edges between molecules
+            </td>
+        </tr>
+    </table>
+</div>
 
 ```python
 # Inspect batch structure
@@ -2841,15 +3440,15 @@ Example batch:
 <div style="background-color:#e1f5fe; padding:10px; border-radius:5px;">
     <p><b>Batching Mechanism Explained:</b></p>
     <ul>
-        <li>$32$ molecules contain $864$ atoms total (average $\approx 27$ atoms/molecule)</li>
-        <li>Batch tensor: $[0, 0, 0, \ldots, 1, 1, 1, \ldots, 31, 31, 31]$</li>
-        <li>Maps each atom to its parent molecule ($0-31$)</li>
+        <li>32 molecules contain 864 atoms total (average ≈ 27 atoms/molecule)</li>
+        <li>Batch tensor: [0, 0, 0, ..., 1, 1, 1, ..., 31, 31, 31]</li>
+        <li>Maps each atom to its parent molecule (0-31)</li>
         <li>Edge index combines all molecular graphs into one large disconnected graph</li>
         <li>Enables efficient parallel processing on GPU</li>
     </ul>
     
     <div style="background-color:#f0f4c3; padding:10px; border-radius:5px; margin-top:10px;">
-        <p><b>💡 Clever Trick:</b> PyTorch Geometric treats a batch of graphs as one big disconnected graph!</p>
+        <p><b>Clever Trick:</b> PyTorch Geometric treats a batch of graphs as one big disconnected graph!</p>
         <ul>
             <li>Molecule 1: atoms 0-20</li>
             <li>Molecule 2: atoms 21-35</li>
@@ -2868,28 +3467,28 @@ Example batch:
 <div style="background-color:#f0f4c3; padding:10px; border-radius:5px; margin:10px 0;">
     <p><b>Adam Optimizer</b>: Combines momentum with adaptive learning rates</p>
     <p style="text-align:center;">
-        $m_t = \beta_1 m_{t-1} + (1 - \beta_1) g_t$<br>
-        $v_t = \beta_2 v_{t-1} + (1 - \beta_2) g_t^2$<br>
-        $\theta_t = \theta_{t-1} - \alpha \left( \frac{m_t}{\sqrt{v_t} + \epsilon} \right)$
+        m_t = β₁m_(t-1) + (1 - β₁)g_t<br>
+        v_t = β₂v_(t-1) + (1 - β₂)g_t²<br>
+        θ_t = θ_(t-1) - α(m_t/√(v_t + ε))
     </p>
     
     <div style="background-color:#fff9c4; padding:10px; border-radius:5px; margin-top:10px;">
-        <p><b>🚀 Adam in Plain English:</b></p>
+        <p><b>Adam in Plain English:</b></p>
         <ul>
-            <li><b>$m_t$:</b> "Momentum" - like a ball rolling downhill, builds up speed</li>
-            <li><b>$v_t$:</b> "Adaptive learning" - goes slow in steep areas, fast in flat areas</li>
-            <li><b>$\alpha = 0.001$:</b> "Step size" - how big each update is</li>
+            <li><b>m_t:</b> "Momentum" - like a ball rolling downhill, builds up speed</li>
+            <li><b>v_t:</b> "Adaptive learning" - goes slow in steep areas, fast in flat areas</li>
+            <li><b>α = 0.001:</b> "Step size" - how big each update is</li>
         </ul>
         <p><b>Why Adam over simple gradient descent?</b> It's like having a smart GPS that adjusts speed based on traffic!</p>
     </div>
     
     <p><b>MSE Loss</b>: For regression tasks</p>
     <p style="text-align:center;">
-        $L = \frac{1}{n} \sum (y_{\text{pred},i} - y_{\text{true},i})^2$
+        L = (1/n) Σ(y_pred,i - y_true,i)²
     </p>
     
     <div style="background-color:#e8f5e9; padding:10px; border-radius:5px; margin-top:10px;">
-        <p><b>📏 Why MSE for Regression?</b></p>
+        <p><b>Why MSE for Regression?</b></p>
         <ul>
             <li>Measures average squared error</li>
             <li>Penalizes big mistakes more than small ones</li>
@@ -2897,6 +3496,31 @@ Example batch:
             <li>Has nice mathematical properties for optimization</li>
         </ul>
     </div>
+</div>
+
+<div style="background-color:#e3f2fd; padding:15px; border-radius:8px; margin:15px 0;">
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#90caf9;">
+            <th style="padding:10px; border:1px solid #42a5f5; text-align:center;" colspan="3">Training Setup Components</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #64b5f6; background-color:#ffffff;">
+                <b>Model:</b><br>
+                MolecularGNN<br>
+                <span style="font-size:0.9em; color:#666;">8,769 parameters</span>
+            </td>
+            <td style="padding:10px; border:1px solid #64b5f6; background-color:#ffffff;">
+                <b>Optimizer:</b><br>
+                Adam (lr=0.001)<br>
+                <span style="font-size:0.9em; color:#666;">Adaptive learning</span>
+            </td>
+            <td style="padding:10px; border:1px solid #64b5f6; background-color:#ffffff;">
+                <b>Loss:</b><br>
+                MSE Loss<br>
+                <span style="font-size:0.9em; color:#666;">For regression</span>
+            </td>
+        </tr>
+    </table>
 </div>
 
 ```python
@@ -2925,7 +3549,7 @@ Training setup:
 ```
 
 <div style="background-color:#ffcdd2; padding:15px; border-radius:8px; margin:10px 0;">
-    <h4>⚠️ Critical Missing Explanations</h4>
+    <h4>Critical Missing Explanations</h4>
     
     <p><b>1. How does the model actually learn?</b></p>
     <ul>
@@ -2949,6 +3573,41 @@ Training setup:
 **Training Function Implementation**
 
 **Principle**: Each training epoch processes all batches once:
+
+<div style="background-color:#f3e5f5; padding:15px; border-radius:8px; margin:15px 0;">
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#e1bee7;">
+            <th style="padding:10px; border:1px solid #ba68c8; text-align:center;" colspan="5">Training Loop Steps</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #ce93d8; background-color:#ffffff;">
+                <b>Step 1:</b><br>
+                Zero gradients<br>
+                <span style="font-size:0.9em; color:#666;">Clear old values</span>
+            </td>
+            <td style="padding:10px; border:1px solid #ce93d8; background-color:#ffffff;">
+                <b>Step 2:</b><br>
+                Forward pass<br>
+                <span style="font-size:0.9em; color:#666;">Get predictions</span>
+            </td>
+            <td style="padding:10px; border:1px solid #ce93d8; background-color:#ffffff;">
+                <b>Step 3:</b><br>
+                Compute loss<br>
+                <span style="font-size:0.9em; color:#666;">How wrong?</span>
+            </td>
+            <td style="padding:10px; border:1px solid #ce93d8; background-color:#ffffff;">
+                <b>Step 4:</b><br>
+                Backward pass<br>
+                <span style="font-size:0.9em; color:#666;">Get gradients</span>
+            </td>
+            <td style="padding:10px; border:1px solid #ce93d8; background-color:#ffffff;">
+                <b>Step 5:</b><br>
+                Update weights<br>
+                <span style="font-size:0.9em; color:#666;">Improve model</span>
+            </td>
+        </tr>
+    </table>
+</div>
 
 ```python
 def train_epoch(model, loader, optimizer, criterion, device):
@@ -2989,7 +3648,7 @@ def train_epoch(model, loader, optimizer, criterion, device):
 ```
 
 <div style="background-color:#e1f5fe; padding:15px; border-radius:8px; margin:10px 0;">
-    <h4>🔍 What Each Line Actually Does</h4>
+    <h4>What Each Line Actually Does</h4>
     
     <p><b>optimizer.zero_grad()</b></p>
     <ul>
@@ -3017,6 +3676,28 @@ def train_epoch(model, loader, optimizer, criterion, device):
 
 **Implementation**: Evaluation without gradient computation saves memory:
 
+<div style="background-color:#e8f5e9; padding:15px; border-radius:8px; margin:15px 0;">
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#a5d6a7;">
+            <th style="padding:10px; border:1px solid #66bb6a; text-align:center;" colspan="2">Training vs Evaluation Mode</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #81c784; background-color:#ffffff;">
+                <b>Training Mode:</b><br>
+                • Compute gradients<br>
+                • Update parameters<br>
+                • Dropout active
+            </td>
+            <td style="padding:10px; border:1px solid #81c784; background-color:#ffffff;">
+                <b>Evaluation Mode:</b><br>
+                • No gradients (save memory)<br>
+                • No parameter updates<br>
+                • Dropout inactive
+            </td>
+        </tr>
+    </table>
+</div>
+
 ```python
 def evaluate(model, loader, criterion, device):
     """Evaluation without gradient computation"""
@@ -3036,6 +3717,31 @@ def evaluate(model, loader, criterion, device):
 **Training Execution**
 
 **Implementation**: Train for 50 epochs with periodic logging:
+
+<div style="background-color:#fff3e0; padding:15px; border-radius:8px; margin:15px 0;">
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#ffe082;">
+            <th style="padding:10px; border:1px solid #ffc107; text-align:center;" colspan="3">Training Process Overview</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #ffd54f; background-color:#ffffff;">
+                <b>Epochs:</b><br>
+                50 total<br>
+                <span style="font-size:0.9em; color:#666;">Full dataset passes</span>
+            </td>
+            <td style="padding:10px; border:1px solid #ffd54f; background-color:#ffffff;">
+                <b>Monitoring:</b><br>
+                Train & test loss<br>
+                <span style="font-size:0.9em; color:#666;">Track progress</span>
+            </td>
+            <td style="padding:10px; border:1px solid #ffd54f; background-color:#ffffff;">
+                <b>Logging:</b><br>
+                Every 10 epochs<br>
+                <span style="font-size:0.9em; color:#666;">Avoid clutter</span>
+            </td>
+        </tr>
+    </table>
+</div>
 
 ```python
 num_epochs = 50
@@ -3079,14 +3785,36 @@ Training completed!
 <div style="background-color:#c8e6c9; padding:10px; border-radius:5px;">
     <p><b>Training Analysis:</b></p>
     <ul>
-        <li>Initial loss $\approx 10$ (not shown) $\rightarrow$ Final loss $\approx 3.5$</li>
+        <li>Initial loss ≈ 10 (not shown) → Final loss ≈ 3.5</li>
         <li>Test loss closely follows training loss (good generalization)</li>
-        <li>Loss of $3.7$ corresponds to RMSE $= \sqrt{3.7} \approx 1.92 \log S$</li>
-        <li>Small train-test gap ($3.49$ vs $3.73$) indicates appropriate model capacity</li>
+        <li>Loss of 3.7 corresponds to RMSE = √3.7 ≈ 1.92 log S</li>
+        <li>Small train-test gap (3.49 vs 3.73) indicates appropriate model capacity</li>
     </ul>
 </div>
 
 **Visualizing Training Progress**
+
+<div style="background-color:#e1f5fe; padding:15px; border-radius:8px; margin:15px 0;">
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#81d4fa;">
+            <th style="padding:10px; border:1px solid #29b6f6; text-align:center;" colspan="2">Training Curves Analysis</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #4fc3f7; background-color:#ffffff;">
+                <b>What to look for:</b><br>
+                • Both curves decreasing<br>
+                • Test follows train<br>
+                • No divergence
+            </td>
+            <td style="padding:10px; border:1px solid #4fc3f7; background-color:#ffffff;">
+                <b>Warning signs:</b><br>
+                • Test loss increases<br>
+                • Large gap develops<br>
+                • Erratic behavior
+            </td>
+        </tr>
+    </table>
+</div>
 
 ```python
 plt.figure(figsize=(10, 6))
@@ -3111,7 +3839,7 @@ plt.show()
 - **No overfitting**: Test loss doesn't increase
 
 <div style="background-color:#f0f4c3; padding:10px; border-radius:5px; margin:10px 0;">
-    <p><b>📊 Reading Training Curves:</b></p>
+    <p><b>Reading Training Curves:</b></p>
     <ul>
         <li><b>Good sign:</b> Test loss follows training loss</li>
         <li><b>Bad sign:</b> Test loss increases while training decreases (overfitting)</li>
@@ -3134,32 +3862,32 @@ plt.show()
     </tr>
     <tr>
         <td style="border:1px solid #64b5f6; padding:8px;">RMSE</td>
-        <td style="border:1px solid #64b5f6; padding:8px;">$\sqrt{\frac{1}{n} \sum (y_{\text{pred}} - y_{\text{true}})^2}$</td>
+        <td style="border:1px solid #64b5f6; padding:8px;">√[(1/n)Σ(y_pred - y_true)²]</td>
         <td style="border:1px solid #64b5f6; padding:8px;">Average error magnitude</td>
         <td style="border:1px solid #64b5f6; padding:8px;">Typical prediction error in log S units</td>
     </tr>
     <tr>
         <td style="border:1px solid #64b5f6; padding:8px;">MAE</td>
-        <td style="border:1px solid #64b5f6; padding:8px;">$\frac{1}{n} \sum |y_{\text{pred}} - y_{\text{true}}|$</td>
+        <td style="border:1px solid #64b5f6; padding:8px;">(1/n)Σ|y_pred - y_true|</td>
         <td style="border:1px solid #64b5f6; padding:8px;">Typical prediction error</td>
         <td style="border:1px solid #64b5f6; padding:8px;">Less sensitive to outliers than RMSE</td>
     </tr>
     <tr>
         <td style="border:1px solid #64b5f6; padding:8px;">R²</td>
-        <td style="border:1px solid #64b5f6; padding:8px;">$1 - \frac{SS_{\text{res}}}{SS_{\text{tot}}}$</td>
+        <td style="border:1px solid #64b5f6; padding:8px;">1 - (SS_res/SS_tot)</td>
         <td style="border:1px solid #64b5f6; padding:8px;">Variance explained (0-1)</td>
         <td style="border:1px solid #64b5f6; padding:8px;">% of data variation our model captures</td>
     </tr>
 </table>
 
 <div style="background-color:#fff3e0; padding:15px; border-radius:8px; margin:10px 0;">
-    <h4>📐 Understanding R² in Detail</h4>
-    <p>The R² formula: $R^2 = 1 - \frac{SS_{\text{res}}}{SS_{\text{tot}}}$</p>
+    <h4>Understanding R² in Detail</h4>
+    <p>The R² formula: R² = 1 - (SS_res/SS_tot)</p>
     <ul>
-        <li><b>$SS_{\text{tot}}$</b> = Total variance = $\sum (y_i - \bar{y})^2$</li>
-        <li><b>$SS_{\text{res}}$</b> = Residual variance = $\sum (y_i - \hat{y}_i)^2$</li>
-        <li><b>$\bar{y}$</b> = Mean of true values</li>
-        <li><b>$\hat{y}_i$</b> = Our predictions</li>
+        <li><b>SS_tot</b> = Total variance = Σ(y_i - ȳ)²</li>
+        <li><b>SS_res</b> = Residual variance = Σ(y_i - ŷ_i)²</li>
+        <li><b>ȳ</b> = Mean of true values</li>
+        <li><b>ŷ_i</b> = Our predictions</li>
     </ul>
     <p><b>Interpretation:</b></p>
     <ul>
@@ -3171,6 +3899,31 @@ plt.show()
 </div>
 
 **Prediction Extraction Function**:
+
+<div style="background-color:#f5f5f5; padding:15px; border-radius:8px; margin:15px 0;">
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#e0e0e0;">
+            <th style="padding:10px; border:1px solid #bdbdbd; text-align:center;" colspan="3">Prediction Collection Process</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #bdbdbd; background-color:#ffffff;">
+                <b>Step 1:</b><br>
+                Set eval mode<br>
+                <span style="font-size:0.9em; color:#666;">No dropout</span>
+            </td>
+            <td style="padding:10px; border:1px solid #bdbdbd; background-color:#ffffff;">
+                <b>Step 2:</b><br>
+                Loop batches<br>
+                <span style="font-size:0.9em; color:#666;">Collect predictions</span>
+            </td>
+            <td style="padding:10px; border:1px solid #bdbdbd; background-color:#ffffff;">
+                <b>Step 3:</b><br>
+                Return arrays<br>
+                <span style="font-size:0.9em; color:#666;">For sklearn metrics</span>
+            </td>
+        </tr>
+    </table>
+</div>
 
 ```python
 def get_predictions(model, loader, device):
@@ -3190,6 +3943,31 @@ def get_predictions(model, loader, device):
 ```
 
 **Metric Calculation**:
+
+<div style="background-color:#e3f2fd; padding:15px; border-radius:8px; margin:15px 0;">
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#90caf9;">
+            <th style="padding:10px; border:1px solid #42a5f5; text-align:center;" colspan="3">Evaluation Metrics Calculation</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #64b5f6; background-color:#ffffff;">
+                <b>RMSE:</b><br>
+                1.931 log S<br>
+                <span style="font-size:0.9em; color:#666;">Typical error size</span>
+            </td>
+            <td style="padding:10px; border:1px solid #64b5f6; background-color:#ffffff;">
+                <b>MAE:</b><br>
+                1.602 log S<br>
+                <span style="font-size:0.9em; color:#666;">Average absolute error</span>
+            </td>
+            <td style="padding:10px; border:1px solid #64b5f6; background-color:#ffffff;">
+                <b>R²:</b><br>
+                0.219<br>
+                <span style="font-size:0.9em; color:#666;">22% variance explained</span>
+            </td>
+        </tr>
+    </table>
+</div>
 
 ```python
 # Get test set predictions
@@ -3225,19 +4003,19 @@ Interpretation:
 <div style="background-color:#ffcdd2; padding:10px; border-radius:5px;">
     <p><b>Performance Reality Check:</b></p>
     <ul>
-        <li>MAE $= 1.6$ log units $\rightarrow 10^{1.6} \approx 40 \times$ error in concentration</li>
-        <li>R² $= 0.22$ means the model explains only $22\%$ of variance</li>
+        <li>MAE = 1.6 log units → 10^1.6 ≈ 40× error in concentration</li>
+        <li>R² = 0.22 means the model explains only 22% of variance</li>
         <li>Why seemingly poor performance?</li>
         <ul>
-            <li>Only $5$ simple atomic features</li>
-            <li>No bond features or $3D$ information</li>
-            <li>Solubility spans $13$ orders of magnitude!</li>
+            <li>Only 5 simple atomic features</li>
+            <li>No bond features or 3D information</li>
+            <li>Solubility spans 13 orders of magnitude!</li>
         </ul>
-        <li>State-of-the-art models achieve R² $\approx 0.9$ with richer features</li>
+        <li>State-of-the-art models achieve R² ≈ 0.9 with richer features</li>
     </ul>
     
     <div style="background-color:#e8f5e9; padding:10px; border-radius:5px; margin-top:10px;">
-        <p><b>🎯 Is R² = 0.22 Actually Bad?</b></p>
+        <p><b>Is R² = 0.22 Actually Bad?</b></p>
         <ul>
             <li><b>For production:</b> Yes, too low for drug development</li>
             <li><b>For learning:</b> No! Shows our simple model captures real patterns</li>
@@ -3250,6 +4028,31 @@ Interpretation:
 **Prediction Visualization**
 
 **Implementation**: Create scatter plot to visualize prediction quality:
+
+<div style="background-color:#f3e5f5; padding:15px; border-radius:8px; margin:15px 0;">
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#e1bee7;">
+            <th style="padding:10px; border:1px solid #ba68c8; text-align:center;" colspan="3">Scatter Plot Components</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #ce93d8; background-color:#ffffff;">
+                <b>Points:</b><br>
+                Test predictions<br>
+                <span style="font-size:0.9em; color:#666;">200 molecules</span>
+            </td>
+            <td style="padding:10px; border:1px solid #ce93d8; background-color:#ffffff;">
+                <b>Red line:</b><br>
+                Perfect predictions<br>
+                <span style="font-size:0.9em; color:#666;">y = x</span>
+            </td>
+            <td style="padding:10px; border:1px solid #ce93d8; background-color:#ffffff;">
+                <b>Gray band:</b><br>
+                ±1 log S error<br>
+                <span style="font-size:0.9em; color:#666;">10× concentration</span>
+            </td>
+        </tr>
+    </table>
+</div>
 
 ```python
 plt.figure(figsize=(8, 8))
@@ -3285,7 +4088,7 @@ plt.show()
 - **±1 log band**: Most predictions within acceptable error range
 
 <div style="background-color:#f0f4c3; padding:10px; border-radius:5px; margin:10px 0;">
-    <p><b>📈 How to Read This Plot:</b></p>
+    <p><b>How to Read This Plot:</b></p>
     <ul>
         <li><b>Perfect model:</b> All points on red dashed line</li>
         <li><b>Good model:</b> Points clustered near line</li>
@@ -3297,6 +4100,28 @@ plt.show()
 **Error Analysis**
 
 **Error Distribution Visualization**:
+
+<div style="background-color:#e8f5e9; padding:15px; border-radius:8px; margin:15px 0;">
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#a5d6a7;">
+            <th style="padding:10px; border:1px solid #66bb6a; text-align:center;" colspan="2">Error Analysis Plots</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #81c784; background-color:#ffffff;">
+                <b>Left plot:</b><br>
+                Error distribution<br>
+                • Should be centered at 0<br>
+                • Narrow = better
+            </td>
+            <td style="padding:10px; border:1px solid #81c784; background-color:#ffffff;">
+                <b>Right plot:</b><br>
+                Error vs true value<br>
+                • Look for patterns<br>
+                • Random = good
+            </td>
+        </tr>
+    </table>
+</div>
 
 ```python
 # Calculate errors
@@ -3334,6 +4159,26 @@ plt.show()
 
 **Error Statistics**:
 
+<div style="background-color:#fff3e0; padding:15px; border-radius:8px; margin:15px 0;">
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#ffe082;">
+            <th style="padding:10px; border:1px solid #ffc107; text-align:center;" colspan="2">Error Statistics Summary</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #ffd54f; background-color:#ffffff;">
+                <b>Central tendency:</b><br>
+                • Mean: -0.368 (slight bias)<br>
+                • Median: ~1.4 (typical error)
+            </td>
+            <td style="padding:10px; border:1px solid #ffd54f; background-color:#ffffff;">
+                <b>Spread:</b><br>
+                • Std dev: 1.895<br>
+                • 95% within ±3.5 log S
+            </td>
+        </tr>
+    </table>
+</div>
+
 ```python
 print(f"Error Statistics:")
 print(f"  Mean error: {np.mean(errors):.3f} log S")
@@ -3369,6 +4214,36 @@ Error Statistics:
 
 **Implementation**: Create user-friendly prediction function:
 
+<div style="background-color:#e3f2fd; padding:15px; border-radius:8px; margin:15px 0;">
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#90caf9;">
+            <th style="padding:10px; border:1px solid #42a5f5; text-align:center;" colspan="4">Prediction Pipeline Steps</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #64b5f6; background-color:#ffffff;">
+                <b>Step 1:</b><br>
+                SMILES → Graph<br>
+                <span style="font-size:0.9em; color:#666;">Convert molecule</span>
+            </td>
+            <td style="padding:10px; border:1px solid #64b5f6; background-color:#ffffff;">
+                <b>Step 2:</b><br>
+                Prepare batch<br>
+                <span style="font-size:0.9em; color:#666;">Single molecule</span>
+            </td>
+            <td style="padding:10px; border:1px solid #64b5f6; background-color:#ffffff;">
+                <b>Step 3:</b><br>
+                Model inference<br>
+                <span style="font-size:0.9em; color:#666;">Get prediction</span>
+            </td>
+            <td style="padding:10px; border:1px solid #64b5f6; background-color:#ffffff;">
+                <b>Step 4:</b><br>
+                Return value<br>
+                <span style="font-size:0.9em; color:#666;">Extract number</span>
+            </td>
+        </tr>
+    </table>
+</div>
+
 ```python
 def predict_solubility(smiles, model, device):
     """
@@ -3401,6 +4276,29 @@ def predict_solubility(smiles, model, device):
 
 **Implementation**: Test predictions on common molecules:
 
+<div style="background-color:#f5f5f5; padding:15px; border-radius:8px; margin:15px 0;">
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#e0e0e0;">
+            <th style="padding:10px; border:1px solid #bdbdbd; text-align:center;" colspan="2">Test Molecule Selection</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #bdbdbd; background-color:#ffffff;">
+                <b>Categories:</b><br>
+                • Water & alcohols<br>
+                • Solvents<br>
+                • Hydrocarbons<br>
+                • Aromatics
+            </td>
+            <td style="padding:10px; border:1px solid #bdbdbd; background-color:#ffffff;">
+                <b>Purpose:</b><br>
+                • Test diverse structures<br>
+                • Check chemical intuition<br>
+                • Validate model behavior
+            </td>
+        </tr>
+    </table>
+</div>
+
 ```python
 test_molecules = [
     ("O", "Water"),
@@ -3417,6 +4315,29 @@ test_molecules = [
 ```
 
 **Prediction Loop**:
+
+<div style="background-color:#e1f5fe; padding:15px; border-radius:8px; margin:15px 0;">
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#81d4fa;">
+            <th style="padding:10px; border:1px solid #29b6f6; text-align:center;" colspan="2">Prediction Results Format</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #4fc3f7; background-color:#ffffff;">
+                <b>Output format:</b><br>
+                • Molecule name<br>
+                • SMILES string<br>
+                • Predicted log S<br>
+                • Status
+            </td>
+            <td style="padding:10px; border:1px solid #4fc3f7; background-color:#ffffff;">
+                <b>Collection:</b><br>
+                • Store in list<br>
+                • For visualization<br>
+                • Analyze patterns
+            </td>
+        </tr>
+    </table>
+</div>
 
 ```python
 print("Predictions for common molecules:")
@@ -3461,6 +4382,34 @@ Aspirin              CC(=O)Oc1ccccc1C(=O)O          -3.580      Success
 **Visualizing Predictions**
 
 **Implementation**: Create bar chart with solubility-based coloring:
+
+<div style="background-color:#f3e5f5; padding:15px; border-radius:8px; margin:15px 0;">
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#e1bee7;">
+            <th style="padding:10px; border:1px solid #ba68c8; text-align:center;" colspan="3">Bar Chart Design</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #ce93d8; background-color:#ffffff;">
+                <b>Color scheme:</b><br>
+                • Green: > 0<br>
+                • Yellow: -3 to 0<br>
+                • Red: < -3
+            </td>
+            <td style="padding:10px; border:1px solid #ce93d8; background-color:#ffffff;">
+                <b>Features:</b><br>
+                • Values on bars<br>
+                • Rotated labels<br>
+                • Grid for clarity
+            </td>
+            <td style="padding:10px; border:1px solid #ce93d8; background-color:#ffffff;">
+                <b>Purpose:</b><br>
+                • Visual comparison<br>
+                • Group by solubility<br>
+                • Quick insights
+            </td>
+        </tr>
+    </table>
+</div>
 
 ```python
 names, preds = zip(*predictions_list)
@@ -3512,6 +4461,34 @@ plt.show()
 
 **Implementation**: Systematic testing of molecular features:
 
+<div style="background-color:#e8f5e9; padding:15px; border-radius:8px; margin:15px 0;">
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#a5d6a7;">
+            <th style="padding:10px; border:1px solid #66bb6a; text-align:center;" colspan="3">Structure-Activity Test Design</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #81c784; background-color:#ffffff;">
+                <b>Test 1: Functional Groups</b><br>
+                • Base: Hexane<br>
+                • Add: -OH, -COOH, -NH₂<br>
+                • Check: Effect on solubility
+            </td>
+            <td style="padding:10px; border:1px solid #81c784; background-color:#ffffff;">
+                <b>Test 2: Chain Length</b><br>
+                • C₂ → C₄ → C₆ → C₈<br>
+                • Track: Size effect<br>
+                • Expect: Decreasing solubility
+            </td>
+            <td style="padding:10px; border:1px solid #81c784; background-color:#ffffff;">
+                <b>Test 3: Aromaticity</b><br>
+                • Benzene vs Cyclohexane<br>
+                • Compare: π-system effect<br>
+                • Expect: Large difference
+            </td>
+        </tr>
+    </table>
+</div>
+
 ```python
 functional_group_tests = [
     # Base molecule
@@ -3531,6 +4508,28 @@ functional_group_tests = [
 ```
 
 **Testing Loop**:
+
+<div style="background-color:#fff3e0; padding:15px; border-radius:8px; margin:15px 0;">
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#ffe082;">
+            <th style="padding:10px; border:1px solid #ffc107; text-align:center;" colspan="2">Analysis Purpose</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #ffd54f; background-color:#ffffff;">
+                <b>What we're testing:</b><br>
+                • Model's chemical understanding<br>
+                • Feature importance<br>
+                • Learned patterns
+            </td>
+            <td style="padding:10px; border:1px solid #ffd54f; background-color:#ffffff;">
+                <b>Expected insights:</b><br>
+                • Which features work well<br>
+                • Model limitations<br>
+                • Improvement areas
+            </td>
+        </tr>
+    </table>
+</div>
 
 ```python
 print("Analyzing functional group effects on solubility:")
@@ -3565,18 +4564,18 @@ Cyclohexane (aliphatic)             C1CCCCC1                   -3.037
     <p><b>Key Findings:</b></p>
     <ol>
         <li><b>Weak Functional Group Effects:</b><br>
-            • Hexane $\rightarrow$ Hexanol: Only $0.049$ log unit improvement<br>
-            • Expected: -OH should increase solubility by $\sim 1-2$ log units<br>
-            • <b>Limitation:</b> Our $5$ features don't capture hydrogen bonding strength
+            • Hexane → Hexanol: Only 0.049 log unit improvement<br>
+            • Expected: -OH should increase solubility by ~1-2 log units<br>
+            • <b>Limitation:</b> Our 5 features don't capture hydrogen bonding strength
         </li>
         <li><b>Clear Size Trend:</b><br>
-            • C₂ $(-2.458)$ $\rightarrow$ C₄ $(-2.710)$ $\rightarrow$ C₆ $(-2.808)$ $\rightarrow$ C₈ $(-2.861)$<br>
-            • $\Delta \log S \approx -0.05$ per CH₂ group<br>
+            • C₂ (-2.458) → C₄ (-2.710) → C₆ (-2.808) → C₈ (-2.861)<br>
+            • Δlog S ≈ -0.05 per CH₂ group<br>
             • <b>Success:</b> Model learned hydrophobic effect of alkyl chains
         </li>
         <li><b>Strong Aromaticity Effect:</b><br>
-            • Benzene vs. Cyclohexane: $1.024$ log unit difference<br>
-            • <b>Success:</b> Model recognizes $\pi$-system hydrophobicity<br>
+            • Benzene vs. Cyclohexane: 1.024 log unit difference<br>
+            • <b>Success:</b> Model recognizes π-system hydrophobicity<br>
             • Aromatic feature in our encoding is highly informative
         </li>
     </ol>
@@ -3589,18 +4588,18 @@ Cyclohexane (aliphatic)             C1CCCCC1                   -3.037
 <div style="background-color:#e3f2fd; padding:15px; border-radius:8px;">
     <p><b>Complete GNN Pipeline:</b></p>
     <ol>
-        <li><b>Data Processing:</b> SMILES $\rightarrow$ Graph conversion with RDKit</li>
-        <li><b>Feature Engineering:</b> $5$ atomic features + bidirectional edges</li>
-        <li><b>Model Architecture:</b> $3$-layer GCN with $8,769$ parameters</li>
-        <li><b>Training:</b> $800$ molecules, $50$ epochs, Adam optimizer</li>
+        <li><b>Data Processing:</b> SMILES → Graph conversion with RDKit</li>
+        <li><b>Feature Engineering:</b> 5 atomic features + bidirectional edges</li>
+        <li><b>Model Architecture:</b> 3-layer GCN with 8,769 parameters</li>
+        <li><b>Training:</b> 800 molecules, 50 epochs, Adam optimizer</li>
         <li><b>Deployment:</b> Prediction function for new molecules</li>
     </ol>
     <p><b>Performance Metrics:</b></p>
     <ul>
-        <li>RMSE: $1.93$ log S</li>
-        <li>MAE: $1.60$ log S</li>
-        <li>R²: $0.22$</li>
-        <li>$95\%$ predictions within ±$3.5$ log units</li>
+        <li>RMSE: 1.93 log S</li>
+        <li>MAE: 1.60 log S</li>
+        <li>R²: 0.22</li>
+        <li>95% predictions within ±3.5 log units</li>
     </ul>
 </div>
 
@@ -3647,7 +4646,7 @@ Cyclohexane (aliphatic)             C1CCCCC1                   -3.037
 </div>
 
 <div style="background-color:#fff3e0; padding:15px; border-radius:8px; margin:20px 0;">
-    <h4>🎓 What We Learned About Deep Learning</h4>
+    <h4>What We Learned About Deep Learning</h4>
     
     <p><b>Key Concepts Demystified:</b></p>
     <ul>
@@ -3667,7 +4666,6 @@ Cyclohexane (aliphatic)             C1CCCCC1                   -3.037
 </div>
 
 The beauty of GNNs for chemistry lies in their natural alignment with molecular structure. While our simple model achieves modest performance, it demonstrates the complete pipeline from molecules to predictions. This foundation, enhanced with richer features and advanced architectures, powers modern drug discovery and materials design platforms.
-
 ### 3.3.4 Challenges and Interpretability in GNNs
 
 #### Completed and Compiled Code: [Click Here](https://colab.research.google.com/drive/1rtJ6voxMVK7KS-oZS97_7Jr1bBf7Z15T?usp=sharing)
