@@ -1643,12 +1643,14 @@ The vertical flowchart above illustrates how a single Graph Convolutional Networ
    - Bundle node features and edge list into a `Data(x, edge_index)` object understood by PyTorch Geometric.
 
 4. **GCN Layer**  
-   - For each atom \(i\), gather its own features and those of bonded neighbors \(j\).  
-   - Apply a learnable weight matrix \(W\) and normalize by \(\tfrac{1}{\sqrt{d_i\,d_j}}\) to balance different bond counts:
-     
-     \[
-       h_i' = \sum_{j\in\mathcal{N}(i)\cup\{i\}} \frac{1}{\sqrt{d_i\,d_j}}\;W\,h_j
-     \]
+   - For each atom *i*, collect its own feature and those of each neighbor *j*.  
+   - Apply a learnable weight matrix *W* and degree-based normalization:  
+
+   $$
+   h_i' \;=\;
+   \sum_{j \in \mathcal{N}(i)\cup\{i\}}
+   \frac{1}{\sqrt{d_i\,d_j}}\;W\,h_j
+   $$
 
 5. **Forward Pass**  
    - Execute this “message passing” in one call:  
@@ -1706,7 +1708,7 @@ tensor([[ 0.2851, -0.0017],
         [ 0.6180,  0.1266],
         [ 0.2807, -0.3559]], grad_fn=<AddBackward0>)
 ```
-What does the result tells us:
+**This result tells us:**
 
 1. **Shape `[4, 2]`**
 
