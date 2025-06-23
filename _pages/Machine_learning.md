@@ -1832,23 +1832,23 @@ The power of message passing lies in its ability to bridge **structure and funct
 
 #### Completed and Compiled Code: [Click Here](https://colab.research.google.com/drive/1IemDJyiQuDwBK-iTkaHBgqqfAiM065_b?usp=sharing)
 
-## Experimental Pipeline Overview
+#### Experimental Pipeline Overview
 
 <div style="background-color:#f0f7ff; border:2px solid #1976d2; border-radius:10px; padding:20px; margin:20px 0;"> <h3>What We're Building: A Molecular Solubility Predictor</h3> <table style="width:100%; border-collapse:collapse;"> <tr style="background-color:#e3f2fd;"> <th style="padding:10px; border:1px solid #90caf9;">Stage</th> <th style="padding:10px; border:1px solid #90caf9;">Input</th> <th style="padding:10px; border:1px solid #90caf9;">Process</th> <th style="padding:10px; border:1px solid #90caf9;">Output</th> </tr> <tr> <td style="padding:10px; border:1px solid #90caf9; background-color:#fff3e0;"><b>1. Data Loading</b></td> <td style="padding:10px; border:1px solid #90caf9;">ESOL CSV file</td> <td style="padding:10px; border:1px solid #90caf9;">pandas parsing</td> <td style="padding:10px; border:1px solid #90caf9;">SMILES + log S values</td> </tr> <tr> <td style="padding:10px; border:1px solid #90caf9; background-color:#f3e5f5;"><b>2. Molecular Encoding</b></td> <td style="padding:10px; border:1px solid #90caf9;">SMILES strings</td> <td style="padding:10px; border:1px solid #90caf9;">RDKit → Graph conversion</td> <td style="padding:10px; border:1px solid #90caf9;">Node features + Edge indices</td> </tr> <tr> <td style="padding:10px; border:1px solid #90caf9; background-color:#e8f5e9;"><b>3. Model Building</b></td> <td style="padding:10px; border:1px solid #90caf9;">Graph structures</td> <td style="padding:10px; border:1px solid #90caf9;">3-layer GCN</td> <td style="padding:10px; border:1px solid #90caf9;">Molecular embeddings</td> </tr> <tr> <td style="padding:10px; border:1px solid #90caf9; background-color:#fce4ec;"><b>4. Training</b></td> <td style="padding:10px; border:1px solid #90caf9;">Batched graphs</td> <td style="padding:10px; border:1px solid #90caf9;">Adam optimizer + MSE loss</td> <td style="padding:10px; border:1px solid #90caf9;">Trained parameters</td> </tr> <tr> <td style="padding:10px; border:1px solid #90caf9; background-color:#e1f5fe;"><b>5. Prediction</b></td> <td style="padding:10px; border:1px solid #90caf9;">New SMILES</td> <td style="padding:10px; border:1px solid #90caf9;">Forward pass</td> <td style="padding:10px; border:1px solid #90caf9;">Solubility (log S)</td> </tr> </table> <h3>Key Metrics We'll Track:</h3> <ul> <li><span style="color:#d32f2f; font-weight:bold;">RMSE</span>: Root Mean Squared Error (expect ~1.9 log S)</li> <li><span style="color:#388e3c; font-weight:bold;">R²</span>: Variance explained (expect ~0.22)</li> <li><span style="color:#1976d2; font-weight:bold;">MAE</span>: Mean Absolute Error (expect ~1.6 log S)</li> </ul> </div>
 
-## Step 1: Understanding Molecular Solubility as a Graph Learning Problem
+#### Step 1: Understanding Molecular Solubility as a Graph Learning Problem
 
-### The Chemistry Behind Solubility
+**The Chemistry Behind Solubility**
 
 <div style="background-color:#e8f5e9; padding:15px; border-radius:8px; margin:10px 0;"> <p><b>Why is solubility prediction hard?</b></p> <p>Solubility emerges from a delicate balance of intermolecular forces:</p> <p style="text-align:center; font-size:18px;"> <b>Solubility ∝ (Solute-Solvent interactions) / (Solute-Solute interactions)</b> </p> <p>Key factors:</p> <ul> <li><b>Hydrogen bonding</b>: -OH, -NH groups increase water solubility</li> <li><b>Hydrophobic effect</b>: Long carbon chains decrease solubility</li> <li><b>Molecular size</b>: Larger molecules → harder to solvate</li> <li><b>Aromaticity</b>: π-systems are hydrophobic</li> </ul> </div>
 
-### Why Graph Neural Networks?
+**Why Graph Neural Networks?**
 
 Traditional machine learning uses fixed-size molecular fingerprints, losing structural information. GNNs preserve the full molecular graph:
 
 <div style="background-color:#fff9c4; padding:10px; border-radius:5px; margin:10px 0;"> <p><b>Molecule as Graph:</b></p> <ul> <li><b>Nodes</b>: Atoms with features (element, charge, aromaticity)</li> <li><b>Edges</b>: Chemical bonds (single, double, triple, aromatic)</li> <li><b>Message Passing</b>: Atoms "communicate" through bonds</li> </ul> </div>
 
-### Package Imports and Setup
+**Package Imports and Setup**
 
 **Implementation Strategy**: We need several specialized libraries to handle different aspects of the pipeline:
 
@@ -1876,7 +1876,7 @@ import io
 from sklearn.metrics import mean_squared_error, r2_score
 ```
 
-### Feature Extraction Functions
+**Feature Extraction Functions**
 
 **Chemical Principle**: Each atom's properties influence molecular behavior. We encode 5 key atomic features:
 
@@ -1915,9 +1915,9 @@ def get_bond_connections(mol):
     return edges
 ```
 
-## Step 2: Loading and Exploring the ESOL Dataset
+#### Step 2: Loading and Exploring the ESOL Dataset
 
-### Dataset Overview
+**Dataset Overview**
 
 **Why ESOL?** The ESOL (Estimated SOLubility) dataset is a gold standard because:
 
@@ -1950,7 +1950,7 @@ Solubility range: -11.60 to 1.58 log S
 
 <div style="background-color:#ffebee; padding:10px; border-radius:5px; margin:10px 0;"> <p><b>What do these numbers mean?</b></p> <ul> <li>log S = -11.60 → Solubility = 10⁻¹¹·⁶ mol/L (extremely insoluble)</li> <li>log S = 1.58 → Solubility = 10¹·⁵⁸ mol/L (very soluble)</li> <li>Range: 13.18 log units = 10¹³·¹⁸ ≈ 15 trillion-fold difference!</li> </ul> </div>
 
-### Examining Example Molecules
+#### Examining Example Molecules
 
 **Implementation**: Let's examine some specific molecules to understand the dataset diversity:
 
@@ -1980,7 +1980,7 @@ c1ccsc1                                  -1.33
 
 <div style="background-color:#e3f2fd; padding:10px; border-radius:5px;"> <p><b>Chemical Interpretation:</b></p> <ul> <li>Row 1: Complex sugar derivative with multiple -OH groups → relatively soluble (-0.77 log S)</li> <li>Row 4: Large polycyclic aromatic hydrocarbon → very insoluble (-7.87 log S)</li> <li>Row 5: Small thiophene heterocycle → moderate solubility (-1.33 log S)</li> </ul> <p>The dataset covers a wide range of molecular complexity and functional groups.</p> </div>
 
-### Visualizing Solubility Distribution
+#### Visualizing Solubility Distribution
 
 **Implementation**: Understanding the distribution helps us assess potential modeling challenges:
 
@@ -2003,9 +2003,9 @@ plt.show()
 - **Chemical reality**: Most organic molecules have limited water solubility
 - **Modeling implication**: Model may perform better on common solubility ranges than extremes
 
-## Step 3: Converting Molecules to Graph Representations
+#### Step 3: Converting Molecules to Graph Representations
 
-### Testing Feature Extraction on Water
+**Testing Feature Extraction on Water**
 
 **Principle**: We validate our feature extraction by testing on water (H₂O), the simplest molecule:
 
@@ -2035,7 +2035,7 @@ Atom 2 (H): [1, 1, 0, 0, 0]
 
 <div style="background-color:#f3e5f5; padding:10px; border-radius:5px;"> <p><b>Feature Vector Breakdown:</b></p> <p><b>Oxygen [8, 2, 0, 0, 0]:</b></p> <ul> <li>8 = Atomic number (element oxygen)</li> <li>2 = Degree (bonded to 2 hydrogen atoms)</li> <li>0 = No formal charge (neutral)</li> <li>0 = Not aromatic (water is not aromatic)</li> <li>0 = No implicit hydrogens (all are explicit)</li> </ul> <p><b>Hydrogen [1, 1, 0, 0, 0]:</b></p> <ul> <li>1 = Atomic number (element hydrogen)</li> <li>1 = Degree (bonded to 1 oxygen atom)</li> <li>Remaining features are all zero</li> </ul> </div>
 
-### Testing Bond Extraction on Ethanol
+**Testing Bond Extraction on Ethanol**
 
 **Implementation**: Test on a more complex molecule to see bond connectivity:
 
@@ -2086,7 +2086,7 @@ First few connections (atom index pairs):
 
 **Chemical Interpretation**: Each bond appears twice (e.g., C→C and C←C) to enable bidirectional message passing in the GNN. This reflects the quantum mechanical reality that electrons are shared between atoms.
 
-### Complete Molecule-to-Graph Conversion
+**Complete Molecule-to-Graph Conversion**
 
 **Implementation Strategy**:
 
@@ -2145,7 +2145,7 @@ def molecule_to_graph(smiles, solubility=None):
     return data
 ```
 
-### Testing the Conversion Pipeline
+**Testing the Conversion Pipeline**
 
 **Implementation**: Test on molecules of varying complexity:
 
@@ -2196,13 +2196,13 @@ Benzene (c1ccccc1):
 
 <div style="background-color:#fff3e0; padding:10px; border-radius:5px;"> <p><b>PyTorch Geometric Data Format:</b></p> <ul> <li><b>x</b>: Node feature matrix [num_atoms, num_features]</li> <li><b>edge_index</b>: COO format edges [2, num_edges]</li> <li><b>y</b>: Target property (solubility)</li> </ul> <p><b>Example - Benzene:</b></p> <ul> <li>6 carbon atoms + 6 hydrogen atoms = 12 nodes</li> <li>6 C-C bonds + 6 C-H bonds = 12 undirected bonds</li> <li>12 undirected bonds × 2 directions = 24 directed edges</li> </ul> </div>
 
-## Step 4: Building the Graph Neural Network Architecture
+#### Step 4: Building the Graph Neural Network Architecture
 
-### GNN Design Principles
+**GNN Design Principles**
 
 <div style="background-color:#e8eaf6; padding:15px; border-radius:8px; margin:10px 0;"> <p><b>Message Passing Framework:</b></p> <p>Each GCN layer performs the following operation:</p> <p style="text-align:center; font-size:18px;"> <b>h<sub>i</sub><sup>(l+1)</sup> = σ(W<sup>(l)</sup> · AGG({h<sub>j</sub><sup>(l)</sup> : j ∈ N(i) ∪ {i}}))</b> </p> <p>Where:</p> <ul> <li>h<sub>i</sub><sup>(l)</sup> = features of atom i at layer l</li> <li>N(i) = neighbors of atom i</li> <li>W<sup>(l)</sup> = learnable weight matrix</li> <li>AGG = aggregation function (mean)</li> <li>σ = activation function (ReLU)</li> </ul> </div>
 
-### Model Architecture
+**Model Architecture**
 
 **Design Choices**:
 
@@ -2247,7 +2247,7 @@ class MolecularGNN(nn.Module):
         self.predictor = nn.Linear(hidden_dim, 1)
 ```
 
-### Forward Pass Implementation
+**Forward Pass Implementation**
 
 **Principle**: The forward pass implements message passing followed by pooling:
 
@@ -2273,7 +2273,7 @@ class MolecularGNN(nn.Module):
         return self.predictor(x)
 ```
 
-### Model Analysis
+**Model Analysis**
 
 **Implementation**: Let's analyze the model architecture:
 
@@ -2324,9 +2324,9 @@ Layer-by-layer breakdown:
 
 <div style="background-color:#f5f5f5; padding:10px; border-radius:5px;"> <p><b>Parameter Calculation:</b></p> <ul> <li>Layer 1 (GCN): (64 × 5) + 64 = 384 parameters</li> <li>Layer 2 (GCN): (64 × 64) + 64 = 4,160 parameters</li> <li>Layer 3 (GCN): (64 × 64) + 64 = 4,160 parameters</li> <li>Predictor: 64 + 1 = 65 parameters</li> <li><b>Total: 8,769 parameters</b></li> </ul> <p>This is remarkably small compared to other deep learning models!</p> </div>
 
-## Step 5: Preparing Training Data
+#### Step 5: Preparing Training Data
 
-### Dataset Conversion Strategy
+**Dataset Conversion Strategy**
 
 **Implementation**: Convert all molecules to graphs, handling potential failures:
 
@@ -2365,7 +2365,7 @@ Failed conversions: 0 molecules
 
 **Interpretation**: 100% success rate indicates high-quality SMILES strings in the ESOL dataset. RDKit successfully parsed all molecules.
 
-### Train-Test Split
+**Train-Test Split**
 
 **ML Principle**: Always evaluate on unseen data to assess generalization. We use 80/20 split:
 
@@ -2388,7 +2388,7 @@ Dataset split:
   Testing: 200 molecules
 ```
 
-### Creating DataLoaders
+**Creating DataLoaders**
 
 **PyTorch Geometric Innovation**: DataLoader automatically batches variable-sized graphs:
 
@@ -2437,9 +2437,9 @@ Example batch:
 
 <div style="background-color:#e1f5fe; padding:10px; border-radius:5px;"> <p><b>Batching Mechanism Explained:</b></p> <ul> <li>32 molecules contain 864 atoms total (average ~27 atoms/molecule)</li> <li>Batch tensor: [0,0,0,...,1,1,1,...,31,31,31]</li> <li>Maps each atom to its parent molecule (0-31)</li> <li>Edge index combines all molecular graphs into one large disconnected graph</li> <li>Enables efficient parallel processing on GPU</li> </ul> </div>
 
-## Step 6: Training the Model
+#### Step 6: Training the Model
 
-### Training Components Setup
+**Training Components Setup**
 
 **Optimization Theory**:
 
@@ -2470,7 +2470,7 @@ Training setup:
   Device: cpu
 ```
 
-### Training Function Implementation
+**Training Function Implementation**
 
 **Principle**: Each training epoch processes all batches once:
 
@@ -2512,7 +2512,7 @@ def train_epoch(model, loader, optimizer, criterion, device):
     return total_loss / len(loader.dataset)
 ```
 
-### Evaluation Function
+**Evaluation Function**
 
 **Implementation**: Evaluation without gradient computation saves memory:
 
@@ -2532,7 +2532,7 @@ def evaluate(model, loader, criterion, device):
     return total_loss / len(loader.dataset)
 ```
 
-### Training Execution
+**Training Execution**
 
 **Implementation**: Train for 50 epochs with periodic logging:
 
@@ -2577,7 +2577,7 @@ Training completed!
 
 <div style="background-color:#c8e6c9; padding:10px; border-radius:5px;"> <p><b>Training Analysis:</b></p> <ul> <li>Initial loss ~10 (not shown) → Final loss ~3.5</li> <li>Test loss closely follows training loss (good generalization)</li> <li>Loss of 3.7 corresponds to RMSE = √3.7 ≈ 1.92 log S</li> <li>Small train-test gap (3.49 vs 3.73) indicates appropriate model capacity</li> </ul> </div>
 
-### Visualizing Training Progress
+**Visualizing Training Progress**
 
 ```python
 plt.figure(figsize=(10, 6))
@@ -2601,9 +2601,9 @@ plt.show()
 - **Epochs 30-50**: Plateau (approaching model capacity)
 - **No overfitting**: Test loss doesn't increase
 
-## Step 7: Model Evaluation
+#### Step 7: Model Evaluation
 
-### Computing Performance Metrics
+**Computing Performance Metrics**
 
 **Evaluation Metrics Explained**:
 
@@ -2663,7 +2663,7 @@ Interpretation:
 
 <div style="background-color:#ffcdd2; padding:10px; border-radius:5px;"> <p><b>Performance Reality Check:</b></p> <ul> <li>MAE = 1.6 log units → 10¹·⁶ ≈ 40× error in concentration</li> <li>R² = 0.22 means model explains only 22% of variance</li> <li>Why seemingly poor performance?</li> <ul> <li>Only 5 simple atomic features</li> <li>No bond features or 3D information</li> <li>Solubility spans 13 orders of magnitude!</li> </ul> <li>State-of-art models achieve R² ~ 0.9 with richer features</li> </ul> </div>
 
-### Prediction Visualization
+**Prediction Visualization**
 
 **Implementation**: Create scatter plot to visualize prediction quality:
 
@@ -2700,7 +2700,7 @@ plt.show()
 - **Regression to mean**: Extreme values pulled toward center
 - **±1 log band**: Most predictions within acceptable error range
 
-### Error Analysis
+**Error Analysis**
 
 **Error Distribution Visualization**:
 
@@ -2760,9 +2760,9 @@ Error Statistics:
 
 <div style="background-color:#fff9c4; padding:10px; border-radius:5px;"> <p><b>Error Pattern Analysis:</b></p> <ul> <li><b>Negative bias</b> (-0.368): Model slightly underpredicts solubility</li> <li><b>Normal distribution</b>: No systematic failures</li> <li><b>Heteroscedasticity</b>: Larger errors at extreme solubilities</li> <li><b>95% confidence</b>: Most errors within ±3.5 log units</li> </ul> <p>For drug discovery screening, this accuracy is often sufficient to filter candidates.</p> </div>
 
-## Step 8: Making Predictions on New Molecules
+#### Step 8: Making Predictions on New Molecules
 
-### Prediction Pipeline Function
+**Prediction Pipeline Function**
 
 **Implementation**: Create user-friendly prediction function:
 
@@ -2794,7 +2794,7 @@ def predict_solubility(smiles, model, device):
     return prediction.item(), "Success"
 ```
 
-### Testing on Known Molecules
+**Testing on Known Molecules**
 
 **Implementation**: Test predictions on common molecules:
 
@@ -2855,7 +2855,7 @@ Aspirin              CC(=O)Oc1ccccc1C(=O)O          -3.580      Success
 - **Hydrocarbons (-2.7 to -3.0)**: Isobutane and cyclohexane less soluble
 - **Aromatics (< -3.5)**: Benzene and phenol least soluble, reflecting hydrophobic π-systems
 
-### Visualizing Predictions
+**Visualizing Predictions**
 
 **Implementation**: Create bar chart with solubility-based coloring:
 
@@ -2903,9 +2903,9 @@ plt.show()
 - **Red bars**: Low solubility (< -3 log S) - aromatics like benzene and phenol
 - **Chemical sense**: Rankings match chemical intuition despite simple model
 
-## Step 9: Analyzing Learned Patterns
+#### Step 9: Analyzing Learned Patterns
 
-### Structure-Activity Relationships
+**Structure-Activity Relationships**
 
 **Implementation**: Systematic testing of molecular features:
 
@@ -2960,13 +2960,13 @@ Cyclohexane (aliphatic)             C1CCCCC1                   -3.037
 
 <div style="background-color:#ffebee; padding:15px; border-radius:8px;"> <p><b>Key Findings:</b></p> <ol> <li><b>Weak Functional Group Effects:</b><br> • Hexane → Hexanol: Only 0.049 log unit improvement<br> • Expected: -OH should increase solubility by ~1-2 log units<br> • <b>Limitation</b>: Our 5 features don't capture hydrogen bonding strength</li> <li><b>Clear Size Trend:</b><br> • C2 (-2.458) → C4 (-2.710) → C6 (-2.808) → C8 (-2.861)<br> • Δlog S ≈ -0.05 per CH₂ group<br> • <b>Success</b>: Model learned hydrophobic effect of alkyl chains</li> <li><b>Strong Aromaticity Effect:</b><br> • Benzene vs Cyclohexane: 1.024 log unit difference<br> • <b>Success</b>: Model recognizes π-system hydrophobicity<br> • Aromatic feature in our encoding is highly informative</li> </ol> </div>
 
-## Summary and Conclusions
+#### Summary and Conclusions
 
-### What We Built
+**What We Built**
 
 <div style="background-color:#e3f2fd; padding:15px; border-radius:8px;"> <p><b>Complete GNN Pipeline:</b></p> <ol> <li><b>Data Processing</b>: SMILES → Graph conversion with RDKit</li> <li><b>Feature Engineering</b>: 5 atomic features + bidirectional edges</li> <li><b>Model Architecture</b>: 3-layer GCN with 8,769 parameters</li> <li><b>Training</b>: 800 molecules, 50 epochs, Adam optimizer</li> <li><b>Deployment</b>: Prediction function for new molecules</li> </ol> <p><b>Performance Metrics:</b></p> <ul> <li>RMSE: 1.93 log S</li> <li>MAE: 1.60 log S</li> <li>R²: 0.22</li> <li>95% predictions within ±3.5 log units</li> </ul> </div>
 
-### Limitations and Future Improvements
+**Limitations and Future Improvements**
 
 | Current Limitation                   | Proposed Solution                  | Expected Impact |
 | ------------------------------------ | ---------------------------------- | --------------- |
@@ -2977,7 +2977,7 @@ Cyclohexane (aliphatic)             C1CCCCC1                   -3.037
 | No 3D information                    | Add 3D coordinates                 | +0.1-0.15 R²    |
 
 
-### Key Takeaways
+**Key Takeaways**
 
 <div style="background-color:#c8e6c9; padding:15px; border-radius:8px;">
 <p><b>Scientific Insights:</b></p>
