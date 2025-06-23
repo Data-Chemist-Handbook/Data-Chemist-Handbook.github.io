@@ -1140,7 +1140,7 @@ Chemical toxicity often arises from complex, nonlinear interactions among molecu
 Unlike images or text, molecules do not follow a regular shape or order. This makes it hard for conventional neural networks to process them effectively. Convolutional neural networks (CNNs) are designed for image data, and recurrent neural networks (RNNs) are built for sequences, but neither is suited to the irregular and highly connected structure of molecules. As a result, older models often fail to capture how atoms are truly linked inside a molecule.
 
 ![GNN Overview - Traditional Methods vs Graph Neural Networks](../../../../../resource/img/gnn/gnn_overview_flowchart.png)
-**Figure 1:** *Comparison between traditional neural network approaches and Graph Neural Networks for molecular machine learning. The flowchart illustrates why molecules require graph-based methods and how GNNs preserve structural information that traditional methods lose.*
+*Comparison between traditional neural network approaches and Graph Neural Networks for molecular machine learning. The flowchart illustrates why molecules require graph-based methods and how GNNs preserve structural information that traditional methods lose.*
 
 Before GNNs were introduced, chemists used what are known as **molecular descriptors**. These are numerical features based on molecular structure, such as how many functional groups a molecule has or how its atoms are arranged in space. These descriptors were used as input for machine learning models. However, they often **lose important information** about the exact way atoms are connected. This loss of detail limits how well the models can predict molecular behavior.
 
@@ -1149,7 +1149,7 @@ GNNs solve this problem by learning directly from the molecular graph. Instead o
 In short, GNNs allow researchers to build models that reflect the true structure of molecules. They avoid the limitations of older methods by directly using the connections between atoms, offering a more natural and powerful way to predict molecular properties.
 
 ![GNN Processing Pipeline](../../../../../resource/img/gnn/gnn_processing_pipeline.png)
-**Figure 2:** *Step-by-step visualization of how Graph Neural Networks process molecular graphs. The pipeline shows the flow from input molecular graph through message passing and aggregation to final property prediction.*
+*Step-by-step visualization of how Graph Neural Networks process molecular graphs. The pipeline shows the flow from input molecular graph through message passing and aggregation to final property prediction.*
 
 ### 3.3.1 What Are Graph Neural Networks?
 
@@ -1171,7 +1171,7 @@ This is already a graph! Let's break it down:
 - **Edges (connections)**: The chemical bonds - two O-H bonds
 
 ![Molecules as Graphs Concept](../../../../../resource/img/gnn/molecules_as_graphs.png)
-**Figure 3.3.1:** *Visualization showing how molecules naturally form graph structures. Water (H₂O) and ethanol (C₂H₆O) are shown in both chemical notation and graph representation, demonstrating that atoms are nodes and bonds are edges.*
+*Visualization showing how molecules naturally form graph structures. Water (H₂O) and ethanol (C₂H₆O) are shown in both chemical notation and graph representation, demonstrating that atoms are nodes and bonds are edges.*
 
 Now consider a slightly more complex molecule - ethanol (drinking alcohol):
 
@@ -1202,7 +1202,7 @@ Before GNNs, how did computers predict molecular properties like solubility, tox
 But this approach has a fundamental flaw. Consider these two molecules:
 
 ![Traditional Descriptors vs Graph Neural Networks](../../../../../resource/img/gnn/traditional_vs_gnn.png)
-**Figure 3.3.2:** *Comparison between traditional molecular descriptors and Graph Neural Networks. Traditional methods lose connectivity information by converting molecules into numerical features, while GNNs preserve the full molecular structure through direct graph processing.*
+*Comparison between traditional molecular descriptors and Graph Neural Networks. Traditional methods lose connectivity information by converting molecules into numerical features, while GNNs preserve the full molecular structure through direct graph processing.*
 
 ```
 Molecule A:  H-O-C-C-C-C-O-H     (linear structure)
@@ -1236,7 +1236,7 @@ GNNs solve this problem elegantly. They process molecules as they truly are - gr
 The magic of GNNs lies in **message passing** - atoms "talk" to their neighbors through bonds. Let's see how this works step by step:
 
 ![Message Passing in Graph Neural Networks](../../../../../resource/img/gnn/message_passing_visualization.png)
-**Figure 3.3.3:** *Step-by-step visualization of the message passing mechanism in GNNs. The figure shows how information propagates through the molecular graph over multiple iterations, allowing each atom to understand its role within the larger molecular context.*
+*Step-by-step visualization of the message passing mechanism in GNNs. The figure shows how information propagates through the molecular graph over multiple iterations, allowing each atom to understand its role within the larger molecular context.*
 
 **Step 0: Initial State**
 Each atom starts knowing only about itself:
@@ -1272,7 +1272,7 @@ After enough message passing, each atom understands its role in the entire molec
 Molecular property prediction is at the heart of modern drug discovery and materials science. Consider these real-world applications:
 
 ![GNN Applications in Science and Industry](../../../../../resource/img/gnn/gnn_applications.png)
-**Figure 3.3.4:** *Real-world applications of molecular property prediction using GNNs across six domains: drug discovery, environmental science, materials design, toxicity prediction, battery research, and agriculture.*
+*Real-world applications of molecular property prediction using GNNs across six domains: drug discovery, environmental science, materials design, toxicity prediction, battery research, and agriculture.*
 
 1. **Drug Discovery**: Will this molecule pass through the blood-brain barrier?
 2. **Environmental Science**: How long will this chemical persist in water?
@@ -1291,7 +1291,7 @@ Let's implement a simple example to see how we represent molecules as graphs in 
 We’ll walk step-by-step through a basic molecular graph construction pipeline using **RDKit**, a popular cheminformatics toolkit in Python. You’ll learn how to load molecules, add hydrogens, inspect atoms and bonds, and prepare graph-based inputs for further learning.
 
 ![Feature Extraction Pipeline](../../../../../resource/img/gnn/feature_extraction_pipeline.png)
-**Figure 3.3.5:** *Complete pipeline for converting molecular SMILES strings into graph representations suitable for GNN processing. The workflow shows six stages: from SMILES input through RDKit molecule creation, node/edge feature extraction, to final graph object construction.*
+*Complete pipeline for converting molecular SMILES strings into graph representations suitable for GNN processing. The workflow shows six stages: from SMILES input through RDKit molecule creation, node/edge feature extraction, to final graph object construction.*
 
 ---
 
@@ -1502,7 +1502,7 @@ print("Water edges:", water_edges)
 Each pair represents one connection (bond) between atoms. Including both directions ensures that during **message passing**, information can flow freely from each node to all its neighbors.
 
 ![RDKit Molecular Structures](../../../../../resource/img/gnn/rdkit_molecules.png)
-**Figure 3.3.6:** *Using RDKit, we can get the chemical structures and corresponding graph statistics for common molecules (water, ethanol, benzene, and aspirin). Each molecule is shown with its 2D structure alongside graph metrics including node count, edge count, and atom type distribution.*
+*Using RDKit, we can get the chemical structures and corresponding graph statistics for common molecules (water, ethanol, benzene, and aspirin). Each molecule is shown with its 2D structure alongside graph metrics including node count, edge count, and atom type distribution.*
 
 ---
 
@@ -1531,12 +1531,15 @@ When a **fluorine atom** is added to a molecule, its **high electronegativity** 
 This is exactly the kind of **structural propagation** that message passing in GNNs is designed to model.
 
 ![Chemical Effects Propagation](../../../../../resource/img/gnn/chemical_propagation.png)
-**Figure 3.3.7:** *Comparison of electronic effects propagation in real molecules (left) versus GNN simulation (right). The fluorine atom's electronegativity creates a ripple effect through the carbon chain, which GNNs capture through iterative message passing.*
+*Comparison of electronic effects propagation in real molecules (left) versus GNN simulation (right). The fluorine atom's electronegativity creates a ripple effect through the carbon chain, which GNNs capture through iterative message passing.*
 
 #### The structure of message passing: what happens at each GNN layer?
 
 Even though the idea sounds intuitive, we need a well-defined set of mathematical steps for the computer to execute.
 In a GNN, each layer usually follows **three standard steps**:
+
+![Message Passing Three Steps](../../../../../resource/img/gnn/message_passing_three_steps.png)
+*The three standard steps of message passing in GNNs: (1) Message Construction - neighbors create messages based on their features and edge properties, (2) Message Aggregation - all incoming messages are combined using sum, mean, or attention, (3) State Update - nodes combine their current state with aggregated messages to produce new representations.*
 
 #### Step 1: **Message Construction**
 
@@ -1563,14 +1566,15 @@ Here, $N(i)$ is the set of all neighbors of node $i$.
 This step is like saying: "I listen to all my neighbors and combine what they told me."
 
 However, in real chemistry, **not all neighbors are equally important**:
-
 * A **double bond** may influence differently than a single bond
 * An **oxygen atom** might carry more weight than a hydrogen atom
 
-That’s why advanced GNNs often use **weighted aggregation** or **attention mechanisms** to adjust how each neighbor contributes.
+![degreenormalize](../../../../../resource/img/gnn/degreenormalize.png)
 
-![Message Passing Three Steps](../../../../../resource/img/gnn/message_passing_three_steps.png)
-**Figure 3.3.8:** *The three standard steps of message passing in GNNs: (1) Message Construction - neighbors create messages based on their features and edge properties, (2) Message Aggregation - all incoming messages are combined using sum, mean, or attention, (3) State Update - nodes combine their current state with aggregated messages to produce new representations.*
+That's why advanced GNNs often use **weighted aggregation** or **attention mechanisms** to adjust how each neighbor contributes.
+
+![Aggregation Functions](../../../../../resource/img/gnn/aggregation_functions.png)
+*Different aggregation functions in GNNs. Sum preserves total signal strength, Mean normalizes by node degree, Max captures the strongest signal, and Attention weights messages by learned importance scores.*
 
 #### Step 3: **State Update**
 
@@ -1653,6 +1657,7 @@ The vertical flowchart above illustrates how a single Graph Convolutional Networ
    $$
 
 5. **Forward Pass**  
+   - The forward pass in a graph neural network executes message passing by updating each node's features based on its neighbors' information and the graph's structure.
    - Execute this “message passing” in one call:  
      ```python
      output = conv(data.x, data.edge_index)
@@ -1755,17 +1760,6 @@ tensor([[ 0.2851, -0.0017],
      * **Potential reaction hotspots**
 
 By combining your flowchart, code snippet, and this result interpretation, your readers should now see **both** how the GCN works in practice and why its output is meaningful for molecular/chemical analysis.
-
-However, in real chemistry, **not all neighbors are equally important**:
-* A **double bond** may influence differently than a single bond
-* An **oxygen atom** might carry more weight than a hydrogen atom
-
-![degreenormalize](../../../../../resource/img/gnn/degreenormalize.png)
-
-That's why advanced GNNs often use **weighted aggregation** or **attention mechanisms** to adjust how each neighbor contributes.
-
-![Aggregation Functions](../../../../../resource/img/gnn/aggregation_functions.png)
-**Figure 3.3.9:** *Different aggregation functions in GNNs. Sum preserves total signal strength, Mean normalizes by node degree, Max captures the strongest signal, and Attention weights messages by learned importance scores.*
 
 **Variants of Graph Convolutions**
 
