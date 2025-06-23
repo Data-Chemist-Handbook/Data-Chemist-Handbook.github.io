@@ -1824,8 +1824,6 @@ Different GNN architectures (GCN, GraphSAGE, GAT, MPNN) offer various approaches
 
 The power of message passing lies in its ability to bridge **structure and function**. By allowing atoms to "communicate" through bonds, GNNs learn representations that encode not just molecular topology, but also the chemical behaviors that emerge from that structure — acidity, reactivity, electronic distribution, and more. This makes GNNs particularly well-suited for molecular property prediction and drug discovery tasks where understanding chemical context is crucial.
 
-
-
 ------
 
 ### 3.3.3 GNNs for Molecular Property Prediction
@@ -2233,7 +2231,7 @@ def get_bond_connections(mol):
 **Why ESOL?** The ESOL (Estimated SOLubility) dataset is a gold standard because:
 
 - 1,128 molecules with **experimental** (not computed) solubility
-- Spans 13+ orders of magnitude (10¹³-fold range!)
+- Spans 13+ orders of magnitude ($10^{13}$-fold range!)
 - Diverse chemical space: alkanes, aromatics, heterocycles, etc.
 
 **Data Loading Implementation**:
@@ -2292,9 +2290,9 @@ Solubility range: -11.60 to 1.58 log S
 <div style="background-color:#ffebee; padding:10px; border-radius:5px; margin:10px 0;">
     <p><b>What do these numbers mean?</b></p>
     <ul>
-        <li>log S = -11.60 → Solubility = 10^(-11.60) mol/L (extremely insoluble)</li>
-        <li>log S = 1.58 → Solubility = 10^(1.58) mol/L (very soluble)</li>
-        <li>Range: 13.18 log units = 10^(13.18) ≈ 15 trillion-fold difference!</li>
+        <li>log S = -11.60 → Solubility = $10^{-11.60}$ mol/L (extremely insoluble)</li>
+        <li>log S = 1.58 → Solubility = $10^{1.58}$ mol/L (very soluble)</li>
+        <li>Range: 13.18 log units = $10^{13.18}$ ≈ 15 trillion-fold difference!</li>
     </ul>
     
     <div style="background-color:#fff3e0; padding:10px; border-radius:5px; margin-top:10px;">
@@ -2890,28 +2888,28 @@ Benzene (c1ccccc1):
     <p><b>Message Passing Framework:</b></p>
     <p>Each GCN layer performs the following operation:</p>
     <p style="text-align:center; font-size:18px;">
-        <b>h_i^(l+1) = σ(W^(l) · AGG({h_j^(l) : j ∈ N(i) ∪ {i}}))</b>
+        <b>$h_i^{(l+1)} = \sigma(W^{(l)} \cdot AGG(\{h_j^{(l)} : j \in N(i) \cup \{i\}\}))$</b>
     </p>
     
     <div style="background-color:#fff9c4; padding:10px; border-radius:5px; margin:10px 0;">
         <p><b>Breaking Down This Scary Formula:</b></p>
         <ul>
-            <li><b>h_i^(l)</b> = "What atom i knows at layer l"</li>
-            <li><b>N(i)</b> = "Atom i's neighbors (bonded atoms)"</li>
-            <li><b>AGG</b> = "Combine information from neighbors (usually average)"</li>
-            <li><b>W^(l)</b> = "Learnable transformation (the 'smart' part)"</li>
-            <li><b>σ</b> = "Activation function (adds non-linearity)"</li>
+            <li><b>$h_i^{(l)}$</b> = "What atom i knows at layer l"</li>
+            <li><b>$N(i)$</b> = "Atom i's neighbors (bonded atoms)"</li>
+            <li><b>$AGG$</b> = "Combine information from neighbors (usually average)"</li>
+            <li><b>$W^{(l)}$</b> = "Learnable transformation (the 'smart' part)"</li>
+            <li><b>$\sigma$</b> = "Activation function (adds non-linearity)"</li>
         </ul>
         <p><b>In Plain English:</b> Each atom collects information from its neighbors, combines it, transforms it with learnable weights, and updates its own representation!</p>
     </div>
     
     <p>Where:</p>
     <ul>
-        <li>h_i^(l) = features of atom i at layer l</li>
-        <li>N(i) = neighbors of atom i</li>
-        <li>W^(l) = learnable weight matrix</li>
-        <li>AGG = aggregation function (mean)</li>
-        <li>σ = activation function (ReLU)</li>
+        <li>$h_i^{(l)}$ = features of atom i at layer l</li>
+        <li>$N(i)$ = neighbors of atom i</li>
+        <li>$W^{(l)}$ = learnable weight matrix</li>
+        <li>$AGG$ = aggregation function (mean)</li>
+        <li>$\sigma$ = activation function (ReLU)</li>
     </ul>
 </div>
 
@@ -2969,7 +2967,6 @@ class MolecularGNN(nn.Module):
     Atoms (5 features) → GCN layers → Molecular embedding (64) → Solubility (1)
     """
     
-    ```python
     def __init__(self, num_features=5, hidden_dim=64, num_layers=3):
         super(MolecularGNN, self).__init__()
         
@@ -3467,24 +3464,24 @@ Example batch:
 <div style="background-color:#f0f4c3; padding:10px; border-radius:5px; margin:10px 0;">
     <p><b>Adam Optimizer</b>: Combines momentum with adaptive learning rates</p>
     <p style="text-align:center;">
-        m_t = β₁m_(t-1) + (1 - β₁)g_t<br>
-        v_t = β₂v_(t-1) + (1 - β₂)g_t²<br>
-        θ_t = θ_(t-1) - α(m_t/√(v_t + ε))
+        $m_t = \beta_1 m_{t-1} + (1 - \beta_1)g_t$<br>
+        $v_t = \beta_2 v_{t-1} + (1 - \beta_2)g_t^2$<br>
+        $\theta_t = \theta_{t-1} - \alpha\frac{m_t}{\sqrt{v_t + \epsilon}}$
     </p>
     
     <div style="background-color:#fff9c4; padding:10px; border-radius:5px; margin-top:10px;">
         <p><b>Adam in Plain English:</b></p>
         <ul>
-            <li><b>m_t:</b> "Momentum" - like a ball rolling downhill, builds up speed</li>
-            <li><b>v_t:</b> "Adaptive learning" - goes slow in steep areas, fast in flat areas</li>
-            <li><b>α = 0.001:</b> "Step size" - how big each update is</li>
+            <li><b>$m_t$:</b> "Momentum" - like a ball rolling downhill, builds up speed</li>
+            <li><b>$v_t$:</b> "Adaptive learning" - goes slow in steep areas, fast in flat areas</li>
+            <li><b>$\alpha = 0.001$:</b> "Step size" - how big each update is</li>
         </ul>
         <p><b>Why Adam over simple gradient descent?</b> It's like having a smart GPS that adjusts speed based on traffic!</p>
     </div>
     
     <p><b>MSE Loss</b>: For regression tasks</p>
     <p style="text-align:center;">
-        L = (1/n) Σ(y_pred,i - y_true,i)²
+        $L = \frac{1}{n} \sum_{i=1}^{n}(y_{pred,i} - y_{true,i})^2$
     </p>
     
     <div style="background-color:#e8f5e9; padding:10px; border-radius:5px; margin-top:10px;">
@@ -3787,7 +3784,7 @@ Training completed!
     <ul>
         <li>Initial loss ≈ 10 (not shown) → Final loss ≈ 3.5</li>
         <li>Test loss closely follows training loss (good generalization)</li>
-        <li>Loss of 3.7 corresponds to RMSE = √3.7 ≈ 1.92 log S</li>
+        <li>Loss of 3.7 corresponds to RMSE = $\sqrt{3.7}$ ≈ 1.92 log S</li>
         <li>Small train-test gap (3.49 vs 3.73) indicates appropriate model capacity</li>
     </ul>
 </div>
@@ -3862,19 +3859,19 @@ plt.show()
     </tr>
     <tr>
         <td style="border:1px solid #64b5f6; padding:8px;">RMSE</td>
-        <td style="border:1px solid #64b5f6; padding:8px;">√[(1/n)Σ(y_pred - y_true)²]</td>
+        <td style="border:1px solid #64b5f6; padding:8px;">$\sqrt{\frac{1}{n}\sum_{i=1}^{n}(y_{pred} - y_{true})^2}$</td>
         <td style="border:1px solid #64b5f6; padding:8px;">Average error magnitude</td>
         <td style="border:1px solid #64b5f6; padding:8px;">Typical prediction error in log S units</td>
     </tr>
     <tr>
         <td style="border:1px solid #64b5f6; padding:8px;">MAE</td>
-        <td style="border:1px solid #64b5f6; padding:8px;">(1/n)Σ|y_pred - y_true|</td>
+        <td style="border:1px solid #64b5f6; padding:8px;">$\frac{1}{n}\sum_{i=1}^{n}|y_{pred} - y_{true}|$</td>
         <td style="border:1px solid #64b5f6; padding:8px;">Typical prediction error</td>
         <td style="border:1px solid #64b5f6; padding:8px;">Less sensitive to outliers than RMSE</td>
     </tr>
     <tr>
         <td style="border:1px solid #64b5f6; padding:8px;">R²</td>
-        <td style="border:1px solid #64b5f6; padding:8px;">1 - (SS_res/SS_tot)</td>
+        <td style="border:1px solid #64b5f6; padding:8px;">$1 - \frac{SS_{res}}{SS_{tot}}$</td>
         <td style="border:1px solid #64b5f6; padding:8px;">Variance explained (0-1)</td>
         <td style="border:1px solid #64b5f6; padding:8px;">% of data variation our model captures</td>
     </tr>
@@ -3882,12 +3879,12 @@ plt.show()
 
 <div style="background-color:#fff3e0; padding:15px; border-radius:8px; margin:10px 0;">
     <h4>Understanding R² in Detail</h4>
-    <p>The R² formula: R² = 1 - (SS_res/SS_tot)</p>
+    <p>The R² formula: $R^2 = 1 - \frac{SS_{res}}{SS_{tot}}$</p>
     <ul>
-        <li><b>SS_tot</b> = Total variance = Σ(y_i - ȳ)²</li>
-        <li><b>SS_res</b> = Residual variance = Σ(y_i - ŷ_i)²</li>
-        <li><b>ȳ</b> = Mean of true values</li>
-        <li><b>ŷ_i</b> = Our predictions</li>
+        <li><b>$SS_{tot}$</b> = Total variance = $\sum(y_i - \bar{y})^2$</li>
+        <li><b>$SS_{res}$</b> = Residual variance = $\sum(y_i - \hat{y}_i)^2$</li>
+        <li><b>$\bar{y}$</b> = Mean of true values</li>
+        <li><b>$\hat{y}_i$</b> = Our predictions</li>
     </ul>
     <p><b>Interpretation:</b></p>
     <ul>
@@ -4003,7 +4000,7 @@ Interpretation:
 <div style="background-color:#ffcdd2; padding:10px; border-radius:5px;">
     <p><b>Performance Reality Check:</b></p>
     <ul>
-        <li>MAE = 1.6 log units → 10^1.6 ≈ 40× error in concentration</li>
+        <li>MAE = 1.6 log units → $10^{1.6}$ ≈ 40× error in concentration</li>
         <li>R² = 0.22 means the model explains only 22% of variance</li>
         <li>Why seemingly poor performance?</li>
         <ul>
@@ -4570,7 +4567,7 @@ Cyclohexane (aliphatic)             C1CCCCC1                   -3.037
         </li>
         <li><b>Clear Size Trend:</b><br>
             • C₂ (-2.458) → C₄ (-2.710) → C₆ (-2.808) → C₈ (-2.861)<br>
-            • Δlog S ≈ -0.05 per CH₂ group<br>
+            • $\Delta\text{log S} \approx -0.05$ per CH₂ group<br>
             • <b>Success:</b> Model learned hydrophobic effect of alkyl chains
         </li>
         <li><b>Strong Aromaticity Effect:</b><br>
@@ -4666,9 +4663,47 @@ Cyclohexane (aliphatic)             C1CCCCC1                   -3.037
 </div>
 
 The beauty of GNNs for chemistry lies in their natural alignment with molecular structure. While our simple model achieves modest performance, it demonstrates the complete pipeline from molecules to predictions. This foundation, enhanced with richer features and advanced architectures, powers modern drug discovery and materials design platforms.
+
+------
+
 ### 3.3.4 Challenges and Interpretability in GNNs
 
 #### Completed and Compiled Code: [Click Here](https://colab.research.google.com/drive/1rtJ6voxMVK7KS-oZS97_7Jr1bBf7Z15T?usp=sharing)
+
+<div style="background-color:#f0f7ff; border:2px solid #1976d2; border-radius:10px; padding:20px; margin:20px 0;">
+    <h4>What We're Exploring: Fundamental Challenges in Graph Neural Networks</h4>
+    
+    <div style="background-color:#fff3e0; padding:15px; border-radius:8px; margin-bottom:15px;">
+        <p><b>Why Study GNN Challenges?</b></p>
+        <ul>
+            <li><b>Over-smoothing:</b> Why deeper isn't always better - node features become indistinguishable</li>
+            <li><b>Interpretability:</b> Understanding what the model learns - crucial for drug discovery</li>
+            <li><b>Real Impact:</b> These challenges affect whether GNNs can be trusted in production</li>
+        </ul>
+        <p><b>What you'll learn:</b> The fundamental limitations of GNNs and current solutions to overcome them</p>
+    </div>
+    
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#e3f2fd;">
+            <th style="padding:10px; border:1px solid #90caf9;">Challenge</th>
+            <th style="padding:10px; border:1px solid #90caf9;">What Happens</th>
+            <th style="padding:10px; border:1px solid #90caf9;">Why It Matters</th>
+            <th style="padding:10px; border:1px solid #90caf9;">Solutions</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #90caf9; background-color:#ffebee;"><b>Over-smoothing</b></td>
+            <td style="padding:10px; border:1px solid #90caf9;">Node features converge<br><span style="color:#666; font-size:0.9em;">All atoms look the same</span></td>
+            <td style="padding:10px; border:1px solid #90caf9;">Limits network depth<br><span style="color:#666; font-size:0.9em;">Can't capture long-range interactions</span></td>
+            <td style="padding:10px; border:1px solid #90caf9;">Residual connections<br><span style="color:#666; font-size:0.9em;">Skip connections, normalization</span></td>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #90caf9; background-color:#fff9c4;"><b>Interpretability</b></td>
+            <td style="padding:10px; border:1px solid #90caf9;">Black box predictions<br><span style="color:#666; font-size:0.9em;">Don't know why it predicts</span></td>
+            <td style="padding:10px; border:1px solid #90caf9;">No trust in predictions<br><span style="color:#666; font-size:0.9em;">Can't guide drug design</span></td>
+            <td style="padding:10px; border:1px solid #90caf9;">Attention visualization<br><span style="color:#666; font-size:0.9em;">Substructure explanations</span></td>
+        </tr>
+    </table>
+</div>
 
 While GNNs have shown remarkable success in molecular property prediction, they face several fundamental challenges that limit their practical deployment. In this section, we'll explore two critical issues: the over-smoothing phenomenon that limits network depth, and the interpretability challenge that makes it difficult to understand model predictions.
 
@@ -4676,11 +4711,72 @@ While GNNs have shown remarkable success in molecular property prediction, they 
 
 In Graph Neural Networks (GNNs), adding more message-passing layers allows nodes (atoms) to gather information from increasingly distant parts of a graph (molecule). At first glance, it seems deeper networks should always perform better—after all, more layers mean more context. But in practice, there's a major trade-off known as **over-smoothing**.
 
+<div style="background-color:#ffebee; padding:15px; border-radius:8px; margin:20px 0;">
+    <h4>Understanding Over-smoothing</h4>
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#ffcdd2;">
+            <th style="padding:8px; border:1px solid #ef9a9a;">Concept</th>
+            <th style="padding:8px; border:1px solid #ef9a9a;">Simple Explanation</th>
+            <th style="padding:8px; border:1px solid #ef9a9a;">Molecular Context</th>
+        </tr>
+        <tr>
+            <td style="padding:8px; border:1px solid #ef9a9a;"><b>Message Passing</b></td>
+            <td style="padding:8px; border:1px solid #ef9a9a;">Atoms share info with neighbors</td>
+            <td style="padding:8px; border:1px solid #ef9a9a;">Like atoms "talking" through bonds</td>
+        </tr>
+        <tr>
+            <td style="padding:8px; border:1px solid #ef9a9a;"><b>Receptive Field</b></td>
+            <td style="padding:8px; border:1px solid #ef9a9a;">How far information travels</td>
+            <td style="padding:8px; border:1px solid #ef9a9a;">k layers = k-hop neighborhood</td>
+        </tr>
+        <tr>
+            <td style="padding:8px; border:1px solid #ef9a9a;"><b>Over-smoothing</b></td>
+            <td style="padding:8px; border:1px solid #ef9a9a;">All nodes become similar</td>
+            <td style="padding:8px; border:1px solid #ef9a9a;">Can't distinguish different atoms</td>
+        </tr>
+        <tr>
+            <td style="padding:8px; border:1px solid #ef9a9a;"><b>Critical Depth</b></td>
+            <td style="padding:8px; border:1px solid #ef9a9a;">~3-5 layers typically</td>
+            <td style="padding:8px; border:1px solid #ef9a9a;">Beyond this, performance drops</td>
+        </tr>
+    </table>
+</div>
+
 **What to Demonstrate**
 
 Before we jump into the code, here's **what it's trying to show**:
 
 We want to measure how **similar node embeddings become** as we increase the number of GCN layers. If all node vectors become nearly identical after several layers, that means the model is **losing resolution**—different atoms can't be distinguished anymore. This is called **over-smoothing**.
+
+<div style="background-color:#e3f2fd; padding:15px; border-radius:8px; margin:15px 0;">
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#90caf9;">
+            <th style="padding:10px; border:1px solid #42a5f5; text-align:center;" colspan="4">Key Functions and Concepts</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #64b5f6; background-color:#ffffff;">
+                <b>GCNConv</b><br>
+                Graph convolution layer<br>
+                <span style="font-size:0.9em; color:#666;">Aggregates neighbor features</span>
+            </td>
+            <td style="padding:10px; border:1px solid #64b5f6; background-color:#ffffff;">
+                <b>F.relu()</b><br>
+                Non-linear activation<br>
+                <span style="font-size:0.9em; color:#666;">Adds expressiveness</span>
+            </td>
+            <td style="padding:10px; border:1px solid #64b5f6; background-color:#ffffff;">
+                <b>F.normalize()</b><br>
+                L2 normalization<br>
+                <span style="font-size:0.9em; color:#666;">For cosine similarity</span>
+            </td>
+            <td style="padding:10px; border:1px solid #64b5f6; background-color:#ffffff;">
+                <b>torch.mm()</b><br>
+                Matrix multiplication<br>
+                <span style="font-size:0.9em; color:#666;">Computes similarity matrix</span>
+            </td>
+        </tr>
+    </table>
+</div>
 
 **Functions and Concepts Used**
 
@@ -4698,9 +4794,37 @@ We want to measure how **similar node embeddings become** as we increase the num
 
 We use a **6-node ring structure** as a simple molecular graph. Each node starts with a unique identity (using identity matrix `torch.eye(6)` as input features), and all nodes are connected in a cycle:
 
-<details>
-<summary>▶ Click to see code: Constructing a simple cyclic graph</summary>
-<pre><code class="language-python">
+<div style="background-color:#e8f5e9; padding:15px; border-radius:8px; margin:15px 0;">
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#a5d6a7;">
+            <th style="padding:10px; border:1px solid #66bb6a; text-align:center;" colspan="4">Graph Construction Process</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #81c784; background-color:#ffffff;">
+                <b>Step 1:</b><br>
+                Create node features<br>
+                <span style="font-size:0.9em; color:#666;">Identity matrix (6×6)</span>
+            </td>
+            <td style="padding:10px; border:1px solid #81c784; background-color:#ffffff;">
+                <b>Step 2:</b><br>
+                Define ring topology<br>
+                <span style="font-size:0.9em; color:#666;">Each node → 2 neighbors</span>
+            </td>
+            <td style="padding:10px; border:1px solid #81c784; background-color:#ffffff;">
+                <b>Step 3:</b><br>
+                Make bidirectional<br>
+                <span style="font-size:0.9em; color:#666;">12 directed edges total</span>
+            </td>
+            <td style="padding:10px; border:1px solid #81c784; background-color:#ffffff;">
+                <b>Result:</b><br>
+                PyG Data object<br>
+                <span style="font-size:0.9em; color:#666;">Ready for GNN</span>
+            </td>
+        </tr>
+    </table>
+</div>
+
+```python
 import torch
 from torch_geometric.data import Data
 
@@ -4715,16 +4839,38 @@ edge_index = torch.tensor([
 
 # Create PyTorch Geometric graph object
 data = Data(x=x, edge_index=edge_index)
-</code></pre>
-</details>
+```
 
 **Over-smoothing Analysis**
 
 Now we apply the same GCN layer multiple times to simulate a deeper GNN. After each layer, we re-compute the node embeddings and compare them using cosine similarity:
 
-<details>
-<summary>▶ Click to see code: Demonstrating over-smoothing</summary>
-<pre><code class="language-python">
+<div style="background-color:#f3e5f5; padding:15px; border-radius:8px; margin:15px 0;">
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#e1bee7;">
+            <th style="padding:10px; border:1px solid #ba68c8; text-align:center;" colspan="3">Over-smoothing Measurement Process</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #ce93d8; background-color:#ffffff;">
+                <b>Apply GCN layers:</b><br>
+                Stack 1-10 layers<br>
+                <span style="font-size:0.9em; color:#666;">Same layer repeated</span>
+            </td>
+            <td style="padding:10px; border:1px solid #ce93d8; background-color:#ffffff;">
+                <b>Compute similarity:</b><br>
+                Cosine between nodes<br>
+                <span style="font-size:0.9em; color:#666;">Average all pairs</span>
+            </td>
+            <td style="padding:10px; border:1px solid #ce93d8; background-color:#ffffff;">
+                <b>Track convergence:</b><br>
+                Plot vs depth<br>
+                <span style="font-size:0.9em; color:#666;">Watch similarity → 1</span>
+            </td>
+        </tr>
+    </table>
+</div>
+
+```python
 import torch
 import torch.nn.functional as F
 import matplotlib.pyplot as plt
@@ -4768,8 +4914,7 @@ plt.ylabel("Average Cosine Similarity")
 plt.title("Over-smoothing Effect in GNNs")
 plt.grid(True)
 plt.show()
-</code></pre>
-</details>
+```
 
 **Output**
 ```
@@ -4781,11 +4926,83 @@ Depth 10: Average similarity = 1.000
 
 ![Over-smoothing in GNNs](../../resource/img/gnn/oversmoothing.png)
 
+<div style="background-color:#fff9c4; padding:15px; border-radius:8px; margin:15px 0;">
+    <h4>Interpretation of Results</h4>
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#fff176;">
+            <th style="padding:10px; border:1px solid #ffd600;">Depth</th>
+            <th style="padding:10px; border:1px solid #ffd600;">Similarity</th>
+            <th style="padding:10px; border:1px solid #ffd600;">What It Means</th>
+            <th style="padding:10px; border:1px solid #ffd600;">Practical Impact</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #ffeb3b; background-color:#ffffff;">1 layer</td>
+            <td style="padding:10px; border:1px solid #ffeb3b; background-color:#ffffff;">0.406</td>
+            <td style="padding:10px; border:1px solid #ffeb3b; background-color:#ffffff;">Nodes still distinct</td>
+            <td style="padding:10px; border:1px solid #ffeb3b; background-color:#ffffff;">Can identify different atoms</td>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #ffeb3b; background-color:#ffffff;">3 layers</td>
+            <td style="padding:10px; border:1px solid #ffeb3b; background-color:#ffffff;">0.995</td>
+            <td style="padding:10px; border:1px solid #ffeb3b; background-color:#ffffff;">Nearly identical</td>
+            <td style="padding:10px; border:1px solid #ffeb3b; background-color:#ffffff;">Losing atomic identity</td>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #ffeb3b; background-color:#ffffff;">5 layers</td>
+            <td style="padding:10px; border:1px solid #ffeb3b; background-color:#ffffff;">0.993</td>
+            <td style="padding:10px; border:1px solid #ffeb3b; background-color:#ffffff;">Effectively same</td>
+            <td style="padding:10px; border:1px solid #ffeb3b; background-color:#ffffff;">No useful information</td>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #ffeb3b; background-color:#ffffff;">10 layers</td>
+            <td style="padding:10px; border:1px solid #ffeb3b; background-color:#ffffff;">1.000</td>
+            <td style="padding:10px; border:1px solid #ffeb3b; background-color:#ffffff;">Complete collapse</td>
+            <td style="padding:10px; border:1px solid #ffeb3b; background-color:#ffffff;">Model is useless</td>
+        </tr>
+    </table>
+</div>
+
 *As shown above, as the number of message-passing layers increases, node representations converge. Initially distinct feature vectors (left) become nearly indistinguishable after several layers (right), resulting in the loss of structural information. This phenomenon is known as **over-smoothing** and is a critical limitation of deep GNNs.*
 
 **Interpretation**
 
 As we can see, even at just 3 layers, the node embeddings become nearly identical. By 10 layers, the model has effectively lost all ability to distinguish individual atoms. This is the core issue of **over-smoothing**—deep GNNs can blur out meaningful structural differences.
+
+<div style="background-color:#e8f5e9; padding:15px; border-radius:8px; margin:15px 0;">
+    <h4>Solutions to Over-smoothing</h4>
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#a5d6a7;">
+            <th style="padding:10px; border:1px solid #66bb6a;">Technique</th>
+            <th style="padding:10px; border:1px solid #66bb6a;">How It Works</th>
+            <th style="padding:10px; border:1px solid #66bb6a;">Implementation</th>
+            <th style="padding:10px; border:1px solid #66bb6a;">Effectiveness</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #81c784; background-color:#ffffff;"><b>Residual Connections</b></td>
+            <td style="padding:10px; border:1px solid #81c784; background-color:#ffffff;">Skip connections preserve original features</td>
+            <td style="padding:10px; border:1px solid #81c784; background-color:#ffffff;">x = x + GCN(x)</td>
+            <td style="padding:10px; border:1px solid #81c784; background-color:#ffffff;">Very effective</td>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #81c784; background-color:#ffffff;"><b>Feature Concatenation</b></td>
+            <td style="padding:10px; border:1px solid #81c784; background-color:#ffffff;">Combine features from multiple layers</td>
+            <td style="padding:10px; border:1px solid #81c784; background-color:#ffffff;">concat(x₁, x₂, ...)</td>
+            <td style="padding:10px; border:1px solid #81c784; background-color:#ffffff;">Good for shallow nets</td>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #81c784; background-color:#ffffff;"><b>Batch Normalization</b></td>
+            <td style="padding:10px; border:1px solid #81c784; background-color:#ffffff;">Normalize features per layer</td>
+            <td style="padding:10px; border:1px solid #81c784; background-color:#ffffff;">BatchNorm after GCN</td>
+            <td style="padding:10px; border:1px solid #81c784; background-color:#ffffff;">Moderate help</td>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #81c784; background-color:#ffffff;"><b>Jumping Knowledge</b></td>
+            <td style="padding:10px; border:1px solid #81c784; background-color:#ffffff;">Aggregate all layer outputs</td>
+            <td style="padding:10px; border:1px solid #81c784; background-color:#ffffff;">JK networks</td>
+            <td style="padding:10px; border:1px solid #81c784; background-color:#ffffff;">State-of-the-art</td>
+        </tr>
+    </table>
+</div>
 
 To mitigate this problem, modern GNNs use techniques like:
 * **Residual connections** (skip connections that reintroduce raw input)
@@ -4799,19 +5016,256 @@ When working with molecular graphs, you should **choose the depth of your GNN ca
 
 Beyond the technical challenge of over-smoothing, GNNs face a critical issue of interpretability. When a model predicts that a molecule might be toxic or have specific properties, chemists need to understand which structural features drive that prediction. This "black box" nature of neural networks is particularly problematic in chemistry, where understanding structure-activity relationships is fundamental to rational drug design.
 
+<div style="background-color:#f0f7ff; border:2px solid #1976d2; border-radius:10px; padding:20px; margin:20px 0;">
+    <h4>Why Interpretability Matters in Chemistry</h4>
+    
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#e3f2fd;">
+            <th style="padding:10px; border:1px solid #90caf9;">Stakeholder</th>
+            <th style="padding:10px; border:1px solid #90caf9;">Need</th>
+            <th style="padding:10px; border:1px solid #90caf9;">Example</th>
+            <th style="padding:10px; border:1px solid #90caf9;">Impact</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #90caf9;"><b>Medicinal Chemists</b></td>
+            <td style="padding:10px; border:1px solid #90caf9;">Understand SAR<br><span style="color:#666; font-size:0.9em;">Structure-Activity Relationships</span></td>
+            <td style="padding:10px; border:1px solid #90caf9;">Which groups increase potency?</td>
+            <td style="padding:10px; border:1px solid #90caf9;">Guide drug optimization</td>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #90caf9;"><b>Regulatory Bodies</b></td>
+            <td style="padding:10px; border:1px solid #90caf9;">Safety justification<br><span style="color:#666; font-size:0.9em;">Why is it safe?</span></td>
+            <td style="padding:10px; border:1px solid #90caf9;">Explain toxicity predictions</td>
+            <td style="padding:10px; border:1px solid #90caf9;">FDA approval</td>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #90caf9;"><b>Researchers</b></td>
+            <td style="padding:10px; border:1px solid #90caf9;">Scientific insight<br><span style="color:#666; font-size:0.9em;">New mechanisms</span></td>
+            <td style="padding:10px; border:1px solid #90caf9;">Discover new pharmacophores</td>
+            <td style="padding:10px; border:1px solid #90caf9;">Advance knowledge</td>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #90caf9;"><b>Industry</b></td>
+            <td style="padding:10px; border:1px solid #90caf9;">Risk assessment<br><span style="color:#666; font-size:0.9em;">Confidence in predictions</span></td>
+            <td style="padding:10px; border:1px solid #90caf9;">Why invest in this molecule?</td>
+            <td style="padding:10px; border:1px solid #90caf9;">Resource allocation</td>
+        </tr>
+    </table>
+</div>
+
 Recent advances in GNN interpretability for molecular applications have taken several promising directions:
 
-**Attention-Based Methods**: Graph Attention Networks (GATs) provide built-in interpretability through their attention mechanisms, allowing researchers to visualize which atoms or bonds the model considers most important for a given prediction [1,2]. This approach naturally aligns with chemical intuition about reactive sites and functional groups.
+**Attention-Based Methods**: 
 
-**Substructure-Based Explanations**: The Substructure Mask Explanation (SME) method represents a significant advance by providing interpretations based on chemically meaningful molecular fragments rather than individual atoms or edges [3]. This approach uses established molecular segmentation methods to ensure explanations align with chemists' understanding, making it particularly valuable for identifying pharmacophores and toxicophores.
+<div style="background-color:#e3f2fd; padding:15px; border-radius:8px; margin:15px 0;">
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#90caf9;">
+            <th style="padding:10px; border:1px solid #42a5f5; text-align:center;" colspan="4">Attention-Based Interpretability</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #64b5f6; background-color:#ffffff;">
+                <b>Method:</b><br>
+                Graph Attention Networks<br>
+                <span style="font-size:0.9em; color:#666;">GATs</span>
+            </td>
+            <td style="padding:10px; border:1px solid #64b5f6; background-color:#ffffff;">
+                <b>How it works:</b><br>
+                Learn importance weights<br>
+                <span style="font-size:0.9em; color:#666;">α_ij for each edge</span>
+            </td>
+            <td style="padding:10px; border:1px solid #64b5f6; background-color:#ffffff;">
+                <b>Visualization:</b><br>
+                Highlight important bonds<br>
+                <span style="font-size:0.9em; color:#666;">Thicker = more important</span>
+            </td>
+            <td style="padding:10px; border:1px solid #64b5f6; background-color:#ffffff;">
+                <b>Reference:</b><br>
+                Veličković et al., 2017<br>
+                <span style="font-size:0.9em; color:#666;">ICLR</span>
+            </td>
+        </tr>
+    </table>
+</div>
 
-**Integration of Chemical Knowledge**: Recent work has shown that incorporating pharmacophore information hierarchically into GNN architectures not only improves prediction performance but also enhances interpretability by explicitly modeling chemically meaningful substructures [4]. This bridges the gap between data-driven learning and domain expertise.
+Graph Attention Networks (GATs) provide built-in interpretability through their attention mechanisms, allowing researchers to visualize which atoms or bonds the model considers most important for a given prediction [1,2]. This approach naturally aligns with chemical intuition about reactive sites and functional groups.
 
-**Gradient-Based Attribution**: Methods like SHAP (SHapley Additive exPlanations) have been successfully applied to molecular property prediction, providing feature importance scores that help identify which molecular characteristics most influence predictions [5,6]. These approaches are particularly useful for understanding global model behavior across different molecular classes.
+**Substructure-Based Explanations**: 
 
-**Comparative Studies**: Recent comparative studies have shown that while GNNs excel at learning complex patterns, traditional descriptor-based models often provide better interpretability through established chemical features, suggesting a potential hybrid approach combining both paradigms [6].
+<div style="background-color:#f3e5f5; padding:15px; border-radius:8px; margin:15px 0;">
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#e1bee7;">
+            <th style="padding:10px; border:1px solid #ba68c8; text-align:center;" colspan="4">Substructure Mask Explanation (SME)</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #ce93d8; background-color:#ffffff;">
+                <b>Innovation:</b><br>
+                Fragment-based<br>
+                <span style="font-size:0.9em; color:#666;">Not just atoms</span>
+            </td>
+            <td style="padding:10px; border:1px solid #ce93d8; background-color:#ffffff;">
+                <b>Alignment:</b><br>
+                Chemical intuition<br>
+                <span style="font-size:0.9em; color:#666;">Functional groups</span>
+            </td>
+            <td style="padding:10px; border:1px solid #ce93d8; background-color:#ffffff;">
+                <b>Application:</b><br>
+                Toxicophore detection<br>
+                <span style="font-size:0.9em; color:#666;">Find toxic substructures</span>
+            </td>
+            <td style="padding:10px; border:1px solid #ce93d8; background-color:#ffffff;">
+                <b>Reference:</b><br>
+                Nature Comms, 2023<br>
+                <span style="font-size:0.9em; color:#666;">14, 2585</span>
+            </td>
+        </tr>
+    </table>
+</div>
 
-The field is moving toward interpretable-by-design architectures rather than post-hoc explanation methods. As noted by researchers, some medicinal chemists value interpretability over raw accuracy if a small sacrifice in performance can significantly enhance understanding of the model's reasoning [3]. This reflects a broader trend in molecular AI toward building systems that augment rather than replace human chemical intuition.
+The Substructure Mask Explanation (SME) method represents a significant advance by providing interpretations based on chemically meaningful molecular fragments rather than individual atoms or edges [3]. This approach uses established molecular segmentation methods to ensure explanations align with chemists' understanding, making it particularly valuable for identifying pharmacophores and toxicophores.
+
+**Integration of Chemical Knowledge**: 
+
+<div style="background-color:#e8f5e9; padding:15px; border-radius:8px; margin:15px 0;">
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#a5d6a7;">
+            <th style="padding:10px; border:1px solid #66bb6a; text-align:center;" colspan="4">Pharmacophore-Integrated GNNs</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #81c784; background-color:#ffffff;">
+                <b>Concept:</b><br>
+                Hierarchical modeling<br>
+                <span style="font-size:0.9em; color:#666;">Multi-level structure</span>
+            </td>
+            <td style="padding:10px; border:1px solid #81c784; background-color:#ffffff;">
+                <b>Benefit 1:</b><br>
+                Better performance<br>
+                <span style="font-size:0.9em; color:#666;">Domain knowledge helps</span>
+            </td>
+            <td style="padding:10px; border:1px solid #81c784; background-color:#ffffff;">
+                <b>Benefit 2:</b><br>
+                Natural interpretability<br>
+                <span style="font-size:0.9em; color:#666;">Pharmacophore-level</span>
+            </td>
+            <td style="padding:10px; border:1px solid #81c784; background-color:#ffffff;">
+                <b>Reference:</b><br>
+                J Cheminformatics, 2022<br>
+                <span style="font-size:0.9em; color:#666;">14, 49</span>
+            </td>
+        </tr>
+    </table>
+</div>
+
+Recent work has shown that incorporating pharmacophore information hierarchically into GNN architectures not only improves prediction performance but also enhances interpretability by explicitly modeling chemically meaningful substructures [4]. This bridges the gap between data-driven learning and domain expertise.
+
+**Gradient-Based Attribution**: 
+
+<div style="background-color:#fff3e0; padding:15px; border-radius:8px; margin:15px 0;">
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#ffe082;">
+            <th style="padding:10px; border:1px solid #ffc107; text-align:center;" colspan="4">SHAP for Molecular GNNs</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #ffd54f; background-color:#ffffff;">
+                <b>Method:</b><br>
+                SHapley values<br>
+                <span style="font-size:0.9em; color:#666;">Game theory based</span>
+            </td>
+            <td style="padding:10px; border:1px solid #ffd54f; background-color:#ffffff;">
+                <b>Advantage:</b><br>
+                Rigorous foundation<br>
+                <span style="font-size:0.9em; color:#666;">Additive features</span>
+            </td>
+            <td style="padding:10px; border:1px solid #ffd54f; background-color:#ffffff;">
+                <b>Output:</b><br>
+                Feature importance<br>
+                <span style="font-size:0.9em; color:#666;">Per atom/bond</span>
+            </td>
+            <td style="padding:10px; border:1px solid #ffd54f; background-color:#ffffff;">
+                <b>Reference:</b><br>
+                Lundberg & Lee, 2017<br>
+                <span style="font-size:0.9em; color:#666;">NeurIPS</span>
+            </td>
+        </tr>
+    </table>
+</div>
+
+Methods like SHAP (SHapley Additive exPlanations) have been successfully applied to molecular property prediction, providing feature importance scores that help identify which molecular characteristics most influence predictions [5,6]. These approaches are particularly useful for understanding global model behavior across different molecular classes.
+
+**Comparative Studies**: 
+
+<div style="background-color:#ffebee; padding:15px; border-radius:8px; margin:15px 0;">
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#ffcdd2;">
+            <th style="padding:10px; border:1px solid #ef9a9a; text-align:center;" colspan="4">GNNs vs Traditional Methods</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #ef9a9a; background-color:#ffffff;">
+                <b>Aspect</b></td>
+            <td style="padding:10px; border:1px solid #ef9a9a; background-color:#ffffff;">
+                <b>GNNs</b></td>
+            <td style="padding:10px; border:1px solid #ef9a9a; background-color:#ffffff;">
+                <b>Descriptor-based</b></td>
+            <td style="padding:10px; border:1px solid #ef9a9a; background-color:#ffffff;">
+                <b>Recommendation</b></td>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #ef9a9a; background-color:#ffffff;">
+                Performance</td>
+            <td style="padding:10px; border:1px solid #ef9a9a; background-color:#ffffff;">
+                Often superior<br><span style="font-size:0.9em; color:#666;">Complex patterns</span></td>
+            <td style="padding:10px; border:1px solid #ef9a9a; background-color:#ffffff;">
+                Good baseline<br><span style="font-size:0.9em; color:#666;">Well-understood</span></td>
+            <td style="padding:10px; border:1px solid #ef9a9a; background-color:#ffffff;">
+                Task-dependent</td>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #ef9a9a; background-color:#ffffff;">
+                Interpretability</td>
+            <td style="padding:10px; border:1px solid #ef9a9a; background-color:#ffffff;">
+                Challenging<br><span style="font-size:0.9em; color:#666;">Requires extra work</span></td>
+            <td style="padding:10px; border:1px solid #ef9a9a; background-color:#ffffff;">
+                Built-in<br><span style="font-size:0.9em; color:#666;">Known features</span></td>
+            <td style="padding:10px; border:1px solid #ef9a9a; background-color:#ffffff;">
+                Hybrid approach</td>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #ef9a9a; background-color:#ffffff;">
+                Reference</td>
+            <td style="padding:10px; border:1px solid #ef9a9a; background-color:#ffffff;" colspan="3">
+                Jiang et al., 2021, J Cheminformatics</td>
+        </tr>
+    </table>
+</div>
+
+Recent comparative studies have shown that while GNNs excel at learning complex patterns, traditional descriptor-based models often provide better interpretability through established chemical features, suggesting a potential hybrid approach combining both paradigms [6].
+
+<div style="background-color:#f0f4c3; padding:15px; border-radius:8px; margin:20px 0;">
+    <h4>The Future: Interpretable-by-Design</h4>
+    <p>The field is moving toward interpretable-by-design architectures rather than post-hoc explanation methods. As noted by researchers, some medicinal chemists value interpretability over raw accuracy if a small sacrifice in performance can significantly enhance understanding of the model's reasoning [3]. This reflects a broader trend in molecular AI toward building systems that augment rather than replace human chemical intuition.</p>
+    
+    <table style="width:100%; border-collapse:collapse; margin-top:15px;">
+        <tr style="background-color:#fff176;">
+            <th style="padding:10px; border:1px solid #ffd600;">Design Principle</th>
+            <th style="padding:10px; border:1px solid #ffd600;">Implementation</th>
+            <th style="padding:10px; border:1px solid #ffd600;">Example</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #ffeb3b; background-color:#ffffff;">Chemical hierarchy</td>
+            <td style="padding:10px; border:1px solid #ffeb3b; background-color:#ffffff;">Multi-scale architectures</td>
+            <td style="padding:10px; border:1px solid #ffeb3b; background-color:#ffffff;">Atom → Group → Molecule</td>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #ffeb3b; background-color:#ffffff;">Explicit substructures</td>
+            <td style="padding:10px; border:1px solid #ffeb3b; background-color:#ffffff;">Pharmacophore encoding</td>
+            <td style="padding:10px; border:1px solid #ffeb3b; background-color:#ffffff;">H-bond donors as nodes</td>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #ffeb3b; background-color:#ffffff;">Modular predictions</td>
+            <td style="padding:10px; border:1px solid #ffeb3b; background-color:#ffffff;">Separate property modules</td>
+            <td style="padding:10px; border:1px solid #ffeb3b; background-color:#ffffff;">Solubility + Toxicity branches</td>
+        </tr>
+    </table>
+</div>
 
 **References:**
 
@@ -4821,13 +5275,46 @@ The field is moving toward interpretable-by-design architectures rather than pos
 
 [3] Chemistry-intuitive explanation of graph neural networks for molecular property prediction with substructure masking. (2023). *Nature Communications*, 14, 2585.
 
-[4] Integrating concept of pharmacophore with graph neural networks for chemical property prediction and interpretation. (2022). *Journal of Cheminformatics*, 14, 49.
+[4] Integrating concept of pharmacophore with graph neural networks for chemical property prediction and interpretation. (2022). *Journal of Cheminformatics*, 14, 52.
 
 [5] Lundberg, S. M., & Lee, S. I. (2017). A unified approach to interpreting model predictions. *Advances in Neural Information Processing Systems*, 30, 4765-4774.
 
 [6] Jiang, D., Wu, Z., Hsieh, C. Y., Chen, G., Liao, B., Wang, Z., ... & Hou, T. (2021). Could graph neural networks learn better molecular representation for drug discovery? A comparison study of descriptor-based and graph-based models. *Journal of Cheminformatics*, 13(1), 1-23.
 
 #### Summary
+
+<div style="background-color:#e3f2fd; padding:15px; border-radius:8px;">
+    <h4>Key Takeaways: Challenges and Solutions</h4>
+    
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#90caf9;">
+            <th style="padding:10px; border:1px solid #42a5f5;">Challenge</th>
+            <th style="padding:10px; border:1px solid #42a5f5;">Impact</th>
+            <th style="padding:10px; border:1px solid #42a5f5;">Current Solutions</th>
+            <th style="padding:10px; border:1px solid #42a5f5;">Future Directions</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #64b5f6; background-color:#ffffff;"><b>Over-smoothing</b></td>
+            <td style="padding:10px; border:1px solid #64b5f6; background-color:#ffffff;">Limits depth to 3-5 layers<br><span style="font-size:0.9em; color:#666;">Can't capture long-range</span></td>
+            <td style="padding:10px; border:1px solid #64b5f6; background-color:#ffffff;">• Residual connections<br>• Jumping knowledge<br>• Normalization</td>
+            <td style="padding:10px; border:1px solid #64b5f6; background-color:#ffffff;">Novel architectures<br><span style="font-size:0.9em; color:#666;">Beyond message passing</span></td>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #64b5f6; background-color:#ffffff;"><b>Interpretability</b></td>
+            <td style="padding:10px; border:1px solid #64b5f6; background-color:#ffffff;">Low trust & adoption<br><span style="font-size:0.9em; color:#666;">Can't guide design</span></td>
+            <td style="padding:10px; border:1px solid #64b5f6; background-color:#ffffff;">• Attention visualization<br>• SHAP values<br>• Substructure masking</td>
+            <td style="padding:10px; border:1px solid #64b5f6; background-color:#ffffff;">Interpretable-by-design<br><span style="font-size:0.9em; color:#666;">Chemical hierarchy</span></td>
+        </tr>
+    </table>
+    
+    <p style="margin-top:15px;"><b>The Path Forward:</b></p>
+    <ul>
+        <li><b>Balance accuracy with interpretability</b> - Sometimes 90% accuracy with clear explanations beats 95% black box</li>
+        <li><b>Incorporate domain knowledge</b> - Chemical principles should guide architecture design</li>
+        <li><b>Develop hybrid approaches</b> - Combine GNN power with traditional descriptor interpretability</li>
+        <li><b>Focus on augmenting chemists</b> - Tools should enhance, not replace, human expertise</li>
+    </ul>
+</div>
 
 The challenges facing molecular GNNs—over-smoothing and interpretability—are significant but surmountable. Over-smoothing limits the depth of networks we can effectively use, constraining the model's ability to capture long-range molecular interactions. Meanwhile, the interpretability challenge affects trust and adoption in real-world applications where understanding model decisions is crucial.
 
