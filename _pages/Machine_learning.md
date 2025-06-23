@@ -1848,18 +1848,6 @@ Predicting how molecules behave in the real world is one of chemistry's grand ch
 
 Traditional approaches to solubility prediction relied on empirical rules like "like dissolves like" or complex equations with dozens of parameters. But these methods often fail for novel molecular structures or struggle to capture subtle effects. GNNs offer a fundamentally different approach: learn the structure-property relationship directly from data.
 
-#### Why Graphs for Molecules?
-
-To appreciate why GNNs excel at molecular property prediction, let's consider how molecules are traditionally represented in machine learning:
-
-**Molecular Fingerprints**: These encode molecular structure as fixed-length bit vectors. While useful, they lose precise connectivity information. Two very different molecules might have similar fingerprints, or subtle but important differences might be obscured.
-
-**Molecular Descriptors**: Calculated properties like molecular weight, logP, or polar surface area. These are interpretable but limited - they're human-designed features that might miss important patterns.
-
-**SMILES Strings**: Text representations that can be processed by sequence models. But SMILES treats molecules as linear sequences, losing the natural graph structure.
-
-In contrast, GNNs work with molecules as they truly are - graphs where atoms are nodes and bonds are edges. This preserves all structural information while allowing the model to learn what matters for the property at hand.
-
 #### Setting Up the Environment
 
 Before we begin building our GNN-based molecular property prediction system, we need to load a set of specialized Python libraries. Let me explain what each library does and why we need it:
