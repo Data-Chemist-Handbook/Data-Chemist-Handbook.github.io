@@ -55,7 +55,7 @@ Retrosynthesis prediction is complex and heavily dependent on molecular descript
 ## 7.3 Seq2Seq LSTM 
 
 The first machine learning-based template-free approach to retrosynthesis we will discuss is the use of a Seq2Seq LSTM. This is a sequence-to-sequence architecture built using two LSTMs, one serving as the encoder and the other as the decoder.
-*(See Chapter 6 for information on RNN and LSTM, and Chapter 3 for information on neural networks.)*
+*(See [Chapter 6](./Reaction_Prediction.md) for information on RNN and LSTM, and [Chapter 3](./Machine_learning.md) for information on neural networks.)*
 
 The Seq2Seq LSTM architecture is used for tasks where one sequence of data needs to be transformed into another sequence, especially when the input and output sequences can have different lengths. Retrosynthesis can be framed as a sequence-to-sequence task, a "translation" from product to reactant, when molecules are represented using SMILES strings.
 
