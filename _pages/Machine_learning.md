@@ -1907,7 +1907,7 @@ The power of message passing lies in its ability to bridge **structure and funct
         <li><b>Hydrogen bonding</b>: -OH, -NH groups increase water solubility</li>
         <li><b>Hydrophobic effect</b>: Long carbon chains decrease solubility</li>
         <li><b>Molecular size</b>: Larger molecules → harder to solvate</li>
-        <li><b>Aromaticity</b>: π-systems are hydrophobic</li>
+        <li><b>Aromaticity</b>: $$\pi\text{-systems}$$ are hydrophobic</li>
     </ul>
 </div>
 
