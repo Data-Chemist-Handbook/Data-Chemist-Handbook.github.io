@@ -1293,8 +1293,6 @@ We’ll walk step-by-step through a basic molecular graph construction pipeline 
 ![Feature Extraction Pipeline](../../../../../resource/img/gnn/feature_extraction_pipeline.png)
 *Complete pipeline for converting molecular SMILES strings into graph representations suitable for GNN processing. The workflow shows six stages: from SMILES input through RDKit molecule creation, node/edge feature extraction, to final graph object construction.*
 
----
-
 #### 1. Load a molecule and include hydrogen atoms
 
 To start, we need to load a molecule using **RDKit**. RDKit provides a function `Chem.MolFromSmiles()` to create a molecule object from a **SMILES string** (a standard text representation of molecules). However, by default, hydrogen atoms are not included explicitly in the molecule. To use GNNs effectively, we want **all atoms explicitly shown**, so we also call `Chem.AddHs()` to add them in.
@@ -1310,6 +1308,8 @@ Let’s break down the functions we’ll use:
 * `Chem.AddHs(mol)`:
   Returns a new molecule object with **explicit hydrogen atoms** added to the input `mol`.
 
+![Molecule Loading Process](../../../../../resource/img/gnn/mol_loading_visualization.png)
+
 <details>
 <summary>▶ Click to see code: Basic molecule to graph conversion</summary>
 <pre><code class="language-python">
@@ -1319,13 +1319,13 @@ import numpy as np
 # Step 1: Create a molecule object from the SMILES string for water ("O" means one oxygen atom)
 water = Chem.MolFromSmiles("O")
 
-# Step 2: Count how many atoms are present (will be 1 — only the oxygen)
+# Count how many atoms are present (will be 1 — only the oxygen)
 print(f"Number of atoms: {water.GetNumAtoms()}")  # Output: 1
 
-# Step 3: Add explicit hydrogen atoms
+# Step 2: Add explicit hydrogen atoms
 water = Chem.AddHs(water)
 
-# Step 4: Count again — now we should see 3 atoms (1 O + 2 H)
+# Count again — now we should see 3 atoms (1 O + 2 H)
 print(f"Number of atoms with H: {water.GetNumAtoms()}")  # Output: 3
 </code></pre>
 </details>
@@ -1335,10 +1335,6 @@ print(f"Number of atoms with H: {water.GetNumAtoms()}")  # Output: 3
 3. **Final Atom Count**: The final count of atoms is `3`, which includes one oxygen atom and two hydrogen atoms. This accurately reflects the molecular structure of water (H₂O).
 
 By explicitly adding hydrogen atoms, we ensure that the molecular graph representation is comprehensive and suitable for further processing in GNNs.
-
-![Molecule Loading Process](../../../../../resource/img/gnn/mol_loading_visualization.png)
-
----
 
 #### 2. Access the bond structure (graph edges)
 
@@ -1386,8 +1382,6 @@ for bond in water.GetBonds():
 
 This indicates that the oxygen atom (index 0) is bonded to two hydrogen atoms (indices 1 and 2). This connectivity information is crucial for constructing the graph representation of the molecule, where atoms are nodes and bonds are edges.
 
----
-
 #### 3. Extract simple atom-level features
 
 Each atom will become a **node** in our graph, and we often associate it with a **feature vector**. To keep things simple, we start with just the **atomic number**.
@@ -1402,6 +1396,9 @@ Here’s what each function does:
 
 * `atom.GetSymbol()`:
   Returns the chemical symbol ("H", "O", etc.), useful for printing/debugging.
+
+![Feature Vector Visualization](../../../../../resource/img/gnn/atom_features_visualization.png)
+*Atom-to-feature mapping. The atomic number provides a simple yet effective initial representation for each node in the molecular graph.*
 
 <details>
 <summary>▶ Click to see code: Atom feature extraction</summary>
@@ -1424,9 +1421,6 @@ for i, atom in enumerate(water.GetAtoms()):
 </code></pre>
 </details>
 
-![Feature Vector Visualization](../../../../../resource/img/gnn/atom_features_visualization.png)
-*Atom-to-feature mapping. The atomic number provides a simple yet effective initial representation for each node in the molecular graph.*
-
 1. **Feature Extraction Function**:
    - The `get_atom_features(atom)` function extracts the atomic number of each atom using `atom.GetAtomicNum()`. This is a simple yet powerful feature for distinguishing between different elements.
    - The atomic number is a unique identifier for each element: 1 for hydrogen (H) and 8 for oxygen (O).
@@ -1447,8 +1441,6 @@ for i, atom in enumerate(water.GetAtoms()):
 
 In summary, this code demonstrates how to extract simple yet essential features from each atom in a molecule, laying the foundation for constructing informative node attributes in molecular graphs.
 
----
-
 #### 4. Build the undirected edge list
 
 Now we extract the **list of bonds as pairs of indices**. Since GNNs typically use **undirected graphs**, we store each bond in both directions (i → j and j → i).
@@ -1457,6 +1449,9 @@ Functions involved:
 
 * `bond.GetBeginAtomIdx()`, `bond.GetEndAtomIdx()` (as above)
 * We simply collect `[i, j]` and `[j, i]` into a list of edges.
+
+![Edge List Construction](../../../../../resource/img/gnn/edge_list_visualization.png)
+*Building an undirected edge list from molecular bonds. Each bond generates two directed edges (i→j and j→i) to ensure bidirectional message passing in the GNN.The complete edge list for water molecule. Bidirectional edges enable information flow in both directions during GNN message passing.*
 
 <details>
 <summary>▶ Click to see code: Edge extraction</summary>
@@ -1479,9 +1474,6 @@ print("Water edges:", water_edges)
 </code></pre>
 </details>
 
-![Edge List Construction](../../../../../resource/img/gnn/edge_list_visualization.png)
-*Building an undirected edge list from molecular bonds. Each bond generates two directed edges (i→j and j→i) to ensure bidirectional message passing in the GNN.The complete edge list for water molecule. Bidirectional edges enable information flow in both directions during GNN message passing.*
-
 1. **Function Definition**:
    - `get_edge_list(mol)`: This function takes an RDKit molecule object (`mol`) as input and returns a list of edges representing the connectivity between atoms.
    
@@ -1503,8 +1495,6 @@ Each pair represents one connection (bond) between atoms. Including both directi
 
 ![RDKit Molecular Structures](../../../../../resource/img/gnn/rdkit_molecules.png)
 *Using RDKit, we can get the chemical structures and corresponding graph statistics for common molecules (water, ethanol, benzene, and aspirin). Each molecule is shown with its 2D structure alongside graph metrics including node count, edge count, and atom type distribution.*
-
----
 
 #### Summary: The Power of Molecular Graphs
 
@@ -1536,7 +1526,7 @@ This is exactly the kind of **structural propagation** that message passing in G
 #### The structure of message passing: what happens at each GNN layer?
 
 Even though the idea sounds intuitive, we need a well-defined set of mathematical steps for the computer to execute.
-In a GNN, each layer usually follows **three standard steps**:
+In a GNN, each layer usually follows **three standard steps**.
 
 ![Message Passing Three Steps](../../../../../resource/img/gnn/message_passing_three_steps.png)
 *The three standard steps of message passing in GNNs: (1) Message Construction - neighbors create messages based on their features and edge properties, (2) Message Aggregation - all incoming messages are combined using sum, mean, or attention, (3) State Update - nodes combine their current state with aggregated messages to produce new representations.*
