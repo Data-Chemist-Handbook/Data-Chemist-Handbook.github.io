@@ -1584,13 +1584,11 @@ This update is usually implemented with a small neural network, such as a **mult
 In summary, at each GNN layer, **every atom (node) listens to its neighbors and updates its understanding of the molecule**.
 After several layers of message passing, each node's embedding captures not just its local features, but also the broader context of the molecular structure.
 
----
-
 #### Graph Convolutions: Making It Concrete
 
 The term **"graph convolution"** comes from analogy with Convolutional Neural Networks (CNNs) in computer vision. In CNNs, filters slide over local neighborhoods of pixels. In GNNs, we also aggregate information from "neighbors", but now **neighbors are defined by molecular or structural connectivity, not spatial proximity**.
 
-In Graph Convolutional Networks (GCNs), message passing is defined by the following steps at each layer:
+In Graph Convolutional Networks (GCNs), message passing is defined by this formula for at each layer:
 
 $$
 h_i^{(t+1)} = \sigma \left( \sum_{j \in \mathcal{N}(i) \cup \{i\}} \frac{1}{\sqrt{d_i d_j}} W h_j^{(t)} \right)
@@ -1600,13 +1598,16 @@ $$
 * $W$: Learnable weight matrix
 * $d_i$: Degree (number of neighbors) of node $i$
 * $\sigma$: Activation function (e.g. ReLU)
-* This formula **averages and transforms** neighbor features while normalizing based on node degrees.
+
+This formula **averages and transforms** neighbor features while normalizing based on node degrees.
 
 ![GCN Formula Breakdown](../../../../../resource/img/gnn/aggregate.png)
 
+According to the formula, GCN message passing follows 4 steps at each layer:
+
 ![gcn4steps](../../../../../resource/img/gnn/gcn4steps.png)
 
-In PyTorch Geometric (PyG), the most basic GNN implementation is `GCNConv`. Let’s go through each part of the code.
+To execute it in Python, we use **PyTorch Geometric (PyG)**. In PyTorch Geometric (PyG), the most basic GNN implementation is `GCNConv`. Let’s go through each part of the code.
 
 **PyTorch Geometric Components**
 
@@ -1621,150 +1622,135 @@ In PyTorch Geometric (PyG), the most basic GNN implementation is `GCNConv`. Let�
 
 Each part of our code works according to this *Flowchart*:
 
-<svg width="600" height="1000" xmlns="http://www.w3.org/2000/svg">
-  <defs>
-    <marker id="arrow" markerWidth="10" markerHeight="10" refX="5" refY="5" orient="auto">
-      <path d="M0,0 L10,5 L0,10 Z" fill="#333"/>
-    </marker>
-  </defs>
-
-  <!-- Box 1: Node Features -->
-  <rect x="50" y="20" width="500" height="100" rx="10" ry="10"
-        fill="#90CAF9" stroke="#1E88E5" stroke-width="2"/>
-  <text x="70" y="55" fill="#ffffff" font-size="18" font-family="sans-serif">Node Features</text>
-  <text x="70" y="80" fill="#ffffff" font-size="14" font-family="sans-serif">x = torch.tensor</text>
-  <text x="70" y="100" fill="#ffffff" font-size="14" font-family="sans-serif">[[1,0,0], [0,1,0], ...]</text>
-
-  <!-- Arrow 1 -->
-  <line x1="300" y1="120" x2="300" y2="160" stroke="#333" stroke-width="2"
-        marker-end="url(#arrow)"/>
-
-  <!-- Box 2: Edge Index -->
-  <rect x="50" y="160" width="500" height="100" rx="10" ry="10"
-        fill="#90CAF9" stroke="#1E88E5" stroke-width="2"/>
-  <text x="70" y="195" fill="#ffffff" font-size="18" font-family="sans-serif">Edge Index</text>
-  <text x="70" y="220" fill="#ffffff" font-size="14" font-family="sans-serif">edge_index = torch.tensor</text>
-  <text x="70" y="240" fill="#ffffff" font-size="14" font-family="sans-serif">
-    [[0,1,1,2,...], [1,0,2,1,...]]
-  </text>
-
-  <!-- Arrow 2 -->
-  <line x1="300" y1="260" x2="300" y2="300" stroke="#333" stroke-width="2"
-        marker-end="url(#arrow)"/>
-
-  <!-- Box 3: Graph Data -->
-  <rect x="50" y="300" width="500" height="100" rx="10" ry="10"
-        fill="#FFD54F" stroke="#FB8C00" stroke-width="2"/>
-  <text x="70" y="335" fill="#ffffff" font-size="18" font-family="sans-serif">Graph Data</text>
-  <text x="70" y="360" fill="#ffffff" font-size="14" font-family="sans-serif">data = Data(x=x, edge_index)</text>
-
-  <!-- Arrow 3 -->
-  <line x1="300" y1="400" x2="300" y2="440" stroke="#333" stroke-width="2"
-        marker-end="url(#arrow)"/>
-
-  <!-- Box 4: GCN Layer -->
-  <rect x="50" y="440" width="500" height="100" rx="10" ry="10"
-        fill="#CE93D8" stroke="#8E24AA" stroke-width="2"/>
-  <text x="70" y="475" fill="#ffffff" font-size="18" font-family="sans-serif">GCN Layer</text>
-  <text x="70" y="500" fill="#ffffff" font-size="14" font-family="sans-serif">conv = GCNConv(</text>
-  <text x="90" y="520" fill="#ffffff" font-size="14" font-family="sans-serif">in_channels=3, out_channels=2)</text>
-
-  <!-- Arrow 4 -->
-  <line x1="300" y1="540" x2="300" y2="580" stroke="#333" stroke-width="2"
-        marker-end="url(#arrow)"/>
-
-  <!-- Box 5: Forward Pass -->
-  <rect x="50" y="580" width="500" height="100" rx="10" ry="10"
-        fill="#F48FB1" stroke="#C2185B" stroke-width="2"/>
-  <text x="70" y="615" fill="#ffffff" font-size="18" font-family="sans-serif">Forward Pass</text>
-  <text x="70" y="640" fill="#ffffff" font-size="14" font-family="sans-serif">output = conv(</text>
-  <text x="90" y="660" fill="#ffffff" font-size="14" font-family="sans-serif">data.x, data.edge_index)</text>
-
-  <!-- Arrow 5 -->
-  <line x1="300" y1="680" x2="300" y2="720" stroke="#333" stroke-width="2"
-        marker-end="url(#arrow)"/>
-
-  <!-- Box 6: Output Features -->
-  <rect x="50" y="720" width="500" height="100" rx="10" ry="10"
-        fill="#80CBC4" stroke="#00897B" stroke-width="2"/>
-  <text x="70" y="755" fill="#ffffff" font-size="18" font-family="sans-serif">Output Features</text>
-  <text x="70" y="780" fill="#ffffff" font-size="14" font-family="sans-serif">Shape: [4, 2]</text>
-  <text x="70" y="800" fill="#ffffff" font-size="14" font-family="sans-serif">4 nodes × 2 features</text>
-</svg>
-
+![flowchart](../../../../../resource/img/gnn/flowchart.png)
 
 **Algorithmic Idea**
 
-The vertical flowchart above illustrates how a single Graph Convolutional Network (GCN) layer transforms raw atomic data into chemically meaningful embeddings:
+The flowchart above shows how raw atomic features are transformed by a single GCN (Graph Convolutional Network) layer into learned, structure-aware embeddings. Below, we unpack this transformation step-by-step, both conceptually and computationally.
 
-1. **Node Features**  
-   - Start with a one-hot encoding for each atom (e.g. C, O, N) → a 3-dimensional feature vector per node.
+1. **Node Features**
+   Each atom is represented by a **3-dimensional** one-hot feature vector that encodes its identity. For example:
 
-2. **Edge Index**  
-   - List every chemical bond twice (i→j and j→i) so messages can flow in both directions.
+* `[1, 0, 0]` could represent carbon (C)
+* `[0, 1, 0]` oxygen (O)
+* `[0, 0, 1]` nitrogen (N)
 
-3. **Graph Data**  
-   - Bundle node features and edge list into a `Data(x, edge_index)` object understood by PyTorch Geometric.
+![encode](../../../../../resource/img/gnn/encode.png)
 
-4. **GCN Layer**  
-   - For each atom *i*, collect its own feature and those of each neighbor *j*.  
-   - Apply a learnable weight matrix *W* and degree-based normalization:  
+In our toy molecule with 4 atoms, the input node feature matrix has shape **\[4, 3]**: 4 atoms, each with 3 features.
 
-   $$
-   h_i' \;=\;
-   \sum_{j \in \mathcal{N}(i)\cup\{i\}}
-   \frac{1}{\sqrt{d_i\,d_j}}\;W\,h_j
-   $$
-
-5. **Forward Pass**  
-   - The forward pass in a graph neural network executes message passing by updating each node's features based on its neighbors' information and the graph's structure.
-   - Execute this “message passing” in one call:  
-     ```python
-     output = conv(data.x, data.edge_index)
-     ```
-
-6. **Output Features**  
-   - Produce a tensor of shape **[4, 2]**: a new 2-dimensional embedding for each of the 4 atoms.  
-   - These embeddings now encode both **atom type** and **local bonding environment**.
-
-<details>
-<summary>▶ Click to see code</summary>
-<pre><code class="language-python">
+```python
 import torch
+
+x = torch.tensor([
+    [1, 0, 0],  # Atom 0: C
+    [0, 1, 0],  # Atom 1: O
+    [1, 1, 0],  # Atom 2: hybrid or multi-type
+    [0, 0, 1]   # Atom 3: N
+], dtype=torch.float)
+```
+
+This matrix `x` is the starting point: a basic, structure-free description of the molecule.
+
+2. **Edge Index**
+   To describe how atoms are bonded, we define the connectivity of the molecular graph using a list of directed edges. Each chemical bond is entered twice to support bidirectional message passing.
+
+The resulting tensor `edge_index` has shape **\[2, E]**, where E is the total number of directed edges. In our case, E = 8.
+
+```python
+edge_index = torch.tensor([
+    [0, 1, 1, 2, 2, 3, 3, 0],  # Source atoms
+    [1, 0, 2, 1, 3, 2, 0, 3]   # Target atoms
+], dtype=torch.long)
+```
+
+Here, for example, the edge (0, 1) and (1, 0) encode a bond between atoms 0 and 1.
+
+![represent](../../../../../resource/img/gnn/represent.png)
+
+3. **Graph Data**
+   PyTorch Geometric uses a unified object to represent graph-structured data. The node features `x` and the connectivity `edge_index` are bundled into a `Data` object:
+
+```python
 from torch_geometric.data import Data
+
+data = Data(x=x, edge_index=edge_index)
+```
+
+At this point:
+
+* `data.x` has shape **\[4, 3]**
+* `data.edge_index` has shape **\[2, 8]**
+
+This fully defines a small undirected graph of 4 atoms.
+
+![graphdata](../../../../../resource/img/gnn/graphdata.png)
+
+4. **GCN Layer**
+   We now define a graph convolutional layer that will **transform each 3-dimensional atom vector into a 2-dimensional learned embedding**.
+
+This is not just a dimensionality reduction step. Rather, it’s a **learned transformation**:
+
+* It combines each atom’s own features with information from its **bonded neighbors**
+* It applies a shared **learnable weight matrix** $W \in \mathbb{R}^{3 \times 2}$
+* It normalizes contributions based on node degrees
+* It applies a non-linear activation function (e.g. ReLU)
+
+![3d2d](../../../../../resource/img/gnn/3d2d.png)
+
+This transformation implements the formula:
+
+$$
+h_i^{(t+1)} = \sigma \left( \sum_{j \in \mathcal{N}(i) \cup \{i\}} \frac{1}{\sqrt{d_i d_j}} \, W h_j^{(t)} \right)
+$$
+
+Where:
+
+* $h_j^{(t)}$ is the 3-dimensional feature vector of neighbor $j$
+* $W$ maps from 3 → 2 dimensions
+* $\sigma$ is a nonlinearity (e.g. ReLU)
+* The normalization factor $\frac{1}{\sqrt{d_i d_j}}$ accounts for node degrees
+
+The layer is defined as:
+
+```python
 from torch_geometric.nn import GCNConv
 
-# Define node features: 4 nodes, each with 3 features (e.g., atom types)
-x = torch.tensor([
-    [1, 0, 0],  # Node 0
-    [0, 1, 0],  # Node 1
-    [1, 1, 0],  # Node 2
-    [0, 0, 1]   # Node 3
-], dtype=torch.float)
-
-# Define edges: undirected graph, so each edge appears twice (i → j and j → i)
-edge_index = torch.tensor([
-    [0, 1, 1, 2, 2, 3, 3, 0],  # Source nodes
-    [1, 0, 2, 1, 3, 2, 0, 3]   # Target nodes
-], dtype=torch.long)
-
-# Build the graph using PyG's Data structure
-data = Data(x=x, edge_index=edge_index)
-
-# Define a Graph Convolutional Network (GCN) layer:
-# input_dim = 3 (features), output_dim = 2
 conv = GCNConv(in_channels=3, out_channels=2)
+```
 
-# Apply the GCN (i.e., message passing)
+This means: input is a **\[4, 3]** matrix, and output will be a **\[4, 2]** matrix. Each atom now gets a 2-dimensional embedding.
+
+> **Why go from 3 to 2 dimensions?**
+> We are not blindly compressing the input — rather, we are learning a more compact, expressive representation that fuses both identity and structure. The dimensionality is a design choice: you could use 2, 8, 128... depending on downstream task complexity. In this toy case, 2 is used for visualization and simplicity.
+
+5. **Forward Pass**
+   We now execute the forward pass of the GCN. Internally, the layer:
+
+* For each atom, gathers features from its neighbors and itself
+* Applies the learned transformation and aggregates
+* Outputs a new feature vector per atom
+
+```python
 output = conv(data.x, data.edge_index)
+```
 
-# Print updated node features
+After this operation:
+
+* Input shape: **\[4, 3]**
+* Output shape: **\[4, 2]**
+* Each row in the output is a learned embedding vector for an atom
+
+![forwardpasstable](../../../../../resource/img/gnn/forwardpasstable.png)
+
+6. **Output Features**
+
+```python
 print("Updated Node Features After Message Passing:")
 print(output)
-</code></pre>
-</details>
+```
 
-This code outputs a tensor of shape `[4, 2]` — one **updated node representation** per node, after applying the GCN layer. Result:
+**Result**
 
 ```
 Updated Node Features After Message Passing:
@@ -1773,55 +1759,34 @@ tensor([[ 0.2851, -0.0017],
         [ 0.6180,  0.1266],
         [ 0.2807, -0.3559]], grad_fn=<AddBackward0>)
 ```
-**This result tells us:**
 
-1. **Shape `[4, 2]`**
+**Interpretation**
 
-   * **4** rows → 4 atoms
-   * **2** columns → each atom’s new 2-dimensional embedding
+**Shape**: The output has shape **\[4, 2]**:
 
-2. **Row = Atom Representation**
+* 4 rows → 4 atoms
+* 2 columns → each atom’s learned embedding
 
-   * Row 0 `[0.2851, -0.0017]`: Atom 0’s updated features
-   * Row 1 `[0.6568, -0.4519]`: Atom 1’s updated features
-   * … and so on.
+**What does each embedding mean?**
+Each row (e.g. `[0.2851, -0.0017]`) represents an atom’s updated feature — not just its raw type (C, O, N), but also how it is **situated in the molecular graph**:
 
-3. **Chemical Significance**
+* Who its neighbors are
+* What types they are
+* How strongly it’s connected (degree)
 
-   * These embeddings capture each atom’s **local environment**:
+This embedding is no longer one-hot or fixed — it is **learned from data**, and will improve with training.
 
-     * Its own type
-     * Which neighbors it’s bonded to
-     * Neighbor types and bonding patterns
-   * Downstream, you can
+**Why is this useful?**
+You can now:
 
-     * **Classify atoms** (e.g. reactive vs. inert)
-     * **Predict molecular properties** (by pooling all atom embeddings)
-     * **Visualize reaction sites** based on embedding clusters
+* Feed these embeddings into another neural network to **predict molecular properties**
+* Use them to **classify atom roles** (e.g., is this a reaction site?)
+* **Visualize molecule structure** in 2D/3D via t-SNE or PCA
 
-4. **`grad_fn=<AddBackward0>`**
+**About `grad_fn=<AddBackward0>`**
+This line tells you that the output is part of the autograd computation graph in PyTorch. That means it supports backpropagation: gradients will flow back through the GCN layer during training to update $W$.
 
-   * Indicates this output is part of the PyTorch computation graph.
-   * During training, you can call `output.backward()` to compute gradients for $W$.
-
-**Review**
-
-1. **Flowchart Recap**
-
-   * You start with **raw features** → build a **graph object** → apply **GCN layer** → obtain **updated features**.
-   * The flowchart you drew corresponds exactly to these four steps.
-
-2. **Why It Matters**
-
-   * In chemistry, learning a compact, informative embedding for each atom helps models understand:
-
-     * **Bonding patterns**
-     * **Local electronic environments**
-     * **Potential reaction hotspots**
-
-By combining your flowchart, code snippet, and this result interpretation, your readers should now see **both** how the GCN works in practice and why its output is meaningful for molecular/chemical analysis.
-
-**Variants of Graph Convolutions**
+#### Variants of Graph Convolutions
 
 Different GNN models define the message passing process differently:
 
@@ -1883,8 +1848,6 @@ Through the lens of para-nitrophenol, we saw how this iterative process graduall
 Different GNN architectures (GCN, GraphSAGE, GAT, MPNN) offer various approaches to this process, each with distinct advantages for chemical applications. The choice depends on factors like molecular size, importance of edge features, and computational constraints.
 
 The power of message passing lies in its ability to bridge **structure and function**. By allowing atoms to "communicate" through bonds, GNNs learn representations that encode not just molecular topology, but also the chemical behaviors that emerge from that structure — acidity, reactivity, electronic distribution, and more. This makes GNNs particularly well-suited for molecular property prediction and drug discovery tasks where understanding chemical context is crucial.
-
-------
 
 ### 3.3.3 GNNs for Molecular Property Prediction
 
