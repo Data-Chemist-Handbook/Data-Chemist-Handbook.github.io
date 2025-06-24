@@ -2865,18 +2865,55 @@ $$
 
 **Model Architecture**
 
-**Design Choices**:
+<div style="font-family: sans-serif; font-size: 13px; max-width: 700px;">
+  <table style="border-collapse: collapse; width: 100%;">
+    <thead>
+      <tr style="background-color: #eeeeee;">
+        <th style="border: 1px solid #ccc; padding: 6px; text-align: left;">Design Choices</th>
+        <th style="border: 1px solid #ccc; padding: 6px; text-align: left;">Architecture Intuition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="border: 1px solid #ccc; padding: 6px;">
+          <span style="color: #1565C0; font-weight: bold;">3 GCN layers</span><br>
+          Captures 3-hop neighborhoods (sufficient for most molecular patterns)
+        </td>
+        <td style="border: 1px solid #ccc; padding: 6px;">
+          Why 3 layers? Most chemical effects happen within 3 bonds
+        </td>
+      </tr>
+      <tr>
+        <td style="border: 1px solid #ccc; padding: 6px;">
+          <span style="color: #2E7D32; font-weight: bold;">64 hidden dimensions</span><br>
+          Balances expressiveness vs overfitting
+        </td>
+        <td style="border: 1px solid #ccc; padding: 6px;">
+          Why 64 dimensions? Enough to capture complexity, not too much to overfit
+        </td>
+      </tr>
+      <tr>
+        <td style="border: 1px solid #ccc; padding: 6px;">
+          <span style="color: #F57C00; font-weight: bold;">Global mean pooling</span><br>
+          Aggregates variable-sized molecules to fixed representation
+        </td>
+        <td style="border: 1px solid #ccc; padding: 6px;">
+          Why mean pooling? Average all atom features to get molecule feature
+        </td>
+      </tr>
+      <tr>
+        <td style="border: 1px solid #ccc; padding: 6px;">
+          <span style="color: #6A1B9A; font-weight: bold;">Single output</span><br>
+          Predicts scalar solubility value
+        </td>
+        <td style="border: 1px solid #ccc; padding: 6px;">
+          Final value is log solubility — a continuous target
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
 
-- **3 GCN layers**: Captures 3-hop neighborhoods (sufficient for most molecular patterns)
-- **64 hidden dimensions**: Balances expressiveness vs overfitting
-- **Global mean pooling**: Aggregates variable-sized molecules to fixed representation
-- **Single output**: Predicts scalar solubility value
-
-**Architecture Intuition:**
-
-* **Why 3 layers?** Most chemical effects happen within 3 bonds
-* **Why 64 dimensions?** Enough to capture complexity, not too much to overfit
-* **Why mean pooling?** Average all atom features to get molecule feature
 
 **Class Definition and Initialization**:
 
