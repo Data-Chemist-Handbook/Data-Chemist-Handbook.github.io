@@ -1944,9 +1944,9 @@ Traditional machine learning uses fixed-size molecular fingerprints, losing stru
   * Information spreads through connections
   * Your friends influence your behavior!
 
-**Package Imports and Setup**
+**Step 1.1: Package Imports and Setup**
 
-**Implementation Strategy**: We need several specialized libraries to handle different aspects of the pipeline:
+We need several specialized libraries to handle different aspects of the pipeline:
 
 | Step  | Library           | Purpose              | Why We Need It                          |
 | ----- | ----------------- | -------------------- | --------------------------------------- |
@@ -2008,9 +2008,9 @@ from sklearn.metrics import mean_squared_error, r2_score
 
 ![library](../../../../../resource/img/gnn/library.png)
 
-**Feature Extraction Functions**
+**Step 1.2: Feature Extraction**
 
-**Chemical Principle**: Each atom's properties influence molecular behavior. We encode 5 key atomic features:
+Each atom's properties influence molecular behavior. We encode 5 key atomic features:
 
 <table style="border-collapse:collapse; width:100%;"> 
     <tr style="background-color:#e1bee7;"> 
@@ -2054,6 +2054,22 @@ from sklearn.metrics import mean_squared_error, r2_score
 
 **Implementation**: The `get_atom_features` function extracts these properties from RDKit atom objects:
 
+```python
+def get_atom_features(atom):
+    """
+    Extract numerical features from RDKit atom object.
+    These features capture the chemical environment of each atom.
+    
+    Think of this as creating an "ID card" for each atom with 5 key facts!
+    """
+    return [
+        atom.GetAtomicNum(),        # What element? (C=6, N=7, O=8, etc.)
+        atom.GetDegree(),           # How many bonds? (connectivity)
+        atom.GetFormalCharge(),     # Is it charged? (+1, 0, -1, etc.)
+        int(atom.GetIsAromatic()),  # In benzene-like ring? (0=no, 1=yes)
+        atom.GetTotalNumHs()        # How many hydrogens attached?
+    ]
+```
 <div style="background-color:#f3e5f5; padding:15px; border-radius:8px; margin:15px 0;">
     <table style="width:100%; border-collapse:collapse;">
         <tr style="background-color:#e1bee7;">
@@ -2084,26 +2100,6 @@ from sklearn.metrics import mean_squared_error, r2_score
     </table>
 </div>
 
-
-```python
-def get_atom_features(atom):
-    """
-    Extract numerical features from RDKit atom object.
-    These features capture the chemical environment of each atom.
-    
-    Think of this as creating an "ID card" for each atom with 5 key facts!
-    """
-    return [
-        atom.GetAtomicNum(),        # What element? (C=6, N=7, O=8, etc.)
-        atom.GetDegree(),           # How many bonds? (connectivity)
-        atom.GetFormalCharge(),     # Is it charged? (+1, 0, -1, etc.)
-        int(atom.GetIsAromatic()),  # In benzene-like ring? (0=no, 1=yes)
-        atom.GetTotalNumHs()        # How many hydrogens attached?
-    ]
-```
-
-![getatom](../../../../../resource/img/gnn/getatom.png)
-
 **Why These 5 Features?**
 
 * **Atomic Number:** Oxygen atoms love water, carbon atoms don't
@@ -2114,9 +2110,9 @@ def get_atom_features(atom):
 
 ![why5features](../../../../../resource/img/gnn/why5features.png)
 
-**Limitation:** We're missing some important features (like H-bond donors/acceptors), which is why our model won't be perfect!
+**Step 1.3: Bond Connectivity Extraction**
 
-**Bond Connectivity Extraction**: Chemical bonds are bidirectional - electrons are shared between atoms. We need to represent this bidirectionality:
+Chemical bonds are bidirectional - electrons are shared between atoms. We need to represent this bidirectionality:
 
 <div style="background-color:#e8f5e9; padding:15px; border-radius:8px; margin:15px 0;">
     <table style="width:100%; border-collapse:collapse;">
@@ -2148,9 +2144,6 @@ def get_atom_features(atom):
     </table>
 </div>
 
-
-![bind](../../../../../resource/img/gnn/bind.png)
-
 ```python
 def get_bond_connections(mol):
     """
@@ -2166,10 +2159,11 @@ def get_bond_connections(mol):
         edges.extend([[i, j], [j, i]])  # Add both directions
     return edges
 ```
+![bind](../../../../../resource/img/gnn/bind.png)
 
 #### Step 2: Loading and Exploring the ESOL Dataset
 
-**Dataset Overview**
+**Step 2.1: Dataset Overview**
 
 **Why ESOL?** The ESOL (Estimated SOLubility) dataset is a gold standard because:
 
@@ -2239,16 +2233,16 @@ Solubility range: -11.60 to 1.58 log S
 * **log S = 1.58** → Solubility = $10^{1.58}$ mol/L (very soluble)
 * **Range:** 13.18 log units = $10^{13.18}$ ≈ 15 trillion-fold difference!
 
-**Real-World Context:**
+**In Real-World Context:**
 
 * **Very soluble** (log S > 0): Like sugar in water – dissolves easily
 * **Moderately soluble** (–3 < log S < 0): Like alcohol – mixes well
 * **Poorly soluble** (log S < –3): Like oil – forms a separate layer
 * **Practically insoluble** (log S < –6): Like plastic – never dissolves
 
-**Examining Example Molecules**
+**Step 2.2: Examining Example Molecules**
 
-**Implementation**: Let's examine some specific molecules to understand the dataset diversity:
+Let's examine some specific molecules to understand the dataset diversity:
 
 <div style="background-color:#f5f5f5; padding:15px; border-radius:8px; margin:15px 0;">
     <table style="width:100%; border-collapse:collapse;">
@@ -2311,9 +2305,9 @@ c1ccsc1                                  -1.33
 The dataset covers a wide range of molecular complexity and functional groups.
 
 
-**Visualizing Solubility Distribution**
+**Step 2.3: Visualizing Solubility Distribution**
 
-**Implementation**: Understanding the distribution helps us assess potential modeling challenges:
+Understanding the distribution helps us assess potential modeling challenges:
 
 <div style="background-color:#e1f5fe; padding:15px; border-radius:8px; margin:15px 0;">
     <table style="width:100%; border-collapse:collapse;">
@@ -2362,9 +2356,9 @@ plt.show()
 
 #### Step 3: Converting Molecules to Graph Representations
 
-**Testing Feature Extraction on Water**
+**Step 3.1: Testing Feature Extraction on Water**
 
-**Principle**: We validate our feature extraction by testing on water (H₂O), the simplest molecule:
+We validate our feature extraction by testing on water (H₂O), the simplest molecule:
 
 <div style="background-color:#f3e5f5; padding:15px; border-radius:8px; margin:15px 0;">
     <table style="width:100%; border-collapse:collapse;">
@@ -2439,9 +2433,9 @@ Atom 2 (H): [1, 1, 0, 0, 0]
 * 1 = Degree (bonded to 1 oxygen atom)
 * Remaining features are all zero
 
-**Testing Bond Extraction on Ethanol**
+**Step 3.2: Testing Bond Extraction on Ethanol**
 
-**Implementation**: Test on a more complex molecule to see bond connectivity:
+Test on a more complex molecule to see bond connectivity:
 
 <div style="background-color:#e8f5e9; padding:15px; border-radius:8px; margin:15px 0;">
     <table style="width:100%; border-collapse:collapse;">
@@ -2494,7 +2488,7 @@ Ethanol molecule (C2H6O):
   Number of directed edges: 16
 ```
 
-**Detailed Edge Analysis**:
+**Step 3.3: Detailed Edge Analysis**
 
 <div style="background-color:#fff9c4; padding:15px; border-radius:8px; margin:15px 0;">
     <table style="width:100%; border-collapse:collapse;">
@@ -2545,7 +2539,7 @@ First few connections (atom index pairs):
 
 ![edge](../../../../../resource/img/gnn/edge.png)
 
-**Complete Molecule-to-Graph Conversion**
+**Step 3.4: Complete Molecule-to-Graph Conversion**
 
 **Implementation Strategy**:
 
@@ -2626,7 +2620,7 @@ def molecule_to_graph(smiles, solubility=None):
     mol = Chem.AddHs(mol)
 ```
 
-**Feature Extraction Part**:
+**Step 3.4.1: Feature Extraction Part**
 
 <div style="background-color:#f3e5f5; padding:15px; border-radius:8px; margin:15px 0;">
     <table style="width:100%; border-collapse:collapse;">
@@ -2664,7 +2658,7 @@ def molecule_to_graph(smiles, solubility=None):
     x = torch.tensor(atom_features, dtype=torch.float)
 ```
 
-**Edge Construction Part**:
+**Step 3.4.2: Edge Construction Part**
 
 <div style="background-color:#e8f5e9; padding:15px; border-radius:8px; margin:15px 0;">
     <table style="width:100%; border-collapse:collapse;">
@@ -2702,7 +2696,7 @@ def molecule_to_graph(smiles, solubility=None):
     edge_index = torch.tensor(edge_list, dtype=torch.long).t().contiguous()
 ```
 
-**Data Object Creation**:
+**Step 3.4.3: Data Object Creation**
 
 <div style="background-color:#fff3e0; padding:15px; border-radius:8px; margin:15px 0;">
     <table style="width:100%; border-collapse:collapse;">
@@ -2736,9 +2730,11 @@ def molecule_to_graph(smiles, solubility=None):
     return data
 ```
 
-**Testing the Conversion Pipeline**
+![5 steps](../../../../../resource/img/gnn/5steps.png)
 
-**Implementation**: Test on molecules of varying complexity:
+**Step 3.5: Testing the Conversion Pipeline**
+
+Test on molecules of varying complexity:
 
 <div style="background-color:#f5f5f5; padding:15px; border-radius:8px; margin:15px 0;">
     <table style="width:100%; border-collapse:collapse;">
@@ -2787,7 +2783,7 @@ for smiles, name in test_molecules:
         print()
 ```
 
-![5 steps](../../../../../resource/img/gnn/5steps.png)
+![features](../../../../../resource/img/gnn/features.png)
 
 **Result Interpretation**:
 
@@ -2813,9 +2809,7 @@ Benzene (c1ccccc1):
   Graph object: Data(x=[12, 5], edge_index=[2, 24], y=[1])
 ```
 
-![features](../../../../../resource/img/gnn/features.png)
-
-**PyTorch Geometric Data Format:**
+**How to interpret "Data(x=[12, 5], edge_index=[2, 24], y=[1])" ?**
 
 * **x**: Node feature matrix `[num_atoms, num_features]`
 * **edge\_index**: COO-format edges `[2, num_edges]`
@@ -2838,10 +2832,10 @@ COO (COOrdinate) format stores edges as pairs of node indices:
 
 #### Step 4: Building the Graph Neural Network Architecture
 
-**GNN Design Principles**
+**Step 4.1: Review the GNN Design Principles**
 
 **Message Passing Framework:**
-Each GCN layer performs the following operation:
+As we have seen before, each GCN layer performs the following operation:
 
 $$
 h_i^{(l+1)} = \sigma\bigl(W^{(l)} \cdot \mathrm{AGG}(\{h_j^{(l)} : j \in N(i) \cup \{i\}\})\bigr)
@@ -2857,7 +2851,7 @@ $$
 - **$W^{(l)}$** — Learnable transformation (the “smart” part)
 - **$\sigma$** — Activation function (adds non-linearity)
 
-**Model Architecture**
+**Step 4.2: Set up the Model Architecture**
 
 <div style="font-family: sans-serif; font-size: 13px; max-width: 700px;">
   <table style="border-collapse: collapse; width: 100%;">
@@ -2910,7 +2904,7 @@ $$
 
 
 
-**Class Definition and Initialization**:
+**Step 4.3: Class Definition and Initialization**
 
 <div style="background-color:#e3f2fd; padding:15px; border-radius:8px; margin:15px 0;">
     <table style="width:100%; border-collapse:collapse;">
@@ -2958,7 +2952,7 @@ class MolecularGNN(nn.Module):
         self.convs = nn.ModuleList()
 ```
 
-**Component 1: Layer Construction**:
+**Step 4.3.1: Layer Construction**
 
 <div style="background-color:#f3e5f5; padding:15px; border-radius:8px; margin:15px 0;">
     <table style="width:100%; border-collapse:collapse;">
@@ -3000,7 +2994,7 @@ class MolecularGNN(nn.Module):
 
 ![layers](../../../../../resource/img/gnn/layers.png)
 
-**Component 2: Forward Pass Implementation**
+**Step 4.3.2: Forward Pass Implementation**
 
 **Principle**: The forward pass implements message passing followed by pooling:
 
@@ -3070,9 +3064,9 @@ class MolecularGNN(nn.Module):
 
 **Key Point:** The network learns **what** information to exchange and **how** to transform it!
 
-**Model Analysis**
+**Step 4.4: Model Analysis**
 
-**Implementation**: Let's analyze the model architecture:
+Let's analyze the model architecture:
 
 <div style="background-color:#f5f5f5; padding:15px; border-radius:8px; margin:15px 0;">
     <table style="width:100%; border-collapse:collapse;">
@@ -3120,7 +3114,7 @@ Model architecture: MolecularGNN
   Total parameters: 8,769
 ```
 
-**Detailed Parameter Breakdown**:
+**Step 4.5: Detailed Parameter Breakdown**
 
 <div style="background-color:#e1f5fe; padding:15px; border-radius:8px; margin:15px 0;">
     <table style="width:100%; border-collapse:collapse;">
@@ -3167,9 +3161,9 @@ Layer-by-layer breakdown:
 
 #### Step 5: Preparing Training Data
 
-**Dataset Conversion Strategy**
+**Step 5.1: Dataset Conversion**
 
-**Implementation**: Convert all molecules to graphs, handling potential failures:
+Convert all molecules to graphs, handling potential failures:
 
 <div style="background-color:#fff3e0; padding:15px; border-radius:8px; margin:15px 0;">
     <table style="width:100%; border-collapse:collapse;">
@@ -3258,11 +3252,11 @@ Successfully converted: 1000 molecules
 Failed conversions: 0 molecules
 ```
 
-**Interpretation**: 100% success rate indicates high-quality SMILES strings in the ESOL dataset. RDKit successfully parsed all molecules.
+100% success rate indicates high-quality SMILES strings in the ESOL dataset. RDKit successfully parsed all molecules.
 
-**Train-Test Split**
+**Step 5.2: Train-Test Split**
 
-**ML Principle**: Always evaluate on unseen data to assess generalization. We use 80/20 split:
+Always evaluate on unseen data to assess generalization. We use 80/20 split:
 
 <div style="background-color:#e3f2fd; padding:15px; border-radius:8px; margin:15px 0;">
     <table style="width:100%; border-collapse:collapse;">
@@ -3311,9 +3305,9 @@ Dataset split:
 
 ![trainsplit](../../../../../resource/img/gnn/trainsplit.png)
 
-**Creating DataLoaders**
+**Step 5.3: Creating DataLoaders**
 
-**PyTorch Geometric Innovation**: DataLoader automatically batches variable-sized graphs:
+DataLoader automatically batches variable-sized graphs:
 
 <div style="background-color:#f3e5f5; padding:15px; border-radius:8px; margin:15px 0;">
     <table style="width:100%; border-collapse:collapse;">
@@ -3363,7 +3357,7 @@ Data loaders created:
 
 ![loader](../../../../../resource/img/gnn/loader.png)
 
-**Batch Structure Analysis**:
+**Step 5.4: Batch Structure Analysis**:
 
 <div style="background-color:#fff9c4; padding:15px; border-radius:8px; margin:15px 0;">
     <table style="width:100%; border-collapse:collapse;">
@@ -3411,6 +3405,8 @@ Example batch:
   Edge index shape: torch.Size([2, 1744])
 ```
 
+![combinegraph](../../../../../resource/img/gnn/combinegraph.png)
+
 **Batching Mechanism Explained:**
 
 * 32 molecules contain 864 atoms total (average ≈ 27 atoms/molecule)
@@ -3427,9 +3423,7 @@ Example batch:
 
 * Enables efficient parallel processing on GPU
 
-![combinegraph](../../../../../resource/img/gnn/combinegraph.png)
-
-**Clever Trick:** PyTorch Geometric treats a batch of graphs as one big disconnected graph!
+After combination, PyTorch Geometric treats a batch of graphs as one big disconnected graph!
 
 * Molecule 1: atoms 0–20
 * Molecule 2: atoms 21–35
@@ -3439,11 +3433,9 @@ Example batch:
 
 #### Step 6: Training the Model
 
-**Training Components Setup**
+**Step 6.1: Training Components Setup**
 
-**Optimization Theory**:
-
-**Adam Optimizer:** Combines momentum with adaptive learning rates
+**Step 6.1.1: Adam Optimizer** Combines momentum with adaptive learning rates
 
 $$
 \begin{aligned}
@@ -3455,16 +3447,40 @@ $$
 
 ![optimizer](../../../../../resource/img/gnn/optimizer.png)
 
-* **\$m\_t\$ (Momentum):** Like a ball rolling downhill, it builds up speed
-* **\$v\_t\$ (Adaptive learning):** Moves slowly in steep areas, quickly in flat areas
-* **\$\alpha = 0.001\$ (Step size):** How large each update is
+* **$m_t$ (Momentum):**  
+  This term computes an exponential moving average of the gradients. It combines the current gradient $g_t$ with the historical average $m_{t-1}$:
 
-**Why Adam over simple gradient descent?**
-It’s like having a smart GPS that adjusts speed based on traffic!
+  \[
+  m_t = \beta_1 m_{t-1} + (1 - \beta_1) g_t
+  \]
 
----
+  Think of it as “smoothing out” the direction of updates. Instead of reacting to each new gradient immediately, $m_t$ helps the model maintain a stable direction over time.  
+  Imagine pushing a ball downhill: the more consistent the slope, the faster it builds momentum. Similarly, $m_t$ gives you an accumulated sense of which direction consistently reduces the loss.
 
-**MSE Loss:** For regression tasks
+* **$v_t$ (Adaptive scaling):**  
+  This term accumulates the squared gradients to estimate how large and volatile each parameter’s updates are:
+
+  \[
+  v_t = \beta_2 v_{t-1} + (1 - \beta_2) g_t^2
+  \]
+
+  Unlike $m_t$, $v_t$ only tracks the **magnitude** of the gradients (not their direction). It tells you whether the updates for a certain parameter dimension have been large or small recently.  
+  If a direction has large or noisy gradients, $v_t$ becomes large, and the update will be smaller in that direction. Think of it as driving over bumpy terrain: the bumpier it is, the more cautiously you move forward.
+
+* **$\theta_t$ (Final update):**  
+  This is the final step that uses both $m_t$ and $v_t$ to update the model parameters:
+
+  \[
+  \theta_t = \theta_{t-1} - \alpha \cdot \frac{m_t}{\sqrt{v_t} + \epsilon}
+  \]
+
+  The numerator ($m_t$) tells you **which direction to move**, and the denominator ($\sqrt{v_t}$) controls **how big the step should be** in that direction.  
+  If $v_t$ is large (unstable or steep), the denominator increases, shrinking the step size. If $v_t$ is small (smooth), the update is larger.  
+  The learning rate $\alpha$ scales the entire step size globally (e.g., 0.001), while $\epsilon$ is a small number added for numerical stability.
+
+  This adaptive combination makes Adam very effective in complex landscapes — it balances speed and caution, moving quickly in flat regions and slowly where gradients are volatile.
+
+**Step 6.1.2: MSE Loss** For regression tasks
 
 $$
 L = \frac{1}{n} \sum_{i=1}^{n}\bigl(y_{\text{pred},i} - y_{\text{true},i}\bigr)^2
@@ -3478,6 +3494,8 @@ $$
 * Penalizes big mistakes more than small ones
 * Always positive (squaring removes sign)
 * Has nice mathematical properties for optimization
+
+**Step 6.2: Training Setup**
 
 <div style="background-color:#e3f2fd; padding:15px; border-radius:8px; margin:15px 0;">
     <table style="width:100%; border-collapse:collapse;">
@@ -3530,8 +3548,6 @@ Training setup:
   Device: cpu
 ```
 
-**Critical Missing Explanations**
-
 **1. How does the model actually learn?**
 
 * **Forward pass:** Input → Model → Prediction
@@ -3544,17 +3560,17 @@ Training setup:
 **2. What is a gradient?**
 The gradient tells us “which way to adjust each parameter to reduce error.” Think of it like hiking—the gradient points uphill, so we go the opposite way to reach the valley (minimum loss).
 
-![learningrate](../../../../../resource/img/gnn/learningrate.png)
-
 **3. Why learning rate = 0.001?**
 
 * Too large (0.1): Might overshoot the minimum
 * Too small (0.00001): Training takes forever
 * 0.001: Good default for Adam optimizer
 
-**Training Function Implementation**
+![learningrate](../../../../../resource/img/gnn/learningrate.png)
 
-**Principle**: Each training epoch processes all batches once:
+**Step 6.3: Training Function Implementation**
+
+Each training epoch processes all batches once, following 5 steps as we have learned before:
 
 <div style="background-color:#f3e5f5; padding:15px; border-radius:8px; margin:15px 0;">
     <table style="width:100%; border-collapse:collapse;">
@@ -3632,21 +3648,21 @@ def train_epoch(model, loader, optimizer, criterion, device):
 
 ![5gradient](../../../../../resource/img/gnn/5gradient.png)
 
-**What Each Line Actually Does**
+Now that we've seen how `optimizer.zero_grad()`, `loss.backward()`, and `optimizer.step()` appear in every training loop, it's important to understand what each of them **actually does** under the hood. These functions may look simple, but they each wrap a number of essential operations that make training work correctly.
 
-**optimizer.zero\_grad()**
+**1. optimizer.zero\_grad()**
 
 * PyTorch accumulates gradients by default
 * Without this, gradients would add up across batches
 * Like clearing a calculator before a new calculation
 
-**loss.backward()**
+**2. loss.backward()**
 
 * Computes gradient of loss w\.r.t. each parameter
 * Uses automatic differentiation (chain rule)
 * Fills the `.grad` attribute of each parameter
 
-**optimizer.step()**
+**3. optimizer.step()**
 
 * Updates parameters using computed gradients
 * Applies the Adam update rule
@@ -3654,9 +3670,9 @@ def train_epoch(model, loader, optimizer, criterion, device):
 
 ![3func](../../../../../resource/img/gnn/3func.png)
 
-**Evaluation Function**
+**Step 6.4: Evaluation Function**
 
-**Implementation**: Evaluation without gradient computation saves memory:
+Evaluation without gradient computation saves memory:
 
 <div style="background-color:#e8f5e9; padding:15px; border-radius:8px; margin:15px 0;">
     <table style="width:100%; border-collapse:collapse;">
@@ -3699,9 +3715,9 @@ def evaluate(model, loader, criterion, device):
 
 ![eval](../../../../../resource/img/gnn/eval.png)
 
-**Training Execution**
+**Step 6.5: Training Execution**
 
-**Implementation**: Train for 50 epochs with periodic logging:
+Train for 50 epochs with periodic logging:
 
 <div style="background-color:#fff3e0; padding:15px; border-radius:8px; margin:15px 0;">
     <table style="width:100%; border-collapse:collapse;">
@@ -3777,7 +3793,7 @@ Training completed!
 * Loss of 3.7 corresponds to RMSE = $\sqrt{3.7}$ ≈ 1.92 log S
 * Small train–test gap (3.49 vs 3.73) indicates appropriate model capacity
 
-**Visualizing Training Progress**
+**Step 6.6: Visualizing Training Progress**
 
 <div style="background-color:#e1f5fe; padding:15px; border-radius:8px; margin:15px 0;">
     <table style="width:100%; border-collapse:collapse;">
@@ -3832,9 +3848,7 @@ plt.show()
 
 #### Step 7: Model Evaluation
 
-**Computing Performance Metrics**
-
-**Evaluation Metrics Explained**:
+**Step 7.1 Understanding the Evaluation Metrics**
 
 <table style="border-collapse:collapse; width:100%;">
     <tr style="background-color:#bbdefb;">
@@ -3886,7 +3900,7 @@ $$
 * **R² = 0.0:** No better than predicting the mean
 * **R² < 0.0:** Worse than predicting the mean!
 
-**Prediction Extraction Function**:
+**Step 7.2: Prediction Extraction Function**
 
 <div style="background-color:#f5f5f5; padding:15px; border-radius:8px; margin:15px 0;">
     <table style="width:100%; border-collapse:collapse;">
@@ -3933,7 +3947,7 @@ def get_predictions(model, loader, device):
 
 ![evalmetric](../../../../../resource/img/gnn/evalmetric.png)
 
-**Metric Calculation**:
+**Step 7.3: Metric Calculation**
 
 <div style="background-color:#e3f2fd; padding:15px; border-radius:8px; margin:15px 0;">
     <table style="width:100%; border-collapse:collapse;">
@@ -4011,9 +4025,9 @@ Interpretation:
 * **Context:** Random guessing would give $R^2 \approx 0$
 * **Improvement potential:** Adding more features could reach $R^2 > 0.8$
 
-**Prediction Visualization**
+**Step 7.4: Prediction Visualization**
 
-**Implementation**: Create scatter plot to visualize prediction quality:
+Create scatter plot to visualize prediction quality:
 
 <div style="background-color:#f3e5f5; padding:15px; border-radius:8px; margin:15px 0;">
     <table style="width:100%; border-collapse:collapse;">
@@ -4081,9 +4095,9 @@ plt.show()
 * **Our model:** General trend but wide spread
 * **Gray band:** ±1 log S is approximately a 10× error in real concentration
 
-**Error Analysis**
+**Step 7.5: Error Analysis**
 
-**Error Distribution Visualization**:
+Error Distribution Visualization:
 
 <div style="background-color:#e8f5e9; padding:15px; border-radius:8px; margin:15px 0;">
     <table style="width:100%; border-collapse:collapse;">
@@ -4194,9 +4208,9 @@ For drug discovery screening, this level of accuracy is often sufficient to filt
 
 #### Step 8: Making Predictions on New Molecules
 
-**Prediction Pipeline Function**
+**Step 8.1: Prediction Pipeline Function**
 
-**Implementation**: Create user-friendly prediction function:
+Create user-friendly prediction function:
 
 <div style="background-color:#e3f2fd; padding:15px; border-radius:8px; margin:15px 0;">
     <table style="width:100%; border-collapse:collapse;">
@@ -4259,9 +4273,9 @@ def predict_solubility(smiles, model, device):
 
 ![inference](../../../../../resource/img/gnn/inference.png)
 
-**Testing on Known Molecules**
+**Step 8.2: Testing on Known Molecules**
 
-**Implementation**: Test predictions on common molecules:
+Test predictions on common molecules:
 
 <div style="background-color:#f5f5f5; padding:15px; border-radius:8px; margin:15px 0;">
     <table style="width:100%; border-collapse:collapse;">
@@ -4304,7 +4318,7 @@ test_molecules = [
 
 ![testingpipe](../../../../../resource/img/gnn/testingpipe.png)
 
-**Prediction Loop**:
+**Step 8.2.1: Prediction Loop**:
 
 <div style="background-color:#e1f5fe; padding:15px; border-radius:8px; margin:15px 0;">
     <table style="width:100%; border-collapse:collapse;">
@@ -4372,9 +4386,9 @@ Aspirin              CC(=O)Oc1ccccc1C(=O)O          -3.580      Success
 - **Hydrocarbons (-2.7 to -3.0)**: Isobutane and cyclohexane less soluble
 - **Aromatics (< -3.5)**: Benzene and phenol least soluble, reflecting hydrophobic π-systems
 
-**Visualizing Predictions**
+**Step 8.2.2: Visualizing Predictions**
 
-**Implementation**: Create bar chart with solubility-based coloring:
+Create bar chart with solubility-based coloring:
 
 <div style="background-color:#f3e5f5; padding:15px; border-radius:8px; margin:15px 0;">
     <table style="width:100%; border-collapse:collapse;">
@@ -4451,9 +4465,9 @@ plt.show()
 
 #### Step 9: Analyzing Learned Patterns
 
-**Structure-Activity Relationships**
+**Step 9.1: Structure-Activity Relationships Testing**
 
-**Implementation**: Systematic testing of molecular features:
+Systematic testing of molecular features:
 
 <div style="background-color:#e8f5e9; padding:15px; border-radius:8px; margin:15px 0;">
     <table style="width:100%; border-collapse:collapse;">
@@ -4504,7 +4518,7 @@ functional_group_tests = [
 
 ![testingcases](../../../../../resource/img/gnn/testingcases.png)
 
-**Testing Loop**:
+**Step 9.2: Testing Loop**
 
 <div style="background-color:#fff3e0; padding:15px; border-radius:8px; margin:15px 0;">
     <table style="width:100%; border-collapse:collapse;">
