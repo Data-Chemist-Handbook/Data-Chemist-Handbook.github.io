@@ -16,7 +16,7 @@ ML encompasses various techniques, including supervised learning, where models a
 
 **Decision Trees** are intuitive and powerful models used in machine learning to make predictions and decisions. Think of it like playing a game of 20 questions, where each question helps you narrow down the possibilities. Decision trees function similarly; they break down a complex decision into a series of simpler questions based on the data.
 
-Each question, referred to as a "decision," relies on a specific characteristic or feature of the data. For instance, if you're trying to determine whether a fruit is an apple or an orange, the initial question might be, "Is the fruit's color red or orange?" Depending on the answer, you might follow up with another question---such as, "Is the fruit's size small or large?" This questioning process continues until you narrow it down to a final answer (e.g., the fruit is either an apple or an orange).
+Each question, referred to as a "decision," relies on a specific characteristic or feature of the data. For instance, if you're trying to determine whether a fruit is an apple or an orange, the initial question might be, "Is the fruit's color red or orange?" Depending on the answer, you might follow up with another question---such as, "Is the fruit's size small or large?" This questioning process continues until you narrow it down to a final answer (e.g., the fruit is either an apple or an orange).      
 
 In a decision tree, these questions are represented as nodes, and the possible answers lead to different branches. The final outcomes are represented at the end of each branch, known as leaf nodes. One of the key advantages of decision trees is their clarity and ease of understanding---much like a flowchart. However, they can also be prone to overfitting, especially when dealing with complex datasets that have many features. Overfitting occurs when a model performs exceptionally well on training data but fails to generalize to new or unseen data.
 
@@ -1909,7 +1909,8 @@ The power of message passing lies in its ability to bridge **structure and funct
 * **Drug Discovery:** 90% of drug candidates fail due to poor solubility – we need to predict this early!
 * **Cost Savings:** Lab testing costs \$1000+/molecule; our model predicts in milliseconds
 * **Real Impact:** Better solubility = better drug absorption = more effective medicines
-* ![whypredict](../../../../../resource/img/gnn/whypredict.png)
+
+![whypredict](../../../../../resource/img/gnn/whypredict.png)
 
 **What you’ll learn:** How to turn molecules into graphs and use AI to predict their properties
 
