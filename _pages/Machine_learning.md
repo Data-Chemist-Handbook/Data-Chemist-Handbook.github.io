@@ -1631,7 +1631,77 @@ In PyTorch Geometric (PyG), the most basic GNN implementation is `GCNConv`. Letâ
 
 Each part of our code works according to this *Flowchart*:
 
-![GCN codeflow](../../../../../resource/img/gnn/workflow.png)
+<svg width="600" height="1000" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="5" refY="5" orient="auto">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#333"/>
+    </marker>
+  </defs>
+
+  <!-- Box 1: Node Features -->
+  <rect x="50" y="20" width="500" height="100" rx="10" ry="10"
+        fill="#90CAF9" stroke="#1E88E5" stroke-width="2"/>
+  <text x="70" y="55" fill="#ffffff" font-size="18" font-family="sans-serif">Node Features</text>
+  <text x="70" y="80" fill="#ffffff" font-size="14" font-family="sans-serif">x = torch.tensor</text>
+  <text x="70" y="100" fill="#ffffff" font-size="14" font-family="sans-serif">[[1,0,0], [0,1,0], ...]</text>
+
+  <!-- Arrow 1 -->
+  <line x1="300" y1="120" x2="300" y2="160" stroke="#333" stroke-width="2"
+        marker-end="url(#arrow)"/>
+
+  <!-- Box 2: Edge Index -->
+  <rect x="50" y="160" width="500" height="100" rx="10" ry="10"
+        fill="#90CAF9" stroke="#1E88E5" stroke-width="2"/>
+  <text x="70" y="195" fill="#ffffff" font-size="18" font-family="sans-serif">Edge Index</text>
+  <text x="70" y="220" fill="#ffffff" font-size="14" font-family="sans-serif">edge_index = torch.tensor</text>
+  <text x="70" y="240" fill="#ffffff" font-size="14" font-family="sans-serif">
+    [[0,1,1,2,...], [1,0,2,1,...]]
+  </text>
+
+  <!-- Arrow 2 -->
+  <line x1="300" y1="260" x2="300" y2="300" stroke="#333" stroke-width="2"
+        marker-end="url(#arrow)"/>
+
+  <!-- Box 3: Graph Data -->
+  <rect x="50" y="300" width="500" height="100" rx="10" ry="10"
+        fill="#FFD54F" stroke="#FB8C00" stroke-width="2"/>
+  <text x="70" y="335" fill="#ffffff" font-size="18" font-family="sans-serif">Graph Data</text>
+  <text x="70" y="360" fill="#ffffff" font-size="14" font-family="sans-serif">data = Data(x=x, edge_index)</text>
+
+  <!-- Arrow 3 -->
+  <line x1="300" y1="400" x2="300" y2="440" stroke="#333" stroke-width="2"
+        marker-end="url(#arrow)"/>
+
+  <!-- Box 4: GCN Layer -->
+  <rect x="50" y="440" width="500" height="100" rx="10" ry="10"
+        fill="#CE93D8" stroke="#8E24AA" stroke-width="2"/>
+  <text x="70" y="475" fill="#ffffff" font-size="18" font-family="sans-serif">GCN Layer</text>
+  <text x="70" y="500" fill="#ffffff" font-size="14" font-family="sans-serif">conv = GCNConv(</text>
+  <text x="90" y="520" fill="#ffffff" font-size="14" font-family="sans-serif">in_channels=3, out_channels=2)</text>
+
+  <!-- Arrow 4 -->
+  <line x1="300" y1="540" x2="300" y2="580" stroke="#333" stroke-width="2"
+        marker-end="url(#arrow)"/>
+
+  <!-- Box 5: Forward Pass -->
+  <rect x="50" y="580" width="500" height="100" rx="10" ry="10"
+        fill="#F48FB1" stroke="#C2185B" stroke-width="2"/>
+  <text x="70" y="615" fill="#ffffff" font-size="18" font-family="sans-serif">Forward Pass</text>
+  <text x="70" y="640" fill="#ffffff" font-size="14" font-family="sans-serif">output = conv(</text>
+  <text x="90" y="660" fill="#ffffff" font-size="14" font-family="sans-serif">data.x, data.edge_index)</text>
+
+  <!-- Arrow 5 -->
+  <line x1="300" y1="680" x2="300" y2="720" stroke="#333" stroke-width="2"
+        marker-end="url(#arrow)"/>
+
+  <!-- Box 6: Output Features -->
+  <rect x="50" y="720" width="500" height="100" rx="10" ry="10"
+        fill="#80CBC4" stroke="#00897B" stroke-width="2"/>
+  <text x="70" y="755" fill="#ffffff" font-size="18" font-family="sans-serif">Output Features</text>
+  <text x="70" y="780" fill="#ffffff" font-size="14" font-family="sans-serif">Shape: [4, 2]</text>
+  <text x="70" y="800" fill="#ffffff" font-size="14" font-family="sans-serif">4 nodes Ã— 2 features</text>
+</svg>
+
 
 **Algorithmic Idea**
 
