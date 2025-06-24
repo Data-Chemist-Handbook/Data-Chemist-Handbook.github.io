@@ -1926,13 +1926,6 @@ The power of message passing lies in its ability to bridge **structure and funct
 * **R²:** Variance explained (expect \~0.22)
 * **MAE:** Mean Absolute Error (expect \~1.6 log S)
 
-**Solubility Formula**
-
-$$
-\mathrm{Solubility} \;\propto\; \frac{\text{Solute–Solvent interactions}}{\text{Solute–Solute interactions}}
-$$
-
-
 **Key Terms Explained**
 
 | Term              | Simple Explanation                                     | Why It Matters                                |
@@ -2862,24 +2855,17 @@ $$
 h_i^{(l+1)} = \sigma\bigl(W^{(l)} \cdot \mathrm{AGG}(\{h_j^{(l)} : j \in N(i) \cup \{i\}\})\bigr)
 $$
 
-**Breaking Down This Scary Formula:**
+<div style="font-family: sans-serif; max-width: 600px; line-height: 1.6;">
+  <h3> Breaking Down This Formula</h3>
+  <ul style="list-style-type: none; padding-left: 0;">
+    <li><b><code>h<sub>i</sub><sup>(l)</sup></code></b> – What atom <i>i</i> knows at layer <i>l</i></li>
+    <li><b><code>N(i)</code></b> – Atom <i>i</i>’s neighbors (bonded atoms)</li>
+    <li><b><code>AGG()</code></b> – Combine information from neighbors (usually average)</li>
+    <li><b><code>W<sup>(l)</sup></code></b> – Learnable transformation (the “smart” part)</li>
+    <li><b><code>σ</code></b> – Activation function (adds non-linearity)</li>
+  </ul>
+</div>
 
-* **\$h\_i^{(l)}\$** = “What atom *i* knows at layer *l*”
-* **\$N(i)\$** = “Atom *i*’s neighbors (bonded atoms)”
-* **\$\mathrm{AGG}\$** = “Combine information from neighbors (usually average)”
-* **\$W^{(l)}\$** = “Learnable transformation (the ‘smart’ part)”
-* **\$\sigma\$** = “Activation function (adds non-linearity)”
-
-**In Plain English:**
-Each atom collects information from its neighbors, combines it, transforms it with learnable weights, and updates its own representation!
-
-Where:
-
-* \$h\_i^{(l)}\$ = features of atom *i* at layer *l*
-* \$N(i)\$ = neighbors of atom *i*
-* \$W^{(l)}\$ = learnable weight matrix
-* \$\mathrm{AGG}\$ = aggregation function (mean)
-* \$\sigma\$ = activation function (ReLU)
 
 **Model Architecture**
 
