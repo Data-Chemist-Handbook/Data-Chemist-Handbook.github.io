@@ -2189,6 +2189,42 @@ def get_atom_features(atom):
         atom.GetTotalNumHs()        # How many hydrogens attached?
     ]
 ```
+<svg width="360" height="240" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .atom { fill:#81D4FA; stroke:#0288D1; stroke-width:2; }
+    .feat { fill:#FFF9C4; stroke:#FBC02D; stroke-width:2; rx:4; }
+    .vec  { fill:#C8E6C9; stroke:#7CB342; stroke-width:2; rx:6; }
+    .arrow{ fill:none; stroke:#555; stroke-width:2; marker-end:url(#head); }
+    .label{ font:12px sans-serif; fill:#333; text-anchor:middle; }
+    .sub  { font:10px sans-serif; fill:#333; text-anchor:middle; }
+  </style>
+  <defs>
+    <marker id="head" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0,8 3,0 6" fill="#555"/>
+    </marker>
+  </defs>
+
+  <!-- Atom Input -->
+  <circle cx="50" cy="120" r="30" class="atom"/>
+  <text x="50" y="125" class="label" fill="#FFF">Atom</text>
+
+  <!-- Arrow to Features -->
+  <line x1="80" y1="120" x2="115" y2="120" class="arrow"/>
+
+  <!-- Feature Boxes (vertical stack) -->
+  <rect x="120" y="40"  width="40" height="25" class="feat"/><text x="140" y="58" class="label">#</text><text x="140" y="75" class="sub">AtNo</text>
+  <rect x="120" y="80"  width="40" height="25" class="feat"/><text x="140" y="98" class="label">d</text><text x="140" y="115"class="sub">Deg</text>
+  <rect x="120" y="120" width="40" height="25" class="feat"/><text x="140" y="138"class="label">±</text><text x="140" y="155"class="sub">Chg</text>
+  <rect x="120" y="160" width="40" height="25" class="feat"/><text x="140" y="178"class="label">ar</text><text x="140" y="195"class="sub">Aro</text>
+  <rect x="120" y="200" width="40" height="25" class="feat"/><text x="140" y="218"class="label">H</text><text x="140" y="235"class="sub">H-Ct</text>
+
+  <!-- Arrow to Vector Output -->
+  <line x1="160" y1="120" x2="200" y2="120" class="arrow"/>
+
+  <!-- Output Vector -->
+  <rect x="200" y="95" width="50" height="50" class="vec"/>
+  <text x="225" y="125" class="label">[5]</text>
+</svg>
 
 <div style="background-color:#e1f5fe; padding:10px; border-radius:5px; margin:10px 0;">
     <p><b>Why These 5 Features?</b></p>
@@ -2233,6 +2269,47 @@ def get_atom_features(atom):
         </tr>
     </table>
 </div>
+
+<svg width="360" height="140" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .box     { fill:#e8f5e9; stroke:#81c784; stroke-width:2; rx:6; }
+    .circle  { fill:#fff3e0; stroke:#ffb74d; stroke-width:2; }
+    .arrow   { fill:none; stroke:#555; stroke-width:2; marker-end:url(#head); }
+    .biarrow { fill:none; stroke:#555; stroke-width:2; marker-start:url(#tail); marker-end:url(#head); }
+    .label   { font:12px sans-serif; fill:#333; text-anchor:middle; }
+  </style>
+  <defs>
+    <marker id="head" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0,0 8,3 0,6" fill="#555"/>
+    </marker>
+    <marker id="tail" markerWidth="8" markerHeight="6" refX="0" refY="3" orient="auto">
+      <polygon points="8,0 0,3 8,6" fill="#555"/>
+    </marker>
+  </defs>
+
+  <!-- Bond input -->
+  <rect x="10" y="55" width="60" height="30" class="box"/>
+  <text x="40" y="75" class="label">Bond</text>
+
+  <!-- Arrow to atom circles -->
+  <line x1="70" y1="70" x2="110" y2="70" class="arrow"/>
+
+  <!-- Atom circles -->
+  <circle cx="140" cy="70" r="20" class="circle"/>
+  <text x="140" y="75" class="label">i</text>
+  <circle cx="200" cy="70" r="20" class="circle"/>
+  <text x="200" y="75" class="label">j</text>
+
+  <!-- Bidirectional arrow between atoms -->
+  <line x1="160" y1="70" x2="180" y2="70" class="biarrow"/>
+
+  <!-- Arrow to edge list -->
+  <line x1="220" y1="70" x2="260" y2="70" class="arrow"/>
+
+  <!-- Edge list output -->
+  <rect x="260" y="55" width="90" height="30" class="box"/>
+  <text x="305" y="75" class="label">[i,j],[j,i]</text>
+</svg>
 
 ```python
 def get_bond_connections(mol):
@@ -2305,6 +2382,46 @@ solubility_values = data['measured log solubility in mols per litre'].tolist()
 print(f"Dataset contains {len(smiles_list)} molecules")
 print(f"Solubility range: {min(solubility_values):.2f} to {max(solubility_values):.2f} log S")
 ```
+<svg width="420" height="160" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .circle { stroke:#555; stroke-width:1.5; }
+    .arrow  { fill:none; stroke:#555; stroke-width:2; marker-end:url(#arrow); }
+    .num    { font: bold 14px sans-serif; fill:#FFF; text-anchor:middle; dominant-baseline:middle; }
+    .step   { font: 12px sans-serif; fill:#333; text-anchor:middle; }
+    .sub    { font: 10px sans-serif; fill:#666; text-anchor:middle; }
+  </style>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0,0 8,3 0,6" fill="#555"/>
+    </marker>
+  </defs>
+
+  <!-- Step circles -->
+  <circle class="circle" cx="50" cy="40" r="20" fill="#64B5F6"/>
+  <text class="num" x="50" y="40">1</text>
+  <text class="step" x="50" y="75">Fetch</text>
+  <text class="sub"  x="50" y="90">requests.get()</text>
+
+  <circle class="circle" cx="150" cy="40" r="20" fill="#81C784"/>
+  <text class="num" x="150" y="40">2</text>
+  <text class="step" x="150" y="75">Parse</text>
+  <text class="sub"  x="150" y="90">pd.read_csv()</text>
+
+  <circle class="circle" cx="250" cy="40" r="20" fill="#FFB74D"/>
+  <text class="num" x="250" y="40">3</text>
+  <text class="step" x="250" y="75">SMILES</text>
+  <text class="sub"  x="250" y="90">data['smiles']</text>
+
+  <circle class="circle" cx="350" cy="40" r="20" fill="#E57373"/>
+  <text class="num" x="350" y="40">4</text>
+  <text class="step" x="350" y="75">Log S</text>
+  <text class="sub"  x="350" y="90">data['log S']</text>
+
+  <!-- Arrows -->
+  <line class="arrow" x1="70" y1="40" x2="130" y2="40"/>
+  <line class="arrow" x1="170" y1="40" x2="230" y2="40"/>
+  <line class="arrow" x1="270" y1="40" x2="330" y2="40"/>
+</svg>
 
 **Result Interpretation**:
 
@@ -2332,7 +2449,7 @@ Solubility range: -11.60 to 1.58 log S
     </div>
 </div>
 
-#### Examining Example Molecules
+**Examining Example Molecules**
 
 **Implementation**: Let's examine some specific molecules to understand the dataset diversity:
 
@@ -2370,6 +2487,76 @@ print("-" * 60)
 for i in range(5):
     print(f"{smiles_list[i]:<40} {solubility_values[i]:<20.2f}")
 ```
+<svg width="1000" height="380" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .atom1   { fill:#AED581; stroke:#7CB342; stroke-width:2; }
+    .bond1   { stroke:#7CB342; stroke-width:2; }
+    .ring2   { fill:none; stroke:#42A5F5; stroke-width:2; }
+    .chain3  { fill:none; stroke:#FF8A65; stroke-width:2; }
+    .branch3 { fill:#FF8A65; stroke:#D84315; stroke-width:2; }
+    .ring4   { fill:none; stroke:#BA68C8; stroke-width:2; }
+    .ring5   { fill:#FFF59D; stroke:#FFEB3B; stroke-width:2; }
+    .label   { font:12px sans-serif; text-anchor:middle; }
+    .label-black { fill:#333; }
+    .label-red   { fill:#D84315; }
+  </style>
+
+  <!-- Top row: Molecule 1 -->
+  <g transform="translate(200,100)">
+    <circle class="atom1" cx="0"   cy="0" r="12"/>
+    <circle class="atom1" cx="40"  cy="0" r="12"/>
+    <circle class="atom1" cx="80"  cy="0" r="12"/>
+    <circle class="atom1" cx="120" cy="0" r="12"/>
+    <circle class="atom1" cx="160" cy="0" r="12"/>
+    <circle class="atom1" cx="200" cy="0" r="12"/>
+    <line class="bond1" x1="12"  y1="0" x2="28"  y2="0"/>
+    <line class="bond1" x1="52"  y1="0" x2="68"  y2="0"/>
+    <line class="bond1" x1="92"  y1="0" x2="108" y2="0"/>
+    <line class="bond1" x1="132" y1="0" x2="148" y2="0"/>
+    <line class="bond1" x1="172" y1="0" x2="188" y2="0"/>
+    <text class="label label-black" x="100" y="30">Sugar derivative</text>
+    <text class="label label-black" x="100" y="48">log S = –0.77</text>
+  </g>
+
+  <!-- Top row: Molecule 2 -->
+  <g transform="translate(600,100)">
+    <polygon class="ring2" points="0,-25 21,-12 21,12 0,25 -21,12 -21,-12"/>
+    <polygon class="ring2" points="60,-25 81,-12 81,12 60,25 39,12 39,-12"/>
+    <line class="ring2" x1="21" y1="0" x2="39" y2="0"/>
+    <text class="label label-black" x="30" y="50">Aromatic amide</text>
+    <text class="label label-black" x="30" y="68">log S = –3.30</text>
+  </g>
+
+  <!-- Bottom row: Molecule 3 -->
+  <g transform="translate(150,260)">
+    <polyline class="chain3" points="0,20 30,0 60,20 90,0 120,20"/>
+    <circle class="branch3" cx="0"   cy="20" r="8"/>
+    <circle class="branch3" cx="30"  cy="0"  r="8"/>
+    <circle class="branch3" cx="60"  cy="20" r="8"/>
+    <circle class="branch3" cx="90"  cy="0"  r="8"/>
+    <circle class="branch3" cx="120" cy="20" r="8"/>
+    <line class="chain3" x1="60" y1="20" x2="60" y2="50"/>
+    <circle class="branch3" cx="60" cy="60" r="8"/>
+    <text class="label label-red" x="60" y="90">Branched alkane</text>
+    <text class="label label-black" x="60" y="108">log S = –2.06</text>
+  </g>
+
+  <!-- Bottom row: Molecule 4 -->
+  <g transform="translate(500,260)">
+    <polygon class="ring4" points="0,-25 21,-12 21,12 0,25 -21,12 -21,-12"/>
+    <polygon class="ring4" points="21,-12 42,-25 63,-12 63,12 42,25 21,12"/>
+    <polygon class="ring4" points="42,-25 63,-12 84,-25 84,12 63,25 42,12"/>
+    <text class="label label-black" x="42" y="50">Polycyclic</text>
+    <text class="label label-black" x="42" y="68">log S = –7.87</text>
+  </g>
+
+  <!-- Bottom row: Molecule 5 -->
+  <g transform="translate(850,260)">
+    <polygon class="ring5" points="0,-30 28,-9 17,24 -17,24 -28,-9"/>
+    <text class="label label-black" x="0" y="50">Thiophene</text>
+    <text class="label label-black" x="0" y="68">log S = –1.33</text>
+  </g>
+</svg>
 
 **Result Interpretation**:
 
@@ -2395,7 +2582,7 @@ c1ccsc1                                  -1.33
     <p>The dataset covers a wide range of molecular complexity and functional groups.</p>
 </div>
 
-#### Visualizing Solubility Distribution
+**Visualizing Solubility Distribution**
 
 **Implementation**: Understanding the distribution helps us assess potential modeling challenges:
 
@@ -2492,6 +2679,67 @@ for i, atom in enumerate(water.GetAtoms()):
     symbol = atom.GetSymbol()
     print(f"Atom {i} ({symbol}): {features}")
 ```
+<svg width="600" height="200" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .atom-o    { fill:#f44336; stroke:#c62828; stroke-width:2; }
+    .atom-h    { fill:#ffffff; stroke:#555; stroke-width:2; }
+    .bond      { stroke:#555; stroke-width:2; }
+    .arrow     { fill:none; stroke:#555; stroke-width:2; marker-end:url(#head); }
+    .feat-box  { fill:#EEEEEE; stroke:#AAA; stroke-width:1; rx:4; ry:4; }
+    .feat-text { font:12px monospace; fill:#333; text-anchor:start; dominant-baseline:middle; }
+    .title     { font: bold 14px sans-serif; fill:#333; text-anchor:middle; }
+  </style>
+  <defs>
+    <marker id="head" markerWidth="6" markerHeight="4" refX="6" refY="2" orient="auto">
+      <polygon points="0,0 6,2 0,4" fill="#555"/>
+    </marker>
+  </defs>
+
+  <!-- Title -->
+  <text class="title" x="300" y="20">Water (H₂O) Feature Extraction</text>
+
+  <!-- Water molecule -->
+  <g transform="translate(100,100)">
+    <!-- Bonds -->
+    <line class="bond" x1="-40" y1="0" x2="-12" y2="0"/>
+    <line class="bond" x1="12"  y1="0" x2="40"  y2="0"/>
+    <!-- Atoms -->
+    <circle class="atom-h" cx="-50" cy="0" r="12"/>
+    <text x="-50" y="4" font="12px sans-serif" text-anchor="middle" fill="#555">H</text>
+    <circle class="atom-o" cx="0" cy="0" r="16"/>
+    <text x="0" y="4" font="12px sans-serif" text-anchor="middle" fill="#fff">O</text>
+    <circle class="atom-h" cx="50" cy="0" r="12"/>
+    <text x="50" y="4" font="12px sans-serif" text-anchor="middle" fill="#555">H</text>
+  </g>
+
+  <!-- Arrow to feature boxes -->
+  <line class="arrow" x1="180" y1="100" x2="240" y2="100"/>
+
+  <!-- Feature boxes for each atom -->
+  <!-- Oxygen features -->
+  <g transform="translate(260,100)">
+    <circle class="atom-o" cx="0" cy="0" r="16"/>
+    <text x="0" y="4" font="12px sans-serif" text-anchor="middle" fill="#fff">O</text>
+    <rect class="feat-box" x="20" y="-12" width="120" height="24"/>
+    <text class="feat-text" x="26" y="0">[8, 2, 0, 0, 0]</text>
+  </g>
+
+  <!-- Hydrogen features (upper) -->
+  <g transform="translate(260,40)">
+    <circle class="atom-h" cx="0" cy="0" r="12"/>
+    <text x="0" y="4" font="12px sans-serif" text-anchor="middle" fill="#555">H</text>
+    <rect class="feat-box" x="20" y="-10" width="120" height="20"/>
+    <text class="feat-text" x="26" y="0">[1, 1, 0, 0, 0]</text>
+  </g>
+
+  <!-- Hydrogen features (lower) -->
+  <g transform="translate(260,160)">
+    <circle class="atom-h" cx="0" cy="0" r="12"/>
+    <text x="0" y="4" font="12px sans-serif" text-anchor="middle" fill="#555">H</text>
+    <rect class="feat-box" x="20" y="-10" width="120" height="20"/>
+    <text class="feat-text" x="26" y="0">[1, 1, 0, 0, 0]</text>
+  </g>
+</svg>
 
 **Result Interpretation**:
 
@@ -2565,6 +2813,69 @@ print(f"  Number of atoms: {ethanol.GetNumAtoms()}")
 print(f"  Number of bonds: {len(connections)//2}")
 print(f"  Number of directed edges: {len(connections)}")
 ```
+<svg width="600" height="360" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .c     { fill:#CFD8DC; stroke:#37474F; stroke-width:2; }
+    .o     { fill:#EF9A9A; stroke:#C62828; stroke-width:2; }
+    .h     { fill:#FFFFFF; stroke:#555555; stroke-width:2; }
+    .bond  { stroke:#555555; stroke-width:2; }
+    .title { font:16px sans-serif; fill:#212121; text-anchor:middle; }
+    .info  { font:12px sans-serif; fill:#212121; text-anchor:start; }
+    .label { font:12px sans-serif; fill:#212121; text-anchor:middle; }
+  </style>
+
+  <!-- Title -->
+  <text class="title" x="300" y="30">Ethanol Bond Extraction Test</text>
+  <text class="title" x="300" y="50" font-size="12px">CH₃–CH₂–OH (C₂H₆O)</text>
+
+  <!-- Ethanol structure -->
+  <g transform="translate(0,0)">
+    <!-- Bonds -->
+    <line class="bond" x1="150" y1="150" x2="275" y2="150"/>
+    <line class="bond" x1="275" y1="150" x2="400" y2="150"/>
+
+    <!-- Carbon 1 -->
+    <circle class="c" cx="150" cy="150" r="20"/>
+    <text class="label" x="150" y="155">C</text>
+    <!-- Hydrogens on C1 -->
+    <line class="bond" x1="150" y1="130" x2="150" y2="90"/>
+    <circle class="h" cx="150" cy="70" r="12"/>
+    <text class="label" x="150" y="74">H</text>
+
+    <line class="bond" x1="130" y1="170" x2="100" y2="210"/>
+    <circle class="h" cx="100" cy="230" r="12"/>
+    <text class="label" x="100" y="234">H</text>
+
+    <line class="bond" x1="170" y1="170" x2="210" y2="210"/>
+    <circle class="h" cx="210" cy="230" r="12"/>
+    <text class="label" x="210" y="234">H</text>
+
+    <!-- Carbon 2 -->
+    <circle class="c" cx="275" cy="150" r="20"/>
+    <text class="label" x="275" y="155">C</text>
+    <!-- Hydrogens on C2 -->
+    <line class="bond" x1="275" y1="130" x2="275" y2="90"/>
+    <circle class="h" cx="275" cy="70" r="12"/>
+    <text class="label" x="275" y="74">H</text>
+
+    <line class="bond" x1="255" y1="170" x2="235" y2="210"/>
+    <circle class="h" cx="235" cy="230" r="12"/>
+    <text class="label" x="235" y="234">H</text>
+
+    <!-- Oxygen -->
+    <circle class="o" cx="400" cy="150" r="20"/>
+    <text class="label" x="400" y="155">O</text>
+    <!-- Hydrogen on O -->
+    <line class="bond" x1="420" y1="150" x2="460" y2="150"/>
+    <circle class="h" cx="480" cy="150" r="12"/>
+    <text class="label" x="480" y="154">H</text>
+  </g>
+
+  <!-- Annotation (no boxes) -->
+  <text class="info" x="20" y="320">Atoms: 9 (2 C, 1 O, 6 H)</text>
+  <text class="info" x="20" y="340">Undirected bonds: 8</text>
+  <text class="info" x="20" y="360">Directed edges: 16</text>
+</svg>
 
 **Result**:
 
@@ -2606,6 +2917,54 @@ for i, (src, dst) in enumerate(connections[:6]):
     dst_symbol = ethanol.GetAtomWithIdx(dst).GetSymbol()
     print(f"  Edge {i}: {src}({src_symbol}) → {dst}({dst_symbol})")
 ```
+<svg width="700" height="260" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .atom     { fill:#CFD8DC; stroke:#37474F; stroke-width:2; }
+    .arrow    { fill:none; stroke:#37474F; stroke-width:2; marker-end:url(#head); marker-start:url(#head); }
+    .arrow2   { fill:none; stroke:#37474F; stroke-width:2; marker-end:url(#head); }
+    .wave     { fill:none; stroke:#37474F; stroke-width:2; marker-end:url(#head); }
+    .label    { font:12px sans-serif; fill:#3E2723; text-anchor:middle; }
+    .sub      { font:10px sans-serif; fill:#3E2723; text-anchor:middle; }
+  </style>
+  <defs>
+    <marker id="head" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#37474F"/>
+    </marker>
+  </defs>
+
+  <!-- Top-left: Electron flow -->
+  <g transform="translate(120,60)">
+    <circle class="atom" cx="-30" cy="0" r="12"/><text class="sub" x="-30" y="25">C</text>
+    <circle class="atom" cx="30" cy="0" r="12"/><text class="sub" x="30" y="25">C</text>
+    <line class="arrow" x1="-18" y1="0" x2="18" y2="0"/>
+    <text class="label" x="0" y="-25">Electrons flow both ways</text>
+  </g>
+
+  <!-- Top-center: Message passing -->
+  <g transform="translate(350,60)">
+    <circle class="atom" cx="-30" cy="0" r="12"/><text class="sub" x="-30" y="25">A</text>
+    <circle class="atom" cx="30" cy="0" r="12"/><text class="sub" x="30" y="25">B</text>
+    <path class="arrow2" d="M -18,-10 Q 0,-30 18,-10"/>
+    <path class="arrow2" d="M 18,10 Q 0,30 -18,10"/>
+    <text class="label" x="0" y="-35">Message passing needs it</text>
+  </g>
+
+  <!-- Top-right: Chemical reality -->
+  <g transform="translate(580,60)">
+    <circle class="atom" cx="-30" cy="0" r="12"/><text class="sub" x="-30" y="25">C</text>
+    <circle class="atom" cx="30" cy="0" r="12"/><text class="sub" x="30" y="25">C</text>
+    <path class="wave" d="M -18,0 Q -10,-15 0,0 T 18,0"/>
+    <text class="label" x="0" y="-25">Reflects reality</text>
+  </g>
+
+  <!-- Bottom: Example edges on C–C bond -->
+  <g transform="translate(350,180)">
+    <circle class="atom" cx="-40" cy="0" r="12"/><text class="label" x="-40" y="25">C(0)</text>
+    <circle class="atom" cx="40" cy="0" r="12"/><text class="label" x="40" y="25">C(1)</text>
+    <line class="arrow" x1="-28" y1="0" x2="28" y2="0"/><text class="sub" x="0" y="-10">Edge 0</text>
+    <line class="arrow" x1="28" y1="10" x2="-28" y2="10"/><text class="sub" x="0" y="35">Edge 1</text>
+  </g>
+</svg>
 
 **Result**:
 
@@ -2620,6 +2979,37 @@ First few connections (atom index pairs):
 ```
 
 **Chemical Interpretation**: Each bond appears twice (e.g., C→C and C←C) to enable bidirectional message passing in the GNN. This reflects the quantum mechanical reality that electrons are shared between atoms.
+
+<svg width="400" height="200" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="arrowhead" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#333"/>
+    </marker>
+  </defs>
+  <style>
+    .atom { fill:#CFD8DC; stroke:#37474F; stroke-width:2; }
+    .label { font:14px sans-serif; fill:#212121; text-anchor:middle; }
+    .arrow { stroke:#333; stroke-width:2.5; marker-end:url(#arrowhead); }
+    .arrow-back { stroke:#333; stroke-width:2.5; marker-end:url(#arrowhead); }
+    .edgetxt { font:12px monospace; fill:#212121; text-anchor:middle; }
+  </style>
+
+  <!-- Carbon atoms -->
+  <circle class="atom" cx="100" cy="100" r="20"/>
+  <text class="label" x="100" y="106">C</text>
+
+  <circle class="atom" cx="300" cy="100" r="20"/>
+  <text class="label" x="300" y="106">C</text>
+
+  <!-- Bidirectional arrows -->
+  <line class="arrow" x1="120" y1="80" x2="280" y2="80"/>
+  <!-- Reverse arrow from right to left -->
+  <line class="arrow-back" x1="280" y1="120" x2="120" y2="120"/>
+
+  <!-- Edge labels -->
+  <text class="edgetxt" x="200" y="70">Edge 0: C→C</text>
+  <text class="edgetxt" x="200" y="140">Edge 1: C←C</text>
+</svg>
 
 **Complete Molecule-to-Graph Conversion**
 
@@ -2856,6 +3246,94 @@ for smiles, name in test_molecules:
         print(f"  Graph object: {graph}")
         print()
 ```
+<svg width="1000" height="400" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="arrowhead" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#1976D2"/>
+    </marker>
+  </defs>
+  <style>
+    .box      { fill:#F1F8E9; stroke:#8BC34A; stroke-width:2; rx:10; ry:10; }
+    .arrow    { fill:none; stroke:#1976D2; stroke-width:2.5; marker-end:url(#arrowhead); }
+    .nodeC    { fill:#CFD8DC; stroke:#37474F; stroke-width:2; }
+    .nodeO    { fill:#FFCDD2; stroke:#C62828; stroke-width:2; }
+    .nodeH    { fill:#FFFFFF; stroke:#555; stroke-width:1.5; }
+    .feat     { fill:#FFF59D; stroke:#FBC02D; stroke-width:1; }
+    .label-lg { font:16px sans-serif; fill:#212121; text-anchor:middle; }
+    .label-sm { font:12px sans-serif; fill:#212121; text-anchor:middle; }
+  </style>
+
+  <!-- Row 1 -->
+  <!-- Step 1 -->
+  <g transform="translate(50,30)">
+    <rect class="box" width="240" height="100"/>
+    <text class="label-lg" x="120" y="30">Step 1: Parse SMILES</text>
+    <text class="label-sm" x="120" y="60" font-family="monospace">CCO</text>
+    <text class="label-sm" x="120" y="80">→ RDKit Molecule</text>
+  </g>
+  <line class="arrow" x1="290" y1="80" x2="350" y2="80"/>
+
+  <!-- Step 2 -->
+  <g transform="translate(380,30)">
+    <rect class="box" width="240" height="100"/>
+    <text class="label-lg" x="120" y="30">Step 2: Add Hydrogens</text>
+    <!-- Ethanol sketch -->
+    <g transform="translate(60,45)">
+      <circle class="nodeC" cx="50" cy="40" r="15"/><text class="label-sm" x="50" y="45">C</text>
+      <circle class="nodeC" cx="120" cy="40" r="15"/><text class="label-sm" x="120" y="45">C</text>
+      <circle class="nodeO" cx="190" cy="40" r="15"/><text class="label-sm" x="190" y="45">O</text>
+      <line class="arrow" x1="65" y1="40" x2="105" y2="40"/>
+      <line class="arrow" x1="135" y1="40" x2="175" y2="40"/>
+      <!-- Hydrogens -->
+      <circle class="nodeH" cx="50" cy="10" r="8"/><text class="label-sm" x="50" y="14">H</text>
+      <circle class="nodeH" cx="30" cy="80" r="8"/><text class="label-sm" x="30" y="84">H</text>
+      <circle class="nodeH" cx="70" cy="80" r="8"/><text class="label-sm" x="70" y="84">H</text>
+    </g>
+  </g>
+  <line class="arrow" x1="640" y1="80" x2="700" y2="80"/>
+
+  <!-- Step 3 -->
+  <g transform="translate(730,30)">
+    <rect class="box" width="240" height="100"/>
+    <text class="label-lg" x="120" y="30">Step 3: Extract Features</text>
+    <!-- Feature grid -->
+    <g transform="translate(60,45)">
+      <rect class="feat" x="0"   y="0" width="20" height="20"/>
+      <rect class="feat" x="25"  y="0" width="20" height="20"/>
+      <rect class="feat" x="50"  y="0" width="20" height="20"/>
+      <rect class="feat" x="75"  y="0" width="20" height="20"/>
+      <rect class="feat" x="100" y="0" width="20" height="20"/>
+      <text class="label-sm" x="110" y="80">5 atom features</text>
+    </g>
+  </g>
+
+  <!-- Row 2 -->
+  <!-- Step 4 -->
+  <g transform="translate(180,180)">
+    <rect class="box" width="240" height="100"/>
+    <text class="label-lg" x="120" y="30">Step 4: Extract Bonds</text>
+    <g transform="translate(60,45)">
+      <circle class="nodeC" cx="50" cy="30" r="12"/><text class="label-sm" x="50" y="34">A</text>
+      <circle class="nodeC" cx="150" cy="30" r="12"/><text class="label-sm" x="150" y="34">B</text>
+      <line class="arrow" x1="62" y1="30" x2="138" y2="30"/>
+      <line class="arrow" x1="138" y1="40" x2="62" y2="40"/>
+    </g>
+  </g>
+  <line class="arrow" x1="430" y1="230" x2="490" y2="230"/>
+
+  <!-- Step 5 -->
+  <g transform="translate(520,180)">
+    <rect class="box" width="240" height="100"/>
+    <text class="label-lg" x="120" y="30">Step 5: Create Graph</text>
+    <g transform="translate(60,45)">
+      <circle class="nodeC" cx="50" cy="30" r="10"/><text class="label-sm" x="50" y="34">1</text>
+      <circle class="nodeC" cx="100" cy="60" r="10"/><text class="label-sm" x="100" y="64">2</text>
+      <circle class="nodeC" cx="150" cy="30" r="10"/><text class="label-sm" x="150" y="34">3</text>
+      <line class="arrow" x1="60" y1="32" x2="90" y2="58"/>
+      <line class="arrow" x1="140" y1="32" x2="110" y2="58"/>
+    </g>
+  </g>
+</svg>
 
 **Result Interpretation**:
 
@@ -2880,6 +3358,143 @@ Benzene (c1ccccc1):
   Bonds: 12
   Graph object: Data(x=[12, 5], edge_index=[2, 24], y=[1])
 ```
+<svg width="960" height="550" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="arrowhead" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#444"/>
+    </marker>
+  </defs>
+  <style>
+    .panel    { fill:#F9FBE7; stroke:#CDDC39; stroke-width:2; rx:8; ry:8; }
+    .title    { font:16px sans-serif; fill:#212121; text-anchor:middle; }
+    .label    { font:12px sans-serif; fill:#424242; text-anchor:middle; }
+    .node     { fill:#BBDEFB; stroke:#1976D2; stroke-width:1.5; }
+    .feat     { fill:#FFE082; stroke:#FFC107; stroke-width:1; }
+    .bond     { stroke:#616161; stroke-width:2; fill:none; marker-start:url(#arrowhead); marker-end:url(#arrowhead); }
+    .table    { fill:#E0F7FA; stroke:#00ACC1; stroke-width:1.5; rx:4; ry:4; }
+    .tabtext  { font:10px monospace; fill:#004D40; }
+  </style>
+
+  <!-- Panel positions -->
+  <g transform="translate(30,20)">
+    <rect class="panel" width="260" height="420"/>
+    <text class="title" x="130" y="30">Water (O)</text>
+
+    <!-- Atoms -->
+    <text class="label" x="130" y="60">Atoms: 3</text>
+    <g transform="translate(30,80)">
+      <circle class="node" cx="40" cy="0" r="12"/>
+      <circle class="node" cx="90" cy="0" r="12"/>
+      <circle class="node" cx="140" cy="0" r="12"/>
+    </g>
+
+    <!-- Features per atom -->
+    <text class="label" x="130" y="170">Features/atom: 5</text>
+    <g transform="translate(30,180)">
+      <rect class="feat" x="0" y="0" width="16" height="16"/>
+      <rect class="feat" x="24" y="0" width="16" height="16"/>
+      <rect class="feat" x="48" y="0" width="16" height="16"/>
+      <rect class="feat" x="72" y="0" width="16" height="16"/>
+      <rect class="feat" x="96" y="0" width="16" height="16"/>
+    </g>
+
+    <!-- Bonds -->
+    <text class="label" x="130" y="280">Bonds: 2</text>
+    <line class="bond" x1="60" y1="290" x2="200" y2="290"/>
+
+    <!-- Graph object -->
+    <text class="label" x="130" y="350">Graph object</text>
+    <rect class="table" x="50" y="360" width="160" height="60"/>
+    <text class="tabtext" x="120" y="375">x=[3,5]</text>
+    <text class="tabtext" x="120" y="390">edge_index=[2,4]</text>
+    <text class="tabtext" x="120" y="405">y=[1]</text>
+  </g>
+
+  <g transform="translate(330,20)">
+    <rect class="panel" width="260" height="420"/>
+    <text class="title" x="130" y="30">Ethanol (CCO)</text>
+
+    <!-- Atoms -->
+    <text class="label" x="130" y="60">Atoms: 9</text>
+    <g transform="translate(30,80)">
+      <!-- 9 nodes in grid 3x3 -->
+      <circle class="node" cx="30" cy="0"  r="10"/>
+      <circle class="node" cx="70" cy="0"  r="10"/>
+      <circle class="node" cx="110" cy="0" r="10"/>
+      <circle class="node" cx="30" cy="30" r="10"/>
+      <circle class="node" cx="70" cy="30" r="10"/>
+      <circle class="node" cx="110" cy="30" r="10"/>
+      <circle class="node" cx="30" cy="60" r="10"/>
+      <circle class="node" cx="70" cy="60" r="10"/>
+      <circle class="node" cx="110" cy="60" r="10"/>
+    </g>
+
+    <!-- Features per atom -->
+    <text class="label" x="130" y="170">Features/atom: 5</text>
+    <g transform="translate(30,180)">
+      <rect class="feat" x="0" y="0" width="16" height="16"/>
+      <rect class="feat" x="24" y="0" width="16" height="16"/>
+      <rect class="feat" x="48" y="0" width="16" height="16"/>
+      <rect class="feat" x="72" y="0" width="16" height="16"/>
+      <rect class="feat" x="96" y="0" width="16" height="16"/>
+    </g>
+
+    <!-- Bonds -->
+    <text class="label" x="130" y="280">Bonds: 8</text>
+    <line class="bond" x1="60" y1="290" x2="200" y2="290"/>
+
+    <!-- Graph object -->
+    <text class="label" x="130" y="350">Graph object</text>
+    <rect class="table" x="50" y="360" width="160" height="60"/>
+    <text class="tabtext" x="120" y="375">x=[9,5]</text>
+    <text class="tabtext" x="120" y="390">edge_index=[2,16]</text>
+    <text class="tabtext" x="120" y="405">y=[1]</text>
+  </g>
+
+  <g transform="translate(630,20)">
+    <rect class="panel" width="260" height="420"/>
+    <text class="title" x="130" y="30">Benzene (c1ccccc1)</text>
+
+    <!-- Atoms -->
+    <text class="label" x="130" y="60">Atoms: 12</text>
+    <g transform="translate(30,80)">
+      <!-- 12 nodes in grid 4x3 -->
+      <circle class="node" cx="20" cy="0"  r="8"/>
+      <circle class="node" cx="50" cy="0"  r="8"/>
+      <circle class="node" cx="80" cy="0"  r="8"/>
+      <circle class="node" cx="110" cy="0" r="8"/>
+      <circle class="node" cx="20" cy="30" r="8"/>
+      <circle class="node" cx="50" cy="30" r="8"/>
+      <circle class="node" cx="80" cy="30" r="8"/>
+      <circle class="node" cx="110" cy="30" r="8"/>
+      <circle class="node" cx="20" cy="60" r="8"/>
+      <circle class="node" cx="50" cy="60" r="8"/>
+      <circle class="node" cx="80" cy="60" r="8"/>
+      <circle class="node" cx="110" cy="60" r="8"/>
+    </g>
+
+    <!-- Features per atom -->
+    <text class="label" x="130" y="170">Features/atom: 5</text>
+    <g transform="translate(30,180)">
+      <rect class="feat" x="0" y="0" width="16" height="16"/>
+      <rect class="feat" x="24" y="0" width="16" height="16"/>
+      <rect class="feat" x="48" y="0" width="16" height="16"/>
+      <rect class="feat" x="72" y="0" width="16" height="16"/>
+      <rect class="feat" x="96" y="0" width="16" height="16"/>
+    </g>
+
+    <!-- Bonds -->
+    <text class="label" x="130" y="280">Bonds: 12</text>
+    <line class="bond" x1="60" y1="290" x2="200" y2="290"/>
+
+    <!-- Graph object -->
+    <text class="label" x="130" y="350">Graph object</text>
+    <rect class="table" x="50" y="360" width="160" height="60"/>
+    <text class="tabtext" x="120" y="375">x=[12,5]</text>
+    <text class="tabtext" x="120" y="390">edge_index=[2,24]</text>
+    <text class="tabtext" x="120" y="405">y=[1]</text>
+  </g>
+</svg>
 
 <div style="background-color:#fff3e0; padding:10px; border-radius:5px;">
     <p><b>PyTorch Geometric Data Format:</b></p>
@@ -3003,6 +3618,75 @@ class MolecularGNN(nn.Module):
         # Build GCN layers
         self.convs = nn.ModuleList()
 ```
+<svg width="860" height="300" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8 Z" fill="#333"/>
+    </marker>
+  </defs>
+  <style>
+    .feat     { fill:#FFEB3B; stroke:#FBC02D; stroke-width:2; }
+    .prism    { fill:#90CAF9; stroke:#42A5F5; stroke-width:2; }
+    .block    { fill:#A5D6A7; stroke:#66BB6A; stroke-width:2; rx:4; ry:4; }
+    .funnel   { fill:#FFCDD2; stroke:#E57373; stroke-width:2; }
+    .cylinder { fill:#FFE082; stroke:#FFB300; stroke-width:2; }
+    .label    { font:14px sans-serif; fill:#212121; text-anchor:middle; }
+    .small    { font:12px sans-serif; fill:#212121; text-anchor:middle; }
+    .arrow    { stroke:#333; stroke-width:2; fill:none; marker-end:url(#arr); }
+  </style>
+
+  <!-- Feature circles -->
+  <g>
+    <text class="label" x="80" y="30">Atomic Features</text>
+    <circle class="feat" cx="40" cy="70" r="10"/><circle class="feat" cx="80" cy="70" r="10"/><circle class="feat" cx="120" cy="70" r="10"/>
+    <circle class="feat" cx="60" cy="100" r="10"/><circle class="feat" cx="100" cy="100" r="10"/>
+    <text class="small" x="80" y="130">5 dims</text>
+  </g>
+
+  <!-- Arrow to Layer1 Prism -->
+  <path class="arrow" d="M140,90 L200,90"/>
+
+  <!-- Prism for Layer1 -->
+  <g>
+    <text class="label" x="260" y="30">Layer 1</text>
+    <polygon class="prism" points="220,60 320,60 300,140 200,140"/>
+    <polygon class="prism" points="320,60 340,80 320,160 300,140"/>
+    <polygon class="prism" points="200,140 300,140 320,160 220,160"/>
+    <text class="small" x="260" y="180">5 → 64</text>
+  </g>
+
+  <!-- Arrow to Layers2-3 -->
+  <path class="arrow" d="M340,120 L400,120"/>
+
+  <!-- Two blocks for Layer2 & Layer3 -->
+  <g>
+    <text class="label" x="440" y="30">Layers 2 & 3</text>
+    <rect class="block" x="400" y="60" width="80" height="60"/><text class="small" x="440" y="90">64 → 64</text>
+    <rect class="block" x="400" y="150" width="80" height="60"/><text class="small" x="440" y="180">64 → 64</text>
+  </g>
+
+  <!-- Arrow to Pool funnel -->
+  <path class="arrow" d="M480,120 L540,120"/>
+
+  <!-- Funnel for Pooling -->
+  <g>
+    <text class="label" x="600" y="30">Mean Pool</text>
+    <path class="funnel" d="M560,70 L640,70 L600,140 Z"/>
+    <text class="small" x="600" y="160">64 → 64</text>
+  </g>
+
+  <!-- Arrow to Output cylinder -->
+  <path class="arrow" d="M640,120 L700,120"/>
+
+  <!-- Cylinder for Output -->
+  <g>
+    <text class="label" x="780" y="30">Linear Output</text>
+    <ellipse class="cylinder" cx="780" cy="100" rx="40" ry="20"/>
+    <rect class="cylinder" x="740" y="100" width="80" height="60"/>
+    <ellipse class="cylinder" cx="780" cy="160" rx="40" ry="20"/>
+    <text class="small" x="780" y="200">64 → 1</text>
+  </g>
+</svg>
 
 **Layer Construction**:
 
