@@ -1909,6 +1909,7 @@ The power of message passing lies in its ability to bridge **structure and funct
 * **Drug Discovery:** 90% of drug candidates fail due to poor solubility – we need to predict this early!
 * **Cost Savings:** Lab testing costs \$1000+/molecule; our model predicts in milliseconds
 * **Real Impact:** Better solubility = better drug absorption = more effective medicines
+* ![whypredict](../../../../../resource/img/gnn/whypredict.png)
 
 **What you’ll learn:** How to turn molecules into graphs and use AI to predict their properties
 
@@ -1919,6 +1920,8 @@ The power of message passing lies in its ability to bridge **structure and funct
 | **3. Model Building**     | Graph structures           | 3-layer GCN               | Molecular embeddings         |
 | **4. Training**           | Batched graphs             | Adam optimizer + MSE loss | Trained parameters           |
 | **5. Prediction**         | New SMILES                 | Forward pass              | Solubility (log S)           |
+
+![5stages](../../../../../resource/img/gnn/5stages.png)
 
 **Key Metrics We’ll Track:**
 
@@ -1934,6 +1937,8 @@ The power of message passing lies in its ability to bridge **structure and funct
 | **Node Features** | Properties of each atom (e.g. element type, charge)    | AI needs numbers to work with                 |
 | **Edge Indices**  | Which atoms are connected by bonds                     | Structure determines properties               |
 | **GCN**           | Graph Convolutional Network – AI for graph data        | Molecules are naturally graphs!               |
+
+![terms](../../../../../resource/img/gnn/terms.png)
 
 #### Step 1: Understanding Molecular Solubility as a Graph Learning Problem
 
@@ -1955,6 +1960,8 @@ $$
 **Example:**
 Sugar dissolves because it forms hydrogen bonds with water better than with other sugar molecules
 
+![factors](../../../../../resource/img/gnn/factors.png)
+
 **Key factors:**
 
 * **Hydrogen bonding:** –OH, –NH groups increase water solubility
@@ -1971,6 +1978,8 @@ Traditional machine learning uses fixed-size molecular fingerprints, losing stru
 * **Nodes:** Atoms with features (element, charge, aromaticity)
 * **Edges:** Chemical bonds (single, double, triple, aromatic)
 * **Message Passing:** Atoms “communicate” through bonds
+
+![intuition](../../../../../resource/img/gnn/intuition.png)
 
 **Intuition:**
 
@@ -2020,6 +2029,7 @@ Traditional machine learning uses fixed-size molecular fingerprints, losing stru
 </div>
 
 
+
 ```python
 # Deep Learning Framework
 import torch
@@ -2041,6 +2051,7 @@ import requests
 import io
 from sklearn.metrics import mean_squared_error, r2_score
 ```
+
 ![library](../../../../../resource/img/gnn/library.png)
 
 **Feature Extraction Functions**
@@ -2086,6 +2097,7 @@ from sklearn.metrics import mean_squared_error, r2_score
     </tr> 
 </table>
 
+
 **Implementation**: The `get_atom_features` function extracts these properties from RDKit atom objects:
 
 <div style="background-color:#f3e5f5; padding:15px; border-radius:8px; margin:15px 0;">
@@ -2118,6 +2130,7 @@ from sklearn.metrics import mean_squared_error, r2_score
     </table>
 </div>
 
+
 ```python
 def get_atom_features(atom):
     """
@@ -2134,6 +2147,7 @@ def get_atom_features(atom):
         atom.GetTotalNumHs()        # How many hydrogens attached?
     ]
 ```
+
 ![getatom](../../../../../resource/img/gnn/getatom.png)
 
 **Why These 5 Features?**
@@ -2143,6 +2157,8 @@ def get_atom_features(atom):
 * **Formal Charge:** Charged molecules dissolve like salt in water
 * **Aromaticity:** Benzene rings are oily, not watery
 * **H Count:** More hydrogens = more hydrogen bonding with water
+
+![why5features](../../../../../resource/img/gnn/why5features.png)
 
 **Limitation:** We're missing some important features (like H-bond donors/acceptors), which is why our model won't be perfect!
 
@@ -2177,6 +2193,7 @@ def get_atom_features(atom):
         </tr>
     </table>
 </div>
+
 
 ![bind](../../../../../resource/img/gnn/bind.png)
 
@@ -2238,6 +2255,7 @@ def get_bond_connections(mol):
     </table>
 </div>
 
+
 ```python
 # Download ESOL dataset from DeepChem repository
 url = "https://raw.githubusercontent.com/deepchem/deepchem/master/datasets/delaney-processed.csv"
@@ -2251,6 +2269,7 @@ solubility_values = data['measured log solubility in mols per litre'].tolist()
 print(f"Dataset contains {len(smiles_list)} molecules")
 print(f"Solubility range: {min(solubility_values):.2f} to {max(solubility_values):.2f} log S")
 ```
+
 ![pipeline1](../../../../../resource/img/gnn/pipeline1.png)
 
 **Result Interpretation**:
@@ -2302,6 +2321,7 @@ Solubility range: -11.60 to 1.58 log S
     </table>
 </div>
 
+
 ```python
 print("\nExample molecules from the dataset:")
 print("-" * 60)
@@ -2311,6 +2331,7 @@ print("-" * 60)
 for i in range(5):
     print(f"{smiles_list[i]:<40} {solubility_values[i]:<20.2f}")
 ```
+
 ![5moles](../../../../../resource/img/gnn/5moles.png)
 
 **Result Interpretation**:
@@ -2364,6 +2385,7 @@ The dataset covers a wide range of molecular complexity and functional groups.
         </tr>
     </table>
 </div>
+
 
 ```python
 plt.figure(figsize=(10, 6))
@@ -2420,6 +2442,7 @@ plt.show()
     </table>
 </div>
 
+
 ```python
 # Parse water molecule
 water_smiles = "O"
@@ -2433,6 +2456,7 @@ for i, atom in enumerate(water.GetAtoms()):
     symbol = atom.GetSymbol()
     print(f"Atom {i} ({symbol}): {features}")
 ```
+
 ![h20](../../../../../resource/img/gnn/h20.png)
 
 **Result Interpretation**:
@@ -2490,6 +2514,7 @@ Atom 2 (H): [1, 1, 0, 0, 0]
     </table>
 </div>
 
+
 ```python
 # Test on ethanol
 ethanol_smiles = "CCO"
@@ -2503,6 +2528,7 @@ print(f"  Number of atoms: {ethanol.GetNumAtoms()}")
 print(f"  Number of bonds: {len(connections)//2}")
 print(f"  Number of directed edges: {len(connections)}")
 ```
+
 ![eth](../../../../../resource/img/gnn/eth.png)
 
 **Result**:
@@ -2538,6 +2564,7 @@ Ethanol molecule (C2H6O):
     </table>
 </div>
 
+
 ```python
 print("\nFirst few connections (atom index pairs):")
 for i, (src, dst) in enumerate(connections[:6]):
@@ -2545,6 +2572,7 @@ for i, (src, dst) in enumerate(connections[:6]):
     dst_symbol = ethanol.GetAtomWithIdx(dst).GetSymbol()
     print(f"  Edge {i}: {src}({src_symbol}) → {dst}({dst_symbol})")
 ```
+
 ![flow](../../../../../resource/img/gnn/flow.png)
 
 **Result**:
@@ -2600,6 +2628,7 @@ First few connections (atom index pairs):
     </tr>
 </table>
 
+
 <div style="background-color:#e3f2fd; padding:15px; border-radius:8px; margin:15px 0;">
     <table style="width:100%; border-collapse:collapse;">
         <tr style="background-color:#90caf9;">
@@ -2625,6 +2654,7 @@ First few connections (atom index pairs):
         </tr>
     </table>
 </div>
+
 
 ```python
 def molecule_to_graph(smiles, solubility=None):
@@ -2669,6 +2699,7 @@ def molecule_to_graph(smiles, solubility=None):
     </table>
 </div>
 
+
 ```python
     # Extract atom features
     atom_features = []
@@ -2706,6 +2737,7 @@ def molecule_to_graph(smiles, solubility=None):
     </table>
 </div>
 
+
 ```python
     # Extract bonds
     edge_list = get_bond_connections(mol)
@@ -2737,6 +2769,7 @@ def molecule_to_graph(smiles, solubility=None):
         </tr>
     </table>
 </div>
+
 
 ```python
     # Create Data object
@@ -2778,6 +2811,7 @@ def molecule_to_graph(smiles, solubility=None):
     </table>
 </div>
 
+
 ```python
 test_molecules = [
     ("O", "Water"),
@@ -2798,6 +2832,7 @@ for smiles, name in test_molecules:
         print(f"  Graph object: {graph}")
         print()
 ```
+
 ![5 steps](../../../../../resource/img/gnn/5steps.png)
 
 **Result Interpretation**:
@@ -2823,6 +2858,7 @@ Benzene (c1ccccc1):
   Bonds: 12
   Graph object: Data(x=[12, 5], edge_index=[2, 24], y=[1])
 ```
+
 ![features](../../../../../resource/img/gnn/features.png)
 
 **PyTorch Geometric Data Format:**
@@ -2836,6 +2872,8 @@ Benzene (c1ccccc1):
 * 6 carbon atoms + 6 hydrogen atoms = 12 nodes
 * 6 C–C bonds + 6 C–H bonds = 12 undirected bonds
 * 12 undirected bonds × 2 directions = 24 directed edges
+
+![benzene](../../../../../resource/img/gnn/benzene.png)
 
 **What is COO Format?**
 COO (COOrdinate) format stores edges as pairs of node indices:
@@ -2855,7 +2893,9 @@ $$
 h_i^{(l+1)} = \sigma\bigl(W^{(l)} \cdot \mathrm{AGG}(\{h_j^{(l)} : j \in N(i) \cup \{i\}\})\bigr)
 $$
 
-**Breaking Down This Scary Formula**
+![pooling](../../../../../resource/img/gnn/pooling.png)
+
+**Breaking Down This Formula**
 
 - **$h_i^{(l)}$** — What atom *i* knows at layer *l*
 - **$N(i)$** — Atom *i*’s neighbors (bonded atoms)
@@ -2915,6 +2955,7 @@ $$
 </div>
 
 
+
 **Class Definition and Initialization**:
 
 <div style="background-color:#e3f2fd; padding:15px; border-radius:8px; margin:15px 0;">
@@ -2941,6 +2982,7 @@ $$
         </tr>
     </table>
 </div>
+
 
 ```python
 class MolecularGNN(nn.Module):
@@ -2989,6 +3031,7 @@ class MolecularGNN(nn.Module):
     </table>
 </div>
 
+
 ```python
         # First layer: 5 → 64
         self.convs.append(GCNConv(num_features, hidden_dim))
@@ -3000,6 +3043,7 @@ class MolecularGNN(nn.Module):
         # Output layer: 64 → 1
         self.predictor = nn.Linear(hidden_dim, 1)
 ```
+
 ![layers](../../../../../resource/img/gnn/layers.png)
 
 **Component 2: Forward Pass Implementation**
@@ -3036,6 +3080,7 @@ class MolecularGNN(nn.Module):
     </table>
 </div>
 
+
 ```python
     def forward(self, x, edge_index, batch):
         """
@@ -3057,6 +3102,8 @@ class MolecularGNN(nn.Module):
         # Predict property
         return self.predictor(x)
 ```
+
+![forwardpass](../../../../../resource/img/gnn/forwardpass.png)
 
 **What Actually Happens in Forward Pass?**
 
@@ -3094,6 +3141,7 @@ class MolecularGNN(nn.Module):
         </tr>
     </table>
 </div>
+
 
 ```python
 # Create model instance
@@ -3140,6 +3188,7 @@ Model architecture: MolecularGNN
     </table>
 </div>
 
+
 ```python
 print("\nLayer-by-layer breakdown:")
 for name, param in model.named_parameters():
@@ -3160,17 +3209,7 @@ Layer-by-layer breakdown:
   predictor.bias: torch.Size([1])
 ```
 
-<div style="background-color:#f5f5f5; padding:10px; border-radius:5px;">
-    <p><b>Parameter Calculation:</b></p>
-    <ul>
-        <li>Layer 1 (GCN): (64 × 5) + 64 = 384 parameters</li>
-        <li>Layer 2 (GCN): (64 × 64) + 64 = 4,160 parameters</li>
-        <li>Layer 3 (GCN): (64 × 64) + 64 = 4,160 parameters</li>
-        <li>Predictor: 64 + 1 = 65 parameters</li>
-        <li><b>Total: 8,769 parameters</b></li>
-    </ul>
-    <p>This is remarkably small compared to other deep learning models!</p>
-</div>
+![paramsize](../../../../../resource/img/gnn/paramsize.png)
 
 #### Step 5: Preparing Training Data
 
@@ -3208,6 +3247,7 @@ Layer-by-layer breakdown:
     </table>
 </div>
 
+
 ```python
 num_molecules = 1000  # Use subset for faster training
 graphs = []
@@ -3225,6 +3265,8 @@ for i in range(num_molecules):
     else:
         failed_molecules.append((i, smiles))
 ```
+
+![trainpre](../../../../../resource/img/gnn/trainpre.png)
 
 **Conversion Results**:
 
@@ -3247,6 +3289,7 @@ for i in range(num_molecules):
         </tr>
     </table>
 </div>
+
 
 ```python
 print(f"Successfully converted: {len(graphs)} molecules")
@@ -3292,6 +3335,7 @@ Failed conversions: 0 molecules
     </table>
 </div>
 
+
 ```python
 # 80/20 split (standard in ML)
 train_size = int(0.8 * len(graphs))
@@ -3311,13 +3355,7 @@ Dataset split:
   Testing: 200 molecules
 ```
 
-**Why Train/Test Split?**
-
-* **Training set:** Model learns patterns from these molecules
-* **Test set:** We check if model works on NEW molecules it hasn’t seen
-* **80/20 split:** Common ratio – enough to train, enough to test
-
-**Important:** Never let the model see test data during training – that’s cheating!
+![trainsplit](../../../../../resource/img/gnn/trainsplit.png)
 
 **Creating DataLoaders**
 
@@ -3348,6 +3386,7 @@ Dataset split:
     </table>
 </div>
 
+
 ```python
 # Batch size 32 is typical for molecular property prediction
 train_loader = DataLoader(train_graphs, batch_size=32, shuffle=True)
@@ -3367,6 +3406,8 @@ Data loaders created:
   Test batches: 7
   Batch size: 32
 ```
+
+![loader](../../../../../resource/img/gnn/loader.png)
 
 **Batch Structure Analysis**:
 
@@ -3394,6 +3435,7 @@ Data loaders created:
     </table>
 </div>
 
+
 ```python
 # Inspect batch structure
 for batch in train_loader:
@@ -3418,6 +3460,7 @@ Example batch:
 **Batching Mechanism Explained:**
 
 * 32 molecules contain 864 atoms total (average ≈ 27 atoms/molecule)
+
 * **Batch tensor:**
 
   ```
@@ -3425,8 +3468,12 @@ Example batch:
   ```
 
   Maps each atom to its parent molecule (0–31)
+
 * Edge index combines all molecular graphs into one large disconnected graph
+
 * Enables efficient parallel processing on GPU
+
+![combinegraph](../../../../../resource/img/gnn/combinegraph.png)
 
 **Clever Trick:** PyTorch Geometric treats a batch of graphs as one big disconnected graph!
 
@@ -3452,7 +3499,7 @@ v_t &= \beta_2 v_{t-1} + (1 - \beta_2)\,g_t^2 \\
 \end{aligned}
 $$
 
-**Adam in Plain English:**
+![optimizer](../../../../../resource/img/gnn/optimizer.png)
 
 * **\$m\_t\$ (Momentum):** Like a ball rolling downhill, it builds up speed
 * **\$v\_t\$ (Adaptive learning):** Moves slowly in steep areas, quickly in flat areas
@@ -3468,6 +3515,8 @@ It’s like having a smart GPS that adjusts speed based on traffic!
 $$
 L = \frac{1}{n} \sum_{i=1}^{n}\bigl(y_{\text{pred},i} - y_{\text{true},i}\bigr)^2
 $$
+
+![mse](../../../../../resource/img/gnn/mse.png)
 
 **Why MSE for Regression?**
 
@@ -3500,6 +3549,7 @@ $$
         </tr>
     </table>
 </div>
+
 
 ```python
 # Initialize components
@@ -3535,8 +3585,12 @@ Training setup:
 * **Backward pass:** Compute gradients (derivatives) using chain rule
 * **Update:** Adjust weights to reduce loss
 
+![gradient](../../../../../resource/img/gnn/gradient.png)
+
 **2. What is a gradient?**
 The gradient tells us “which way to adjust each parameter to reduce error.” Think of it like hiking—the gradient points uphill, so we go the opposite way to reach the valley (minimum loss).
+
+![learningrate](../../../../../resource/img/gnn/learningrate.png)
 
 **3. Why learning rate = 0.001?**
 
@@ -3583,6 +3637,7 @@ The gradient tells us “which way to adjust each parameter to reduce error.” 
     </table>
 </div>
 
+
 ```python
 def train_epoch(model, loader, optimizer, criterion, device):
     """
@@ -3621,6 +3676,8 @@ def train_epoch(model, loader, optimizer, criterion, device):
     return total_loss / len(loader.dataset)
 ```
 
+![5gradient](../../../../../resource/img/gnn/5gradient.png)
+
 **What Each Line Actually Does**
 
 **optimizer.zero\_grad()**
@@ -3640,6 +3697,8 @@ def train_epoch(model, loader, optimizer, criterion, device):
 * Updates parameters using computed gradients
 * Applies the Adam update rule
 * Parameters move in the direction that reduces loss
+
+![3func](../../../../../resource/img/gnn/3func.png)
 
 **Evaluation Function**
 
@@ -3667,6 +3726,7 @@ def train_epoch(model, loader, optimizer, criterion, device):
     </table>
 </div>
 
+
 ```python
 def evaluate(model, loader, criterion, device):
     """Evaluation without gradient computation"""
@@ -3682,6 +3742,8 @@ def evaluate(model, loader, criterion, device):
     
     return total_loss / len(loader.dataset)
 ```
+
+![eval](../../../../../resource/img/gnn/eval.png)
 
 **Training Execution**
 
@@ -3712,6 +3774,7 @@ def evaluate(model, loader, criterion, device):
     </table>
 </div>
 
+
 ```python
 num_epochs = 50
 train_losses = []
@@ -3736,6 +3799,8 @@ for epoch in range(num_epochs):
 print("-" * 60)
 print("Training completed!")
 ```
+
+![traineval](../../../../../resource/img/gnn/traineval.png)
 
 **Result**:
 
@@ -3781,6 +3846,7 @@ Training completed!
         </tr>
     </table>
 </div>
+
 
 ```python
 plt.figure(figsize=(10, 6))
@@ -3843,6 +3909,9 @@ plt.show()
     </tr>
 </table>
 
+
+![3metrics](../../../../../resource/img/gnn/3metrics.png)
+
 **Understanding R² in Detail**
 
 The R² formula:
@@ -3890,6 +3959,7 @@ $$
     </table>
 </div>
 
+
 ```python
 def get_predictions(model, loader, device):
     """Extract all predictions for evaluation"""
@@ -3906,6 +3976,8 @@ def get_predictions(model, loader, device):
     
     return np.array(predictions), np.array(true_values)
 ```
+
+![evalmetric](../../../../../resource/img/gnn/evalmetric.png)
 
 **Metric Calculation**:
 
@@ -3933,6 +4005,7 @@ def get_predictions(model, loader, device):
         </tr>
     </table>
 </div>
+
 
 ```python
 # Get test set predictions
@@ -4013,6 +4086,7 @@ Interpretation:
     </table>
 </div>
 
+
 ```python
 plt.figure(figsize=(8, 8))
 
@@ -4079,6 +4153,7 @@ plt.show()
     </table>
 </div>
 
+
 ```python
 # Calculate errors
 errors = test_preds - test_true
@@ -4134,6 +4209,7 @@ plt.show()
         </tr>
     </table>
 </div>
+
 
 ```python
 print(f"Error Statistics:")
@@ -4198,6 +4274,7 @@ For drug discovery screening, this level of accuracy is often sufficient to filt
     </table>
 </div>
 
+
 ```python
 def predict_solubility(smiles, model, device):
     """
@@ -4226,6 +4303,8 @@ def predict_solubility(smiles, model, device):
     return prediction.item(), "Success"
 ```
 
+![inference](../../../../../resource/img/gnn/inference.png)
+
 **Testing on Known Molecules**
 
 **Implementation**: Test predictions on common molecules:
@@ -4253,6 +4332,7 @@ def predict_solubility(smiles, model, device):
     </table>
 </div>
 
+
 ```python
 test_molecules = [
     ("O", "Water"),
@@ -4267,6 +4347,8 @@ test_molecules = [
     ("CC(=O)Oc1ccccc1C(=O)O", "Aspirin")
 ]
 ```
+
+![testingpipe](../../../../../resource/img/gnn/testingpipe.png)
 
 **Prediction Loop**:
 
@@ -4292,6 +4374,7 @@ test_molecules = [
         </tr>
     </table>
 </div>
+
 
 ```python
 print("Predictions for common molecules:")
@@ -4325,6 +4408,8 @@ Cyclohexane          C1CCCCC1                       -3.037      Success
 Phenol               c1ccc(O)cc1                    -3.903      Success
 Aspirin              CC(=O)Oc1ccccc1C(=O)O          -3.580      Success
 ```
+
+![testinglogic](../../../../../resource/img/gnn/testinglogic.png)
 
 **Chemical Interpretation**:
 
@@ -4364,6 +4449,7 @@ Aspirin              CC(=O)Oc1ccccc1C(=O)O          -3.580      Success
         </tr>
     </table>
 </div>
+
 
 ```python
 names, preds = zip(*predictions_list)
@@ -4443,6 +4529,7 @@ plt.show()
     </table>
 </div>
 
+
 ```python
 functional_group_tests = [
     # Base molecule
@@ -4460,6 +4547,8 @@ functional_group_tests = [
     ("C1CCCCC1", "Cyclohexane (aliphatic)")
 ]
 ```
+
+![testingcases](../../../../../resource/img/gnn/testingcases.png)
 
 **Testing Loop**:
 
@@ -4484,6 +4573,7 @@ functional_group_tests = [
         </tr>
     </table>
 </div>
+
 
 ```python
 print("Analyzing functional group effects on solubility:")
@@ -4517,19 +4607,19 @@ Cyclohexane (aliphatic)             C1CCCCC1                   -3.037
 **Key Findings:**
 
 1. **Weak Functional Group Effects:**
-   • Hexane → Hexanol: Only 0.049 log unit improvement
-   • Expected: –OH should increase solubility by \~1–2 log units
-   • **Limitation:** Our 5 features don’t capture hydrogen bonding strength
+   - Hexane → Hexanol: Only 0.049 log unit improvement
+   - Expected: –OH should increase solubility by \~1–2 log units
+   - **Limitation:** Our 5 features don’t capture hydrogen bonding strength
 
 2. **Clear Size Trend:**
-   • C₂ (–2.458) → C₄ (–2.710) → C₆ (–2.808) → C₈ (–2.861)
-   • $\Delta \log S \approx -0.05$ per CH₂ group
-   • **Success:** Model learned hydrophobic effect of alkyl chains
+   - C₂ (–2.458) → C₄ (–2.710) → C₆ (–2.808) → C₈ (–2.861)
+   - $\Delta \log S \approx -0.05$ per CH₂ group
+   - **Success:** Model learned hydrophobic effect of alkyl chains
 
 3. **Strong Aromaticity Effect:**
-   • Benzene vs. Cyclohexane: 1.024 log unit difference
-   • **Success:** Model recognizes π-system hydrophobicity
-   • Aromatic feature in our encoding is highly informative
+   - Benzene vs. Cyclohexane: 1.024 log unit difference
+   - **Success:** Model recognizes π-system hydrophobicity
+   - Aromatic feature in our encoding is highly informative
 
 #### Summary and Conclusions
 
@@ -4542,6 +4632,8 @@ Cyclohexane (aliphatic)             C1CCCCC1                   -3.037
 3. **Model Architecture:** 3-layer GCN with 8,769 parameters
 4. **Training:** 800 molecules, 50 epochs, Adam optimizer
 5. **Deployment:** Prediction function for new molecules
+
+![review](../../../../../resource/img/gnn/review.png)
 
 **Performance Metrics:**
 
@@ -4576,6 +4668,8 @@ Cyclohexane (aliphatic)             C1CCCCC1                   -3.037
 * With proposed improvements, could reach $R^2 > 0.8$
 * Same architecture applies to any molecular property
 * Computational efficiency: \~1 ms per molecule prediction
+
+![insight](../../../../../resource/img/gnn/insight.png)
 
 **Applications Beyond Solubility:**
 
