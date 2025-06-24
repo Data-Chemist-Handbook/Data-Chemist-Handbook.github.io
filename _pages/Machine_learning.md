@@ -2961,9 +2961,8 @@ class MolecularGNN(nn.Module):
         # Build GCN layers
         self.convs = nn.ModuleList()
 ```
-![layers](../../../../../resource/img/gnn/layers.png)
 
-**Layer Construction**:
+**Component 1: Layer Construction**:
 
 <div style="background-color:#f3e5f5; padding:15px; border-radius:8px; margin:15px 0;">
     <table style="width:100%; border-collapse:collapse;">
@@ -3001,8 +3000,9 @@ class MolecularGNN(nn.Module):
         # Output layer: 64 → 1
         self.predictor = nn.Linear(hidden_dim, 1)
 ```
+![layers](../../../../../resource/img/gnn/layers.png)
 
-**Forward Pass Implementation**
+**Component 2: Forward Pass Implementation**
 
 **Principle**: The forward pass implements message passing followed by pooling:
 
