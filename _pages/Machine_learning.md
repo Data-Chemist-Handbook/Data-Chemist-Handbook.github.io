@@ -1628,7 +1628,7 @@ Each part of our code works according to this *Flowchart*:
 
 The flowchart above shows how raw atomic features are transformed by a single GCN (Graph Convolutional Network) layer into learned, structure-aware embeddings. Below, we unpack this transformation step-by-step, both conceptually and computationally.
 
-1. **Node Features**
+**1. Node Features**
    Each atom is represented by a **3-dimensional** one-hot feature vector that encodes its identity. For example:
 
 * `[1, 0, 0]` could represent carbon (C)
@@ -1652,7 +1652,7 @@ x = torch.tensor([
 
 This matrix `x` is the starting point: a basic, structure-free description of the molecule.
 
-2. **Edge Index**
+**2. Edge Index**
    To describe how atoms are bonded, we define the connectivity of the molecular graph using a list of directed edges. Each chemical bond is entered twice to support bidirectional message passing.
 
 The resulting tensor `edge_index` has shape **\[2, E]**, where E is the total number of directed edges. In our case, E = 8.
@@ -1668,7 +1668,7 @@ Here, for example, the edge (0, 1) and (1, 0) encode a bond between atoms 0 and 
 
 ![represent](../../../../../resource/img/gnn/represent.png)
 
-3. **Graph Data**
+**3. Graph Data**
    PyTorch Geometric uses a unified object to represent graph-structured data. The node features `x` and the connectivity `edge_index` are bundled into a `Data` object:
 
 ```python
@@ -1686,7 +1686,7 @@ This fully defines a small undirected graph of 4 atoms.
 
 ![graphdata](../../../../../resource/img/gnn/graphdata.png)
 
-4. **GCN Layer**
+**4. GCN Layer**
    We now define a graph convolutional layer that will **transform each 3-dimensional atom vector into a 2-dimensional learned embedding**.
 
 This is not just a dimensionality reduction step. Rather, it’s a **learned transformation**:
@@ -1724,7 +1724,7 @@ This means: input is a **\[4, 3]** matrix, and output will be a **\[4, 2]** matr
 > **Why go from 3 to 2 dimensions?**
 > We are not blindly compressing the input — rather, we are learning a more compact, expressive representation that fuses both identity and structure. The dimensionality is a design choice: you could use 2, 8, 128... depending on downstream task complexity. In this toy case, 2 is used for visualization and simplicity.
 
-5. **Forward Pass**
+**5. Forward Pass**
    We now execute the forward pass of the GCN. Internally, the layer:
 
 * For each atom, gathers features from its neighbors and itself
@@ -1743,7 +1743,7 @@ After this operation:
 
 ![forwardpasstable](../../../../../resource/img/gnn/forwardpasstable.png)
 
-6. **Output Features**
+**6. Output Features**
 
 ```python
 print("Updated Node Features After Message Passing:")
@@ -1768,6 +1768,7 @@ tensor([[ 0.2851, -0.0017],
 * 2 columns → each atom’s learned embedding
 
 **What does each embedding mean?**
+
 Each row (e.g. `[0.2851, -0.0017]`) represents an atom’s updated feature — not just its raw type (C, O, N), but also how it is **situated in the molecular graph**:
 
 * Who its neighbors are
@@ -1777,6 +1778,7 @@ Each row (e.g. `[0.2851, -0.0017]`) represents an atom’s updated feature — n
 This embedding is no longer one-hot or fixed — it is **learned from data**, and will improve with training.
 
 **Why is this useful?**
+
 You can now:
 
 * Feed these embeddings into another neural network to **predict molecular properties**
@@ -1784,6 +1786,7 @@ You can now:
 * **Visualize molecule structure** in 2D/3D via t-SNE or PCA
 
 **About `grad_fn=<AddBackward0>`**
+
 This line tells you that the output is part of the autograd computation graph in PyTorch. That means it supports backpropagation: gradients will flow back through the GCN layer during training to update $W$.
 
 #### Variants of Graph Convolutions
@@ -1811,6 +1814,9 @@ To understand how message passing in graph neural networks actually captures che
 
 Chemically speaking, this setup forms a classic "push-pull" system: the nitro group is strongly electron-withdrawing, while the hydroxyl group is electron-donating. This dynamic tension in electron distribution plays a key role in determining the molecule’s acidity, reactivity, and overall behavior. The power of message passing lies in its ability to gradually capture this electron flow, layer by layer.
 
+![GNN Layer Expansion](../../../../../resource/img/gnn/layer_expansion.png)
+**Figure 3.3.11:** *Receptive field expansion in GNNs. Each layer increases a node's awareness by one hop. Starting from self-awareness (Layer 0), nodes progressively integrate information from 1-hop neighbors, 2-hop neighbors, and eventually the entire molecular graph.*
+
 **GNN Message Passing: Neighborhood Expansion per Layer**
 - Layer 0: Self (Each atom only knows its own features)
   - e.g., O knows it's oxygen; N knows it's nitrogen
@@ -1830,9 +1836,6 @@ Chemically speaking, this setup forms a classic "push-pull" system: the nitro gr
 - Layer 4+: Global context (Full molecule representation)
   - Every atom integrates information from the entire molecule
   - Final features encode global electronic and structural effects
-
-![GNN Layer Expansion](../../../../../resource/img/gnn/layer_expansion.png)
-**Figure 3.3.11:** *Receptive field expansion in GNNs. Each layer increases a node's awareness by one hop. Starting from self-awareness (Layer 0), nodes progressively integrate information from 1-hop neighbors, 2-hop neighbors, and eventually the entire molecular graph.*
 
 #### Summary
 
@@ -3450,9 +3453,9 @@ $$
 * **$m_t$ (Momentum):**  
   This term computes an exponential moving average of the gradients. It combines the current gradient $g_t$ with the historical average $m_{t-1}$:
 
-  \[
+  $$
   m_t = \beta_1 m_{t-1} + (1 - \beta_1) g_t
-  \]
+  $$
 
   Think of it as “smoothing out” the direction of updates. Instead of reacting to each new gradient immediately, $m_t$ helps the model maintain a stable direction over time.  
   Imagine pushing a ball downhill: the more consistent the slope, the faster it builds momentum. Similarly, $m_t$ gives you an accumulated sense of which direction consistently reduces the loss.
@@ -3460,9 +3463,9 @@ $$
 * **$v_t$ (Adaptive scaling):**  
   This term accumulates the squared gradients to estimate how large and volatile each parameter’s updates are:
 
-  \[
+  $$
   v_t = \beta_2 v_{t-1} + (1 - \beta_2) g_t^2
-  \]
+  $$
 
   Unlike $m_t$, $v_t$ only tracks the **magnitude** of the gradients (not their direction). It tells you whether the updates for a certain parameter dimension have been large or small recently.  
   If a direction has large or noisy gradients, $v_t$ becomes large, and the update will be smaller in that direction. Think of it as driving over bumpy terrain: the bumpier it is, the more cautiously you move forward.
@@ -3470,9 +3473,9 @@ $$
 * **$\theta_t$ (Final update):**  
   This is the final step that uses both $m_t$ and $v_t$ to update the model parameters:
 
-  \[
+  $$
   \theta_t = \theta_{t-1} - \alpha \cdot \frac{m_t}{\sqrt{v_t} + \epsilon}
-  \]
+  $$
 
   The numerator ($m_t$) tells you **which direction to move**, and the denominator ($\sqrt{v_t}$) controls **how big the step should be** in that direction.  
   If $v_t$ is large (unstable or steep), the denominator increases, shrinking the step size. If $v_t$ is small (smooth), the update is larger.  
@@ -3570,7 +3573,7 @@ The gradient tells us “which way to adjust each parameter to reduce error.” 
 
 **Step 6.3: Training Function Implementation**
 
-Each training epoch processes all batches once, following 5 steps as we have learned before:
+Each training epoch processes all batches once, following the 5 steps as we have learned before:
 
 <div style="background-color:#f3e5f5; padding:15px; border-radius:8px; margin:15px 0;">
     <table style="width:100%; border-collapse:collapse;">
