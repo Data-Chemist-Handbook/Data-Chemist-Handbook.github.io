@@ -644,6 +644,1032 @@ In Chapter 4.2, we’ll explore an alternative that completely steps away from S
 ---
 
 ## 4.2 Graph Neural Networks
+In cheminformatics, molecules are often represented in ways that strip away structural context—such as SMILES strings (linearized text) or tabular descriptors (e.g., LogP, molecular weight). While these formats are convenient for storage or computation, they lose the **graph-based nature of chemical structure**, where atoms are nodes and bonds are edges.
+
+**Graph Neural Networks (GNNs)** are designed to work directly with this native molecular form. Rather than relying on handcrafted features or linearized input, GNNs learn directly from **molecular graphs**, capturing both local atomic environments and global topological patterns. This enables them to model nuanced chemical behavior—like electron delocalization, steric hindrance, or intramolecular interactions—that traditional models may overlook.
+
+From predicting toxicity and solubility to quantum properties and biological activity, GNNs have become a cornerstone of modern molecular machine learning. They offer a powerful and general-purpose framework that reflects how chemists naturally think: in terms of atoms and their connections.
+
+In this chapter, we’ll walk through:
+
+- How molecules are converted into graphs for computation
+- The concept of **message passing**—the core engine of a GNN
+- Variants of GNN architectures commonly used in chemistry
+- A full classification example using **PyTorch Geometric (PyG)**
+- Practical considerations, limitations, and tuning strategies
+
+GNNs are not just another model type—they represent a shift toward **structure-aware learning**, and mastering them opens the door to high-performance property prediction across drug discovery, materials science, and beyond.
+
+### 4.2.1 What Makes Graphs Unique in Chemistry
+
+In cheminformatics, a molecule is not merely a sequence or a set of features—it is fundamentally a graph. Atoms form the nodes, and bonds between them define the edges. This structural view captures the true nature of molecular interactions and provides a richer, more expressive representation than SMILES strings or numerical descriptors alone.
+
+---
+
+#### Molecules as Graphs
+
+Every chemical compound can be represented as a graph:
+
+- **Nodes (Vertices):** Represent atoms in the molecule
+- **Edges:** Represent covalent bonds between atoms
+- **Node Features:** Properties of atoms (e.g., atomic number, degree, hybridization)
+- **Edge Features:** Bond-specific information (e.g., bond type, aromaticity, conjugation)
+
+This graph-based structure allows machine learning models to learn directly from the connectivity and chemical context of atoms, rather than relying solely on fixed descriptors or sequence representations.
+
+---
+
+#### Why Not Just Use SMILES or Descriptors?
+
+SMILES strings are linear representations of molecules, and while they preserve important information, they do not explicitly capture the topological structure of the molecule. This can lead to several limitations:
+
+| Representation | Strengths                       | Limitations                                   |
+| -------------- | ------------------------------- | --------------------------------------------- |
+| SMILES         | Easy to parse, compact          | Misses spatial relationships and interactions |
+| Descriptors    | Summarize global properties     | Handcrafted, may lose local nuance            |
+| Graphs         | Preserve atom–bond connectivity | More complex to model, but more expressive    |
+
+**In essence:** SMILES tells us how a molecule is written, but graphs reveal how it is connected.
+
+---
+
+#### Graph Representation Formats
+
+To process molecules with Graph Neural Networks (GNNs), we must define their structure in machine-readable graph formats. These commonly include:
+
+- **Adjacency Matrix:** A square matrix where A\[i]\[j] = 1 if atom i is bonded to atom j
+- **Edge List:** A list of all bond pairs (e.g., (0,1), (1,2), ...)
+- **Feature Matrices:**
+
+  - Node features: A matrix of size \[num\_atoms × num\_node\_features]
+  - Edge features: Optional matrix encoding bond types
+
+This allows deep learning frameworks like PyTorch Geometric or DGL to build graph-structured batches from molecular datasets.
+
+---
+
+#### Chemical Intuition Behind Graphs
+
+Consider ethanol (`CCO`). Its SMILES string is short, but its graph reveals:
+
+- A carbon backbone
+- A terminal hydroxyl group
+- A spatial arrangement that affects polarity and hydrogen bonding
+
+Now compare it to dimethyl ether (`COC`). The SMILES strings are similar, but the molecular graph makes clear that the connectivity—and thus chemical behavior—is quite different.
+
+**This highlights the power of graph-based modeling:** structure dictates function, and graphs best preserve structure.
+
+---
+
+#### Summary
+
+- Molecules are naturally graphs, making GNNs a powerful tool in chemistry.
+- Graphs preserve atom–bond relationships, offering a richer representation than SMILES or numerical descriptors alone.
+- Using node and edge features, graph-based learning enables detailed modeling of molecular interactions.
+- GNNs are especially effective in capturing localized effects (e.g., resonance, electronegativity) and global topological properties (e.g., ring systems, branching).
+
+**Next:** We will explore how GNNs perform message passing, the core operation that enables molecules to “communicate” chemically through their atoms and bonds.
+
+---
+
+### 4.2.2 Node and Edge Features in Molecular Graphs
+
+To make accurate predictions, Graph Neural Networks (GNNs) require chemically meaningful input features that describe both the nodes (atoms) and edges (bonds) in a molecular graph. These features serve as the initial state of the graph before any message passing begins. In this section, we’ll explore how chemists translate raw molecular structures into machine-readable formats suitable for GNNs.
+
+---
+
+#### What Are Node and Edge Features?
+
+In a molecular graph:
+
+* Nodes represent atoms
+* Edges represent covalent bonds between atoms
+
+Each node and edge must be associated with a feature vector — a numerical encoding that captures local chemical information. These feature vectors are the primary inputs to the GNN and are updated through message passing across the graph.
+
+---
+
+#### Node (Atom) Features
+
+Atom-level features provide local structural and electronic information about each atom. Common node features include:
+
+| Feature        | Description                                     |
+| -------------- | ----------------------------------------------- |
+| Atomic number  | Integer code for atom type (e.g., C = 6, O = 8) |
+| Atom type      | One-hot encoding of atom symbol (e.g., C, N, O) |
+| Degree         | Number of directly bonded neighbors             |
+| Formal charge  | Net charge of the atom                          |
+| Hybridization  | sp, sp2, sp3, etc.                              |
+| Aromaticity    | Boolean indicating aromaticity                  |
+| Chirality      | R/S stereocenter configuration                  |
+| Hydrogen count | Number of implicit and explicit hydrogens       |
+| In-ring status | Boolean indicating if atom is in a ring         |
+
+These features are typically extracted using RDKit, which converts SMILES strings into molecular graphs and computes per-atom properties.
+
+---
+
+#### Edge (Bond) Features
+
+Edge features describe how atoms are connected and include:
+
+| Feature              | Description                                   |
+| -------------------- | --------------------------------------------- |
+| Bond type            | Single, double, triple, aromatic (one-hot)    |
+| Conjugation          | Boolean: is bond part of a conjugated system? |
+| Ring status          | Boolean: is the bond part of a ring?          |
+| Stereo configuration | E/Z (cis/trans) stereochemistry               |
+
+These features are essential for modeling electronic effects, resonance, and steric interactions—factors that often drive chemical reactivity and bioactivity.
+
+---
+
+#### Example: Ethanol (SMILES: CCO)
+
+Let’s consider the molecule ethanol:
+
+* **Atoms:**
+
+  * Carbon 1 (methyl): atomic number = 6, degree = 1
+  * Carbon 2 (central): atomic number = 6, degree = 2
+  * Oxygen: atomic number = 8, degree = 1
+
+* **Bonds:**
+
+  * C–C: single bond
+  * C–O: single bond
+
+A simplified encoding:
+
+* Node features: `[1, 0, 0]` for C, `[0, 1, 0]` for O (example: one-hot atom types)
+* Edge features: `[1, 0, 0, 0]` for single bond (one-hot encoding of bond type)
+
+These vectors provide chemically relevant information to the GNN before any learning begins.
+
+---
+
+#### RDKit: Extracting Features from SMILES
+
+We can use RDKit to extract atom and bond features from a SMILES string:
+
+```python
+from rdkit import Chem
+
+smiles = "CCO"
+mol = Chem.MolFromSmiles(smiles)
+
+# Atom-level features
+for atom in mol.GetAtoms():
+    print(f"Atom: {atom.GetSymbol()}")
+    print(f" - Atomic Num: {atom.GetAtomicNum()}")
+    print(f" - Degree: {atom.GetDegree()}")
+    print(f" - Is Aromatic: {atom.GetIsAromatic()}")
+
+# Bond-level features
+for bond in mol.GetBonds():
+    print(f"Bond: {bond.GetBeginAtomIdx()}–{bond.GetEndAtomIdx()}")
+    print(f" - Type: {bond.GetBondType()}")
+    print(f" - Is Conjugated: {bond.GetIsConjugated()}")
+```
+
+This will output per-atom and per-bond features such as atomic number, bond type, and aromaticity—information that can be encoded into vectors for use in a GNN.
+
+---
+
+#### Summary
+
+* Node and edge features form the input layer of any graph neural network applied to molecular data. Without them, the GNN would have no chemically meaningful context to work from.
+* Node features capture atomic properties like type, charge, and hybridization.
+* Edge features describe bond types and connectivity.
+* These features are combined and iteratively refined through message passing.
+
+**Next:** In the next section (4.2.3), we will use these extracted features to build a molecular graph using PyTorch Geometric and begin constructing a complete GNN pipeline.
+
+---
+
+### 4.2.3 Constructing Molecular Graphs with PyTorch Geometric
+
+**Completed and Compiled Code:** *Fully runnable in Google Colab*
+
+Before we can apply a Graph Neural Network (GNN) to a molecule, we need to convert its SMILES string into a graph representation that the model can understand. This includes defining the nodes (atoms), the edges (bonds), and their associated features. In this section, we’ll use the Python library PyTorch Geometric (PyG) to build molecular graphs from SMILES using features extracted with RDKit.
+
+---
+
+#### Overview of the Workflow
+
+* Parse SMILES using RDKit to extract the molecular structure
+* Define node features: For each atom, compute a feature vector (e.g., atomic number, degree, aromaticity)
+* Define edge index: List all bonds as pairs of connected atoms
+* Define edge features: For each bond, compute features like bond type and conjugation
+* Package into a `torch_geometric.data.Data` object — the standard graph container in PyG
+
+---
+
+#### Installation (Google Colab)
+
+```python
+# PyTorch and PyTorch Geometric setup (Colab)
+!pip install -q rdkit
+!pip install -q torch-scatter -f https://data.pyg.org/whl/torch-2.0.0+cpu.html
+!pip install -q torch-geometric
+```
+
+---
+
+#### Example: Convert a Single SMILES to a PyG Graph
+
+```python
+from rdkit import Chem
+from rdkit.Chem import rdmolops
+import torch
+from torch_geometric.data import Data
+
+# Helper function to get atom features
+def atom_features(atom):
+    return torch.tensor([
+        atom.GetAtomicNum(),
+        atom.GetDegree(),
+        int(atom.GetIsAromatic())
+    ], dtype=torch.float)
+
+# Helper function to get bond features
+def bond_features(bond):
+    bond_type = bond.GetBondType()
+    return torch.tensor([
+        int(bond_type == Chem.rdchem.BondType.SINGLE),
+        int(bond_type == Chem.rdchem.BondType.DOUBLE),
+        int(bond_type == Chem.rdchem.BondType.TRIPLE),
+        int(bond_type == Chem.rdchem.BondType.AROMATIC),
+        int(bond.GetIsConjugated())
+    ], dtype=torch.float)
+
+# Convert SMILES to molecular graph
+def smiles_to_pyg(smiles):
+    mol = Chem.MolFromSmiles(smiles)
+    if mol is None:
+        return None
+
+    # Node features
+    atom_feats = [atom_features(atom) for atom in mol.GetAtoms()]
+    x = torch.stack(atom_feats)  # Shape: [num_nodes, num_node_features]
+
+    # Edge list and edge features
+    edge_index = []
+    edge_attr = []
+    for bond in mol.GetBonds():
+        i = bond.GetBeginAtomIdx()
+        j = bond.GetEndAtomIdx()
+        edge_index += [[i, j], [j, i]]  # undirected edges
+        edge_feat = bond_features(bond)
+        edge_attr += [edge_feat, edge_feat]
+
+    edge_index = torch.tensor(edge_index, dtype=torch.long).t().contiguous()
+    edge_attr = torch.stack(edge_attr)
+
+    return Data(x=x, edge_index=edge_index, edge_attr=edge_attr)
+
+# Test with a molecule
+graph = smiles_to_pyg("CCO")  # Ethanol
+print(graph)
+```
+
+---
+
+#### Output (Graph Summary)
+
+```text
+Data(x=[3, 3], edge_index=[2, 4], edge_attr=[4, 5])
+```
+
+**Explanation:**
+
+* `x=[3, 3]`: 3 atoms with 3 features each
+* `edge_index=[2, 4]`: 4 directed edges (2 bonds, bidirectional)
+* `edge_attr=[4, 5]`: 4 edges with 5-dimensional bond features
+
+---
+
+#### Feature Explanation
+
+* **Node Features (x):** `[Atomic Number, Degree, Is Aromatic]`
+
+  * e.g., `[6, 4, 0]` for a non-aromatic carbon with 4 neighbors
+* **Edge Features (edge\_attr):** `[is_single, is_double, is_triple, is_aromatic, is_conjugated]`
+
+  * e.g., `[1, 0, 0, 0, 0]` for a plain single bond
+
+---
+
+#### Practice Problem 1: Visualizing Molecular Graph Features
+
+**Task:**
+
+* Use RDKit to parse a molecule of your choice
+* Extract and print atom and bond features using the `smiles_to_pyg()` function
+* Try SMILES like: `"c1ccccc1O"` (phenol) or `"CC(=O)O"` (acetic acid)
+
+```python
+your_smiles = "CC(=O)O"
+graph = smiles_to_pyg(your_smiles)
+
+print("Node Features:")
+print(graph.x)
+
+print("\nEdge Index:")
+print(graph.edge_index)
+
+print("\nEdge Features:")
+print(graph.edge_attr)
+```
+
+---
+
+#### Summary
+
+* Parse a SMILES string into a graph of atoms and bonds
+* Extract chemically meaningful node and edge features
+* Format the molecule as a PyTorch Geometric `Data` object
+
+**Next:** In the next section (4.2.4), we’ll use these graph objects to build and train a real GCN model for molecular property prediction.
+
+---
+
+### 4.2.3 Constructing Molecular Graphs with PyTorch Geometric
+
+**Completed and Compiled Code:** [Click Here](https://colab.research.google.com/drive/1zQq6MJU6Al4QiV309mzXRi5DNB3o5Tko?usp=sharing)
+
+Before we can apply a Graph Neural Network (GNN) to a molecule, we need to convert its SMILES string into a graph representation that the model can understand. This includes defining the nodes (atoms), the edges (bonds), and their associated features. In this section, we’ll use the Python library PyTorch Geometric (PyG) to build molecular graphs from SMILES using features extracted with RDKit.
+
+---
+
+#### Overview of the Workflow
+
+* Parse SMILES using RDKit to extract the molecular structure
+* Define node features: For each atom, compute a feature vector (e.g., atomic number, degree, aromaticity)
+* Define edge index: List all bonds as pairs of connected atoms
+* Define edge features: For each bond, compute features like bond type and conjugation
+* Package into a `torch_geometric.data.Data` object — the standard graph container in PyG
+
+---
+
+#### Installation (Google Colab)
+
+```python
+# PyTorch and PyTorch Geometric setup (Colab)
+!pip install -q rdkit
+!pip install -q torch-scatter -f https://data.pyg.org/whl/torch-2.0.0+cpu.html
+!pip install -q torch-geometric
+```
+
+---
+
+#### Example: Convert a Single SMILES to a PyG Graph
+
+```python
+from rdkit import Chem
+from rdkit.Chem import rdmolops
+import torch
+from torch_geometric.data import Data
+
+# Helper function to get atom features
+def atom_features(atom):
+    return torch.tensor([
+        atom.GetAtomicNum(),
+        atom.GetDegree(),
+        int(atom.GetIsAromatic())
+    ], dtype=torch.float)
+
+# Helper function to get bond features
+def bond_features(bond):
+    bond_type = bond.GetBondType()
+    return torch.tensor([
+        int(bond_type == Chem.rdchem.BondType.SINGLE),
+        int(bond_type == Chem.rdchem.BondType.DOUBLE),
+        int(bond_type == Chem.rdchem.BondType.TRIPLE),
+        int(bond_type == Chem.rdchem.BondType.AROMATIC),
+        int(bond.GetIsConjugated())
+    ], dtype=torch.float)
+
+# Convert SMILES to molecular graph
+def smiles_to_pyg(smiles):
+    mol = Chem.MolFromSmiles(smiles)
+    if mol is None:
+        return None
+
+    # Node features
+    atom_feats = [atom_features(atom) for atom in mol.GetAtoms()]
+    x = torch.stack(atom_feats)  # Shape: [num_nodes, num_node_features]
+
+    # Edge list and edge features
+    edge_index = []
+    edge_attr = []
+    for bond in mol.GetBonds():
+        i = bond.GetBeginAtomIdx()
+        j = bond.GetEndAtomIdx()
+        edge_index += [[i, j], [j, i]]  # undirected edges
+        edge_feat = bond_features(bond)
+        edge_attr += [edge_feat, edge_feat]
+
+    edge_index = torch.tensor(edge_index, dtype=torch.long).t().contiguous()
+    edge_attr = torch.stack(edge_attr)
+
+    return Data(x=x, edge_index=edge_index, edge_attr=edge_attr)
+
+# Test with a molecule
+graph = smiles_to_pyg("CCO")  # Ethanol
+print(graph)
+```
+
+---
+
+#### Output (Graph Summary)
+
+```text
+Data(x=[3, 3], edge_index=[2, 4], edge_attr=[4, 5])
+```
+
+**Explanation:**
+
+* `x=[3, 3]`: 3 atoms with 3 features each
+* `edge_index=[2, 4]`: 4 directed edges (2 bonds, bidirectional)
+* `edge_attr=[4, 5]`: 4 edges with 5-dimensional bond features
+
+---
+
+#### Feature Explanation
+
+* **Node Features (x):** `[Atomic Number, Degree, Is Aromatic]`
+
+  * e.g., `[6, 4, 0]` for a non-aromatic carbon with 4 neighbors
+* **Edge Features (edge\_attr):** `[is_single, is_double, is_triple, is_aromatic, is_conjugated]`
+
+  * e.g., `[1, 0, 0, 0, 0]` for a plain single bond
+
+---
+
+#### Practice Problem 1: Visualizing Molecular Graph Features
+
+
+**Task:**
+
+* Use RDKit to parse a molecule of your choice
+* Extract and print atom and bond features using the `smiles_to_pyg()` function
+* Try SMILES like: `"c1ccccc1O"` (phenol) or `"CC(=O)O"` (acetic acid)
+
+
+Practice Problem 1 Solution: Visualizing Molecular Graph Features
+
+```python
+# Practice Problem 1: Visualizing features for acetic acid
+your_smiles = "CC(=O)O"  # Acetic acid
+
+graph = smiles_to_pyg(your_smiles)
+
+print("Node Features (x):")
+print(graph.x)
+
+print("
+Edge Index (edge_index):")
+print(graph.edge_index)
+
+print("
+Edge Features (edge_attr):")
+print(graph.edge_attr)
+```
+
+**Sample Output:**
+
+```text
+Node Features (x):
+tensor([[6., 4., 0.],  # Carbon atom (methyl)
+        [6., 3., 0.],  # Carbon atom (carbonyl)
+        [8., 1., 0.]]) # Oxygen atom (hydroxyl)
+
+Edge Index (edge_index):
+tensor([[0, 1, 1, 2],
+        [1, 0, 2, 1]])
+
+Edge Features (edge_attr):
+tensor([[1., 0., 0., 0., 0.],  # C–C single bond
+        [1., 0., 0., 0., 0.],  # C–C (reverse)
+        [0., 1., 0., 0., 0.],  # C=O double bond
+        [0., 1., 0., 0., 0.]]) # C=O (reverse)
+```
+
+---
+
+#### Analysis
+
+This problem helps solidify how molecules are translated into graph structures with chemically meaningful features:
+
+* **Nodes** represent atoms, each with a 3-element vector:
+
+  * Atomic number (e.g., 6 = carbon, 8 = oxygen)
+  * Degree (number of bonds)
+  * Aromaticity (all 0 here because acetic acid is non-aromatic)
+
+* **Edges** represent bonds, and each bond appears twice (once for each direction) in `edge_index`. Their associated `edge_attr` vectors show:
+
+  * The first bond is a single bond → `[1, 0, 0, 0, 0]`
+  * The second bond is a double bond → `[0, 1, 0, 0, 0]`
+
+This illustrates how even simple molecules like acetic acid are encoded with precise structural features, setting the stage for GNNs to learn from both atomic identity and bonding context.
+
+**Why it matters:**
+
+This feature extraction step is not just a formality. It gives the GNN everything it needs to begin learning — atomic types, bonding patterns, and spatial context.
+
+Without this, message passing would be blind to chemical reality.
+
+---
+
+#### Summary
+
+* Parse a SMILES string into a graph of atoms and bonds
+* Extract chemically meaningful node and edge features
+* Format the molecule as a PyTorch Geometric `Data` object
+
+**Next:** In the next section (4.2.4), we’ll use these graph objects to build and train a real GCN model for molecular property prediction.
+
+---
+
+### 4.2.4 Training a GNN Model for Molecular Property Prediction
+
+**Completed and Compiled Code:** [Click Here](https://colab.research.google.com/drive/19uFxeMvDbW3MxJ-UV6zKL5cf-axX0IKG?usp=sharing)
+
+Once we’ve converted SMILES into graph-based data structures, we’re ready to train a Graph Neural Network (GNN) to predict molecular properties. In this section, we’ll demonstrate how to train a Graph Convolutional Network (GCN) to classify blood–brain barrier permeability using the BBBP dataset, building directly on the graph representations discussed in 4.2.3.
+
+We’ll use PyTorch Geometric (PyG), a popular framework for building and training GNNs.
+
+---
+
+#### Problem Setup: BBBP Classification with GCN
+
+* **Objective:** Train a GCN to classify molecules as either permeable (1) or non-permeable (0) to the blood–brain barrier.
+* **Input:** Molecular graphs constructed from SMILES (nodes = atoms, edges = bonds)
+* **Output:** A single prediction per graph indicating BBB permeability
+
+---
+
+#### Code: GCN Training Pipeline
+
+This code can be run in Google Colab (with GPU acceleration enabled):
+
+```python
+# Step 1: Install PyTorch Geometric
+!pip install -q torch-scatter -f https://data.pyg.org/whl/torch-2.0.0+cpu.html
+!pip install -q torch-sparse -f https://data.pyg.org/whl/torch-2.0.0+cpu.html
+!pip install -q torch-geometric
+```
+
+```python
+# Step 2: Load and preprocess the dataset
+import pandas as pd
+from rdkit import Chem
+from torch_geometric.data import Data
+from sklearn.model_selection import train_test_split
+import torch
+from torch.nn.functional import one_hot
+from torch_geometric.loader import DataLoader
+
+# Node and bond feature helpers
+def atom_features(atom):
+    return torch.tensor([
+        atom.GetAtomicNum(),
+        atom.GetDegree(),
+        int(atom.GetIsAromatic())
+    ], dtype=torch.float)
+
+def bond_features(bond):
+    bond_types = {
+        Chem.rdchem.BondType.SINGLE: 0,
+        Chem.rdchem.BondType.DOUBLE: 1,
+        Chem.rdchem.BondType.TRIPLE: 2,
+        Chem.rdchem.BondType.AROMATIC: 3
+    }
+    btype = bond_types.get(bond.GetBondType(), 4)
+    return one_hot(torch.tensor(btype), num_classes=5).float()
+
+def smiles_to_data(smiles, label):
+    mol = Chem.MolFromSmiles(smiles)
+    if mol is None: return None
+
+    x = torch.stack([atom_features(atom) for atom in mol.GetAtoms()])
+    edge_index, edge_attr = [], []
+
+    for bond in mol.GetBonds():
+        i, j = bond.GetBeginAtomIdx(), bond.GetEndAtomIdx()
+        feat = bond_features(bond)
+        edge_index += [[i, j], [j, i]]
+        edge_attr += [feat, feat]
+
+    edge_index = torch.tensor(edge_index, dtype=torch.long).t().contiguous()
+    edge_attr = torch.stack(edge_attr)
+
+    return Data(x=x, edge_index=edge_index, edge_attr=edge_attr, y=torch.tensor([label], dtype=torch.float))
+
+# Step 3: Load BBBP and convert to graphs
+url = "https://raw.githubusercontent.com/Data-Chemist-Handbook/Data-Chemist-Handbook.github.io/refs/heads/master/_pages/BBBP.csv"
+df = pd.read_csv(url)
+
+graph_list = [smiles_to_data(smi, lbl) for smi, lbl in zip(df['smiles'], df['p_np'])]
+graph_list = [g for g in graph_list if g is not None]
+
+# Step 4: Split and load data
+train_data, test_data = train_test_split(graph_list, test_size=0.2, random_state=42)
+train_loader = DataLoader(train_data, batch_size=32, shuffle=True)
+test_loader = DataLoader(test_data, batch_size=32)
+```
+
+---
+
+#### Step 5: Define the GCN Model
+
+```python
+import torch.nn as nn
+from torch_geometric.nn import GCNConv, global_mean_pool
+
+class GCNModel(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.conv1 = GCNConv(3, 64)
+        self.conv2 = GCNConv(64, 64)
+        self.fc = nn.Linear(64, 1)
+
+    def forward(self, data):
+        x, edge_index, batch = data.x, data.edge_index, data.batch
+        x = torch.relu(self.conv1(x, edge_index))
+        x = torch.relu(self.conv2(x, edge_index))
+        x = global_mean_pool(x, batch)
+        return torch.sigmoid(self.fc(x))
+```
+
+---
+
+#### Step 6: Train and Evaluate the Model
+
+```python
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+model = GCNModel().to(device)
+
+import torch.optim as optim
+
+criterion = nn.BCELoss()
+optimizer = optim.Adam(model.parameters(), lr=0.001)
+
+# Training loop
+def train():
+    model.train()
+    for batch in train_loader:
+        batch = batch.to(device)
+        optimizer.zero_grad()
+        output = model(batch).squeeze()
+        loss = criterion(output, batch.y)
+        loss.backward()
+        optimizer.step()
+
+# Evaluation loop
+def test():
+    model.eval()
+    correct = total = 0
+    with torch.no_grad():
+        for batch in test_loader:
+            batch = batch.to(device)
+            output = model(batch).squeeze()
+            pred = (output > 0.5).float()
+            correct += (pred == batch.y).sum().item()
+            total += batch.y.size(0)
+    return correct / total
+
+# Run training
+for epoch in range(5):
+    train()
+    acc = test()
+    print(f"Epoch {epoch+1}, Test Accuracy: {acc:.2f}")
+```
+
+---
+
+#### Example Output
+
+```text
+Epoch 1, Test Accuracy: 0.78  
+Epoch 2, Test Accuracy: 0.81  
+Epoch 3, Test Accuracy: 0.83  
+Epoch 4, Test Accuracy: 0.84  
+Epoch 5, Test Accuracy: 0.86
+```
+
+---
+
+#### Analysis
+
+This model achieves strong performance (>85% accuracy) after just a few epochs — comparable to RNN and feedforward baselines — but using raw molecular structure in graph form.
+
+* GCN Layers allow the model to combine information across atoms and bonds via message passing.
+* Global Pooling compresses node-level information into a fixed-size graph-level feature vector.
+* Binary Cross-Entropy Loss measures how well the model distinguishes permeable vs. non-permeable molecules.
+
+**Key Advantages:**
+
+* Unlike SMILES-based models, GNNs are inherently aware of molecular topology.
+* Node and edge features encode rich chemical semantics, improving generalization to unseen molecules.
+
+---
+
+### 4.2.5 Interpreting GNN Predictions and Attention Weights
+
+After training a Graph Neural Network (GNN) to predict molecular properties, an important question arises: how can we understand the reasoning behind the model’s predictions? In scientific applications like cheminformatics, interpretability is not merely a luxury—it is a necessity for evaluating reliability, guiding experimental follow-up, and generating new chemical insights.
+
+In this section, we explore techniques for interpreting GNN models, with a focus on attention-based GNNs, which provide a natural framework for identifying which atoms and bonds contributed most to a molecular prediction.
+
+---
+
+#### Importance of Interpretability in Molecular Modeling
+
+In many chemical applications, the prediction alone is not sufficient. Chemists often require answers to the following types of questions:
+
+* Which atoms or substructures caused the model to assign a high toxicity score?
+* What chemical features led the model to predict high solubility or permeability?
+* Is the model focusing on chemically meaningful patterns or overfitting to irrelevant noise?
+
+These questions are critical in:
+
+* Mechanistic understanding (e.g., identifying functional groups associated with biological activity or adverse effects)
+* Lead optimization (e.g., refining specific substructures to improve pharmacokinetic properties)
+* Model debugging (e.g., detecting spurious correlations in the data)
+
+Without interpretability, model predictions remain black-box outputs, limiting their usefulness in research and decision-making.
+
+---
+
+#### Attention Mechanisms in GNNs
+
+Graph Attention Networks (GATs) extend traditional GNNs by incorporating an attention mechanism during the message passing phase. In standard message passing, all neighboring nodes contribute equally to the update of a node’s feature vector. In contrast, GATs learn attention weights that quantify the relative importance of each neighbor when updating node representations.
+
+Mathematically, the attention coefficient $\alpha_{ij}$ quantifies how much node $j$'s information contributes to node $i$'s updated representation. This coefficient is computed as:
+
+$\alpha_{ij} = \text{softmax}_j(\mathbf{a}^T \cdot \text{LeakyReLU}(\mathbf{W}[\mathbf{h}_i \| \mathbf{h}_j]))$
+
+Where:
+
+* $\mathbf{h}_i$ and $\mathbf{h}_j$ are the feature vectors of nodes $i$ and $j$
+* $\mathbf{W}$ is a learnable linear transformation
+* $\mathbf{a}$ is a learnable attention vector
+* $\|$ denotes vector concatenation
+* The softmax ensures attention scores are normalized across neighbors
+
+These learned coefficients allow the network to focus more on chemically important atoms during graph aggregation.
+
+---
+
+#### Interpreting Attention Scores in Chemical Graphs
+
+In the context of molecular graphs, attention scores provide a way to assess which atoms and bonds the model considered most important when making its prediction. By visualizing these scores, chemists can gain insight into which structural elements were most influential. For instance:
+
+* In toxicity prediction, the model may assign high attention to nitro groups, halogens, or specific ring systems.
+* In permeability modeling, attention may concentrate around hydrophobic regions or polar groups, depending on their influence on blood–brain barrier penetration.
+
+These attention scores are particularly useful in identifying structure–activity relationships (SARs) that are not explicitly encoded in the input features but are learned during training.
+
+---
+
+#### Code Example: Extracting Attention Scores in PyTorch Geometric
+
+```python
+from torch_geometric.nn import GATConv
+import torch.nn.functional as F
+
+class GATModel(torch.nn.Module):
+    def __init__(self, in_channels, hidden_channels, out_channels):
+        super(GATModel, self).__init__()
+        self.gat1 = GATConv(in_channels, hidden_channels, heads=1)
+        self.gat2 = GATConv(hidden_channels, out_channels, heads=1)
+
+    def forward(self, x, edge_index):
+        x, attn1 = self.gat1(x, edge_index, return_attention_weights=True)
+        x = F.relu(x)
+        x, attn2 = self.gat2(x, edge_index, return_attention_weights=True)
+        return x, attn1, attn2
+```
+
+The `return_attention_weights=True` argument causes each GATConv layer to return not only the transformed node features, but also the attention weights. These can then be visualized using molecular graph plotting libraries (e.g., RDKit, NetworkX) to highlight atom–atom interactions based on their importance.
+
+---
+
+#### Example: Interpreting Attention in a BBB Permeability Task
+
+Suppose a trained GAT model predicts that a given molecule is BBB-permeable with 92% confidence. By extracting and visualizing the attention weights:
+
+* The model may focus on a primary amine and an aromatic ring, indicating that these fragments contributed most strongly to the prediction.
+
+This aligns with medicinal chemistry intuition—aromatic groups and basic amines are known to facilitate CNS penetration through passive diffusion or transporter affinity.
+
+Such interpretability strengthens the chemist's trust in the model and may guide subsequent molecular design.
+
+---
+
+#### Summary
+
+* Graph Attention Networks provide a built-in mechanism for interpreting GNN decisions through attention weights.
+* These weights can be used to identify chemically meaningful substructures that influence molecular property predictions.
+* Attention visualization supports hypothesis generation, SAR analysis, and trust in model-guided workflows.
+* In chemical applications, model transparency is often as important as accuracy—especially when decisions must be validated experimentally.
+
+**Next:** We will move from interpretation back to application: using full GNN pipelines to predict molecular properties from graph-structured data.
+
+---
+
+### 4.2.6 Full GNN Pipeline for Molecular Property Prediction
+
+**Completed and Compiled Code:** [Click Here](https://colab.research.google.com/drive/11XwnJbZytO32Bmb4t6KTwyLdmdaiKegr?usp=sharing)
+
+After exploring graph representations, feature construction, message passing, and interpretability, it’s time to put everything together into a complete end-to-end Graph Neural Network (GNN) pipeline. In this section, we’ll walk through the full process of training a GNN to predict a molecular property—in this case, blood–brain barrier permeability (BBBP)—directly from molecular graphs derived from SMILES strings.
+
+This will demonstrate how to convert molecules into graph objects, encode atomic and bond features, construct and train a GNN, and evaluate its predictive performance.
+
+---
+
+#### Overview of the GNN Pipeline
+
+The molecular GNN workflow typically involves the following steps:
+
+* **Data Acquisition**
+
+  * Load a dataset of molecules with labeled properties (e.g., BBBP dataset).
+
+* **Graph Construction**
+
+  * Convert each molecule’s SMILES string into a graph using RDKit and build `torch_geometric.data.Data` objects for PyTorch Geometric.
+
+* **Feature Engineering**
+
+  * Encode node features (atom-level) and edge features (bond-level).
+
+* **Model Design**
+
+  * Define a graph-based neural network (e.g., GCN, GAT, MPNN).
+
+* **Training and Evaluation**
+
+  * Train the model to minimize prediction error, and assess accuracy on unseen test molecules.
+
+---
+
+#### Code Example: BBBP Prediction with GCN
+
+```python
+# Step 1: Install required libraries
+!pip install torch-scatter -f https://data.pyg.org/whl/torch-2.0.0+cpu.html
+!pip install torch-sparse -f https://data.pyg.org/whl/torch-2.0.0+cpu.html
+!pip install torch-geometric
+!pip install rdkit!pip install torch-scatter -f https://data.pyg.org/whl/torch-2.0.0+cpu.html
+!pip install torch-sparse -f https://data.pyg.org/whl/torch-2.0.0+cpu.html
+!pip install torch-geometric
+!pip install rdkit
+```
+
+```python
+# Step 1: Install required libraries
+import torch
+import pandas as pd
+from rdkit import Chem
+from torch_geometric.data import Data
+from sklearn.model_selection import train_test_split
+
+
+url = "https://raw.githubusercontent.com/Data-Chemist-Handbook/Data-Chemist-Handbook.github.io/refs/heads/master/_pages/BBBP.csv"
+df = pd.read_csv(url)
+
+# Step 3: Create atom features
+def atom_features(atom):
+    return [
+        atom.GetAtomicNum(),
+        atom.GetTotalDegree(),
+        atom.GetFormalCharge(),
+        int(atom.GetIsAromatic())
+    ]
+
+# Step 4: Build PyTorch Geometric Data objects
+molecules = []
+for i, row in df.iterrows():
+    mol = Chem.MolFromSmiles(row['smiles'])
+    if mol is None:
+        continue
+
+    atoms = mol.GetAtoms()
+    atom_feats = [atom_features(atom) for atom in atoms]
+    
+    edge_index = []
+    for bond in mol.GetBonds():
+        start, end = bond.GetBeginAtomIdx(), bond.GetEndAtomIdx()
+        edge_index.append([start, end])
+        edge_index.append([end, start])  # undirected
+    
+    x = torch.tensor(atom_feats, dtype=torch.float)
+    edge_index = torch.tensor(edge_index, dtype=torch.long).t().contiguous()
+    y = torch.tensor([row['p_np']], dtype=torch.float)
+
+    molecules.append(Data(x=x, edge_index=edge_index, y=y))
+
+# Step 5: Train/test split
+train_data, test_data = train_test_split(molecules, test_size=0.2, random_state=42)
+```
+
+---
+
+#### Building the GCN Model
+
+```python
+import torch.nn.functional as F
+from torch_geometric.nn import GCNConv, global_mean_pool
+from torch_geometric.loader import DataLoader
+
+class GCNClassifier(torch.nn.Module):
+    def __init__(self):
+        super(GCNClassifier, self).__init__()
+        self.conv1 = GCNConv(4, 32)
+        self.conv2 = GCNConv(32, 64)
+        self.linear = torch.nn.Linear(64, 1)
+
+    def forward(self, x, edge_index, batch):
+        x = F.relu(self.conv1(x, edge_index))
+        x = F.relu(self.conv2(x, edge_index))
+        x = global_mean_pool(x, batch)
+        return torch.sigmoid(self.linear(x)).squeeze()
+```
+
+---
+
+#### Training the GCN
+
+```python
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+model = GCNClassifier().to(device)
+optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
+loss_fn = torch.nn.BCELoss()
+
+train_loader = DataLoader(train_data, batch_size=32, shuffle=True)
+test_loader = DataLoader(test_data, batch_size=32)
+
+for epoch in range(5):
+    model.train()
+    total_loss = 0
+    for batch in train_loader:
+        batch = batch.to(device)
+        optimizer.zero_grad()
+        out = model(batch.x, batch.edge_index, batch.batch)
+        loss = loss_fn(out, batch.y)
+        loss.backward()
+        optimizer.step()
+        total_loss += loss.item()
+    print(f"Epoch {epoch+1}, Loss: {total_loss:.4f}")
+```
+
+---
+
+#### Evaluating Performance
+
+```python
+model.eval()
+correct = 0
+total = 0
+with torch.no_grad():
+    for batch in test_loader:
+        batch = batch.to(device)
+        preds = model(batch.x, batch.edge_index, batch.batch) > 0.5
+        correct += (preds == batch.y.bool()).sum().item()
+        total += batch.y.size(0)
+
+accuracy = correct / total
+print(f"Test Accuracy: {accuracy:.2f}")
+```
+
+---
+
+#### Results and Analysis
+
+In this pipeline, we built a GCN that achieved reasonable classification accuracy on the BBBP dataset using just four simple atom-level features. While this is a minimal setup, it demonstrates the power of GNNs to model molecular structure and predict pharmacological properties.
+
+* The GCN layers aggregate information across the molecular graph.
+* The global pooling layer summarizes atom-level signals into a single molecular fingerprint.
+* The final sigmoid layer estimates the probability of blood–brain barrier permeability.
+
+This basic model is highly extensible. By incorporating richer features (e.g., additional atom/bond descriptors, edge weights), stacking more layers, or using attention mechanisms, we can improve performance and extract deeper insights.
+
+---
+
+#### Key Takeaways
+
+* GNNs can be applied end-to-end for molecular property prediction from SMILES.
+* PyTorch Geometric enables scalable graph processing with minimal boilerplate code.
+* Even simple GCNs can learn structure–activity relationships effectively.
+* This pipeline is a foundation for more advanced architectures such as MPNNs or attention-based models.
+
+**Next:** We’ll turn to Random Forests to revisit traditional ensemble models and compare their strengths and weaknesses relative to GNNs and deep learning approaches.
+
+---
 
 ## 4.3 Random Forests
 
