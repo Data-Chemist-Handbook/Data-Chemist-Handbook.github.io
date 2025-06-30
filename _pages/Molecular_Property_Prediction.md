@@ -1673,4 +1673,592 @@ This basic model is highly extensible. By incorporating richer features (e.g., a
 
 ## 4.3 Random Forests
 
+In cheminformatics, selecting the right machine learning model often requires balancing predictive power, interpretability, and ease of implementation. Deep learning architectures like Recurrent Neural Networks (RNNs) and Graph Neural Networks (GNNs) can uncover intricate patterns in molecular data, but they typically demand large datasets, significant computational resources, and specialized expertise.
+
+Random Forests provide a practical alternative. These models are based on ensembles of decision trees—simple, rule-based classifiers that split data according to feature thresholds. While a single decision tree can easily overfit the training data, a Random Forest aggregates predictions from multiple trees built on different subsets of the data. This approach reduces variance and improves the model’s ability to generalize.
+
+Random Forests are especially useful for molecular property prediction tasks where:
+
+* Descriptors are already well-defined (such as molecular weight, topological polar surface area, or LogP)
+* Interpretability is desired (to understand which molecular features influence predictions)
+* The dataset is relatively small or contains noise
+
+They are widely used in cheminformatics for problems such as blood–brain barrier permeability classification, solubility prediction, and drug-likeness scoring. Random Forests also require minimal preprocessing and can handle both categorical and numerical features, making them accessible to both chemists and data scientists.
+
+In this chapter, we will explore how Random Forests operate, how to prepare molecular descriptors as input features, and how to evaluate and interpret the model’s predictions. The goal is to equip you with a reliable, interpretable, and reproducible method for making molecular predictions.
+
+We begin by reviewing the structure and decision-making process of individual decision trees, followed by the ensemble principles that define the Random Forest model.
+
+---
+
+### 4.3.1 Decision Trees for Molecular Property Prediction
+
+Before understanding Random Forests, it’s important to first understand how individual decision trees work. Decision trees are one of the most intuitive models in machine learning — they split the data based on simple, interpretable decision rules. Each internal node in the tree represents a test on a feature, and each leaf node represents a final prediction.
+
+---
+
+#### How Decision Trees Work
+
+A decision tree recursively partitions the input space. At each node, it asks a question about one of the input features — such as “Is molecular weight greater than 250?” or “Is LogP less than 3.5?” Based on the answer, the input is routed down the left or right branch. This process continues until the input reaches a leaf node, which contains a predicted class (for classification problems) or a value (for regression).
+
+In cheminformatics, decision trees are often used to classify or predict molecular properties using computed descriptors such as:
+
+* Molecular weight
+* LogP (octanol–water partition coefficient)
+* Topological Polar Surface Area (TPSA)
+* Number of rotatable bonds
+* Aromatic ring count
+
+These descriptors are quantitative values that summarize important chemical traits of a molecule.
+
+---
+
+#### Example: Solubility Classification
+
+Suppose we are building a classifier to predict whether a compound is soluble or not. A decision tree might learn the following structure:
+
+1. Is TPSA < 75?
+
+   * Yes → Go to 2
+   * No → Predict “Insoluble”
+2. Is Molecular Weight < 300?
+
+   * Yes → Predict “Soluble”
+   * No → Predict “Insoluble”
+
+This decision process is easy to follow and provides insight into what properties are influencing the model’s decisions.
+
+---
+
+#### Advantages
+
+Decision trees have several useful properties:
+
+* **Interpretability:** The decision path for any molecule can be traced back, which makes the model understandable to chemists.
+* **No need for feature scaling:** Unlike many other models, decision trees do not require normalization or standardization of input features.
+* **Works with mixed data types:** Can handle both continuous (e.g., molecular weight) and categorical data (e.g., atom types).
+
+---
+
+#### Limitations
+
+Despite their advantages, single decision trees are prone to overfitting — especially when the tree becomes too deep. In such cases, the model may memorize the training data but perform poorly on new, unseen molecules. This motivates the use of Random Forests, which average over many trees to reduce variance and improve generalization.
+
+---
+
+In the next section (4.3.2), we’ll build and train a Random Forest model using molecular descriptors to predict solubility, using the BBBP dataset.
+
+---
+
+### 4.3.2 Random Forest Classification on Molecular Descriptors
+**Completed and Compiled Code:** [Click Here](https://colab.research.google.com/drive/1-ZVEWWfamCM3gUShKyY_NnMdsZz4Mx8W?usp=sharing)
+
+Random Forest is an ensemble learning method that improves the stability and accuracy of predictions by combining the output of multiple decision trees. In molecular property prediction, it’s especially effective when using chemical descriptors—numerical features that capture molecular traits such as size, polarity, and flexibility.
+
+In this section, we’ll build a Random Forest classifier using descriptors extracted from the BBBP dataset, and use it to predict blood–brain barrier (BBB) permeability.
+
+---
+
+#### Dataset Overview
+
+We’ll use the same dataset as in Chapter 4.1:
+
+* **BBBP dataset (Blood–Brain Barrier Penetration)**
+* Each molecule has:
+
+  * A SMILES string representing its chemical structure
+  * A binary label `p_np` (1 = permeable, 0 = impermeable)
+
+Rather than feeding SMILES directly to a model, we’ll extract numerical descriptors for each molecule using RDKit, and then train a Random Forest classifier using scikit-learn.
+
+---
+
+#### Step-by-Step Code Example (Google Colab Compatible)
+
+#### Step 1: Install RDKit (if not already installed)
+```python
+# Step 1: Install RDKit (if not already installed)
+!pip install -q rdkit pandas scikit-learn
+```
+
+#### Step 2: Import libraries
+```python
+# Step 2: Import libraries
+import pandas as pd
+from rdkit import Chem
+from rdkit.Chem import Descriptors
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score, classification_report
+```
+
+---
+
+#### Step 3: Load the BBBP Dataset
+
+```python
+# Load BBBP dataset from GitHub
+url = "https://raw.githubusercontent.com/Data-Chemist-Handbook/Data-Chemist-Handbook.github.io/refs/heads/master/_pages/BBBP.csv"
+data = pd.read_csv(url)
+data.head()
+```
+
+---
+
+#### Step 4: Feature Extraction with RDKit
+
+```python
+# Step 4: Feature Extraction with RDKit (safe handling)
+def compute_descriptors(smiles):
+    mol = Chem.MolFromSmiles(smiles)
+    if mol:
+        return {
+            'MolWt': Descriptors.MolWt(mol),
+            'LogP': Descriptors.MolLogP(mol),
+            'NumHDonors': Descriptors.NumHDonors(mol),
+            'NumHAcceptors': Descriptors.NumHAcceptors(mol),
+            'TPSA': Descriptors.TPSA(mol),
+            'NumRotatableBonds': Descriptors.NumRotatableBonds(mol)
+        }
+    else:
+        return None
+
+# Apply descriptor function
+descriptor_data = data['smiles'].apply(compute_descriptors)
+
+# Filter out failed SMILES rows
+valid_mask = descriptor_data.notnull()
+df_desc = pd.DataFrame(descriptor_data[valid_mask].tolist())
+df_desc['Label'] = data['p_np'][valid_mask].values
+```
+
+---
+
+#### Step 5: Train/Test Split and Model Training
+
+```python
+# Split into input features and labels
+X = df_desc.drop('Label', axis=1)
+y = df_desc['Label']
+
+# Train/test split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Train Random Forest
+rf = RandomForestClassifier(n_estimators=100, random_state=42)
+rf.fit(X_train, y_train)
+```
+
+---
+
+#### Step 6: Model Evaluation
+
+```python
+# Make predictions
+y_pred = rf.predict(X_test)
+
+# Evaluate accuracy
+print("Accuracy:", accuracy_score(y_test, y_pred))
+print("\nClassification Report:\n", classification_report(y_test, y_pred))
+```
+
+---
+
+#### Sample Output
+
+```text
+Accuracy: 0.87
+
+Classification Report:
+              precision    recall  f1-score   support
+         0.0       0.84      0.88      0.86       130
+         1.0       0.90      0.85      0.87       148
+    accuracy                           0.87       278
+```
+
+---
+
+#### Analysis
+
+This Random Forest model performs well, achieving high precision and recall on both classes. The molecular descriptors used are chemically interpretable, giving insights into which features drive permeability. Feature importance scores from the model could be used to further understand which descriptors are most predictive.
+
+Random Forest is a strong baseline model in cheminformatics because:
+
+* It handles feature interactions automatically.
+* It’s robust to noisy or missing features.
+* It provides feature importance scores — useful for interpretability.
+
+---
+
+In the next section (4.3.3), we’ll explore how to extract and visualize those feature importances to better understand the model’s decision-making process.
+
+---
+
+### 4.3.3 Training and Evaluation
+**Completed and Compiled Code:** [Click Here](https://colab.research.google.com/drive/1erpaYRZM4tb5YDH8VT-Wc12XunjuKJSf?usp=sharing)
+
+Once molecular descriptors have been computed and organized into a usable dataset, the next step is to train a machine learning model on that data. In this section, we’ll walk through how to use a Random Forest classifier to predict whether molecules from the BBBP dataset can cross the blood–brain barrier.
+
+This subchapter will cover:
+
+* Splitting data into training and testing sets
+* Fitting a Random Forest model to chemical descriptors
+* Evaluating model performance using accuracy and classification metrics
+* Understanding the contribution of each descriptor using feature importance
+
+---
+
+#### Step 1: Train/Test Split
+
+Machine learning models need to be evaluated on unseen data to measure generalization. We achieve this by splitting the dataset into:
+
+* Training set (usually 80%): Used to teach the model.
+* Testing set (remaining 20%): Used to evaluate performance on unseen compounds.
+
+```python
+from sklearn.model_selection import train_test_split
+
+# Assuming `df_desc` is your cleaned DataFrame from section 4.3.2
+X = df_desc.drop(columns=['Label'])
+y = df_desc['Label']
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+```
+
+---
+
+#### Step 2: Train a Random Forest Classifier
+
+We now use scikit-learn’s `RandomForestClassifier` to build a model. It constructs many decision trees using different subsets of the data and averages their results for better stability and accuracy.
+
+```python
+from sklearn.ensemble import RandomForestClassifier
+
+# Initialize and train the model
+rf_model = RandomForestClassifier(n_estimators=100, random_state=42)
+rf_model.fit(X_train, y_train)
+```
+
+* `n_estimators=100` means we train 100 decision trees.
+* `random_state=42` ensures reproducibility.
+
+---
+
+#### Step 3: Make Predictions and Evaluate the Model
+
+After training, we can use the model to make predictions on the test set and assess how well it generalizes to unseen molecules.
+
+```python
+from sklearn.metrics import accuracy_score, classification_report
+
+# Predict on the test set
+y_pred = rf_model.predict(X_test)
+
+# Evaluate the results
+print("Accuracy:", accuracy_score(y_test, y_pred))
+print("\nClassification Report:")
+print(classification_report(y_test, y_pred))
+```
+
+**Metrics Explained:**
+
+* **Accuracy:** Proportion of correct predictions.
+* **Precision:** Of the molecules predicted as permeable, how many actually are?
+* **Recall:** Of the truly permeable molecules, how many were correctly predicted?
+* **F1-score:** Harmonic mean of precision and recall — useful when classes are imbalanced.
+
+---
+
+#### Step 4: Interpret Feature Importance
+
+One of the advantages of Random Forests is their interpretability. We can extract feature importance to determine which descriptors influenced the model’s decisions most.
+
+```python
+# Sort and select top features
+import numpy as np
+import matplotlib.pyplot as plt
+
+importances = rf_model.feature_importances_
+feature_names = df_desc.drop(columns=['Label']).columns
+indices = np.argsort(importances)[::-1]
+top_n = min(10, len(importances))  # Use the smaller of 10 or actual feature count
+
+# Plot
+plt.figure(figsize=(10, 6))
+plt.title("Top Important Molecular Descriptors")
+plt.bar(range(top_n), importances[indices[:top_n]])
+plt.xticks(range(top_n), feature_names[indices[:top_n]], rotation=45, ha='right')
+plt.ylabel("Feature Importance")
+plt.tight_layout()
+plt.show()
+```
+
+This plot shows the descriptors that the model relied on most when predicting BBB permeability.
+
+---
+
+#### Practice Problem: **Evaluating Model Confidence**
+
+**Task:**
+
+1. Take 5 random test molecules from the dataset.
+2. Print:
+
+   * Their SMILES strings
+   * The model’s binary prediction (0 or 1)
+   * The model’s predicted probability (i.e. confidence level)
+
+This helps you understand how confident the model is in its decisions—and whether those decisions seem reasonable.
+
+---
+
+#### Solution Code
+
+Make sure to run this after training your `rf_model` and preparing `X_test`, `y_test`, and the original `data` DataFrame.
+
+```python
+import numpy as np
+import pandas as pd
+
+# Access the indices from the test set
+test_indices = X_test.index
+
+# Recover corresponding SMILES strings from the original dataset
+test_smiles = data.loc[test_indices, 'smiles']
+
+# Sample 5 molecules
+sampled = test_smiles.sample(5, random_state=1)
+
+print("Random Test Samples:\n")
+for idx in sampled.index:
+    smiles = data.loc[idx, 'smiles']
+    features = X.loc[idx].values.reshape(1, -1)
+
+    pred = rf_model.predict(features)[0]
+    prob = rf_model.predict_proba(features)[0][1]  # Probability of class 1
+
+    print(f"SMILES: {smiles}")
+    print(f"→ Predicted Label: {pred}")
+    print(f"→ Predicted Probability (Confidence): {prob:.2f}\n")
+```
+
+---
+
+#### Example Output
+
+```text
+Random Test Samples:
+
+SMILES: [H+].C1=C(OCC(=O)NCCN(CC)CC)C=CC(=C1)OC.[Cl-]
+→ Predicted Label: 1
+→ Predicted Probability (Confidence): 0.88
+
+SMILES: C1=C(Br)C=CC2=C1C(=NCC(N2C)COC)C3=CC=CC=C3Cl
+→ Predicted Label: 1
+→ Predicted Probability (Confidence): 1.00
+
+SMILES: CC(C)c1ccc(C)cc1OCC2=NCCN2
+→ Predicted Label: 1
+→ Predicted Probability (Confidence): 0.56
+
+SMILES: [C@@]125C3=C4C[C@H]([C@@]1(CC[C@@H]([C@@H]2OC3=C(C=C4)O)O)O)N(C)CC5
+→ Predicted Label: 1
+→ Predicted Probability (Confidence): 0.89
+
+SMILES: CO\N=C(C(=O)NC1[C@H]2SCC(=C(N2C1=O)C(O)=O)\C=C/c3scnc3C)\c4csc(N)n4
+→ Predicted Label: 0
+→ Predicted Probability (Confidence): 0.41
+```
+
+---
+
+#### Analysis
+
+This exercise highlights how confident the model is in predicting BBB permeability for individual molecules. For example:
+
+* A predicted label of 1 with 87% confidence suggests the model is strongly convinced that the molecule can cross the blood–brain barrier.
+* A predicted label of 0 with low confidence (e.g., 31%) may indicate structural ambiguity or lack of similar examples in the training data.
+
+**What we learn:**
+
+* Prediction confidence matters—it can help flag molecules near the decision boundary that may require expert review or additional data.
+* Not all predictions are equally reliable—and the probability output gives us a way to rank how confident we should be in each.
+* Chemists can use this as a practical filtering step when prioritizing compounds for synthesis or simulation.
+
+---
+
+#### Takeaways
+
+* `predict_proba()` gives an added layer of interpretability beyond binary predictions.
+* High-confidence predictions may be ready for real-world use.
+* Lower-confidence predictions may benefit from further data collection or model refinement.
+
+**Next:** In Section 4.3.4, we’ll discuss how this feature-based approach compares with GNN and RNN models introduced earlier.
+
+---
+
+### 4.3.4 Interpreting Random Forest Outputs
+**Completed and Compiled Code:** [Click Here](https://colab.research.google.com/drive/1r8XcPromrAsBPgE-atlJ_AZD7lijBpb5?usp=sharing)
+
+Once a Random Forest model has been trained for molecular property prediction, the next crucial step is interpreting what the model has learned. In cheminformatics, interpretation isn’t just about model accuracy — it’s about understanding why the model makes its predictions. This is essential for trust, scientific insight, and experimental design.
+
+---
+
+#### Why Interpretability Matters in Chemistry
+
+Chemists are not just looking for black-box predictions. They want to know:
+
+* Which molecular descriptors are most important?
+* Are the model’s decisions chemically plausible?
+* Can we learn new structure–activity relationships from the model’s behavior?
+
+Random Forests are inherently more interpretable than many other models (like neural networks) because they’re built on decision trees, each of which makes transparent, rule-based decisions. Although a forest of trees becomes complex, we can still extract meaningful patterns.
+
+---
+
+#### Feature Importance: What Drives Prediction?
+
+The most common interpretability tool in Random Forests is feature importance. This is a score assigned to each input descriptor that quantifies how much it contributed to splitting decisions across all trees in the ensemble.
+
+Two common ways feature importance is calculated:
+
+* **Mean decrease in impurity (Gini importance):** Based on how much each feature reduces impurity (misclassification or error) in the tree.
+* **Permutation importance:** Measures the change in model accuracy when the values of a feature are randomly shuffled.
+
+For molecular descriptors, this means we can identify which chemical properties — like LogP, TPSA, or molecular weight — were most influential in classifying activity or predicting permeability.
+
+---
+
+#### Example: Visualizing Descriptor Importance
+
+Let’s say you’ve trained a Random Forest on SMILES-based molecular descriptors to predict BBB permeability. You can extract and visualize the top 10 most important features using the following code:
+
+```python
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import train_test_split
+
+# Example setup
+X = df_desc.drop("Label", axis=1).values
+y = df_desc["Label"].values
+feature_names = df_desc.drop("Label", axis=1).columns
+
+# Train the model
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+rf = RandomForestClassifier(n_estimators=100, random_state=42)
+rf.fit(X_train, y_train)
+
+# Compute feature importances
+importances = rf.feature_importances_
+indices = np.argsort(importances)[::-1]  # sort descending
+
+# Visualize top 10 features
+top_k = min(10, len(feature_names))
+plt.figure(figsize=(10, 6))
+plt.title("Top Molecular Descriptors by Importance")
+plt.bar(range(top_k), importances[indices[:top_k]])
+plt.xticks(range(top_k), feature_names[indices[:top_k]], rotation=45)
+plt.ylabel("Importance Score")
+plt.tight_layout()
+plt.show()
+```
+
+---
+
+#### Interpretation of the Plot
+
+The resulting bar chart tells you which descriptors were most predictive of blood–brain barrier penetration. For example:
+
+* A high importance score for TPSA (topological polar surface area) might suggest that polarity significantly influences permeability.
+* Molecular weight and LogP often appear near the top — both are known factors in passive diffusion across membranes.
+
+---
+
+#### Practice Problem: Investigating Descriptor Roles
+
+**Practice Problem:**
+
+1. Use the Random Forest trained above.
+2. Identify the three most important descriptors.
+3. Write a short explanation of why each might influence BBB permeability from a chemical perspective.
+
+**Solution:**
+
+```python
+top3_indices = indices[:3]
+for i in top3_indices:
+    print(f"{feature_names[i]} - Importance: {importances[i]:.3f}")
+```
+
+**Sample Output:**
+
+```text
+TPSA - Importance: 0.292
+LogP - Importance: 0.192
+MolWt - Importance: 0.190
+```
+
+---
+
+#### Analysis
+
+* **TPSA:** A lower polar surface area is generally associated with better membrane permeability — making this descriptor especially important in predicting BBB crossing.
+* **MolLogP:** LogP reflects lipophilicity. Compounds with balanced hydrophobicity are more likely to diffuse through lipid bilayers.
+* **MolWt:** Larger molecules may struggle to cross the BBB due to size restrictions. The model has learned this constraint.
+
+These insights align with well-known medicinal chemistry heuristics, illustrating that Random Forests can recapitulate domain knowledge — and potentially highlight new exceptions worth investigating.
+
+---
+
+**Next:** In the following section, we’ll summarize what Random Forests offer chemists and when they’re most appropriate for molecular modeling tasks.
+
+---
+### 4.3.5 Summary and Best Practices for Random Forests in Chemistry
+
+Random Forests are among the most effective and accessible machine learning models for molecular property prediction. They offer a balance between strong predictive performance and interpretability — two essential qualities for chemists applying data science to real-world problems.
+
+---
+
+#### Why Chemists Use Random Forests
+
+* **Robust Performance:** Random Forests handle noisy, nonlinear, and high-dimensional datasets with ease. They’re less sensitive to overfitting than individual decision trees, especially on moderate-sized chemical datasets.
+* **Descriptor Compatibility:** They work well with traditional cheminformatics descriptors (e.g., molecular weight, LogP, TPSA) generated from SMILES strings or molecular graphs.
+* **No Feature Scaling Required:** Unlike many models, Random Forests don’t require normalization or standardization of features.
+* **Interpretability:** Feature importance measures provide clear insight into which molecular properties drive predictions — essential for guiding experiments.
+
+---
+
+#### Best Practices for Chemists
+
+| Best Practice                             | Why It Matters                                        |
+| ----------------------------------------- | ----------------------------------------------------- |
+| Use enough estimators (e.g., 100–500)     | More trees reduce variance and improve generalization |
+| Tune max depth and min samples split      | Controls model complexity and prevents overfitting    |
+| Stratify your train/test splits           | Ensures class balance is preserved across subsets     |
+| Analyze feature importance after training | Helps you understand chemical drivers of activity     |
+| Cross-validate when possible              | Provides more stable performance estimates            |
+| Handle missing data before training       | Random Forests can’t handle NaNs directly             |
+
+---
+
+#### When Not to Use Random Forests
+
+While powerful, Random Forests may not be ideal in these scenarios:
+
+* **Large-scale SMILES or Graph Data:** For raw sequence or structural input, deep learning models (e.g., RNNs or GNNs) often perform better.
+* **Highly Imbalanced Labels:** You may need resampling, class weighting, or alternative metrics.
+* **Real-time Prediction:** Large forests can be slow to evaluate, especially with thousands of trees.
+
+---
+
+#### Final Thoughts
+
+Random Forests remain a workhorse model in cheminformatics. They are particularly effective when working with hand-crafted features derived from molecular descriptors. Their interpretability helps chemists connect ML predictions with known chemical intuition, making them an ideal starting point for predictive modeling in drug discovery, materials science, and beyond.
+
+**Coming Up Next:** In Section 4.4, we’ll revisit fully connected Neural Networks — this time using molecular descriptors instead of sequences — and compare their strengths and limitations alongside Random Forests.
+
+---
+
+
 ## 4.4 Neural Networks
