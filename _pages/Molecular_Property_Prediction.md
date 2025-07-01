@@ -2262,3 +2262,615 @@ Random Forests remain a workhorse model in cheminformatics. They are particularl
 
 
 ## 4.4 Neural Networks
+
+In computational chemistry, many molecular datasets come in tabular form—where each molecule is described by a fixed-length vector of descriptors or fingerprints. These descriptors might include physicochemical properties (e.g., molecular weight, LogP), structural counts (e.g., number of aromatic rings or rotatable bonds), or binary fingerprints encoding substructure presence. When working with this kind of structured data, one of the most flexible and powerful machine learning tools available is the feedforward neural network (also called a fully connected neural network or multilayer perceptron).
+
+Unlike RNNs that process SMILES strings or GNNs that operate on molecular graphs, feedforward neural networks treat molecular descriptors as static numerical vectors. This architecture makes them well-suited for classification and regression tasks in ADMET prediction, toxicity modeling, QSAR, and materials informatics.
+
+Because neural networks are universal function approximators, they can learn highly nonlinear relationships between molecular structure and properties—sometimes outperforming simpler models like random forests or support vector machines when properly tuned. However, this flexibility comes at the cost of complexity. Designing, training, and interpreting neural networks requires care: too few neurons may limit performance, while too many may lead to overfitting.
+
+In this chapter, you’ll learn:
+	•	How to prepare molecular descriptors for neural networks
+	•	How to design and train fully connected models in Python using TensorFlow/Keras
+	•	How to compare their performance to other algorithms such as random forests
+	•	And how to interpret the model’s predictions using modern explainability tools
+
+Through a hands-on case study involving the BBBP dataset, you’ll build a complete pipeline from descriptor generation to model training and evaluation. By the end of the chapter, you’ll be able to confidently apply neural networks to a wide range of property prediction tasks using traditional descriptor-based representations.
+
+---
+
+### 4.4.1 Understanding Feedforward Neural Networks
+
+Feedforward neural networks (FNNs) are the simplest and most widely used type of artificial neural network. They form the foundation of deep learning models and are particularly effective when working with fixed-length numerical vectors, such as molecular descriptors.
+
+In contrast to RNNs or GNNs, which are designed to handle structured or sequential data like SMILES strings or molecular graphs, feedforward neural networks treat every input feature as an independent component of a molecule’s representation. This makes them ideal for tasks where we already have tabular descriptors available—such as predicting solubility, toxicity, or bioactivity using physicochemical properties and substructure fingerprints.
+
+---
+
+#### Core Structure
+
+A typical feedforward neural network consists of the following:
+
+1. **Input Layer**
+   This layer accepts the molecular descriptor vector. Each feature—such as molecular weight, LogP, or the number of hydrogen bond donors—corresponds to one input neuron.
+
+2. **Hidden Layers**
+   One or more layers of neurons sit between the input and output. These layers learn complex transformations of the input through weighted sums, bias terms, and activation functions. Each hidden neuron receives inputs from the previous layer and sends outputs to the next.
+
+3. **Output Layer**
+   This layer produces the final prediction. For classification tasks (e.g., BBB permeable vs. not), the output is often a single neuron with a sigmoid activation to produce a probability. For regression tasks (e.g., predicting LogP), the output neuron is typically linear.
+
+---
+
+#### Mathematical Intuition
+
+At a basic level, each layer performs a weighted linear combination followed by a nonlinear transformation:
+
+$$
+\text{Output} = f(Wx + b)
+$$
+
+Where:
+
+* $x$ is the input vector (e.g., molecular descriptors)
+* $W$ is a weight matrix
+* $b$ is a bias vector
+* $f$ is an activation function like ReLU or sigmoid
+
+This process is repeated layer by layer until the final output is produced.
+
+---
+
+#### Why Use Neural Networks in Chemistry?
+
+Chemists often deal with highly nonlinear relationships: small structural changes can lead to dramatic shifts in properties (e.g., stereochemistry or electron-withdrawing effects). Neural networks are well-suited to modeling these nonlinearities because they can learn complex decision boundaries that traditional models (e.g., linear regression) cannot capture.
+
+In practice, feedforward neural networks can be trained on descriptors such as:
+
+* RDKit-computed molecular properties (TPSA, MW, LogP)
+* Binary fingerprints (e.g., Morgan or MACCS)
+* Custom feature vectors derived from quantum chemistry or DFT
+
+These networks have been successfully used in:
+
+* QSAR modeling
+* Toxicity prediction
+* Blood–brain barrier classification
+* Metabolic site prediction
+
+---
+
+In the next section (4.4.2), we’ll walk through a practical example of building a feedforward neural network in Python using the BBBP dataset. You’ll learn how to preprocess descriptor data, define a network architecture, and evaluate prediction performance in a classification setting.
+
+---
+
+### 4.4.2 Implementing a Neural Network with Molecular Descriptors
+**Completed and Compiled Code:** [Click Here](https://colab.research.google.com/drive/17h1LCsR7anf3F272BXOBCRjli0zSr5l_?usp=sharing)
+
+Now that we’ve introduced feedforward neural networks (FNNs), let’s apply one to a real-world classification task: predicting whether a molecule is permeable to the blood–brain barrier (BBB) using molecular descriptors.
+
+We’ll extract these descriptors using RDKit and use them as input features for a neural network built with TensorFlow/Keras.
+
+---
+
+#### Goal
+
+Build a neural network to classify molecules from the BBBP dataset based on a set of physicochemical descriptors, such as:
+
+* Molecular weight
+* LogP (lipophilicity)
+* Topological polar surface area (TPSA)
+* Number of rotatable bonds
+* Number of hydrogen bond donors/acceptors
+
+---
+
+#### Step-by-Step Colab Code
+
+```python
+# Step 1: Install dependencies
+!pip install -q rdkit-pypi pandas scikit-learn tensorflow
+
+# Step 2: Load the BBBP dataset
+import pandas as pd
+from rdkit import Chem
+from rdkit.Chem import Descriptors
+
+url = "https://raw.githubusercontent.com/Data-Chemist-Handbook/Data-Chemist-Handbook.github.io/refs/heads/master/_pages/BBBP.csv"
+data = pd.read_csv(url)
+
+# Step 3: Define a function to compute molecular descriptors
+def compute_descriptors(smiles):
+    mol = Chem.MolFromSmiles(smiles)
+    if mol is None:
+        return None
+    return [
+        Descriptors.MolWt(mol),                      # Molecular weight
+        Descriptors.MolLogP(mol),                    # LogP
+        Descriptors.TPSA(mol),                       # Topological polar surface area
+        Descriptors.NumRotatableBonds(mol),          # Rotatable bonds
+        Descriptors.NumHDonors(mol),                 # H-bond donors
+        Descriptors.NumHAcceptors(mol)               # H-bond acceptors
+    ]
+
+# Step 4: Apply descriptor function to SMILES
+descriptor_data = data['smiles'].apply(compute_descriptors)
+
+# Filter out None entries
+valid_mask = descriptor_data.notnull()
+valid_descriptors = descriptor_data[valid_mask]
+
+# Convert the list of valid descriptors into a DataFrame
+df_desc = pd.DataFrame(valid_descriptors.tolist(), columns=[
+    'MolWt', 'LogP', 'TPSA', 'RotatableBonds', 'HDonors', 'HAcceptors'
+])
+
+# Attach the corresponding labels
+df_desc['Label'] = data.loc[valid_mask, 'p_np'].values
+
+# Step 5: Train/test split
+from sklearn.model_selection import train_test_split
+X = df_desc.drop('Label', axis=1).values
+y = df_desc['Label'].values
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Step 6: Normalize the features
+from sklearn.preprocessing import StandardScaler
+scaler = StandardScaler()
+X_train = scaler.fit_transform(X_train)
+X_test = scaler.transform(X_test)
+
+# Step 7: Build a neural network
+import tensorflow as tf
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense, Dropout
+
+model = Sequential([
+    Dense(64, activation='relu', input_shape=(X_train.shape[1],)),
+    Dropout(0.3),
+    Dense(32, activation='relu'),
+    Dropout(0.3),
+    Dense(1, activation='sigmoid')  # Binary classification
+])
+
+model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
+model.summary()
+
+# Step 8: Train the model
+history = model.fit(X_train, y_train, epochs=10, batch_size=32, validation_split=0.2)
+
+# Step 9: Evaluate the model
+loss, accuracy = model.evaluate(X_test, y_test)
+print(f"Test Accuracy: {accuracy:.2f}")
+```
+
+---
+
+#### Analysis
+
+This model uses molecular descriptors as fixed-length inputs, making it ideal for feedforward neural networks. Here’s what happens at each stage:
+
+* **Input Layer:** Receives six standardized chemical descriptors.
+* **Hidden Layers:** Apply learned transformations and non-linear activation to extract complex structure–property relationships.
+* **Dropout:** Prevents overfitting by randomly disabling neurons during training.
+* **Output Layer:** Produces a probability for BBB permeability using a sigmoid activation.
+
+On this dataset, the model typically reaches a test accuracy around 80–85% after 10 epochs. While not perfect, this performance is strong considering only a few descriptors are used.
+
+---
+
+#### Practice Problem
+
+**Predict on New Molecules**
+
+Using the trained model and the same descriptor pipeline, predict whether the following molecules are BBB-permeable:
+
+1. "CCN(CC)CC" (Dimethylaminoethane)
+2. "c1ccccc1O" (Phenol)
+3. "CC(=O)OC1=CC=CC=C1C(=O)O" (Aspirin)
+
+**Solution:**
+
+```python
+new_smiles = ["CCN(CC)CC", "c1ccccc1O", "CC(=O)OC1=CC=CC=C1C(=O)O"]
+new_desc = [compute_descriptors(smi) for smi in new_smiles]
+new_X = scaler.transform(new_desc)
+predictions = model.predict(new_X)
+
+for i, smi in enumerate(new_smiles):
+    prob = predictions[i][0]
+    print(f"{smi} → Predicted BBB permeability: {prob:.2f}")
+```
+
+**Expected Output (example):**
+
+```text
+CCN(CC)CC → Predicted BBB permeability: 0.98
+c1ccccc1O → Predicted BBB permeability: 0.96
+CC(=O)OC1=CC=CC=C1C(=O)O → Predicted BBB permeability: 0.91
+```
+
+**Interpretation:** The model predicts that dimethylaminoethane is likely BBB-permeable, while phenol and aspirin are not—reflecting the role of polarity and molecular size in permeability.
+
+---
+
+#### Summary
+
+* Feedforward neural networks work well with tabular molecular descriptor data.
+* RDKit makes it easy to extract chemically meaningful features from SMILES.
+* This method is a baseline for cheminformatics tasks like BBB prediction.
+* You can extend this approach by adding more descriptors or tuning hyperparameters.
+
+---
+
+In 4.4.3, we’ll discuss training dynamics, loss curves, and how to avoid overfitting in neural networks for chemistry.
+
+---
+
+### 4.4.3 Training and Evaluating a Neural Network for Property Prediction
+**Completed and Compiled Code:** [Click Here](https://colab.research.google.com/drive/12ecTRB1I4FH9-f_utyJD0hlQg-o-1pqQ?usp=sharing)
+
+In the previous sections, we explored how to convert molecules into descriptor vectors and build a basic neural network to model molecular properties. Now we’ll take a hands-on approach: training and evaluating a neural network to classify molecules based on blood–brain barrier permeability using computed molecular descriptors.
+
+---
+
+#### Objective
+
+We’ll build a feedforward neural network that:
+
+* Accepts molecular descriptors as input
+* Predicts a binary class label (BBB-permeable or not)
+* Is trained on the BBBP dataset
+* Is evaluated using standard metrics like accuracy, precision, recall, and F1 score
+
+---
+
+#### Step-by-Step Code Walkthrough
+
+```python
+# Step 1: Install RDKit (if not already installed)
+!pip install -q rdkit
+
+# Step 2: Import required libraries
+import pandas as pd
+import numpy as np
+from rdkit import Chem
+from rdkit.Chem import Descriptors
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import classification_report
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense
+
+# Step 3: Load the dataset
+url = "https://raw.githubusercontent.com/Data-Chemist-Handbook/Data-Chemist-Handbook.github.io/refs/heads/master/_pages/BBBP.csv"
+data = pd.read_csv(url)
+
+# Step 4: Define descriptor calculation function
+def compute_descriptors(smiles):
+    mol = Chem.MolFromSmiles(smiles)
+    if mol is None:
+        return None
+    return [
+        Descriptors.MolWt(mol),
+        Descriptors.MolLogP(mol),
+        Descriptors.TPSA(mol),
+        Descriptors.NumRotatableBonds(mol),
+        Descriptors.NumHDonors(mol),
+        Descriptors.NumHAcceptors(mol)
+    ]
+
+# Step 5: Apply descriptor calculation
+descriptor_data = data['smiles'].apply(compute_descriptors)
+descriptor_data = descriptor_data.dropna()  # Remove invalid entries
+X = np.array(descriptor_data.tolist())
+y = data.loc[descriptor_data.index, 'p_np'].values  # Use same indices to align labels
+
+# Step 6: Scale descriptors and split data
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X)
+X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.2, random_state=42)
+
+# Step 7: Define and compile neural network
+model = Sequential([
+    Dense(32, activation='relu', input_shape=(X_train.shape[1],)),
+    Dense(16, activation='relu'),
+    Dense(1, activation='sigmoid')
+])
+model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
+
+# Step 8: Train the model
+history = model.fit(X_train, y_train, epochs=10, batch_size=32, validation_split=0.2, verbose=1)
+
+# Step 9: Evaluate the model
+y_pred = (model.predict(X_test) > 0.5).astype(int)
+print(classification_report(y_test, y_pred))
+```
+
+---
+
+#### Results and Analysis
+
+In the output, you should see metrics like accuracy, precision, recall, and F1 score. These help assess the model’s ability to correctly classify molecules as BBB-permeable or impermeable.
+
+**Typical results might look like:**
+
+```
+              precision    recall  f1-score   support
+
+           0       0.72      0.46      0.56        99
+           1       0.85      0.94      0.89       309
+
+    accuracy                           0.83       408
+   macro avg       0.78      0.70      0.73       408
+weighted avg       0.82      0.83      0.81       408
+```
+
+**Key Insights:**
+
+* The model performs well on both classes, with a balanced F1 score.
+* The input descriptors are sufficient to make reasonably accurate predictions about BBB permeability.
+* Adding more descriptors or domain-specific features (e.g., graph-based information) might further improve performance.
+
+**Chemist’s Tip:** If the model struggles with generalization, consider augmenting the dataset or using dropout and regularization techniques in the network.
+
+---
+
+### 4.4.3 Training and Evaluating a Neural Network for Property Prediction
+
+In the previous sections, we explored how to convert molecules into descriptor vectors and build a basic neural network to model molecular properties. Now we’ll take a hands-on approach: training and evaluating a neural network to classify molecules based on blood–brain barrier permeability using computed molecular descriptors.
+
+---
+
+#### Objective
+
+We’ll build a feedforward neural network that:
+
+* Accepts molecular descriptors as input
+* Predicts a binary class label (BBB-permeable or not)
+* Is trained on the BBBP dataset
+* Is evaluated using standard metrics like accuracy, precision, recall, and F1 score
+
+---
+
+#### Step-by-Step Code Walkthrough
+
+```python
+# Step 1: Install RDKit (if not already installed)
+!pip install -q rdkit
+
+# Step 2: Import required libraries
+import pandas as pd
+import numpy as np
+from rdkit import Chem
+from rdkit.Chem import Descriptors
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import classification_report
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense
+
+# Step 3: Load the dataset
+url = "https://raw.githubusercontent.com/Data-Chemist-Handbook/Data-Chemist-Handbook.github.io/refs/heads/master/_pages/BBBP.csv"
+data = pd.read_csv(url)
+
+# Step 4: Define descriptor calculation function
+def compute_descriptors(smiles):
+    mol = Chem.MolFromSmiles(smiles)
+    if mol is None:
+        return None
+    return [
+        Descriptors.MolWt(mol),
+        Descriptors.MolLogP(mol),
+        Descriptors.TPSA(mol),
+        Descriptors.NumRotatableBonds(mol),
+        Descriptors.NumHDonors(mol),
+        Descriptors.NumHAcceptors(mol)
+    ]
+
+# Step 5: Apply descriptor calculation
+descriptor_data = data['smiles'].apply(compute_descriptors)
+descriptor_data = descriptor_data.dropna()  # Remove invalid entries
+X = np.array(descriptor_data.tolist())
+y = data.loc[descriptor_data.index, 'p_np'].values  # Use same indices to align labels
+
+# Step 6: Scale descriptors and split data
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X)
+X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.2, random_state=42)
+
+# Step 7: Define and compile neural network
+model = Sequential([
+    Dense(32, activation='relu', input_shape=(X_train.shape[1],)),
+    Dense(16, activation='relu'),
+    Dense(1, activation='sigmoid')
+])
+model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
+
+# Step 8: Train the model
+history = model.fit(X_train, y_train, epochs=10, batch_size=32, validation_split=0.2, verbose=1)
+
+# Step 9: Evaluate the model
+y_pred = (model.predict(X_test) > 0.5).astype(int)
+print(classification_report(y_test, y_pred))
+```
+
+---
+
+#### Results and Analysis
+
+In the output, you should see metrics like accuracy, precision, recall, and F1 score. These help assess the model’s ability to correctly classify molecules as BBB-permeable or impermeable.
+
+**Typical results might look like:**
+
+```
+              precision    recall  f1-score   support
+
+           0       0.75      0.79      0.77       108
+           1       0.81      0.77      0.79       124
+
+    accuracy                           0.78       232
+   macro avg       0.78      0.78      0.78       232
+weighted avg       0.78      0.78      0.78       232
+```
+
+**Key Insights:**
+
+* The model performs well on both classes, with a balanced F1 score.
+* The input descriptors are sufficient to make reasonably accurate predictions about BBB permeability.
+* Adding more descriptors or domain-specific features (e.g., graph-based information) might further improve performance.
+
+**Chemist’s Tip:** If the model struggles with generalization, consider augmenting the dataset or using dropout and regularization techniques in the network.
+
+---
+
+### 4.4.4 Analyzing and Interpreting Neural Network Outputs
+**Completed and Compiled Code:** [Click Here](https://colab.research.google.com/drive/1ps2jxBne5ObDzNp4xNIVNoGU-EjM2qtU?usp=sharing)
+
+After training a neural network on molecular descriptors to predict a property—such as blood–brain barrier permeability—the next step is to evaluate how the model behaves and what its predictions reveal. This section guides you through the tools and techniques that chemists can use to understand the outputs of a trained neural network and extract chemical insight, not just accuracy metrics.
+
+---
+
+#### Why Interpretation Matters
+
+Chemists often care not just about predictions, but also about understanding why a model makes them. Interpretability is crucial for:
+
+* Validating that the model is learning chemically meaningful patterns.
+* Identifying which descriptors (features) are most influential.
+* Gaining insights into structural drivers of activity or property.
+* Building trust in data-driven tools used for synthesis and decision-making.
+
+A neural network, even though it is often considered a “black box,” can still be interpreted using both global and local analysis techniques.
+
+---
+
+#### 1. Evaluating Prediction Performance
+
+The most immediate way to interpret a neural network is through standard evaluation metrics:
+
+* Accuracy (for classification tasks like BBB permeability)
+* Mean Squared Error (MSE) or Mean Absolute Error (MAE) (for regression)
+* ROC-AUC Curve (for binary classifiers)
+
+These give an overall sense of how well the model is performing across the test set, but they don’t explain why it is performing that way.
+
+---
+
+#### 2. Feature Importance via Permutation
+
+Although neural networks do not have built-in feature importance measures like decision trees, we can assess which molecular descriptors are influential using permutation importance. This involves:
+
+1. Shuffling one feature’s values across the test set.
+2. Measuring the drop in model performance.
+3. Repeating this for each feature.
+
+A larger drop implies that the feature was more important.
+
+```python
+from sklearn.neural_network import MLPClassifier
+from sklearn.inspection import permutation_importance
+from sklearn.metrics import classification_report
+
+# Replace the Keras model with sklearn's MLP
+mlp = MLPClassifier(hidden_layer_sizes=(32, 16), max_iter=500, random_state=42)
+mlp.fit(X_train, y_train)
+
+# Predict and evaluate
+y_pred = mlp.predict(X_test)
+print(classification_report(y_test, y_pred))
+
+# Permutation importance
+result = permutation_importance(mlp, X_test, y_test, n_repeats=10, random_state=42)
+
+# Display feature importances
+for i in result.importances_mean.argsort()[::-1]:
+    print(f"Feature {i}: {result.importances_mean[i]:.4f}")
+```
+
+This lets you identify which chemical properties—like molecular weight, LogP, or TPSA—drive predictions.
+
+---
+
+#### 3. SHAP Values for Local Interpretability
+
+SHAP (SHapley Additive exPlanations) is a powerful tool to understand how each input feature contributes to a single prediction. This is useful for inspecting outliers or understanding why two similar molecules receive different scores.
+
+```python
+import shap
+
+explainer = shap.Explainer(model.predict, X_train[:100], algorithm="permutation")
+shap_values = explainer(X_test[:10]) # subset to speed up the example
+
+# Visualize for one example molecule
+shap.plots.waterfall(shap_values[0])
+```
+
+SHAP gives a per-feature breakdown of the predicted output—telling you whether each descriptor pushed the prediction higher or lower. This helps chemists understand which molecular traits influenced a specific output.
+
+---
+
+#### 4. Visualizing Prediction Confidence for Classification
+
+In classification tasks like predicting BBB permeability, it’s more informative to visualize the distribution of predicted probabilities for each class rather than plotting predicted vs. actual values directly.
+
+The violin plot below shows how confident the model is when predicting each class:
+
+```python
+import matplotlib.pyplot as plt
+import seaborn as sns
+import numpy as np
+
+# Ensure predictions are 1D array
+probs = predictions.flatten()
+
+# Create a DataFrame for easy plotting
+import pandas as pd
+df_plot = pd.DataFrame({
+    'True Label': y_test,
+    'Predicted Probability': probs
+})
+
+# Plot the distribution of predicted probabilities for each class
+plt.figure(figsize=(8, 5))
+sns.violinplot(x='True Label', y='Predicted Probability', data=df_plot, inner='point')
+plt.title('Predicted Probability Distributions by Class')
+plt.xlabel('True Label (0 = Not Permeable, 1 = Permeable)')
+plt.ylabel('Predicted Probability')
+plt.grid(True)
+plt.show()
+```
+
+**Interpretation**
+
+	•	Left violin (Label = 0): The model outputs a wide range of probabilities, including many closer to 1, suggesting some false positives.
+	•	Right violin (Label = 1): Most predictions are confidently near 1, indicating the model is better at identifying permeable molecules.
+	•	The spread and overlap between the violins reveal the degree of confidence and uncertainty in the model’s predictions.
+
+This visualization provides insight into model calibration — how well the predicted probabilities reflect true outcomes — which is especially important in pharmacological settings where misclassifications have real-world consequences.
+
+
+---
+
+#### 5. Error Analysis
+
+After training, look at which predictions were wrong or had the highest error. These molecules might:
+
+* Contain rare substructures underrepresented in training data.
+* Be chemically noisy or mislabeled.
+* Highlight limits of descriptor-based representations.
+
+You can investigate these by visualizing the SMILES or 2D structure using RDKit and examining descriptor values.
+
+---
+
+#### Summary
+
+Interpreting neural network outputs transforms a predictive model into a decision-support tool. For chemists, this means:
+
+* Going beyond accuracy to understand what drives predictions.
+* Using permutation importance or SHAP to find key molecular features.
+* Investigating both global patterns and local anomalies.
+
+---
+
+
