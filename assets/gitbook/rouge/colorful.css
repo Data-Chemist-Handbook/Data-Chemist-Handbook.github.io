@@ -24,6 +24,9 @@
 .highlight .kt {
   color: #339;
 }
+.book:not(.color-theme-1):not(.color-theme-2) .highlight .p{
+  color: #a3bfae;
+}
 .highlight .o {
   color: #333;
 }
