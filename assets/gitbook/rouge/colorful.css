@@ -53,7 +53,10 @@
   color: #F00;
   font-weight: bold;
 }
-.highlight .nv, .highlight .vm {
+.book.color-theme-2 .highlight .nv, .book.color-theme-2 .highlight .vm {
+  color: #963;
+}
+.book.color-theme-1 .highlight .nv, .book.color-theme-1 .highlight .vm {
   color: #963;
 }
 .book:not(.color-theme-1):not(.color-theme-2) .highlight .nv, .book:not(.color-theme-1):not(.color-theme-2) .highlight .vm {
