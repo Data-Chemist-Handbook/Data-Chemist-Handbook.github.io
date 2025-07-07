@@ -34,6 +34,15 @@
   color: #000;
   font-weight: bold;
 }
+.book.color-theme-2 .highlight .n {
+  color: #963;
+}
+.book.color-theme-1 .highlight .n {
+  color: #963;
+}
+.book:not(.color-theme-1):not(.color-theme-2) .highlight .n {
+  color: #222233;
+}
 .highlight .nb, .highlight .bp {
   color: #007020;
 }
