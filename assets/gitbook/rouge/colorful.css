@@ -85,8 +85,11 @@
   color: #555;
   font-weight: bold;
 }
-.highlight .s, .highlight .sb, .highlight .dl, .highlight .s2, .highlight .sh, .highlight .s1 {
+.book.color-theme-2 .highlight .s, .book.color-theme-2 .highlight .sb, .book.color-theme-2 .highlight .dl, .book.color-theme-2 .highlight .s2, .book.color-theme-2 .highlight .sh, .book.color-theme-2 .highlight .s1 {
   background-color: #2e486c;
+}
+.book.color-theme-1 .highlight .s, .book.color-theme-1 .highlight .sb, .book.color-theme-1 .highlight .dl, .book.color-theme- .highlight .s2, .book.color-theme-1 .highlight .sh, .book.color-theme-1 .highlight .s1 {
+  background-color: #e8e1c0;
 }
 .highlight .sa {
   color: #080;
