@@ -27,6 +27,9 @@
 .highlight .o {
   color: #333;
 }
+.book.color-theme-2 .highlight .o, .book.color-theme-2 .highlight .ow {
+  color: #e2e7b3;
+}
 .highlight .ow {
   color: #000;
   font-weight: bold;
@@ -126,6 +129,14 @@
 }
 .highlight .m, .highlight .mb, .highlight .mx {
   color: #60E;
+  font-weight: bold;
+}
+.book.color-theme-2 .highlight .m {
+  color: #66dcee;
+  font-weight: bold;
+}
+.book.color-theme-2 .highlight .mi {
+  color: #66dcee;
   font-weight: bold;
 }
 .highlight .mi, .highlight .il {
