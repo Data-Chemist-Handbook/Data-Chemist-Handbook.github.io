@@ -20,17 +20,18 @@ The chapter also introduces challenges unique to SMILES-based modeling, includin
 Throughout, we emphasize practical aspects such as data preprocessing, model training, and evaluation strategies. The chapter includes complete code examples, with a focus on the USPTO-50K dataset, to support hands-on implementation.
 
 ## Summary of Key Terms Used in the Chapter
-| Term              | Definition  |
-| :---------------: | :------- |
-| canonicalse SMILES | <def> |
-| seq2seq        |   <def>   |
-| LSTM           |   <def>   |
-| tokenize    |  <def>   |
-| tensor | <def> |
-| token-level accuracy | <def> |
-| exact match |  <def>   |
-| top-k accuracy | <def> |
-| attention | <def> |
+
+| Term                 | Definition |
+| :------------------: | :--------- |
+| canonicalse SMILES   | Definition |
+| seq2seq              | Definition |
+| LSTM                 | Definition |
+| tokenize             | Definition |
+| tensor               | Definition |
+| token-level accuracy | Definition |
+| exact match          | Definition |
+| top-k accuracy       | Definition |
+| attention            | Definition |
 
 ## 7.1 Retrosynthesis
 Organic synthesis, the design of synthetic routes to organic compounds, is a crucial discipline that holds relevance not only in the field of chemistry but also across many other scientific domains and industries, including medicine and pharmaceuticals. It enables access to new molecules for a wide range of applications, including drug development and materials science.
