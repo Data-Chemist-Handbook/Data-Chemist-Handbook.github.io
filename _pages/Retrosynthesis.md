@@ -435,7 +435,7 @@ code
 
 The `train` function handles the complete training workflow for the Seq2Seq LSTM, with support for hyperparameter tuning via wandb. The function sets up the training, validation, and test data loaders. It loads hyperparameter values from the wandb.config object, which is defined through a sweep configuration (refer Step 7 for `sweep_config`). Alternatively, you may replace a parameter (`config.<param>` here) with fixed values to manually define your hyperparameters.
 
-For each epoch, the model is trained using `train_epoch()`, and validation is performed using `evaluate()`. The etst fucntion used is `test_exactmatch`. Key metrics are logged to wandb for tracking. After training completes, the final model is saved to disk and also uploaded to wandb for record-keeping or future use.
+For each epoch, the model is trained using `train_epoch()`, and validation is performed using `evaluate()`. The test fucntion used is `test_exactmatch`. Key metrics are logged to wandb for tracking. After training completes, the final model is saved to disk and also uploaded to wandb for record-keeping or future use.
 
 ```python
 # Training loop, with wandb
