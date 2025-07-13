@@ -29,11 +29,12 @@ Furthermore, many existing tools are rule-based, template-driven, or rely on dec
 
 | Term                 | Definition |
 | :------------------: | :--------- |
-| canonicalized SMILES   | a unique, standardized version of a molecule's SMILES representation. Because the same molecule can be described by multiple valid SMILES strings, canonicalization ensures consistency. |
-| hyperparameters | Definition |
 | seq2seq              | a neural network architecture designed to map one sequence to another, often with different lengths. |
 | LSTM                 | a type of recurrent neural network (RNN) that can learn long-range dependencies in sequences. |
-| tokenize             | Definition |
+| canonicalized SMILES   | a unique, standardized version of a molecule's SMILES representation. Because the same molecule can be described by multiple valid SMILES strings, canonicalization ensures consistency. |
+| hyperparameters | variables that control the learning process of a model. They are not learned from the data during training, rather they are provided before training and influence the training itself |
+| tokens | the fundamental units of text that a model processes. They can be characters, words, or subwords. |
+| tokenization         | the process of converting raw text into a sequence of tokens |
 | tensor               | a multi-dimensional array used to store data in deep learning frameworks like PyTorch or TensorFlow. |
 | token-level accuracy | a measure of how many predicted tokens match the ground truth tokens, averaged over all positions in all sequences. It helps identify whether the model is getting most of the structure right, even if the entire prediction isn't perfect. |
 | exact match          | a stricter metric that checks whether the entire predicted sequence (e.g., the reactants) is identical to the target sequence. |
