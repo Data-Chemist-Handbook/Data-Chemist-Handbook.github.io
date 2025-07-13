@@ -117,6 +117,8 @@ Overall, Seq2Seq LSTM is a conceptually clean and easy-to-train baseline for ret
 
 **Dataset:** The USPTO-50k dataset was used for this model. Link: [Click here](https://figshare.com/articles/dataset/USPTO-50K_raw_/25459573?file=45206101)
 
+In this section, we provide a step-by-step process for creating an LSTM for single-step retrosynthesis. We have chosen the small USPTO-50k dataset which contains 50,000 reactions for this demonstration for ease of explanation and limited computational resources.
+
 **Step 1: Download the data files and upload them to Colab**
 
 The provided link has downloadable raw files split into `raw_train.csv`, `raw_val.csv`, and `raw_test.csv`. Download the zip, extract files, and upload into the Colab notebook.
@@ -143,6 +145,7 @@ import wandb # Optional: Used for hyperparameter tuning or logging models (See b
 ***Note:*** *To use transformers library, add your HuggingFace token to the Colab notebook. The HuggingFace token can be found in "Settings>>Access Tokens" when logged in to HuggingFace (more information [here](https://huggingface.co/docs/hub/en/security-tokens)). To add the key to Colab, click on the key icon on the left side panel of the notebook and paste the token in the value field. Name the token "HF_TOKEN" and toggle notebook access for the key.* 
 
 *If **not** using Colab, the following lines of code can be used to access the token:*
+
 ```python
 # If using Colab, add HF_TOKEN to Colab Secrets
 # else, add HF_TOKEN to python env and use the following lines of code
@@ -266,15 +269,76 @@ test_X, test_y = canonicalize_pairs(test_X, test_y)
 print(train_X[0])
 ```
 
-**Step 6: Tokenize SMILES**
+**Optional Step 6: Append Reaction Classes**
+
+This step involves adding known reaction classes to our input as it can potentially help the model learn better. It is entirely optional as in the real-world, we may or may not be aware of the reaction type, but ML-based computational methods work with both approaches though there may be some differences in performance.
 
 ```python
-# Tokenize SMILES
+# Add Reaction Class to Input 
+train2_X = [f"[RX_TYPE_{rx_type}] {smiles}" for rx_type, smiles in zip(trxntype, train_X)]
+val2_X = [f"[RX_TYPE_{rx_type}] {smiles}" for rx_type, smiles in zip(vrxntype, val_X)]
+test2_X = [f"[RX_TYPE_{rx_type}] {smiles}" for rx_type, smiles in zip(tstrxntype, test_rxns)]
+```
 
+**Step 7: Prepare to Tokenize**
+
+Add Beginning-of-Sequence and End-of-Sequence tokens: 
+
+```python
+# Add BOS and EOS tokens manually
+train_y = [f"<s> {seq}" if not seq.startswith("<s>") else seq for seq in train_y]
+train_y = [f"{seq} </s>" if not seq.endswith("</s>") else seq for seq in train_y]
+
+val_y = [f"<s> {seq}" if not seq.startswith("<s>") else seq for seq in val_y]
+val_y = [f"{seq} </s>" if not seq.endswith("</s>") else seq for seq in val_y]
+
+test_y = [f"<s> {seq}" if not seq.startswith("<s>") else seq for seq in test_y]
+test_y = [f"{seq} </s>" if not seq.endswith("</s>") else seq for seq in test_y]
+
+train_X = [f"<s> {seq}" if not seq.startswith("<s>") else seq for seq in train2_X]
+train_X = [f"{seq} </s>" if not seq.endswith("</s>") else seq for seq in train_X]
+
+val_X = [f"<s> {seq}" if not seq.startswith("<s>") else seq for seq in val2_X]
+val_X = [f"{seq} </s>" if not seq.endswith("</s>") else seq for seq in val_X]
+
+test_X = [f"<s> {seq}" if not seq.startswith("<s>") else seq for seq in test2_X]
+test_X = [f"{seq} </s>" if not seq.endswith("</s>") else seq for seq in test_X]
+
+# print some to verify
+for x in range(5):
+    print("Some train e.g.: ", train_X[x], "from: ", train_y[x])
+for x in range(5):
+    print("Some val e.g.: ", val_X[x], "from: ", val_y[x])
+for x in range(5):
+    print("Some train e.g.: ", test_X[x], "from: ", test_y[x])
+```
+
+Define tokenizer and special tokens:
+
+```python
+from transformers import RobertaTokenizerFast
+
+# define tokenizer
 tokenizer = RobertaTokenizerFast.from_pretrained("seyonec/PubChem10M_SMILES_BPE_450k")
 # This is a fast tokenizer implementation of the RoBERTa tokenizer, specifically designed for use with SMILES strings
 # You may also use other tokenizer of choice
 
+# define special tokens for tokenizer
+tokenizer.bos_token = "<s>"
+tokenizer.eos_token = "</s>"
+tokenizer.pad_token="<pad>"
+tokenizer.add_special_tokens({"additional_special_tokens": ["[RXN_TYPE_1]", "[RXN_TYPE_2]","[RXN_TYPE_3]","[RXN_TYPE_4]","[RXN_TYPE_5]","[RXN_TYPE_6]","[RXN_TY>
+
+# print bos, eos, pad token ids for reference
+print("BOS token:", tokenizer.bos_token, "→ ID:", tokenizer.bos_token_id)
+print("EOS token:", tokenizer.eos_token, "→ ID:", tokenizer.eos_token_id)
+print("Pad token:", tokenizer.pad_token, "-> ID", tokenizer.pad_token_id)
+print()
+```
+
+**Step 8: Tokenize SMILES**
+
+```python
 # Create function for tokenization
 def tokenize_smiles_bpe(smiles_list, tokenizer, max_length=600):
     encodings = tokenizer(smiles_list,
@@ -299,7 +363,7 @@ print(train_enc_input.shape)
 print(train_dec_input.shape)
 ```
 
-**Step 7: Define Some Helpful Helpers**
+**Step 9: Define Some Helpful Helpers**
 
 `create_dataloader` is a utility function used to wrap input and target tensors into a DataLoader object which handles batching, shuffling etc. Additionally, this function ensures that both enc_inputs and dec_inputs are PyTorch tensors. If they're not already tensors, it converts them.
 
@@ -349,7 +413,7 @@ sweep_config = {
 }
 ```
 
-**Step 8: Define Model Components**
+**Step 10: Define Model Components**
 
 ```python
 # LSTM Components
@@ -404,7 +468,7 @@ class Seq2Seq(nn.Module):
         return torch.cat(outputs, dim=1)
 ```
 
-**Step 9: Create the Training, Evaluation, and Test Functions**
+**Step 11: Create the Training, Evaluation, and Test Functions**
 
 The `train_epoch` function handles one training pass over the training dataset (epoch).
 
@@ -483,7 +547,7 @@ Finally, we have the `test_exactmatch` function which performs exact-match check
 code
 ```
 
-**Step 10: Training Loop**
+**Step 12: Training Loop**
 
 The `train` function handles the complete training workflow for the Seq2Seq LSTM, with support for hyperparameter tuning via wandb. The function sets up the training, validation, and test data loaders. It loads hyperparameter values from the wandb.config object, which is defined through a sweep configuration (refer Step 7 for `sweep_config`). Alternatively, you may replace a parameter (`config.<param>` here) with fixed values to manually define your hyperparameters.
 
@@ -547,7 +611,7 @@ def train():
     return model
 ```
 
-**(If using wandb) Step 11: Start wandb Sweep**
+**(If using wandb) Step 13: Start wandb Sweep**
 
 ```python
 wandb.login()
