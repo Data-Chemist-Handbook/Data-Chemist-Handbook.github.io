@@ -62,7 +62,7 @@ However, even inferring a single-step retrosynthesis is not trivial. Both it and
 The application of computational techniques to retrosynthesis analysis has emerged as an active and challenging area of research. In recent years, the accumulation of chemical synthesis data, coupled with advances in deep learning, has accelerated the development of computer-assisted synthesis processes, particularly for single-step retrosynthesis.
 
 ### 7.2.1 Types of Computational Approaches
-Computational methods for retrosynthesis can be broadly categorized into two main types: template-based and template-free approaches. In this section, we provide a brief overview of both, but the computaional methods for single-step retrosynthesis presented in this chapter fall in the category of template-free methods.  
+Computational methods for retrosynthesis can be broadly categorized into two main types: template-based and template-free approaches. In this section, we provide a brief overview of both, but the detailed methods for single-step retrosynthesis presented in this chapter fall in the category of template-free methods.  
 
 #### Template-Based Methods
 Template-based methods rely on predefined collections of reaction rules. These methods typically treat single-step retrosynthesis as a classification task, selecting the most suitable reaction template to generate a given target product.
