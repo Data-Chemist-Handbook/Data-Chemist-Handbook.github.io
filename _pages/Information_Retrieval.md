@@ -1,6 +1,6 @@
 ---
 title: 10. LLMs for Chemistry
-author: Quang Dao
+author: Haomin-Quang Dao
 date: 2024-08-20
 category: Jekyll
 layout: post

@@ -1,47 +1,115 @@
 ---
 title: 8. Yield Prediction
-author: Haomin
+author: Haomin-QuangDao
 date: 2024-08-18
 category: Jekyll
 layout: post
 ---
 
+**Chemical Reaction Yield**: In any chemical reaction, the yield refers to the percentage of the reactants that is succesfully converted to desired product. For chemists, predicting this yield is crucial because a high predicted yield can save time and resources by guiding experiment planning, while a low yield might indicate an inefficient route Traditionally, chemists have used domain knowledge or trial-and-error to
+estimate yields, but modern machine learning methods can learn yield patterns from data and make fast predictions.  
 
-Yield prediction in chemistry involves estimating the outcome of a chemical reaction under specific conditions. 
-Modern machine learning methods, including recurrent neural networks (RNNs), graph neural networks (GNNs), 
-random forests, and neural networks, have significantly enhanced yield prediction by capturing complex patterns
-from experimental data. In this section, we explore these four model families, understand why chemists use them,see a very small PyTorch demo for each deep‑learning model that illustrate their strengths and trade-offs. 
+**Machine Learning Mode**:Predicting reaction yield can be approached with a variety of machine learning models, ranging from
+classical ensemble methods to modern deep neural networks. In this section, we discuss how Recurrent Neural Networks (RNNs), Graph Neural Networks (GNNs), Random Forests, and Neural Networks have been applied to chemical yield prediction. For each model type, we explain its fundamental working principle in accessible terms, why it suits yield prediction, give chemistry-focused
+examples (including datasets like reaction screens and patent data), and provide simple code Python examples. We also compare typical performance metrics reported on benchmark reaction yield datasets.
 
 ---
 
 ## 8.1 Recurrent Neural Networks (RNNs)
 
-### Why RNNs make chemical sense  
-Chemical processes often have an inherent sequence or time-series aspect. For example, reaction conditions
-can change over time (temperature or pH profiles). An RNN is well-suited
-to such data because it “remembers” previous time steps when predicting the next. In a chemistry context:  
+### Why using RNN ?
+Early data-driven yield prediction models often used fixed descriptors or one-hot encodings of reactants (e.g. encoding presence/absence of certain functional groups) and then applied algorithms like Random Forests. While useful, those approaches treat
+each reaction as a bag of features, potentially missing the structure of the molecular and reaction conditions influence yield. Recent advances bring a big advancement into yield prediction field which is deep learning model. In particular, treating a reaction’s representation as a sequence – analogous to a sentence in a chemical “language” – has proven a high potential. For example, a reaction can be written as a SMILES string (a text encoding of molecules), and deep learning models can be trained to read this string and predict the yield . One way to do this is with Recurrent Neural Networks (RNNs), which are designed to handle sequential data.  
 
-- **Temporal Reaction Data**: If a reaction’s progress (e.g. conversion or yield over time) is recorded, an
-RNN can model the trend and forecast the final outcome. It treats time-course data points as a
-sequence, capturing dependencies between early events and later yield.  
+### What is RNN actually ?
+Imagine reading a recipe for a chemical reaction step by step. An RNN does something similar: it reads a
+sequence (like a reaction encoded as text) one element at a time, remembering what came before. This
+memory is what we call the hidden state. At each step in the sequence, the RNN updates its hidden state
+based on the current input and the previous state, and optionally produces an output (in our case,
+eventually an estimated yield). Figuratively, you can think of the hidden state as the RNN’s interpretation of
+the reaction so far.  
+In a chemistry context, consider an RNN reading a reaction SMILES string token by token. When it sees the “Br” token (aryl bromide), it updates its hidden state to reflect the presence of a highly reactive aryl halide (which often increases yield). Later, encountering a token for a bulky base, it further adjusts the hidden state to represent potential steric hindrance (which can lower yield). In this way, the RNN builds a running summary of the reaction, step by step incorporating each component’s influence on the final yield.  
 
-- **Process Control**: In chemistry, conditions (flow rates, concentrations, temperature) vary with time. 
-RNNs have been used to model kinetics in these systems, helping maintain optimal yields in real-time control scenarios.  
+#### Key characteristics of RNNs  
+- **Sequence Awareness:** RNNs process input sequences in order, which is useful in chemistry because
+the order of components (and the context they appear in) can matter. For example, an RNN can learn
+that a brominated reactan at the start of a SMILES might indicate a different reactivity pattern than chlorinated due to bromine being a better leaving group.  
+- **Hidden State (Memory):** As the RNN reads through the sequence, it carries a hidden state vector.
+This is like the running summary of what has been “seen” so far. In chemistry, you can compare it to
+a chemist keeping track of which functional groups have appeared in a reaction and adjusting
+expectations of yield accordingly.  
+- **Reusability of Structure:** The RNN uses the same network cell for each step (recurrently). This is
+analogous to applying the same reasoning rules to each part of a molecule or reaction. No matter
+where a particular functional group appears in the SMILES, the RNN cell can recognize it and update
+the state in a consistent way.  
 
-In essence, RNNs make chemical sense whenever past reaction information influences future behavior. They
-extend standard neural networks with an internal state (memory) that carries information across the
-sequence of inputs.
-### Concept of RNNs
-A recurrent neural network processes input sequentially, updating an internal hidden state at each step. At a given time step, an RNN takes the current input (e.g. a measurement at time t) and the hidden state from time t–1, and produces an output and a new hidden state. This design enables RNNs to capture temporal dependencies because an early event in the sequence can affect the prediction at a later time. Chemists find this useful for modeling reaction profiles because the network can, for example, learn that a temperature spike at the beginning might lead to a higher yield at the end.  
+![RNN Diagram](../../resource/img/yield_prediction/RNN_Process.png)
+Figure 1: A schematic “unrolling” of the RNN over three time steps as it reads a reaction sequence token-by-token. At each step t, the input token 𝑥_𝑡 (e.g., “Br”, “Ph”, “R”) enters an RNN cell. That cell combines the new input with the previous hidden state hₜ₋₁ to produce the updated hidden state hₜ. Arrows show the flow: horizontal arrows carry the hidden state forward through time, and vertical arrows inject each new chemistry token into the cell. This illustrates how the network incrementally builds a memory of the reaction’s components, accumulating context that will ultimately be used to predict the reaction’s yield.  
 
-There are variations like Long Short-Term Memory (LSTM) that address issues of standard (“vanilla”) RNNs, such as the tendency for gradients to vanish over long sequences, which means when you train the RNN by going backward through dozens of time-steps, the signals used to update the earliest weights become so tiny that the network “forgets” anything that happened at the start of the sequence. These gated RNNs can retain long-range information better, which is valuable if a reaction’s outcome depends on something that happened hours earlier. For typical laboratory reactions with sequences of moderate length , vanilla RNNs can suffice, but more complex sequences may require LSTM to handle long-term memory.  
+Chemically speaking, an RNN can learn patterns by seeing many examples. It remembers the
+presence of the previous states while reading the rest of the reaction. This ability to capture context and sequence is
+what sets RNNs apart from simpler models in yield prediction.  
 
-### Example Application
-Imagine a reaction run in a flow reactor where we monitor the conversion % each hour for 8 hours. We want to predict the final isolated yield at the end of the process. An RNN can be trained on historical runs of the reactor: the input would be the time-series of conversion or other sensor readings, and the target is the final yield. By learning from many such sequences, the RNN can start to predict whether, say, a slow start in conversion is likely to lead to a low final yield, or if a certain pattern of spikes in temperature improves the yield.  
-For instance, RNN models have been applied in pharmaceutical process development to model reaction kinetics in continuous flow systems, where controlling the reaction over time is crucial to maximize yield. In these cases, the RNN effectively learns the dynamic relationship between time-dependent conditions and the ultimate yield, providing chemists with a tool to forecast final outcomes from partial progress data.  
+### RNN Architecture for Yield Prediction
+To understand how an RNN predicts yields, let’s break down its architecture into parts, relating each to a
+chemistry analogy:  
+- **Input Layer (Encoding the Reaction):** First, we need to encode the reaction (e.g., as a SMILES
+string). This could be done at the character level or using chemical tokens. For simplicity, imagine we
+feed the SMILES one character at a time into the RNN. We typically convert characters to numeric
+vectors via an embedding layer so it is essentially a lookup table that turns each symbol (like C , Br ,
+= , . etc.) into a vector of numbers. This is analogous to encoding chemical species properties:
+just as we might encode an element or functional group with descriptors, here we learn a vector
+representation for each character or token.
+- **Recurrent Layer (the “RNN cell”):** This is the heart of the network. A basic RNN cell takes two things
+as input: the current input vector (from the reaction sequence) and the previous hidden state. It
+combines them (through weighted summation and a nonlinear function) to produce a new hidden
+state. Mathematically, one common formulation is: **hₜ = tanh(W ⋅ xₜ + U ⋅ hₜ₋₁ + b)** where xₜ is the input at step t, hₜ₋₁ is the hidden state from the previous step, W, U and b are learnable parameters (matrices/vectors) . The new hidden state is then passed to the next step. You can picture this like an assembly line: each station (time step) takes the current reagent
+(input) and the accumulated mixture info (hidden state) to update the mixture’s status.  
+- **Output Layer:**: After processing the entire sequence (the RNN has seen the whole reaction), we use
+the final hidden state (or some aggregation of all hidden states) to predict the yield value. Typically,
+a simple fully-connected layer takes the last hidden state and outputs a number (which we interpret as the predicted yield). We often apply a suitable activation if needed (for regression usually identity or ensure the output is within 0-100 range by clamping or using a function, though many models just predict a real number and we treat it as yield %).  
+- **Longer-term Dependencies – LSTM/GRU:** One issue with basic RNNs is that their memory can fade for long sequences (vanishing gradient problem). In lengthy SMILES or very complex reactions, something seen at the start can be “forgotten” by the end. Advanced RNN variants like Long Short-Term Memory (LSTM) networks and Gated Recurrent Units (GRUs) address this by having gated mechanisms that control information flow. In chemical analogy, an LSTM is like a careful lab notebook. It decides what to write down or erase at each step, so critical information isn’t lost by the time the network finishes reading the reaction. These gated RNNs maintain a more persistent cell state in addition to the hidden state, which helps in capturing long-range effects (e.g., a reagent mentioned at the beginning of a protocol affecting the final outcome). Many state-of-the-art sequence models for chemistry use LSTMs or GRUs under the hood because of these benefits.  
 
 **RNN Diagram**  
 ![RNN Diagram](../../resource/img/yield_prediction/RNN.png)
+A compact schematic of an RNN unrolled over three time steps for yield forecasting. Blue circles (hₜ₋₁, hₜ, hₜ₊₁) are the hidden‐state vectors; at t - 1, the model ingests the reaction condition (orange), updates to hₜ, then outputs the yield at 𝑡. That yield feeds back into the next step, combining with hₜ to form hₜ₊₁, which produces the predicted yield at t+1.  
+### How RNNs Learn – The Math Behind the Scenes  
+How does an RNN actually learn these chemical yield patterns from data? It all happens during the training
+process via backpropagation. Here’s an overview, tied into our yield prediction scenario:
+- **1. Training Data:** We provide the RNN with many example reactions and their yields. For instance, a dataset might contain thousands of reactions (as SMILES or similar text) each labeled with an experimentally measured yield (as a percentage) . An example entry might be: “Some Reaction – Yield: 85%”. The model doesn’t know chemistry, but it will try to map from the reaction string to that number.  
+- **2. Forward Pass:** For each training reaction, the RNN processes the sequence of tokens, updating its
+hidden state, and finally produces a predicted yield $\hat{y}$ (a single number). Initially, these
+predictions are basically random, since weights are random at start.  
+- **3. Loss Calculation:** We measure the error of the prediction using a loss function. In regression tasks
+like yield, a common choice is Mean Squared Error (MSE): $\mathcal{L}$ = ($\hat{y}$ − y)^2 where y is the true yield and $\hat{y}$ is the predicted yield. For example, if the true yield was 85 and the model predicted 60, the error is $(60 - 85)^2 = 625$ – quite large. The model will try to reduce this.
+- **4. Backpropagation Through Time (BPTT):** This is where the “magic” happens. The model computes how the loss $\mathcal{L}$ changes with respect to each of the RNN’s parameters. Because the RNN’s output depends on all the steps (all the way back to the first token of the reaction), the error is back-propagated through each time step of the RNN. Essentially, the RNN unrolls through the sequence and perform backpropagation through that unrolled network. During training, the gradient $\displaystyle \frac{\partial \mathcal{L}}{\partial W_{Br}}$ tells us how much the loss changes if we tweak the weight on the “Br” token. For instance,  $\displaystyle \frac{\partial \mathcal{L}}{\partial W_{Br}}$=−0.5, then increasing $W_{Br}$ by a small step (say, 0.1) will reduce the loss increase yield prediction by 5 for this reaction.  
+- **5. Parameter Update:** Using an optimization algorithm (like Adam or simple gradient descent), we adjust the weights slightly in the direction that reduces the error. For example, if the network underestimated yields whenever a bromide ( Br ) was present, the gradients will nudge the relevant weights to boost yield predictions in presence of Br. The model learns that bromides often lead to higher yields (compared to chlorides, perhaps) because that adjustment reduces overall prediction error across training examples.  
+- **6. Iterate:** The process repeats for many epochs (passes through the data). Over time, the RNN’s hidden state representations become tuned to capture factors that influence yield. It might learn numeric encodings corresponding to “presence of electron donor”, “high temperature used”, “watersensitive reagent present” etc., without being explicitly told these concepts – they emerge from the training if those factors consistently affect yield in the data.  
+  
+Mathematically, the training is adjusting the matrices like $W, U$ (from the RNN cell) and the output layer
+weights to minimize the loss across all training reactions. One can think of the hidden state at final time as
+computing some function $f(\text{reaction}) = h_{\text{final}}$, and then the output layer does $y = w^\top
+h_{\text{final}} + b$. Training tunes $f$ and $w$ so that $y$ is close to the true yield for all training
+reactions.  
+  
+From a chemistry standpoint, during training the model might discover, for example, that “if nitrogen is
+present in the base, yields tend to be lower” because every time a reaction with, say, a nitrogenous
+base had lower yield, the model was penalized until it adjusted to predict that lower yield. Similarly, it might
+learn “reactions with certain protecting groups never go to completion” and incorporate that into its hidden
+state memory.   
+  
+It’s worth noting that RNNs don’t have built-in knowledge of chemistry; they learn purely from data
+correlations. Thus, they require sufficient examples of various factors to generalize well. If an RNN is trained
+on a high-throughput experimentation (HTE) dataset (like the Buchwald-Hartwig amination yields from Doyle’s group ), it can achieve very high accuracy on similar reactions. However, if it is asked a very different chemistry than it saw in training, it might falter. Just like humans, we tend to perform poorly on tasks we haven’t learned before.  
+
+**Training an RNN:** summary of steps:  
+- Prepare lots of reaction examples with known yields.  
+- Convert reactions to sequences of numeric tokens (characters or chemical tokens).  
+- Initialize an RNN model (random weights).  
+- Repeatedly do forward passes to get predictions, compute loss (e.g., MSE between predicted and true yield), backpropagate errors, and update weights.  
+- Over many iterations, the RNN parameters adjust to minimize the error on training reactions.  
+  
+The result is a trained RNN model that, when given a new reaction (that it hasn’t seen), can process the sequence and output a predicted yield. Importantly, the model’s hidden state approach means it has learned which parts of the sequence matter – effectively which functional groups or sequence patterns correlate with high or low yield, even though we didn’t explicitly hard-code any chemistry rules.
 
 ### Advantages
 - **Captures Temporal Patterns**: RNNs excel at modeling sequential data. They can learn how earlier time points in a reaction influence later time points and final results.  
@@ -53,108 +121,242 @@ For instance, RNN models have been applied in pharmaceutical process development
 - **Vanishing Gradients on Long Sequences**: Standard RNNs can struggle with very long sequences due to vanishing or exploding gradients, making it hard to learn long-range dependencies. Architectural improvements like LSTM mitigate this but add complexity.  
 - **Complexity for Beginners**: The mathematical formulation of RNNs (with looping states and backpropagation through time) is more complex than a simple feed-forward network. This can be challenge for those new to machine learning.  
 
-### Simple Python Snippet
+### Implementation Example: RNN for Yield Prediction
+
+Let’s walk through an example of building and training an RNN model to predict reaction yields using
+Python and PyTorch. We will use a real-world dataset for demonstration. For instance, the Buchwald–
+Hartwig amination HTE dataset (Ahneman et al., Science 2018) contains thousands of C–N cross-coupling
+reactions with measured yields. Each data point in this dataset is a reaction (specific aryl halide, amine,
+base, ligand, etc.) and the resulting yield.  
+  
+#### 1. Set Up The Environment
+- Open google-colab/Python  
+- Instal core packages for RNN:  
+```python
+    pip install torch torchvision torchaudio  
+    pip install pandas scikit-learn matplotlib requests  
+```
+- Install chemistry helpers package:  
+```python
+    pip intall rdkit
+```
+#### 2. Download the dataset  
+Download Buchwald-Hartwig dataset then store in "yield_data.csv" file  
+```python
+    import requests
+
+    # URL of the raw CSV data
+    url = "https://raw.githubusercontent.com/rxn4chemistry/rxn_yields/master/data/Buchwald-Hartwig/Dreher_and_Doyle_input_data.xlsx"
+    resp = requests.get(url)
+
+    with open("yield_data.csv", "wb") as f:
+        f.write(resp.content)
+
+    print("Dataset downloaded and saved as yield_data.csv")
+```
+
+#### 3. Get helpers function and generate reaction SMILES
+Transforms the spreadsheet style HTE dataset into standard reaction SMILES format  
+```python 
+
+__all__ = ['canonicalize_with_dict', 'generate_buchwald_hartwig_rxns']
+
+from rdkit import Chem
+from rdkit.Chem import rdChemReactions
+
+def canonicalize_with_dict(smi, can_smi_dict={}):
+    if smi not in can_smi_dict.keys():
+        return Chem.MolToSmiles(Chem.MolFromSmiles(smi))
+    else:
+        return can_smi_dict[smi]
+
+def generate_buchwald_hartwig_rxns(df):
+    """
+    Converts the entries in the excel files from Sandfort et al. to reaction SMILES.
+    """
+    df = df.copy()
+    fwd_template = '[F,Cl,Br,I]-[c;H0;D3;+0:1](:[c,n:2]):[c,n:3].[NH2;D1;+0:4]-[c:5]>>[c,n:2]:[c;H0;D3;+0:1](:[c,n:3])-[NH;D2;+0:4]-[c:5]'
+    methylaniline = 'Cc1ccc(N)cc1'
+    pd_catalyst = Chem.MolToSmiles(Chem.MolFromSmiles('O=S(=O)(O[Pd]1~[NH2]C2C=CC=CC=2C2C=CC=CC1=2)C(F)(F)F'))
+    methylaniline_mol = Chem.MolFromSmiles(methylaniline)
+    rxn = rdChemReactions.ReactionFromSmarts(fwd_template)
+    products = []
+    for i, row in df.iterrows():
+        reacts = (Chem.MolFromSmiles(row['Aryl halide']), methylaniline_mol)
+        rxn_products = rxn.RunReactants(reacts)
+
+        rxn_products_smiles = set([Chem.MolToSmiles(mol[0]) for mol in rxn_products])
+        assert len(rxn_products_smiles) == 1
+        products.append(list(rxn_products_smiles)[0])
+    df['product'] = products
+    rxns = []
+    can_smiles_dict = {}
+    for i, row in df.iterrows():
+        aryl_halide = canonicalize_with_dict(row['Aryl halide'], can_smiles_dict)
+        can_smiles_dict[row['Aryl halide']] = aryl_halide
+        ligand = canonicalize_with_dict(row['Ligand'], can_smiles_dict)
+        can_smiles_dict[row['Ligand']] = ligand
+        base = canonicalize_with_dict(row['Base'], can_smiles_dict)
+        can_smiles_dict[row['Base']] = base
+        additive = canonicalize_with_dict(row['Additive'], can_smiles_dict)
+        can_smiles_dict[row['Additive']] = additive
+
+        reactants = f"{aryl_halide}.{methylaniline}.{pd_catalyst}.{ligand}.{base}.{additive}"
+        rxns.append(f"{reactants}>>{row['product']}")
+    return rxns
+```
+
+#### 4. Preprocessing & Data Preparation
+We will load the raw Excel file, generate reaction SMILES, split into train/test, build a character‑level vocabulary, and wrap everything in PyTorch format so that we could run on RNN model later.
+```python
+import pandas as pd
+import torch
+from sklearn.model_selection import train_test_split
+from torch.utils.data import Dataset, DataLoader
+from torch.nn.utils.rnn import pad_sequence
+
+# 1.1  Read the Excel file from `yield_data.xlsx`
+df = pd.read_excel('yield_data.csv', sheet_name='FullCV_01')
+
+# 1.2 Convert each row’s reagent columns into a single reaction SMILES string
+df['rxn_smiles'] = generate_buchwald_hartwig_rxns(df)
+
+# 1.3 Keep only the SMILES and the yield column (rename to 'yield')
+data = df[['rxn_smiles', 'Output']].rename(columns={'Output': 'yield'})
+
+# 1.4 Split into train/test
+train_df, test_df = train_test_split(data, test_size=0.2, random_state=42)
+
+# 1.5 Build a char‑level vocabulary (PAD token at index 0)
+chars = sorted({ch for smi in train_df.rxn_smiles for ch in smi})
+chars = ['<PAD>'] + chars
+vocab  = {ch: i for i, ch in enumerate(chars)}
+PAD_IDX = 0
+
+def encode(smi):
+    “Turn a SMILES string into a list of integer token IDs.”
+    return [vocab[ch] for ch in smi]
+
+# 1.6 Define a Dataset that pads & scales yields 0–1
+class RxnDataset(Dataset):
+    def __init__(self, df):
+        self.seqs   = [torch.tensor(encode(s), dtype=torch.long) for s in df.rxn_smiles]
+        self.length = [len(s) for s in self.seqs]
+        self.y      = torch.tensor(df['yield'].values / 100, dtype=torch.float32)
+
+
+def collate(batch):
+    seqs, lens, ys = zip(*batch)
+    seq_pad = pad_sequence(seqs, batch_first=True, padding_value=PAD_IDX)
+    lens    = torch.tensor(lens)
+    ys      = torch.tensor(ys)
+    return seq_pad, lens, ys
+
+train_loader = DataLoader(RxnDataset(train_df), batch_size=32, shuffle=True, collate_fn=collate)
+test_loader  = DataLoader(RxnDataset(test_df),  batch_size=32, shuffle=False, collate_fn=collate)
+```
+
+#### 5. Create RNN model
+We define an LSTM‑based RNN that:
+
+- Embeds each token ID → vector  
+
+- Runs a packed LSTM over the sequence (skipping PADs)  
+
+- Reads out the final hidden state → linear layer → predicted yield (0–1)  
+
 
 ```python
-    import os
-    import pandas as pd
-    import numpy as np
-    import torch
-    import torch.nn as nn
-    from sklearn.model_selection import train_test_split
+import torch.nn as nn
+from torch.nn.utils.rnn import pack_padded_sequence
 
-    # 1. Data Loading & Preprocessing
-    csv_file = "buchwald_hartwig_yields.csv"
-    if not os.path.exists(csv_file):
-        print("Dataset not found. Please download 'buchwald_hartwig_yields.csv' and place it in the working directory.")
+class YieldRNN(nn.Module):
+    def __init__(self, vocab_size, embed_dim=64, hidden_dim=256):
+        super().__init__()
+        self.embed = nn.Embedding(vocab_size, embed_dim,
+                                  padding_idx=PAD_IDX)
+        self.lstm  = nn.LSTM(embed_dim, hidden_dim,
+                             batch_first=True)
+        self.fc    = nn.Linear(hidden_dim, 1)
 
-    # Read the dataset
-    df = pd.read_csv(csv_file)
-    df = df.dropna()  
+    def forward(self, x, lengths):
+        # x: (batch, seq_len); lengths: (batch,)
+        emb = self.embed(x) 
+        packed = pack_padded_sequence(
+            emb, lengths.cpu(),
+            batch_first=True,
+            enforce_sorted=False
+        )
+        _, (h, _) = self.lstm(packed)
+        # h[-1]: final hidden state of last LSTM layer → (batch, hidden_dim)
+        return self.fc(h[-1]).squeeze(1)
+```
 
-    # Create dictionaries to map each categorical value to an index
-    ligands = df["Ligand"].astype(str).unique().tolist()
-    bases = df["Base"].astype(str).unique().tolist()
-    aryl_halides = df["Aryl halide"].astype(str).unique().tolist()
-    additives = df["Additive"].astype(str).unique().tolist()
+#### 6. Training & Evaluation  
+Here we train for 60 epochs with MSE loss (on scaled 0–1 yields), print validation MSE every 10 epochs then output % yields and plot actual vs predicted.
+```python
+import torch
+import matplotlib.pyplot as plt
+import numpy as np
+import math
 
-    # Create a unified vocabulary for all categories
-    # We prepend category-specific prefixes to ensure uniqueness and clarity
-    vocab = {}
-    idx = 0
-    for cat, values in [("Ligand", ligands), ("Base", bases), ("ArylHalide", aryl_halides), ("Additive", additives)]:
-        for val in values:
-            token = f"{cat}:{val}"
-            if token not in vocab:
-                vocab[token] = idx
-                idx += 1
+# 1. Set up steps
+# Using GPU instead of cpu if possible
+device    = 'cuda' if torch.cuda.is_available() else 'cpu'
+model     = YieldRNN(len(vocab)).to(device)
+# Using MSELoss function and Adam to optmize
+criterion = nn.MSELoss()
+optim     = torch.optim.Adam(model.parameters(), lr=1e-3)
 
-    # Encode each reaction's features as a sequence of token indices
-    sequences = []
-    yields = []
-    for _, row in df.iterrows():
-        seq_tokens = [
-            vocab[f"ArylHalide:{row['Aryl halide']}"],
-            vocab[f"Ligand:{row['Ligand']}"],
-            vocab[f"Base:{row['Base']}"],
-            vocab[f"Additive:{row['Additive']}"]
-        ]
-        sequences.append(seq_tokens)
-        yields.append(row["Yield"] if "Yield" in row else row["Output"])  # handle different column name for yield
-
-    sequences = np.array(sequences)
-    yields = np.array(yields, dtype=np.float32)
-
-    # Convert to PyTorch tensors
-    X = torch.tensor(sequences, dtype=torch.long)
-    y = torch.tensor(yields, dtype=torch.float).view(-1, 1)
-
-    # Train-test split
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-
-    # 2. Model Definition: Embedding + LSTM + Dense
-    class YieldRNN(nn.Module):
-        def __init__(self, vocab_size, embed_dim=32, hidden_dim=64):
-            super(YieldRNN, self).__init__()
-            self.embedding = nn.Embedding(vocab_size, embed_dim)
-            self.lstm = nn.LSTM(embed_dim, hidden_dim, batch_first=True)
-            self.fc = nn.Linear(hidden_dim, 1)  # output a single yield value
-            
-        def forward(self, x):
-            # x shape: (batch_size, seq_length=4)
-            embeds = self.embedding(x)            # (batch, seq, embed_dim)
-            lstm_out, _ = self.lstm(embeds)       # (batch, seq, hidden_dim)
-            # Use the final LSTM hidden state for regression:
-            last_hidden = lstm_out[:, -1, :]      # (batch, hidden_dim)
-            out = self.fc(last_hidden)            # (batch, 1)
-            return out
-
-    model = YieldRNN(vocab_size=len(vocab))
-    criterion = nn.MSELoss()
-    optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
-
-    # 3. Training loop
-    epochs = 10
+# 2 Training loop
+for epoch in range(1, 61):
     model.train()
-    for epoch in range(epochs):
-        optimizer.zero_grad()
-        outputs = model(X_train)
-        loss = criterion(outputs, y_train)
+    for X, L, y in train_loader:
+        X, L, y = X.to(device), L.to(device), y.to(device)
+        optim.zero_grad()
+        pred = model(X, L)
+        loss = criterion(pred, y)
         loss.backward()
-        optimizer.step()
-        if epoch % 2 == 0:  # print loss every 2 epochs
-            print(f"Epoch {epoch}: Train MSE = {loss.item():.4f}")
+        optim.step()
 
-    # Evaluation on test set
-    model.eval()
-    with torch.no_grad():
-        preds = model(X_test)
-        test_mse = criterion(preds, y_test).item()
-        print(f"Test MSE: {test_mse:.4f}")
+    if epoch % 10 == 0:
+        model.eval()
+        total_mse, n = 0.0, 0
+        with torch.no_grad():
+            for X, L, y in test_loader:
+                X, L, y = X.to(device), L.to(device), y.to(device)
+                mse = criterion(model(X, L), y).item()
+                total_mse += mse * y.size(0)
+                n += y.size(0)
+        print(f"Epoch {epoch:2d} — Val MSE: {total_mse/n:.4f}")
+
+# 3 Inference & plotting
+model.eval()
+preds, trues = [], []
+with torch.no_grad():
+    for X, L, y in test_loader:
+        X, L = X.to(device), L.to(device)
+        out = model(X, L).cpu().numpy() * 100  # rescale to %
+        preds.extend(out)
+        trues.extend(y.numpy() * 100)
+
+# Compute RMSE on % yield
+rmse = math.sqrt(((np.array(preds) - np.array(trues))**2).mean())
+print(f"Test RMSE: {rmse:.1f}% yield")
+
+# Scatter plot
+plt.figure(figsize=(5,5))
+plt.scatter(trues, preds, alpha=0.6, edgecolors='k')
+plt.plot([0,100],[0,100],'--',c='gray')
+plt.xlabel("Actual Yield (%)")
+plt.ylabel("Predicted Yield (%)")
+plt.title("Buchwald–Hartwig: Actual vs. Predicted Yields")
+plt.show()
 
 ```
 
 ---
+
 
 ### Section 8.1 – Quiz Questions
 
@@ -216,135 +418,6 @@ If you change `hidden_dim` from 64 → 32 without altering anything else, you pr
 ---
 
 ## 8.2 Graph Neural Networks (GNNs)
-
-### Why GNNs make chemical sense  
-Many chemical problems are best described by graphs: molecules are graphs of atoms (nodes) connected by bonds (edges). In a reaction context, we have multiple molecules interacting. Graph neural networks are designed to operate on graph-structured data, which aligns with chemistry in several ways:  
-- **Molecular Representation**: Unlike a fixed-size fingerprint or descriptor vector, GNNs can take the actual molecular graph as input. This avoids manual feature engineering which mean the model can learn directly from the structure (connectivity, atom types). For yield prediction, this means a GNN could directly consider the structures of reactants, catalyst in their native graph form.  
-
-- **Variable-Size Inputs**: Each reaction can have molecules of varying sizes. GNNs naturally handle this because they produce an embedding (vector) for a whole graph regardless of the number of atoms – effectively mapping a variable-size molecule to a fixed-length representation by aggregating over its nodes. This size-invariance is crucial in chemistry, where one reaction’s molecule may have 10 atoms and another’s 30.  
-
-- **Locality of Chemical Effects**: GNNs use a concept called message passing, where each atom updates its state based on neighboring atoms iteratively. This mimics how local chemical environment influences properties: for example, an electron-withdrawing group on an aromatic ring affects the reactivity of that ring’s other positions mostly through local inductive or resonance effects. GNNs naturally capture such locality – after a few message-passing steps, an atom’s state encodes information about the atoms in its vicinity (neighbors, neighbors of neighbors). This is highly relevant for reactions, as yield might depend on the local functional groups around the reactive site.  
-
-In summary, GNNs see molecules like a chemist does (as graphs) and thus make sense for chemistry. They have indeed been shown to improve reaction yield predictions by better capturing structural effects  
-
-**How a GNN Sees a Molecule and Outputs Yield**  
-![GNN Structure](../../resource/img/yield_prediction/Gnn-structure.png)
-
-
-### Concept
-A Graph Neural Network operates by iteratively updating node feature vectors. Initially, each node (atom) can be described by features such as atom type, degree. In each message passing round (or GNN layer), each node gathers feature information from its neighbors (the connected atoms) and uses a neural network to update its own feature vector. After several rounds, each node’s vector contains information about its local substructure.  
-
-After updating node features, we need a readout or pooling step to get a fixed-size representation for the whole graph (molecule or reaction). Common readouts include simple averaging of node vectors, summation. This graph-level vector can then be fed into further layers or used for prediction. For reaction yield, one could combine the graph representations of all reaction components to output a yield prediction.   
-
-Think of a GNN as a way to compute molecular descriptors on the fly: instead of predefined fingerprints, the model learns its own features that are optimal for predicting yield. For example, a GNN might learn an embedding that captures a complicated structure without us explicitly coding that rule, it can infer it from data.
-
-**Inside a GNN: Message-Passing → Update → Read-out Pipeline**  
-![GNN Process](../../resource/img/yield_prediction/GNN-process.png)
-
-### Example Application
-A GNN-based approach to predict yield could involve the following steps:
-- **Molecular Graphs**: Convert each reactant molecule into a graph. For instance, represent the structure as a graph of atoms and bonds.  
-- **Graph Embeddings**: Use a GNN to compute an embedding for each molecule. For simplicity, you might train one GNN model that takes any molecule and produces a vector.  
-- **Reaction Embedding**: Combine the embeddings of the reactants for example, concatenate or sum them in order to get a representation of the entire reaction setup.
-- **Yield Prediction**: Feed this reaction representation into a regression model (like a feed-forward neural network) to predict the yield. Such a model can capture subtle effects. They can learn interaction effects, because the graph representation can encode those functional groups explicitly.  
-### Advantages
-- **Direct use of chemical structure**: No need for manual descriptors, the model learns from raw structures, potentially discovering new relevant features.
-- **Expressive power**: GNNs can, in principle, approximate complex functions on graphs, meaning they can capture non-linear structure–yield relationships that simpler models might miss.
-- **Handling Novel Molecules**: Because GNNs don’t rely on a fixed fingerprint dictionary, they can better handle molecules that weren’t in the training set (assuming similar chemistry). The model will still produce an embedding by message passing, whereas a fixed fingerprint might miss an unseen substructure.
-
-### Limitations
-- **Data Hungry**: GNNs typically have a lot of parameters and may require large datasets to avoid overfitting. If you have only a few dozen reaction examples, a GNN might overfit; the BH dataset with a few thousand entries is borderline and techniques like pre-training on large molecular datasets can help.  
-- **Computational Cost**: Operating on graphs is generally slower than computing a simple fingerprint. Training GNNs can be more time-consuming .
-- **Expertise Barrier**: Implementing and tuning GNN models (choosing number of message passing steps, handling multiple molecules in a reaction) is complex.  
-- **Multiple Graphs Combination**: In reaction yield tasks, you often have multiple distinct molecules. There’s a design decision whether to combine them into one graph or process each separately and combine embeddings. Both approaches add complexity.
-
-### Simple Python Snippet
-```python
-    # 0.  Imports & CSV ───────────────────────────────────────────
-    import os, pandas as pd, torch
-    from rdkit import Chem
-    from torch_geometric.data import Data, Batch
-    from torch_geometric.nn import GraphConv, global_mean_pool
-
-    csv = "buchwald_hartwig_yields.csv"
-    assert os.path.exists(csv), "Put the BH CSV in this folder first."
-    df = pd.read_csv(csv).dropna()
-
-    # 1.  SMILES → simple graph  (atom-number feature, bond edges)
-    def smiles_to_graph(smiles: str) -> Data:
-        mol = Chem.MolFromSmiles(smiles)
-        if mol is None:                       # skip bad rows
-            return None
-        x = torch.tensor([[a.GetAtomicNum()] for a in mol.GetAtoms()],
-                        dtype=torch.float)   # 1-dim feature = Z
-        edge_index = []
-        for b in mol.GetBonds():              # undirected edges
-            i, j = b.GetBeginAtomIdx(), b.GetEndAtomIdx()
-            edge_index += [[i, j], [j, i]]
-        edge_index = torch.tensor(edge_index, dtype=torch.long).t().contiguous()
-        return Data(x=x, edge_index=edge_index)
-
-    # 2.  Build a graph per *whole reaction* (merge 4 components)
-    graphs = []
-    for _, r in df.iterrows():
-        comps = [r["Aryl halide"], r["Ligand"], r["Base"], r["Additive"]]
-        pieces = [smiles_to_graph(s) for s in comps]
-        if any(p is None for p in pieces):
-            continue
-        offset, xs, es = 0, [], []
-        for g in pieces:
-            es.append(g.edge_index + offset)
-            xs.append(g.x)
-            offset += g.x.size(0)
-        G = Data(x=torch.cat(xs),
-                edge_index=torch.cat(es, dim=1),
-                y=torch.tensor([r["Yield"]], dtype=torch.float))
-        graphs.append(G)
-
-    # 3.  Train / test split & batching
-    train_split = int(0.8*len(graphs))
-    train_set, test_set = graphs[:train_split], graphs[train_split:]
-
-    def batch(loader):
-        return Batch.from_data_list(loader)
-
-    train_batch = batch(train_set)
-    test_batch  = batch(test_set)
-
-    # 4.  Minimal 2-layer GNN model
-    class YieldGNN(torch.nn.Module):
-        def __init__(self, hidden=64):
-            super().__init__()
-            self.conv1 = GraphConv(1, hidden)
-            self.conv2 = GraphConv(hidden, hidden)
-            self.reg   = torch.nn.Linear(hidden, 1)
-        def forward(self, data):
-            x = torch.relu(self.conv1(data.x, data.edge_index))
-            x = torch.relu(self.conv2(x,     data.edge_index))
-            x = global_mean_pool(x, data.batch)      # graph -> vector
-            return self.reg(x)
-
-    model = YieldGNN()
-    opt   = torch.optim.Adam(model.parameters(), lr=1e-3)
-    lossf = torch.nn.MSELoss()
-
-    # 5.  Quick training loop
-    for epoch in range(5):
-        model.train()
-        opt.zero_grad()
-        loss = lossf(model(train_batch), train_batch.y)
-        loss.backward(); opt.step()
-        print(f"Epoch {epoch+1}: train MSE {loss.item():.3f}")
-
-    # 6.  Test performance
-    model.eval()
-    with torch.no_grad():
-        test_mse = lossf(model(test_batch), test_batch.y).item()
-    print(f"Test MSE: {test_mse:.3f}")
-```
-
----
-
 ### Section 8.2 – Quiz Questions (Graph Neural Networks)
 
 #### 1) Factual Questions
@@ -393,38 +466,6 @@ Can you still train a GNN?
 
 
 ## 8.3 Random Forests
-
-### Concept
-Random Forests are ensemble methods combining multiple decision trees. They aggregate predictions from various decision trees to enhance accuracy and reduce overfitting.
-
-### Example Application
-Successfully predicted yields for chemical synthesis reactions such as pyrroles and dipyrromethanes, highlighting how different reagents affect reaction outcomes.
-
-### Advantages
-- Intuitive and easy to implement.  
-- Good accuracy and robustness with noisy data.
-
-### Limitations
-- Less effective with extremely large datasets.  
-- Interpretability can decrease with increasing complexity.
-
-### Simple Python Snippet
-```python
-from sklearn.ensemble import RandomForestRegressor
-import numpy as np
-np.random.seed(0)
-
-X = np.random.rand(100, 6)   # 6 engineered features (e.g: MW, logP, base pKa…)
-y = np.random.rand(100)      # yields 0‑1
-
-rf = RandomForestRegressor(n_estimators=200, oob_score=True, random_state=0)
-rf.fit(X, y)
-
-print("OOB R² :", rf.oob_score_)
-print("sample prediction:", rf.predict(X[:1])[0])
-```
-
----
 
 ### Section 8.3 – Quiz Questions (Random Forests)
 
@@ -499,48 +540,6 @@ Your forest overfits. Which tweak most likely reduces overfitting?
 
 ## 8.4 Neural Networks
 
-### Concept
-Neural networks mimic biological neurons and connections, capable of capturing nonlinear and complex relationships. They typically consist of input layers, hidden layers, and output layers.
-
-### Example Application
-Used broadly to predict chemical reaction outcomes, learning from experimental data to forecast yields even for reactions with complex mechanisms.
-
-### Advantages
-- Powerful in modeling complex, nonlinear relationships.  
-- Flexible architectures applicable to various chemical prediction tasks.
-
-### Limitations
-- Requires significant computational resources.  
-- Needs large datasets for effective training.
-
-### Simple Python Snippet
-```python
-import torch, torch.nn as nn, torch.optim as optim
-torch.manual_seed(1)
-
-X = torch.rand(120, 8)   # 8 engineered descriptors per reaction
-y = torch.rand(120, 1)   # yields
-
-model = nn.Sequential(
-    nn.Linear(8, 32), nn.ReLU(),
-    nn.Linear(32, 16), nn.ReLU(),
-    nn.Linear(16, 1)
-)
-
-loss_fn = nn.MSELoss()
-opt = optim.Adam(model.parameters(), lr=1e-2)
-
-for epoch in range(80):
-    y_hat = model(X)
-    loss = loss_fn(y_hat, y)
-    opt.zero_grad(); loss.backward(); opt.step()
-
-print("final loss:", loss.item())
-print("predicted yield (first sample):", y_hat[0].item())
-```
-
----
-
 ### Section 8.4 – Quiz Questions (Feed-forward Neural Networks)
 
 #### 1) Factual Questions
@@ -609,11 +608,3 @@ What operation does `nn.MSELoss()` perform behind the scenes?
 
 <details><summary>▶ Click to show answer</summary>Correct Answer: B</details>  
 <details><summary>▶ Click to show explanation</summary>MSELoss measures how far off your predictions are by taking each prediction’s error (prediction minus true value), squaring it (to penalize larger mistakes more), and then averaging all those squared errors into one overall score.</details>
-
-
-
-
-
-
-
-
