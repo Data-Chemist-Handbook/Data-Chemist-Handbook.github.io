@@ -551,7 +551,7 @@ code
 
 The `train` function handles the complete training workflow for the Seq2Seq LSTM, with support for hyperparameter tuning via wandb. The function sets up the training, validation, and test data loaders. It loads hyperparameter values from the wandb.config object, which is defined through a sweep configuration (refer Step 7 for `sweep_config`). Alternatively, you may replace a parameter (`config.<param>` here) with fixed values to manually define your hyperparameters.
 
-For each epoch, the model is trained using `train_epoch()`, and validation is performed using `evaluate()`. The test fucntion used is `test_exactmatch`. Key metrics are logged to wandb for tracking. After training completes, the final model is saved to disk and also uploaded to wandb for record-keeping or future use.
+For each epoch, the model is trained using `train_epoch()`, and validation is performed using `evaluate()`. The test fucntion used is `test_exactmatch`. Key metrics are logged to wandb for tracking. After training completes, the final model is saved locally and also uploaded to wandb for record-keeping or future use.
 
 ```python
 # Training loop, with wandb
@@ -562,6 +562,7 @@ def train():
     vocab_size = tokenizer.vocab_size
     batch_size = 64 # Batch size can also be configurable and performance may change 
     # but, parallelisation was used to utilise multiple GPUs and memory limitations restricted us to batch size of 64
+    # even without parallelisation, you may be restricted by available memory in CUDA
     
     # Data loaders
     train_loader = create_dataloader(train_enc_input, train_dec_input, batch_size)
@@ -584,9 +585,9 @@ def train():
         dropout=config.dropout,
     )
 
-    model = Seq2Seq(encoder, decoder, tokenizer).to(device)
-    optimizer = optim.Adam(model.parameters(), lr=config.learning_rate)
-    criterion = nn.CrossEntropyLoss(ignore_index=0)
+    model = Seq2Seq(encoder, decoder, tokenizer).to(device) # create model
+    optimizer = optim.Adam(model.parameters(), lr=config.learning_rate) # define your optimizer; here, we are using Adam which a common optimizer 
+    criterion = nn.CrossEntropyLoss(ignore_index=0) # loss function usd in this seq2seq model, ignores apdding when calculating loss
 
     for epoch in range(config.epochs):
         train_loss, train_acc = train_epoch(model, train_loader, criterion, optimizer, vocab_size, max_len=600)
@@ -606,8 +607,8 @@ def train():
         print(f"Epoch {epoch+1} | Train Loss: {train_loss:.4f} |Train Acc: {train_acc:.4f} | Val Loss: {val_loss:.4f} | Val Acc: {val_acc:.4f}")
 
     # Save final model
-    torch.save(model.state_dict(), "model_final.pth")
-    wandb.save("model_final.pth")
+    torch.save(model.state_dict(), "model_final.pth") # saves locally
+    wandb.save("model_final.pth") # saves to wandb
     return model
 ```
 
@@ -615,8 +616,8 @@ def train():
 
 ```python
 wandb.login()
-sweep_id = wandb.sweep(sweep_config, project="retro-lstm")
-wandb.agent(sweep_id, function=train)
+sweep_id = wandb.sweep(sweep_config, project="retro-lstm") # name your project as you please
+wandb.agent(sweep_id, function = train) # set the function to the function that handles the entire model training, eval, test process
 ```
 ## 7.4 Transformer
 
