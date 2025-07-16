@@ -24,12 +24,30 @@
 .highlight .kt {
   color: #339;
 }
+.book.color-theme-2 .highlight .p{
+  color: #e3e7e8;
+}
+.highlight .p{
+  color: #6ead33;
+}
 .highlight .o {
   color: #333;
+}
+.book.color-theme-2 .highlight .o, .book.color-theme-2 .highlight .ow {
+  color: #e2e7b3;
 }
 .highlight .ow {
   color: #000;
   font-weight: bold;
+}
+.book.color-theme-2 .highlight .n {
+  color: #963;
+}
+.book.color-theme-1 .highlight .n {
+  color: #963;
+}
+.book:not(.color-theme-1):not(.color-theme-2) .highlight .n {
+  color: #222233;
 }
 .highlight .nb, .highlight .bp {
   color: #007020;
@@ -50,8 +68,14 @@
   color: #F00;
   font-weight: bold;
 }
-.highlight .nv, .highlight .vm {
+.book.color-theme-2 .highlight .nv, .book.color-theme-2 .highlight .vm {
   color: #963;
+}
+.book.color-theme-1 .highlight .nv, .book.color-theme-1 .highlight .vm {
+  color: #963;
+}
+.book:not(.color-theme-1):not(.color-theme-2) .highlight .nv, .book:not(.color-theme-1):not(.color-theme-2) .highlight .vm {
+  color: #222233;
 }
 .highlight .vi {
   color: #33B;
@@ -85,8 +109,14 @@
   color: #555;
   font-weight: bold;
 }
-.highlight .s, .highlight .sb, .highlight .dl, .highlight .s2, .highlight .sh, .highlight .s1 {
-  background-color: #fff0f0;
+.book.color-theme-2 .highlight .s, .book.color-theme-2 .highlight .sb, .book.color-theme-2 .highlight .dl, .book.color-theme-2 .highlight .s2, .book.color-theme-2 .highlight .sh, .book.color-theme-2 .highlight .s1 {
+  background-color: #2e486c;
+}
+.book.color-theme-1 .highlight .s, .book.color-theme-1 .highlight .sb, .book.color-theme-1 .highlight .dl, .book.color-theme-1 .highlight .s2, .book.color-theme-1 .highlight .sh, .book.color-theme-1 .highlight .s1 {
+  background-color: #e8e1c0;
+}
+.book:not(.color-theme-1):not(.color-theme-2) .highlight .s, .book:not(.color-theme-1):not(.color-theme-2) .highlight .sb, .book:not(.color-theme-1):not(.color-theme-2) .highlight .dl, .book:not(.color-theme-1):not(.color-theme-2) .highlight .s2, .book:not(.color-theme-1):not(.color-theme-2) .highlight .sh, .book:not(.color-theme-1):not(.color-theme-2) .highlight .s1 {
+  background-color: #c3d0fe;
 }
 .highlight .sa {
   color: #080;
@@ -117,6 +147,14 @@
 }
 .highlight .m, .highlight .mb, .highlight .mx {
   color: #60E;
+  font-weight: bold;
+}
+.book.color-theme-2 .highlight .m {
+  color: #66dcee;
+  font-weight: bold;
+}
+.book.color-theme-2 .highlight .mi {
+  color: #66dcee;
   font-weight: bold;
 }
 .highlight .mi, .highlight .il {

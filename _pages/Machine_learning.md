@@ -16,7 +16,7 @@ ML encompasses various techniques, including supervised learning, where models a
 
 **Decision Trees** are intuitive and powerful models used in machine learning to make predictions and decisions. Think of it like playing a game of 20 questions, where each question helps you narrow down the possibilities. Decision trees function similarly; they break down a complex decision into a series of simpler questions based on the data.
 
-Each question, referred to as a "decision," relies on a specific characteristic or feature of the data. For instance, if you're trying to determine whether a fruit is an apple or an orange, the initial question might be, "Is the fruit's color red or orange?" Depending on the answer, you might follow up with another question---such as, "Is the fruit's size small or large?" This questioning process continues until you narrow it down to a final answer (e.g., the fruit is either an apple or an orange).
+Each question, referred to as a "decision," relies on a specific characteristic or feature of the data. For instance, if you're trying to determine whether a fruit is an apple or an orange, the initial question might be, "Is the fruit's color red or orange?" Depending on the answer, you might follow up with another question---such as, "Is the fruit's size small or large?" This questioning process continues until you narrow it down to a final answer (e.g., the fruit is either an apple or an orange).      
 
 In a decision tree, these questions are represented as nodes, and the possible answers lead to different branches. The final outcomes are represented at the end of each branch, known as leaf nodes. One of the key advantages of decision trees is their clarity and ease of understanding---much like a flowchart. However, they can also be prone to overfitting, especially when dealing with complex datasets that have many features. Overfitting occurs when a model performs exceptionally well on training data but fails to generalize to new or unseen data.
 
@@ -576,6 +576,7 @@ This process repeats until the final output is produced.
 **Building a Simple Neural Network for Molecular Property Prediction**
 
 Let's build a minimal neural network that takes molecular descriptors as input and predicts a continuous chemical property, such as aqueous solubility. We'll use TensorFlow and Keras.
+
 
 ```python
 import tensorflow as tf
@@ -1138,11 +1139,17 @@ Chemical toxicity often arises from complex, nonlinear interactions among molecu
 
 Unlike images or text, molecules do not follow a regular shape or order. This makes it hard for conventional neural networks to process them effectively. Convolutional neural networks (CNNs) are designed for image data, and recurrent neural networks (RNNs) are built for sequences, but neither is suited to the irregular and highly connected structure of molecules. As a result, older models often fail to capture how atoms are truly linked inside a molecule.
 
+![GNN Overview - Traditional Methods vs Graph Neural Networks](../../../../../resource/img/gnn/gnn_overview_flowchart.png)
+*Comparison between traditional neural network approaches and Graph Neural Networks for molecular machine learning. The flowchart illustrates why molecules require graph-based methods and how GNNs preserve structural information that traditional methods lose.*
+
 Before GNNs were introduced, chemists used what are known as **molecular descriptors**. These are numerical features based on molecular structure, such as how many functional groups a molecule has or how its atoms are arranged in space. These descriptors were used as input for machine learning models. However, they often **lose important information** about the exact way atoms are connected. This loss of detail limits how well the models can predict molecular behavior.
 
 GNNs solve this problem by learning directly from the molecular graph. Instead of relying on handcrafted features, GNNs use the structure itself to learn what matters. Each atom gathers information from its neighbors in the graph, which helps the model understand the molecule as a whole. This approach leads to **more accurate predictions** and also makes the results **easier to interpret**.
 
 In short, GNNs allow researchers to build models that reflect the true structure of molecules. They avoid the limitations of older methods by directly using the connections between atoms, offering a more natural and powerful way to predict molecular properties.
+
+![GNN Processing Pipeline](../../../../../resource/img/gnn/gnn_processing_pipeline.png)
+*Step-by-step visualization of how Graph Neural Networks process molecular graphs. The pipeline shows the flow from input molecular graph through message passing and aggregation to final property prediction.*
 
 ### 3.3.1 What Are Graph Neural Networks?
 
@@ -1162,6 +1169,9 @@ This is already a graph! Let's break it down:
 
 - **Nodes (vertices)**: The atoms - one oxygen (O) and two hydrogens (H)
 - **Edges (connections)**: The chemical bonds - two O-H bonds
+
+![Molecules as Graphs Concept](../../../../../resource/img/gnn/molecules_as_graphs.png)
+*Visualization showing how molecules naturally form graph structures. Water (H₂O) and ethanol (C₂H₆O) are shown in both chemical notation and graph representation, demonstrating that atoms are nodes and bonds are edges.*
 
 Now consider a slightly more complex molecule - ethanol (drinking alcohol):
 
@@ -1190,6 +1200,9 @@ Before GNNs, how did computers predict molecular properties like solubility, tox
 - Surface area
 
 But this approach has a fundamental flaw. Consider these two molecules:
+
+![Traditional Descriptors vs Graph Neural Networks](../../../../../resource/img/gnn/traditional_vs_gnn.png)
+*Comparison between traditional molecular descriptors and Graph Neural Networks. Traditional methods lose connectivity information by converting molecules into numerical features, while GNNs preserve the full molecular structure through direct graph processing.*
 
 ```
 Molecule A:  H-O-C-C-C-C-O-H     (linear structure)
@@ -1222,7 +1235,10 @@ GNNs solve this problem elegantly. They process molecules as they truly are - gr
 
 The magic of GNNs lies in **message passing** - atoms "talk" to their neighbors through bonds. Let's see how this works step by step:
 
-**Step 1: Initial State**
+![Message Passing in Graph Neural Networks](../../../../../resource/img/gnn/message_passing_visualization.png)
+*Step-by-step visualization of the message passing mechanism in GNNs. The figure shows how information propagates through the molecular graph over multiple iterations, allowing each atom to understand its role within the larger molecular context.*
+
+**Step 0: Initial State**
 Each atom starts knowing only about itself:
 
 ```
@@ -1231,7 +1247,7 @@ Carbon-2: "I'm carbon with 4 bonds"
 Oxygen:   "I'm oxygen with 2 bonds"
 ```
 
-**Step 2: First Message Pass**
+**Step 1: First Message Pass**
 Atoms share information with neighbors:
 
 ```
@@ -1240,7 +1256,7 @@ Carbon-2: "I'm carbon between another carbon and an oxygen"
 Oxygen:   "I'm oxygen connected to a carbon and a hydrogen"
 ```
 
-**Step 3: Second Message Pass**
+**Step 2: Second Message Pass**
 Information spreads further:
 
 ```
@@ -1255,6 +1271,9 @@ After enough message passing, each atom understands its role in the entire molec
 
 Molecular property prediction is at the heart of modern drug discovery and materials science. Consider these real-world applications:
 
+![GNN Applications in Science and Industry](../../../../../resource/img/gnn/gnn_applications.png)
+*Real-world applications of molecular property prediction using GNNs across six domains: drug discovery, environmental science, materials design, toxicity prediction, battery research, and agriculture.*
+
 1. **Drug Discovery**: Will this molecule pass through the blood-brain barrier?
 2. **Environmental Science**: How long will this chemical persist in water?
 3. **Materials Design**: What's the melting point of this new polymer?
@@ -1265,11 +1284,14 @@ Traditional experiments to measure these properties are expensive and time-consu
 - Identify promising drug candidates faster
 - Avoid creating harmful compounds
 
+#### Representing Molecules as Graphs: A Step-by-Step Guide
+
 Let's implement a simple example to see how we represent molecules as graphs in code.
 
 We’ll walk step-by-step through a basic molecular graph construction pipeline using **RDKit**, a popular cheminformatics toolkit in Python. You’ll learn how to load molecules, add hydrogens, inspect atoms and bonds, and prepare graph-based inputs for further learning.
 
----
+![Feature Extraction Pipeline](../../../../../resource/img/gnn/feature_extraction_pipeline.png)
+*Complete pipeline for converting molecular SMILES strings into graph representations suitable for GNN processing. The workflow shows six stages: from SMILES input through RDKit molecule creation, node/edge feature extraction, to final graph object construction.*
 
 #### 1. Load a molecule and include hydrogen atoms
 
@@ -1286,6 +1308,8 @@ Let’s break down the functions we’ll use:
 * `Chem.AddHs(mol)`:
   Returns a new molecule object with **explicit hydrogen atoms** added to the input `mol`.
 
+![Molecule Loading Process](../../../../../resource/img/gnn/mol_loading_visualization.png)
+
 <details>
 <summary>▶ Click to see code: Basic molecule to graph conversion</summary>
 <pre><code class="language-python">
@@ -1295,18 +1319,22 @@ import numpy as np
 # Step 1: Create a molecule object from the SMILES string for water ("O" means one oxygen atom)
 water = Chem.MolFromSmiles("O")
 
-# Step 2: Count how many atoms are present (will be 1 — only the oxygen)
+# Count how many atoms are present (will be 1 — only the oxygen)
 print(f"Number of atoms: {water.GetNumAtoms()}")  # Output: 1
 
-# Step 3: Add explicit hydrogen atoms
+# Step 2: Add explicit hydrogen atoms
 water = Chem.AddHs(water)
 
-# Step 4: Count again — now we should see 3 atoms (1 O + 2 H)
+# Count again — now we should see 3 atoms (1 O + 2 H)
 print(f"Number of atoms with H: {water.GetNumAtoms()}")  # Output: 3
 </code></pre>
 </details>
 
----
+1. **Initial Atom Count**: Initially, the molecule object only includes the oxygen atom, as hydrogen atoms are not explicitly represented by default. Therefore, `GetNumAtoms()` returns `1`.
+2. **Adding Hydrogen Atoms**: After calling `Chem.AddHs(water)`, the molecule object is updated to include explicit hydrogen atoms. This is essential for a complete representation of the molecule.
+3. **Final Atom Count**: The final count of atoms is `3`, which includes one oxygen atom and two hydrogen atoms. This accurately reflects the molecular structure of water (H₂O).
+
+By explicitly adding hydrogen atoms, we ensure that the molecular graph representation is comprehensive and suitable for further processing in GNNs.
 
 #### 2. Access the bond structure (graph edges)
 
@@ -1322,6 +1350,9 @@ Let’s break down the functions used here:
 
 * `mol.GetAtomWithIdx(idx).GetSymbol()`:
   This retrieves the **chemical symbol** (e.g. "H", "O") of the atom at a given index.
+
+![Bond Structure Extraction](../../../../../resource/img/gnn/bond_structure_visualization.png)
+*Extracting bond connectivity from RDKit molecule object. Each bond connects two atoms identified by their indices, forming the edges of our molecular graph.*
 
 <details>
 <summary>▶ Click to see code: Extracting graph connectivity</summary>
@@ -1342,7 +1373,14 @@ for bond in water.GetBonds():
 </code></pre>
 </details>
 
----
+1. **Bond Retrieval**: The `mol.GetBonds()` function returns a list of bond objects in the molecule. Each bond object represents a connection between two atoms.
+2. **Atom Indices**: For each bond, `bond.GetBeginAtomIdx()` and `bond.GetEndAtomIdx()` return the indices of the two atoms connected by the bond. These indices correspond to the positions of the atoms in the molecule object.
+3. **Atom Symbols**: The `mol.GetAtomWithIdx(idx).GetSymbol()` function retrieves the chemical symbol (e.g., "H" for hydrogen, "O" for oxygen) of the atom at a given index. This helps in identifying the types of atoms involved in each bond.
+4. **Connectivity Representation**: The output shows the connectivity of the water molecule as:
+   - `O(0) -- H(1)`
+   - `O(0) -- H(2)`
+
+This indicates that the oxygen atom (index 0) is bonded to two hydrogen atoms (indices 1 and 2). This connectivity information is crucial for constructing the graph representation of the molecule, where atoms are nodes and bonds are edges.
 
 #### 3. Extract simple atom-level features
 
@@ -1358,6 +1396,9 @@ Here’s what each function does:
 
 * `atom.GetSymbol()`:
   Returns the chemical symbol ("H", "O", etc.), useful for printing/debugging.
+
+![Feature Vector Visualization](../../../../../resource/img/gnn/atom_features_visualization.png)
+*Atom-to-feature mapping. The atomic number provides a simple yet effective initial representation for each node in the molecular graph.*
 
 <details>
 <summary>▶ Click to see code: Atom feature extraction</summary>
@@ -1380,8 +1421,25 @@ for i, atom in enumerate(water.GetAtoms()):
 </code></pre>
 </details>
 
+1. **Feature Extraction Function**:
+   - The `get_atom_features(atom)` function extracts the atomic number of each atom using `atom.GetAtomicNum()`. This is a simple yet powerful feature for distinguishing between different elements.
+   - The atomic number is a unique identifier for each element: 1 for hydrogen (H) and 8 for oxygen (O).
 
----
+2. **Iterating Over Atoms**:
+   - The `mol.GetAtoms()` function returns a generator that iterates over all `Atom` objects in the molecule.
+   - For each atom, we retrieve its atomic number and store it as a feature vector (a list containing a single element).
+
+3. **Output Explanation**:
+   - The output lists each atom in the molecule along with its atomic number:
+     - `Atom 0 (O): features = [8]`: The oxygen atom (index 0) has an atomic number of 8.
+     - `Atom 1 (H): features = [1]`: The first hydrogen atom (index 1) has an atomic number of 1.
+     - `Atom 2 (H): features = [1]`: The second hydrogen atom (index 2) also has an atomic number of 1.
+
+4. **Significance**:
+   - These atomic numbers serve as the initial node features for the molecular graph. In more advanced models, additional features (e.g., degree, hybridization, electronegativity) can be included to capture more complex chemical properties.
+   - By representing each atom with its atomic number, we provide a basic yet meaningful input for graph neural networks to learn from the structural and chemical properties of the molecule.
+
+In summary, this code demonstrates how to extract simple yet essential features from each atom in a molecule, laying the foundation for constructing informative node attributes in molecular graphs.
 
 #### 4. Build the undirected edge list
 
@@ -1391,6 +1449,9 @@ Functions involved:
 
 * `bond.GetBeginAtomIdx()`, `bond.GetEndAtomIdx()` (as above)
 * We simply collect `[i, j]` and `[j, i]` into a list of edges.
+
+![Edge List Construction](../../../../../resource/img/gnn/edge_list_visualization.png)
+*Building an undirected edge list from molecular bonds. Each bond generates two directed edges (i→j and j→i) to ensure bidirectional message passing in the GNN.The complete edge list for water molecule. Bidirectional edges enable information flow in both directions during GNN message passing.*
 
 <details>
 <summary>▶ Click to see code: Edge extraction</summary>
@@ -1413,9 +1474,27 @@ print("Water edges:", water_edges)
 </code></pre>
 </details>
 
+1. **Function Definition**:
+   - `get_edge_list(mol)`: This function takes an RDKit molecule object (`mol`) as input and returns a list of edges representing the connectivity between atoms.
+   
+2. **Edge Extraction**:
+   - `mol.GetBonds()`: This method retrieves a list of bond objects from the molecule. Each bond object represents a connection between two atoms.
+   - For each bond, `bond.GetBeginAtomIdx()` and `bond.GetEndAtomIdx()` are used to get the indices of the two atoms connected by the bond. These indices are integers that uniquely identify atoms within the molecule.
+   - The edge list is constructed by appending both `[i, j]` and `[j, i]` to the `edges` list. This ensures that the graph is undirected, which is essential for GNNs. In an undirected graph, the relationship between nodes is bidirectional, meaning that if atom `i` is connected to atom `j`, then atom `j` is also connected to atom `i`.
+
+3. **Output**:
+   - The function returns the complete edge list, which includes all pairs of connected atoms in both directions.
+   - For the water molecule (H₂O), the output is:
+     ```
+     Water edges: [[0, 1], [1, 0], [0, 2], [2, 0]]
+     ```
+     - `[0, 1]` and `[1, 0]`: These pairs represent the bond between the oxygen atom (index 0) and the first hydrogen atom (index 1).
+     - `[0, 2]` and `[2, 0]`: These pairs represent the bond between the oxygen atom (index 0) and the second hydrogen atom (index 2).
+
 Each pair represents one connection (bond) between atoms. Including both directions ensures that during **message passing**, information can flow freely from each node to all its neighbors.
 
----
+![RDKit Molecular Structures](../../../../../resource/img/gnn/rdkit_molecules.png)
+*Using RDKit, we can get the chemical structures and corresponding graph statistics for common molecules (water, ethanol, benzene, and aspirin). Each molecule is shown with its 2D structure alongside graph metrics including node count, edge count, and atom type distribution.*
 
 #### Summary: The Power of Molecular Graphs
 
@@ -1437,16 +1516,22 @@ At the core of a Graph Neural Network (GNN) is the idea of **message passing**.
 The goal is to simulate an important phenomenon in chemistry: **how electronic effects propagate through molecular structures via chemical bonds**. This is something that happens in real molecules, and GNNs try to mimic it through mathematical and computational means.
 
 Let’s first look at a chemistry example.
-When a **fluorine atom** is added to a molecule, its **high electronegativity** doesn’t just affect the atom it is directly bonded to. It causes that **carbon atom** to become slightly positive, which in turn affects its other bonds, and so on. The effect ripples outward through the structure.
+When a **fluorine atom** is added to a molecule, its **high electronegativity** doesn't just affect the atom it is directly bonded to. It causes that **carbon atom** to become slightly positive, which in turn affects its other bonds, and so on. The effect ripples outward through the structure.
 
 This is exactly the kind of **structural propagation** that message passing in GNNs is designed to model.
+
+![Chemical Effects Propagation](../../../../../resource/img/gnn/chemical_propagation.png)
+*Comparison of electronic effects propagation in real molecules (left) versus GNN simulation (right). The fluorine atom's electronegativity creates a ripple effect through the carbon chain, which GNNs capture through iterative message passing.*
 
 #### The structure of message passing: what happens at each GNN layer?
 
 Even though the idea sounds intuitive, we need a well-defined set of mathematical steps for the computer to execute.
-In a GNN, each layer usually follows **three standard steps**:
+In a GNN, each layer usually follows **three standard steps**.
 
-#### Step 1: **Message Construction**
+![Message Passing Three Steps](../../../../../resource/img/gnn/message_passing_three_steps.png)
+*The three standard steps of message passing in GNNs: (1) Message Construction - neighbors create messages based on their features and edge properties, (2) Message Aggregation - all incoming messages are combined using sum, mean, or attention, (3) State Update - nodes combine their current state with aggregated messages to produce new representations.*
+
+**Step 1: Message Construction**
 
 For every node $i$, we consider all its neighbors $j$ and create a message $m_{ij}$ to describe what information node $j$ wants to send to node $i$.
 
@@ -1457,7 +1542,7 @@ This message often includes:
 
 Importantly, we don’t just pass raw features. Instead, we use **learnable functions** (like neural networks) to transform the input into something more meaningful for the task.
 
-#### Step 2: **Message Aggregation**
+**Step 2: Message Aggregation**
 
 Once node $i$ receives messages from all neighbors, it aggregates them into a single combined message $m_i$.
 
@@ -1471,13 +1556,17 @@ Here, $N(i)$ is the set of all neighbors of node $i$.
 This step is like saying: "I listen to all my neighbors and combine what they told me."
 
 However, in real chemistry, **not all neighbors are equally important**:
-
 * A **double bond** may influence differently than a single bond
 * An **oxygen atom** might carry more weight than a hydrogen atom
 
-That’s why advanced GNNs often use **weighted aggregation** or **attention mechanisms** to adjust how each neighbor contributes.
+![degreenormalize](../../../../../resource/img/gnn/degreenormalize.png)
 
-#### Step 3: **State Update**
+That's why advanced GNNs often use **weighted aggregation** or **attention mechanisms** to adjust how each neighbor contributes.
+
+![Aggregation Functions](../../../../../resource/img/gnn/aggregation_functions.png)
+*Different aggregation functions in GNNs. Sum preserves total signal strength, Mean normalizes by node degree, Max captures the strongest signal, and Attention weights messages by learned importance scores.*
+
+**Step 3: State Update**
 
 Finally, node $i$ uses two inputs:
 
@@ -1495,13 +1584,11 @@ This update is usually implemented with a small neural network, such as a **mult
 In summary, at each GNN layer, **every atom (node) listens to its neighbors and updates its understanding of the molecule**.
 After several layers of message passing, each node's embedding captures not just its local features, but also the broader context of the molecular structure.
 
----
-
 #### Graph Convolutions: Making It Concrete
 
 The term **"graph convolution"** comes from analogy with Convolutional Neural Networks (CNNs) in computer vision. In CNNs, filters slide over local neighborhoods of pixels. In GNNs, we also aggregate information from "neighbors", but now **neighbors are defined by molecular or structural connectivity, not spatial proximity**.
 
-In Graph Convolutional Networks (GCNs), message passing is defined by the following steps at each layer:
+In Graph Convolutional Networks (GCNs), message passing is defined by this formula for at each layer:
 
 $$
 h_i^{(t+1)} = \sigma \left( \sum_{j \in \mathcal{N}(i) \cup \{i\}} \frac{1}{\sqrt{d_i d_j}} W h_j^{(t)} \right)
@@ -1511,9 +1598,16 @@ $$
 * $W$: Learnable weight matrix
 * $d_i$: Degree (number of neighbors) of node $i$
 * $\sigma$: Activation function (e.g. ReLU)
-* This formula **averages and transforms** neighbor features while normalizing based on node degrees.
 
-In PyTorch Geometric (PyG), the most basic GNN implementation is `GCNConv`. Let’s go through each part of the code.
+This formula **averages and transforms** neighbor features while normalizing based on node degrees.
+
+![GCN Formula Breakdown](../../../../../resource/img/gnn/aggregate.png)
+
+According to the formula, GCN message passing follows 4 steps at each layer:
+
+![gcn4steps](../../../../../resource/img/gnn/gcn4steps.png)
+
+To execute it in Python, we use **PyTorch Geometric (PyG)**. In PyTorch Geometric (PyG), the most basic GNN implementation is `GCNConv`. Let’s go through each part of the code.
 
 **PyTorch Geometric Components**
 
@@ -1526,44 +1620,137 @@ In PyTorch Geometric (PyG), the most basic GNN implementation is `GCNConv`. Let�
 | `GCNConv(in_channels, out_channels)` | A GCN layer that does: message passing + aggregation + update.                                    |
 | `conv(x, edge_index)`                | Applies one layer of graph convolution and returns updated node features.                         |
 
-<details>
-<summary>▶ Click to see code</summary>
-<pre><code class="language-python">
+Each part of our code works according to this *Flowchart*:
+
+![flowchart](../../../../../resource/img/gnn/flowchart.png)
+
+**Algorithmic Idea**
+
+The flowchart above shows how raw atomic features are transformed by a single GCN (Graph Convolutional Network) layer into learned, structure-aware embeddings. Below, we unpack this transformation step-by-step, both conceptually and computationally.
+
+**1. Node Features**
+   Each atom is represented by a **3-dimensional** one-hot feature vector that encodes its identity. For example:
+
+* `[1, 0, 0]` could represent carbon (C)
+* `[0, 1, 0]` oxygen (O)
+* `[0, 0, 1]` nitrogen (N)
+
+![encode](../../../../../resource/img/gnn/encode.png)
+
+In our toy molecule with 4 atoms, the input node feature matrix has shape **\[4, 3]**: 4 atoms, each with 3 features.
+
+```python
 import torch
+
+x = torch.tensor([
+    [1, 0, 0],  # Atom 0: C
+    [0, 1, 0],  # Atom 1: O
+    [1, 1, 0],  # Atom 2: hybrid or multi-type
+    [0, 0, 1]   # Atom 3: N
+], dtype=torch.float)
+```
+
+This matrix `x` is the starting point: a basic, structure-free description of the molecule.
+
+**2. Edge Index**
+   To describe how atoms are bonded, we define the connectivity of the molecular graph using a list of directed edges. Each chemical bond is entered twice to support bidirectional message passing.
+
+The resulting tensor `edge_index` has shape **\[2, E]**, where E is the total number of directed edges. In our case, E = 8.
+
+```python
+edge_index = torch.tensor([
+    [0, 1, 1, 2, 2, 3, 3, 0],  # Source atoms
+    [1, 0, 2, 1, 3, 2, 0, 3]   # Target atoms
+], dtype=torch.long)
+```
+
+Here, for example, the edge (0, 1) and (1, 0) encode a bond between atoms 0 and 1.
+
+![represent](../../../../../resource/img/gnn/represent.png)
+
+**3. Graph Data**
+   PyTorch Geometric uses a unified object to represent graph-structured data. The node features `x` and the connectivity `edge_index` are bundled into a `Data` object:
+
+```python
 from torch_geometric.data import Data
+
+data = Data(x=x, edge_index=edge_index)
+```
+
+At this point:
+
+* `data.x` has shape **\[4, 3]**
+* `data.edge_index` has shape **\[2, 8]**
+
+This fully defines a small undirected graph of 4 atoms.
+
+![graphdata](../../../../../resource/img/gnn/graphdata.png)
+
+**4. GCN Layer**
+   We now define a graph convolutional layer that will **transform each 3-dimensional atom vector into a 2-dimensional learned embedding**.
+
+This is not just a dimensionality reduction step. Rather, it’s a **learned transformation**:
+
+* It combines each atom’s own features with information from its **bonded neighbors**
+* It applies a shared **learnable weight matrix** $W \in \mathbb{R}^{3 \times 2}$
+* It normalizes contributions based on node degrees
+* It applies a non-linear activation function (e.g. ReLU)
+
+![3d2d](../../../../../resource/img/gnn/3d2d.png)
+
+This transformation implements the formula:
+
+$$
+h_i^{(t+1)} = \sigma \left( \sum_{j \in \mathcal{N}(i) \cup \{i\}} \frac{1}{\sqrt{d_i d_j}} \, W h_j^{(t)} \right)
+$$
+
+Where:
+
+* $h_j^{(t)}$ is the 3-dimensional feature vector of neighbor $j$
+* $W$ maps from 3 → 2 dimensions
+* $\sigma$ is a nonlinearity (e.g. ReLU)
+* The normalization factor $\frac{1}{\sqrt{d_i d_j}}$ accounts for node degrees
+
+The layer is defined as:
+
+```python
 from torch_geometric.nn import GCNConv
 
-# Define node features: 4 nodes, each with 3 features (e.g., atom types)
-x = torch.tensor([
-    [1, 0, 0],  # Node 0
-    [0, 1, 0],  # Node 1
-    [1, 1, 0],  # Node 2
-    [0, 0, 1]   # Node 3
-], dtype=torch.float)
-
-# Define edges: undirected graph, so each edge appears twice (i → j and j → i)
-edge_index = torch.tensor([
-    [0, 1, 1, 2, 2, 3, 3, 0],  # Source nodes
-    [1, 0, 2, 1, 3, 2, 0, 3]   # Target nodes
-], dtype=torch.long)
-
-# Build the graph using PyG's Data structure
-data = Data(x=x, edge_index=edge_index)
-
-# Define a Graph Convolutional Network (GCN) layer:
-# input_dim = 3 (features), output_dim = 2
 conv = GCNConv(in_channels=3, out_channels=2)
+```
 
-# Apply the GCN (i.e., message passing)
+This means: input is a **\[4, 3]** matrix, and output will be a **\[4, 2]** matrix. Each atom now gets a 2-dimensional embedding.
+
+> **Why go from 3 to 2 dimensions?**
+> We are not blindly compressing the input — rather, we are learning a more compact, expressive representation that fuses both identity and structure. The dimensionality is a design choice: you could use 2, 8, 128... depending on downstream task complexity. In this toy case, 2 is used for visualization and simplicity.
+
+**5. Forward Pass**
+   We now execute the forward pass of the GCN. Internally, the layer:
+
+* For each atom, gathers features from its neighbors and itself
+* Applies the learned transformation and aggregates
+* Outputs a new feature vector per atom
+
+```python
 output = conv(data.x, data.edge_index)
+```
 
-# Print updated node features
+After this operation:
+
+* Input shape: **\[4, 3]**
+* Output shape: **\[4, 2]**
+* Each row in the output is a learned embedding vector for an atom
+
+![forwardpasstable](../../../../../resource/img/gnn/forwardpasstable.png)
+
+**6. Output Features**
+
+```python
 print("Updated Node Features After Message Passing:")
 print(output)
-</code></pre>
-</details>
+```
 
-This code outputs a tensor of shape `[4, 2]` — one **updated node representation** per node, after applying the GCN layer. For example:
+**Result**
 
 ```
 Updated Node Features After Message Passing:
@@ -1573,7 +1760,36 @@ tensor([[ 0.2851, -0.0017],
         [ 0.2807, -0.3559]], grad_fn=<AddBackward0>)
 ```
 
-**Variants of Graph Convolutions**
+**Interpretation**
+
+**Shape**: The output has shape **\[4, 2]**:
+
+* 4 rows → 4 atoms
+* 2 columns → each atom’s learned embedding
+
+**What does each embedding mean?**
+
+Each row (e.g. `[0.2851, -0.0017]`) represents an atom’s updated feature — not just its raw type (C, O, N), but also how it is **situated in the molecular graph**:
+
+* Who its neighbors are
+* What types they are
+* How strongly it’s connected (degree)
+
+This embedding is no longer one-hot or fixed — it is **learned from data**, and will improve with training.
+
+**Why is this useful?**
+
+You can now:
+
+* Feed these embeddings into another neural network to **predict molecular properties**
+* Use them to **classify atom roles** (e.g., is this a reaction site?)
+* **Visualize molecule structure** in 2D/3D via t-SNE or PCA
+
+**About `grad_fn=<AddBackward0>`**
+
+This line tells you that the output is part of the autograd computation graph in PyTorch. That means it supports backpropagation: gradients will flow back through the GCN layer during training to update $W$.
+
+#### Variants of Graph Convolutions
 
 Different GNN models define the message passing process differently:
 
@@ -1589,11 +1805,17 @@ Use attention to assign **different weights** to different neighbors. This is ve
 **Message Passing Neural Networks (MPNNs)**
 A general and expressive framework. Can use **edge features**, which is important in molecules (e.g. bond type, aromaticity). Many SOTA chemistry models (e.g., D-MPNN) are built on this.
 
+![GNN Variants](../../../../../resource/img/gnn/gnn_variants.png)
+**Figure 3.3.10:** *Comparison of different GNN architectures. GCN uses simple normalized averaging, GraphSAGE samples neighbors for scalability, GAT employs attention mechanisms for weighted aggregation, and MPNN provides a general framework incorporating edge features.*
+
 #### Chemical Intuition Behind Message Passing
 
 To understand how message passing in graph neural networks actually captures chemical effects, let’s walk through a concrete example: the molecule **para-nitrophenol**, which features two chemically distinct groups — a nitro group (NO₂) and a hydroxyl group (OH) — placed at opposite ends of a benzene ring.
 
 Chemically speaking, this setup forms a classic "push-pull" system: the nitro group is strongly electron-withdrawing, while the hydroxyl group is electron-donating. This dynamic tension in electron distribution plays a key role in determining the molecule’s acidity, reactivity, and overall behavior. The power of message passing lies in its ability to gradually capture this electron flow, layer by layer.
+
+![GNN Layer Expansion](../../../../../resource/img/gnn/layer_expansion.png)
+**Figure 3.3.11:** *Receptive field expansion in GNNs. Each layer increases a node's awareness by one hop. Starting from self-awareness (Layer 0), nodes progressively integrate information from 1-hop neighbors, 2-hop neighbors, and eventually the entire molecular graph.*
 
 **GNN Message Passing: Neighborhood Expansion per Layer**
 - Layer 0: Self (Each atom only knows its own features)
@@ -1615,27 +1837,2905 @@ Chemically speaking, this setup forms a classic "push-pull" system: the nitro gr
   - Every atom integrates information from the entire molecule
   - Final features encode global electronic and structural effects
 
-At the initial step (layer 0), each atom only knows itself: for example, the nitrogen in the nitro group knows it is positively charged, the hydroxyl oxygen knows it’s bonded to a hydrogen, and the aromatic carbons know their local type. No context is shared yet.
+#### Summary
 
-In the first message passing layer, atoms begin exchanging information with their direct neighbors. The nitro nitrogen learns it is connected to two electron-withdrawing oxygens. The ortho carbon next to the nitro group receives this message and begins to "realize" it’s adjacent to a strong puller. On the other side of the ring, the carbon bonded to the hydroxyl group starts picking up signals from the electron-donating OH.
+In this section, we explored **message passing** and **graph convolutions**, the fundamental mechanisms that enable Graph Neural Networks to learn from molecular structures. The key insight is that GNNs mimic how electronic effects propagate through chemical bonds in real molecules.
 
-By the second layer, this influence propagates further. Carbons that are not directly attached to NO₂ or OH now begin receiving mixed signals. The meta carbons, for instance, integrate messages from both sides — they now reflect the competing effects of withdrawal and donation. The model begins to reconstruct the kind of electronic delocalization and inductive influence that chemists would traditionally describe with resonance structures or Hammett constants.
+The message passing framework follows three standard steps at each layer:
+1. **Message Construction**: Nodes create messages for their neighbors using learnable functions
+2. **Message Aggregation**: Each node combines incoming messages (via sum, attention, etc.)
+3. **State Update**: Nodes update their representations by combining current features with aggregated messages
 
-As we add more layers, each atom eventually integrates information from the entire molecule. At this point, the model can “understand” the global distribution of electronic effects. It learns that this is a conjugated aromatic system with competing substituents and adjusts each atom’s representation accordingly. This is not just structural information, but **functional** understanding — the kind that predicts acid dissociation, reactivity sites, or electronic transition behavior.
+Through the lens of para-nitrophenol, we saw how this iterative process gradually expands each atom's "awareness" from local to global context. Starting with only self-knowledge, atoms progressively integrate information from direct neighbors, then second-hop neighbors, until eventually capturing full molecular context including competing electronic effects.
 
-From a computational point of view, each additional GNN layer expands an atom’s receptive field by one hop. By the third or fourth layer, the atom embeddings encode not only local geometry but also the broader chemical environment. Modern architectures like GAT can further modulate this process by weighting important neighbors more heavily (e.g., polar bonds, charged atoms), and MPNNs can include edge features like bond types or bond orders to enrich the message content.
+Different GNN architectures (GCN, GraphSAGE, GAT, MPNN) offer various approaches to this process, each with distinct advantages for chemical applications. The choice depends on factors like molecular size, importance of edge features, and computational constraints.
 
-In short, message passing enables the model to capture what chemists know intuitively: that an atom’s behavior is shaped not just by its identity, but by its **context** within the molecule. This is how GNNs bridge raw structure and chemical insight — atom by atom, bond by bond.
+The power of message passing lies in its ability to bridge **structure and function**. By allowing atoms to "communicate" through bonds, GNNs learn representations that encode not just molecular topology, but also the chemical behaviors that emerge from that structure — acidity, reactivity, electronic distribution, and more. This makes GNNs particularly well-suited for molecular property prediction and drug discovery tasks where understanding chemical context is crucial.
+
+### 3.3.3 GNNs for Molecular Property Prediction
+
+#### Completed and Compiled Code: [Click Here](https://colab.research.google.com/drive/1IemDJyiQuDwBK-iTkaHBgqqfAiM065_b?usp=sharing)
+
+#### Experimental Pipeline Overview
+
+**What We’re Building: A Molecular Solubility Predictor**
+
+**Why Predict Molecular Solubility?**
+
+* **Drug Discovery:** 90% of drug candidates fail due to poor solubility – we need to predict this early!
+* **Cost Savings:** Lab testing costs \$1000+/molecule; our model predicts in milliseconds
+* **Real Impact:** Better solubility = better drug absorption = more effective medicines
+
+![whypredict](../../../../../resource/img/gnn/whypredict.png)
+
+**What you’ll learn:** How to turn molecules into graphs and use AI to predict their properties
+
+| Stage                     | Input                      | Process                   | Output                       |
+| ------------------------- | -------------------------- | ------------------------- | ---------------------------- |
+| **1. Data Loading**       | ESOL CSV file              | pandas parsing            | SMILES + log S values        |
+| **2. Molecular Encoding** | SMILES strings<br>*(text)* | RDKit → graph conversion  | Node features + edge indices |
+| **3. Model Building**     | Graph structures           | 3-layer GCN               | Molecular embeddings         |
+| **4. Training**           | Batched graphs             | Adam optimizer + MSE loss | Trained parameters           |
+| **5. Prediction**         | New SMILES                 | Forward pass              | Solubility (log S)           |
+
+![5stages](../../../../../resource/img/gnn/5stages.png)
+
+**Key Metrics We’ll Track:**
+
+* **RMSE:** Root Mean Squared Error (expect \~1.9 log S)
+* **R²:** Variance explained (expect \~0.22)
+* **MAE:** Mean Absolute Error (expect \~1.6 log S)
+
+**Key Terms Explained**
+
+| Term              | Simple Explanation                                     | Why It Matters                                |
+| ----------------- | ------------------------------------------------------ | --------------------------------------------- |
+| **SMILES**        | Text code for molecules (like “H₂O” but more detailed) | Computers can’t see molecules, so we use text |
+| **Node Features** | Properties of each atom (e.g. element type, charge)    | AI needs numbers to work with                 |
+| **Edge Indices**  | Which atoms are connected by bonds                     | Structure determines properties               |
+| **GCN**           | Graph Convolutional Network – AI for graph data        | Molecules are naturally graphs!               |
+
+![terms](../../../../../resource/img/gnn/terms.png)
+
+#### Step 1: Understanding Molecular Solubility as a Graph Learning Problem
+
+**The Chemistry Behind Solubility**
+
+**Why is solubility prediction hard?**
+Solubility emerges from a delicate balance of intermolecular forces:
+
+$$
+\mathrm{Solubility} \;\propto\; \frac{\text{Solute–Solvent interactions}}{\text{Solute–Solute interactions}}
+$$
+
+**What This Formula Really Means:**
+
+* **Numerator (top):** How well the molecule “likes” water
+* **Denominator (bottom):** How much the molecule “likes” itself
+* **Result:** If molecules prefer water over themselves → high solubility!
+
+**Example:**
+Sugar dissolves because it forms hydrogen bonds with water better than with other sugar molecules
+
+![factors](../../../../../resource/img/gnn/factors.png)
+
+**Key factors:**
+
+* **Hydrogen bonding:** –OH, –NH groups increase water solubility
+* **Hydrophobic effect:** Long carbon chains decrease solubility
+* **Molecular size:** Larger molecules → harder to solvate
+* **Aromaticity:** π-systems are hydrophobic
+
+**Why Graph Neural Networks?**
+
+Traditional machine learning uses fixed-size molecular fingerprints, losing structural information. GNNs preserve the full molecular graph:
+
+**Molecule as Graph:**
+
+* **Nodes:** Atoms with features (element, charge, aromaticity)
+* **Edges:** Chemical bonds (single, double, triple, aromatic)
+* **Message Passing:** Atoms “communicate” through bonds
+
+![intuition](../../../../../resource/img/gnn/intuition.png)
+
+**Intuition:**
+
+* Just like social networks!
+
+  * People (atoms) have properties (age, interests)
+  * Friendships (bonds) connect people
+  * Information spreads through connections
+  * Your friends influence your behavior!
+
+**Step 1.1: Package Imports and Setup**
+
+We need several specialized libraries to handle different aspects of the pipeline:
+
+| Step  | Library           | Purpose              | Why We Need It                          |
+| ----- | ----------------- | -------------------- | --------------------------------------- |
+| **1** | PyTorch           | Deep Learning Core   | Handles neural networks and gradients   |
+| **2** | PyTorch Geometric | Graph Operations     | Special tools for graph neural networks |
+| **3** | RDKit             | Chemistry Processing | Understands molecules and bonds         |
+| **4** | NumPy / Pandas    | Data Handling        | Efficient array and table operations    |
+| **5** | Scikit-learn      | Evaluation Metrics   | Measure how good our predictions are    |
+
+<div style="background-color:#f3e5f5; padding:15px; border-radius:8px; margin:15px 0;">
+  <table style="width:100%; border-collapse:collapse;">
+    <tr style="background-color:#e1bee7;">
+      <th style="padding:10px; border:1px solid #ba68c8; text-align:center;" colspan="4">Library Import Process</th>
+    </tr>
+    <tr>
+      <td style="padding:10px; border:1px solid #ba68c8; background-color:#ffffff;">
+        <b>Step 1:</b> Import PyTorch Core<br>
+        <span style="font-size:0.9em;">torch, nn, F</span>
+      </td>
+      <td style="padding:10px; border:1px solid #ba68c8; background-color:#ffffff;">
+        <b>Step 2:</b> Import Graph Tools<br>
+        <span style="font-size:0.9em;">GCNConv, DataLoader</span>
+      </td>
+      <td style="padding:10px; border:1px solid #ba68c8; background-color:#ffffff;">
+        <b>Step 3:</b> Import Chemistry<br>
+        <span style="font-size:0.9em;">RDKit Chem module</span>
+      </td>
+      <td style="padding:10px; border:1px solid #ba68c8; background-color:#ffffff;">
+        <b>Step 4:</b> Import Utilities<br>
+        <span style="font-size:0.9em;">numpy, pandas, sklearn</span>
+      </td>
+    </tr>
+  </table>
+</div>
+
+
+
+```python
+# Deep Learning Framework
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+
+# Graph Neural Network Operations
+from torch_geometric.nn import GCNConv, global_mean_pool
+from torch_geometric.data import Data, DataLoader
+
+# Chemistry Toolkit
+from rdkit import Chem
+
+# Data Processing & Visualization
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import requests
+import io
+from sklearn.metrics import mean_squared_error, r2_score
+```
+
+![library](../../../../../resource/img/gnn/library.png)
+
+**Step 1.2: Feature Extraction**
+
+Each atom's properties influence molecular behavior. We encode 5 key atomic features:
+
+<table style="border-collapse:collapse; width:100%;"> 
+    <tr style="background-color:#e1bee7;"> 
+        <th style="border:1px solid #ce93d8; padding:8px;">Feature</th> 
+        <th style="border:1px solid #ce93d8; padding:8px;">Chemical Meaning</th> 
+        <th style="border:1px solid #ce93d8; padding:8px;">Value Range</th> 
+        <th style="border:1px solid #ce93d8; padding:8px;">Why It Affects Solubility</th>
+    </tr> 
+    <tr> 
+        <td style="border:1px solid #ce93d8; padding:8px;">Atomic Number</td> 
+        <td style="border:1px solid #ce93d8; padding:8px;">Element identity (C=6, N=7, O=8)</td> 
+        <td style="border:1px solid #ce93d8; padding:8px;">1-118</td> 
+        <td style="border:1px solid #ce93d8; padding:8px;">O, N form H-bonds with water</td>
+    </tr> 
+    <tr> 
+        <td style="border:1px solid #ce93d8; padding:8px;">Degree</td> 
+        <td style="border:1px solid #ce93d8; padding:8px;">Number of bonds</td> 
+        <td style="border:1px solid #ce93d8; padding:8px;">0-4 (typically)</td> 
+        <td style="border:1px solid #ce93d8; padding:8px;">More bonds = less flexible</td>
+    </tr> 
+    <tr> 
+        <td style="border:1px solid #ce93d8; padding:8px;">Formal Charge</td> 
+        <td style="border:1px solid #ce93d8; padding:8px;">Electronic state</td> 
+        <td style="border:1px solid #ce93d8; padding:8px;">-2 to +2</td> 
+        <td style="border:1px solid #ce93d8; padding:8px;">Charged = water-loving</td>
+    </tr> 
+    <tr> 
+        <td style="border:1px solid #ce93d8; padding:8px;">Aromaticity</td> 
+        <td style="border:1px solid #ce93d8; padding:8px;">In aromatic ring?</td> 
+        <td style="border:1px solid #ce93d8; padding:8px;">0 or 1</td> 
+        <td style="border:1px solid #ce93d8; padding:8px;">Aromatic = water-fearing</td>
+    </tr> 
+    <tr> 
+        <td style="border:1px solid #ce93d8; padding:8px;">H Count</td> 
+        <td style="border:1px solid #ce93d8; padding:8px;">Hydrogen bonding potential</td> 
+        <td style="border:1px solid #ce93d8; padding:8px;">0-4</td> 
+        <td style="border:1px solid #ce93d8; padding:8px;">More H = more H-bonds</td>
+    </tr> 
+</table>
+
+
+**Implementation**: The `get_atom_features` function extracts these properties from RDKit atom objects:
+
+```python
+def get_atom_features(atom):
+    """
+    Extract numerical features from RDKit atom object.
+    These features capture the chemical environment of each atom.
+    
+    Think of this as creating an "ID card" for each atom with 5 key facts!
+    """
+    return [
+        atom.GetAtomicNum(),        # What element? (C=6, N=7, O=8, etc.)
+        atom.GetDegree(),           # How many bonds? (connectivity)
+        atom.GetFormalCharge(),     # Is it charged? (+1, 0, -1, etc.)
+        int(atom.GetIsAromatic()),  # In benzene-like ring? (0=no, 1=yes)
+        atom.GetTotalNumHs()        # How many hydrogens attached?
+    ]
+```
+<div style="background-color:#f3e5f5; padding:15px; border-radius:8px; margin:15px 0;">
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#e1bee7;">
+            <th style="padding:10px; border:1px solid #ba68c8; text-align:center;" colspan="3">Atom Feature Extraction Process</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #ce93d8; background-color:#ffffff; width:30%;">
+                <b>Input:</b><br>
+                RDKit Atom Object<br>
+                <span style="font-size:0.9em; color:#666;">Contains all chemical info</span>
+            </td>
+            <td style="padding:10px; border:1px solid #ce93d8; background-color:#f3e5f5; width:40%; text-align:center;">
+                <b>→ Extract 5 Features →</b><br>
+                <span style="font-size:0.9em;">
+                1. Element type<br>
+                2. Bond count<br>
+                3. Charge state<br>
+                4. Aromaticity<br>
+                5. H-bond potential
+                </span>
+            </td>
+            <td style="padding:10px; border:1px solid #ce93d8; background-color:#ffffff; width:30%;">
+                <b>Output:</b><br>
+                List of 5 numbers<br>
+                <span style="font-size:0.9em; color:#666;">[8, 2, 0, 0, 0] for oxygen</span>
+            </td>
+        </tr>
+    </table>
+</div>
+
+**Why These 5 Features?**
+
+* **Atomic Number:** Oxygen atoms love water, carbon atoms don't
+* **Degree (Connectivity):** Highly connected atoms are "buried" in the molecule
+* **Formal Charge:** Charged molecules dissolve like salt in water
+* **Aromaticity:** Benzene rings are oily, not watery
+* **H Count:** More hydrogens = more hydrogen bonding with water
+
+![why5features](../../../../../resource/img/gnn/why5features.png)
+
+**Step 1.3: Bond Connectivity Extraction**
+
+Chemical bonds are bidirectional - electrons are shared between atoms. We need to represent this bidirectionality:
+
+<div style="background-color:#e8f5e9; padding:15px; border-radius:8px; margin:15px 0;">
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#a5d6a7;">
+            <th style="padding:10px; border:1px solid #66bb6a; text-align:center;" colspan="4">Bond Extraction Process</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #81c784; background-color:#ffffff;">
+                <b>Step 1:</b><br>
+                Loop through bonds<br>
+                <span style="font-size:0.9em; color:#666;">mol.GetBonds()</span>
+            </td>
+            <td style="padding:10px; border:1px solid #81c784; background-color:#ffffff;">
+                <b>Step 2:</b><br>
+                Get atom indices<br>
+                <span style="font-size:0.9em; color:#666;">i = start, j = end</span>
+            </td>
+            <td style="padding:10px; border:1px solid #81c784; background-color:#ffffff;">
+                <b>Step 3:</b><br>
+                Create bidirectional<br>
+                <span style="font-size:0.9em; color:#666;">[i→j] and [j→i]</span>
+            </td>
+            <td style="padding:10px; border:1px solid #81c784; background-color:#ffffff;">
+                <b>Result:</b><br>
+                Edge list<br>
+                <span style="font-size:0.9em; color:#666;">[[0,1], [1,0], ...]</span>
+            </td>
+        </tr>
+    </table>
+</div>
+
+```python
+def get_bond_connections(mol):
+    """
+    Convert molecular bonds to directed edges.
+    Bidirectional to allow information flow in both directions.
+    
+    Why bidirectional? In real molecules, electrons flow both ways!
+    """
+    edges = []
+    for bond in mol.GetBonds():
+        i = bond.GetBeginAtomIdx()
+        j = bond.GetEndAtomIdx()
+        edges.extend([[i, j], [j, i]])  # Add both directions
+    return edges
+```
+![bind](../../../../../resource/img/gnn/bind.png)
+
+#### Step 2: Loading and Exploring the ESOL Dataset
+
+**Step 2.1: Dataset Overview**
+
+**Why ESOL?** The ESOL (Estimated SOLubility) dataset is a gold standard because:
+
+- 1,128 molecules with **experimental** (not computed) solubility
+- Spans 13+ orders of magnitude ($10^{13}$-fold range!)
+- Diverse chemical space: alkanes, aromatics, heterocycles, etc.
+
+**Data Loading Implementation**:
+
+<div style="background-color:#fff3e0; padding:15px; border-radius:8px; margin:15px 0;">
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#ffe082;">
+            <th style="padding:10px; border:1px solid #ffc107; text-align:center;" colspan="4">Data Loading Pipeline</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #ffd54f; background-color:#ffffff;">
+                <b>Step 1:</b><br>
+                Fetch from GitHub<br>
+                <span style="font-size:0.9em; color:#666;">requests.get(url)</span>
+            </td>
+            <td style="padding:10px; border:1px solid #ffd54f; background-color:#ffffff;">
+                <b>Step 2:</b><br>
+                Parse CSV<br>
+                <span style="font-size:0.9em; color:#666;">pd.read_csv()</span>
+            </td>
+            <td style="padding:10px; border:1px solid #ffd54f; background-color:#ffffff;">
+                <b>Step 3:</b><br>
+                Extract SMILES<br>
+                <span style="font-size:0.9em; color:#666;">data['smiles']</span>
+            </td>
+            <td style="padding:10px; border:1px solid #ffd54f; background-color:#ffffff;">
+                <b>Step 4:</b><br>
+                Extract log S<br>
+                <span style="font-size:0.9em; color:#666;">data['measured log solubility']</span>
+            </td>
+        </tr>
+    </table>
+</div>
+
+
+```python
+# Download ESOL dataset from DeepChem repository
+url = "https://raw.githubusercontent.com/deepchem/deepchem/master/datasets/delaney-processed.csv"
+response = requests.get(url)
+data = pd.read_csv(io.StringIO(response.text))
+
+# Extract molecular data
+smiles_list = data['smiles'].tolist()
+solubility_values = data['measured log solubility in mols per litre'].tolist()
+
+print(f"Dataset contains {len(smiles_list)} molecules")
+print(f"Solubility range: {min(solubility_values):.2f} to {max(solubility_values):.2f} log S")
+```
+
+![pipeline1](../../../../../resource/img/gnn/pipeline1.png)
+
+**Result Interpretation**:
+
+```
+Dataset contains 1128 molecules
+Solubility range: -11.60 to 1.58 log S
+```
+
+**What do these numbers mean?**
+
+* **log S = –11.60** → Solubility = $10^{-11.60}$ mol/L (extremely insoluble)
+* **log S = 1.58** → Solubility = $10^{1.58}$ mol/L (very soluble)
+* **Range:** 13.18 log units = $10^{13.18}$ ≈ 15 trillion-fold difference!
+
+**In Real-World Context:**
+
+* **Very soluble** (log S > 0): Like sugar in water – dissolves easily
+* **Moderately soluble** (–3 < log S < 0): Like alcohol – mixes well
+* **Poorly soluble** (log S < –3): Like oil – forms a separate layer
+* **Practically insoluble** (log S < –6): Like plastic – never dissolves
+
+**Step 2.2: Examining Example Molecules**
+
+Let's examine some specific molecules to understand the dataset diversity:
+
+<div style="background-color:#f5f5f5; padding:15px; border-radius:8px; margin:15px 0;">
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#e0e0e0;">
+            <th style="padding:10px; border:1px solid #bdbdbd; text-align:center;" colspan="3">Data Exploration Process</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #bdbdbd; background-color:#ffffff; width:33%;">
+                <b>Purpose:</b><br>
+                Understand dataset<br>
+                <span style="font-size:0.9em; color:#666;">Check molecular diversity</span>
+            </td>
+            <td style="padding:10px; border:1px solid #bdbdbd; background-color:#ffffff; width:33%;">
+                <b>Method:</b><br>
+                Print first 5 molecules<br>
+                <span style="font-size:0.9em; color:#666;">SMILES + solubility</span>
+            </td>
+            <td style="padding:10px; border:1px solid #bdbdbd; background-color:#ffffff; width:33%;">
+                <b>Insight:</b><br>
+                Complexity varies<br>
+                <span style="font-size:0.9em; color:#666;">Simple to complex structures</span>
+            </td>
+        </tr>
+    </table>
+</div>
+
+
+```python
+print("\nExample molecules from the dataset:")
+print("-" * 60)
+print(f"{'SMILES':<40} {'Solubility (log S)':<20}")
+print("-" * 60)
+
+for i in range(5):
+    print(f"{smiles_list[i]:<40} {solubility_values[i]:<20.2f}")
+```
+
+![5moles](../../../../../resource/img/gnn/5moles.png)
+
+**Result Interpretation**:
+
+```
+Example molecules from the dataset:
+------------------------------------------------------------
+SMILES                                   Solubility (log S)  
+------------------------------------------------------------
+OCC3OC(OCC2OC(OC(C#N)c1ccccc1)C(O)C(O)C2O)C(O)C(O)C3O  -0.77               
+Cc1occc1C(=O)Nc2ccccc2                   -3.30               
+CC(C)=CCCC(C)=CC(=O)                     -2.06               
+c1ccc2c(c1)ccc3c2ccc4c5ccccc5ccc43       -7.87               
+c1ccsc1                                  -1.33               
+```
+
+**Chemical Interpretation:**
+
+* Row 1: Complex sugar derivative with multiple –OH groups → relatively soluble (log S = –0.77)
+* Row 4: Large polycyclic aromatic hydrocarbon → very insoluble (log S = –7.87)
+* Row 5: Small thiophene heterocycle → moderate solubility (log S = –1.33)
+
+The dataset covers a wide range of molecular complexity and functional groups.
+
+
+**Step 2.3: Visualizing Solubility Distribution**
+
+Understanding the distribution helps us assess potential modeling challenges:
+
+<div style="background-color:#e1f5fe; padding:15px; border-radius:8px; margin:15px 0;">
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#81d4fa;">
+            <th style="padding:10px; border:1px solid #29b6f6; text-align:center;" colspan="3">Visualization Purpose</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #4fc3f7; background-color:#ffffff;">
+                <b>What:</b><br>
+                Histogram of solubility<br>
+                <span style="font-size:0.9em; color:#666;">50 bins</span>
+            </td>
+            <td style="padding:10px; border:1px solid #4fc3f7; background-color:#ffffff;">
+                <b>Why:</b><br>
+                See data distribution<br>
+                <span style="font-size:0.9em; color:#666;">Identify skewness</span>
+            </td>
+            <td style="padding:10px; border:1px solid #4fc3f7; background-color:#ffffff;">
+                <b>Insight:</b><br>
+                Most molecules poorly soluble<br>
+                <span style="font-size:0.9em; color:#666;">Left-skewed distribution</span>
+            </td>
+        </tr>
+    </table>
+</div>
+
+
+```python
+plt.figure(figsize=(10, 6))
+plt.hist(solubility_values, bins=50, edgecolor='black', alpha=0.7)
+plt.xlabel('Log Solubility (log S)', fontsize=12)
+plt.ylabel('Count', fontsize=12)
+plt.title('Distribution of Solubility Values in ESOL Dataset', fontsize=14)
+plt.grid(True, alpha=0.3)
+plt.show()
+```
+
+![Distribution of Solubility Values in ESOL Dataset](../../../../../resource/img/gnn/solubility_distribution.png)
+
+**Result Interpretation**:
+
+- **Central tendency**: Distribution peaks around -2 to -3 log S
+- **Skewness**: Left-skewed distribution (more insoluble molecules)
+- **Chemical reality**: Most organic molecules have limited water solubility
+- **Modeling implication**: Model may perform better on common solubility ranges than extremes
+
+#### Step 3: Converting Molecules to Graph Representations
+
+**Step 3.1: Testing Feature Extraction on Water**
+
+We validate our feature extraction by testing on water (H₂O), the simplest molecule:
+
+<div style="background-color:#f3e5f5; padding:15px; border-radius:8px; margin:15px 0;">
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#e1bee7;">
+            <th style="padding:10px; border:1px solid #ba68c8; text-align:center;" colspan="4">Water Molecule Test Process</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #ce93d8; background-color:#ffffff;">
+                <b>Input:</b><br>
+                SMILES: "O"<br>
+                <span style="font-size:0.9em; color:#666;">Oxygen only</span>
+            </td>
+            <td style="padding:10px; border:1px solid #ce93d8; background-color:#ffffff;">
+                <b>Step 1:</b><br>
+                Parse SMILES<br>
+                <span style="font-size:0.9em; color:#666;">Create mol object</span>
+            </td>
+            <td style="padding:10px; border:1px solid #ce93d8; background-color:#ffffff;">
+                <b>Step 2:</b><br>
+                Add H atoms<br>
+                <span style="font-size:0.9em; color:#666;">O → H-O-H</span>
+            </td>
+            <td style="padding:10px; border:1px solid #ce93d8; background-color:#ffffff;">
+                <b>Step 3:</b><br>
+                Extract features<br>
+                <span style="font-size:0.9em; color:#666;">For O, H, H</span>
+            </td>
+        </tr>
+    </table>
+</div>
+
+
+```python
+# Parse water molecule
+water_smiles = "O"
+water = Chem.MolFromSmiles(water_smiles)
+water = Chem.AddHs(water)  # Add explicit hydrogens
+
+print("Water molecule (H2O) atom features:")
+print("-" * 50)
+for i, atom in enumerate(water.GetAtoms()):
+    features = get_atom_features(atom)
+    symbol = atom.GetSymbol()
+    print(f"Atom {i} ({symbol}): {features}")
+```
+
+![h20](../../../../../resource/img/gnn/h20.png)
+
+**Result Interpretation**:
+
+```
+Water molecule (H2O) atom features:
+--------------------------------------------------
+Atom 0 (O): [8, 2, 0, 0, 0]
+Atom 1 (H): [1, 1, 0, 0, 0]
+Atom 2 (H): [1, 1, 0, 0, 0]
+```
+
+**Feature Vector Breakdown:**
+
+**Oxygen:** `[8, 2, 0, 0, 0]`
+
+* 8 = Atomic number (element oxygen)
+* 2 = Degree (bonded to 2 hydrogen atoms)
+* 0 = No formal charge (neutral)
+* 0 = Not aromatic (water is not aromatic)
+* 0 = No implicit hydrogens (all are explicit)
+
+**Hydrogen:** `[1, 1, 0, 0, 0]`
+
+* 1 = Atomic number (element hydrogen)
+* 1 = Degree (bonded to 1 oxygen atom)
+* Remaining features are all zero
+
+**Step 3.2: Testing Bond Extraction on Ethanol**
+
+Test on a more complex molecule to see bond connectivity:
+
+<div style="background-color:#e8f5e9; padding:15px; border-radius:8px; margin:15px 0;">
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#a5d6a7;">
+            <th style="padding:10px; border:1px solid #66bb6a; text-align:center;" colspan="3">Ethanol Bond Analysis</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #81c784; background-color:#ffffff;">
+                <b>Molecule:</b><br>
+                Ethanol (CCO)<br>
+                <span style="font-size:0.9em; color:#666;">CH₃-CH₂-OH</span>
+            </td>
+            <td style="padding:10px; border:1px solid #81c784; background-color:#ffffff;">
+                <b>Expected:</b><br>
+                9 atoms total<br>
+                <span style="font-size:0.9em; color:#666;">2C + 1O + 6H</span>
+            </td>
+            <td style="padding:10px; border:1px solid #81c784; background-color:#ffffff;">
+                <b>Bonds:</b><br>
+                8 undirected<br>
+                <span style="font-size:0.9em; color:#666;">16 directed edges</span>
+            </td>
+        </tr>
+    </table>
+</div>
+
+
+```python
+# Test on ethanol
+ethanol_smiles = "CCO"
+ethanol = Chem.MolFromSmiles(ethanol_smiles)
+ethanol = Chem.AddHs(ethanol)
+
+connections = get_bond_connections(ethanol)
+
+print(f"Ethanol molecule (C2H6O):")
+print(f"  Number of atoms: {ethanol.GetNumAtoms()}")
+print(f"  Number of bonds: {len(connections)//2}")
+print(f"  Number of directed edges: {len(connections)}")
+```
+
+![eth](../../../../../resource/img/gnn/eth.png)
+
+**Result**:
+
+```
+Ethanol molecule (C2H6O):
+  Number of atoms: 9
+  Number of bonds: 8
+  Number of directed edges: 16
+```
+
+**Step 3.3: Detailed Edge Analysis**
+
+<div style="background-color:#fff9c4; padding:15px; border-radius:8px; margin:15px 0;">
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#fff176;">
+            <th style="padding:10px; border:1px solid #ffd600; text-align:center;" colspan="2">Edge Directionality Explanation</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #ffeb3b; background-color:#ffffff;">
+                <b>Why Bidirectional?</b><br>
+                • Electrons flow both ways<br>
+                • Message passing needs it<br>
+                • Reflects chemical reality
+            </td>
+            <td style="padding:10px; border:1px solid #ffeb3b; background-color:#ffffff;">
+                <b>Example:</b><br>
+                C-C bond becomes:<br>
+                • Edge 0: C→C<br>
+                • Edge 1: C←C
+            </td>
+        </tr>
+    </table>
+</div>
+
+
+```python
+print("\nFirst few connections (atom index pairs):")
+for i, (src, dst) in enumerate(connections[:6]):
+    src_symbol = ethanol.GetAtomWithIdx(src).GetSymbol()
+    dst_symbol = ethanol.GetAtomWithIdx(dst).GetSymbol()
+    print(f"  Edge {i}: {src}({src_symbol}) → {dst}({dst_symbol})")
+```
+
+![flow](../../../../../resource/img/gnn/flow.png)
+
+**Result**:
+
+```
+First few connections (atom index pairs):
+  Edge 0: 0(C) → 1(C)
+  Edge 1: 1(C) → 0(C)
+  Edge 2: 1(C) → 2(O)
+  Edge 3: 2(O) → 1(C)
+  Edge 4: 0(C) → 3(H)
+  Edge 5: 3(H) → 0(C)
+```
+
+**Chemical Interpretation**: Each bond appears twice (e.g., C→C and C←C) to enable bidirectional message passing in the GNN. This reflects the quantum mechanical reality that electrons are shared between atoms.
+
+![edge](../../../../../resource/img/gnn/edge.png)
+
+**Step 3.4: Complete Molecule-to-Graph Conversion**
+
+**Implementation Strategy**:
+
+<table style="width:100%; border-collapse:collapse; margin:20px 0;">
+    <tr style="background-color:#e8f5e9;">
+        <th style="padding:10px; border:1px solid #66bb6a;">Step</th>
+        <th style="padding:10px; border:1px solid #66bb6a;">Process</th>
+        <th style="padding:10px; border:1px solid #66bb6a;">Output</th>
+    </tr>
+    <tr>
+        <td style="padding:10px; border:1px solid #66bb6a;">1</td>
+        <td style="padding:10px; border:1px solid #66bb6a;">SMILES String → RDKit Molecule</td>
+        <td style="padding:10px; border:1px solid #66bb6a;">Molecule object</td>
+    </tr>
+    <tr>
+        <td style="padding:10px; border:1px solid #66bb6a;">2</td>
+        <td style="padding:10px; border:1px solid #66bb6a;">Add Hydrogens</td>
+        <td style="padding:10px; border:1px solid #66bb6a;">Complete molecule</td>
+    </tr>
+    <tr>
+        <td style="padding:10px; border:1px solid #66bb6a;">3</td>
+        <td style="padding:10px; border:1px solid #66bb6a;">Extract Features</td>
+        <td style="padding:10px; border:1px solid #66bb6a;">Node feature matrix</td>
+    </tr>
+    <tr>
+        <td style="padding:10px; border:1px solid #66bb6a;">4</td>
+        <td style="padding:10px; border:1px solid #66bb6a;">Extract Bonds</td>
+        <td style="padding:10px; border:1px solid #66bb6a;">Edge index</td>
+    </tr>
+    <tr>
+        <td style="padding:10px; border:1px solid #66bb6a;">5</td>
+        <td style="padding:10px; border:1px solid #66bb6a;">Create PyG Data</td>
+        <td style="padding:10px; border:1px solid #66bb6a;">Graph object</td>
+    </tr>
+</table>
+
+
+<div style="background-color:#e3f2fd; padding:15px; border-radius:8px; margin:15px 0;">
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#90caf9;">
+            <th style="padding:10px; border:1px solid #42a5f5; text-align:center;" colspan="2">Main Conversion Function Structure</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #64b5f6; background-color:#ffffff; width:50%;">
+                <b>Function Inputs:</b><br>
+                • SMILES string<br>
+                • Solubility value (optional)
+            </td>
+            <td style="padding:10px; border:1px solid #64b5f6; background-color:#ffffff; width:50%;">
+                <b>Function Outputs:</b><br>
+                • PyG Data object<br>
+                • None if parsing fails
+            </td>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #64b5f6; background-color:#e3f2fd; text-align:center;" colspan="2">
+                <b>Processing Steps:</b><br>
+                Parse → Add H → Extract features → Extract bonds → Package
+            </td>
+        </tr>
+    </table>
+</div>
+
+
+```python
+def molecule_to_graph(smiles, solubility=None):
+    """
+    Complete pipeline: SMILES → Molecular Graph
+    
+    Uses RDKit for chemistry, PyTorch Geometric for graph structure
+    """
+    # Parse SMILES
+    mol = Chem.MolFromSmiles(smiles)
+    if mol is None:
+        return None
+    
+    # Add hydrogens (affects H-bonding)
+    mol = Chem.AddHs(mol)
+```
+
+**Step 3.4.1: Feature Extraction Part**
+
+<div style="background-color:#f3e5f5; padding:15px; border-radius:8px; margin:15px 0;">
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#e1bee7;">
+            <th style="padding:10px; border:1px solid #ba68c8; text-align:center;" colspan="3">Feature Extraction Loop</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #ce93d8; background-color:#ffffff;">
+                <b>For each atom:</b><br>
+                Call get_atom_features()<br>
+                <span style="font-size:0.9em; color:#666;">Returns list of 5 numbers</span>
+            </td>
+            <td style="padding:10px; border:1px solid #ce93d8; background-color:#ffffff;">
+                <b>Collect all:</b><br>
+                atom_features list<br>
+                <span style="font-size:0.9em; color:#666;">[[f1], [f2], ...]</span>
+            </td>
+            <td style="padding:10px; border:1px solid #ce93d8; background-color:#ffffff;">
+                <b>Convert:</b><br>
+                To PyTorch tensor<br>
+                <span style="font-size:0.9em; color:#666;">Shape: [n_atoms, 5]</span>
+            </td>
+        </tr>
+    </table>
+</div>
+
+
+```python
+    # Extract atom features
+    atom_features = []
+    for atom in mol.GetAtoms():
+        atom_features.append(get_atom_features(atom))
+    
+    # Convert to tensor
+    x = torch.tensor(atom_features, dtype=torch.float)
+```
+
+**Step 3.4.2: Edge Construction Part**
+
+<div style="background-color:#e8f5e9; padding:15px; border-radius:8px; margin:15px 0;">
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#a5d6a7;">
+            <th style="padding:10px; border:1px solid #66bb6a; text-align:center;" colspan="3">Edge Index Construction</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #81c784; background-color:#ffffff;">
+                <b>Get bonds:</b><br>
+                Call get_bond_connections<br>
+                <span style="font-size:0.9em; color:#666;">Returns [[i,j], ...]</span>
+            </td>
+            <td style="padding:10px; border:1px solid #81c784; background-color:#ffffff;">
+                <b>Handle edge case:</b><br>
+                Single atoms<br>
+                <span style="font-size:0.9em; color:#666;">Add self-loop [0,0]</span>
+            </td>
+            <td style="padding:10px; border:1px solid #81c784; background-color:#ffffff;">
+                <b>Format for PyG:</b><br>
+                Transpose to COO<br>
+                <span style="font-size:0.9em; color:#666;">Shape: [2, n_edges]</span>
+            </td>
+        </tr>
+    </table>
+</div>
+
+
+```python
+    # Extract bonds
+    edge_list = get_bond_connections(mol)
+    if len(edge_list) == 0:  # Single atom
+        edge_list = [[0, 0]]  # Self-loop
+    
+    # Create edge index (transpose for PyG format)
+    edge_index = torch.tensor(edge_list, dtype=torch.long).t().contiguous()
+```
+
+**Step 3.4.3: Data Object Creation**
+
+<div style="background-color:#fff3e0; padding:15px; border-radius:8px; margin:15px 0;">
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#ffe082;">
+            <th style="padding:10px; border:1px solid #ffc107; text-align:center;" colspan="2">PyG Data Object Assembly</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #ffd54f; background-color:#ffffff;">
+                <b>Required fields:</b><br>
+                • x: node features<br>
+                • edge_index: connectivity
+            </td>
+            <td style="padding:10px; border:1px solid #ffd54f; background-color:#ffffff;">
+                <b>Optional fields:</b><br>
+                • y: target value<br>
+                • Other properties
+            </td>
+        </tr>
+    </table>
+</div>
+
+
+```python
+    # Create Data object
+    data = Data(x=x, edge_index=edge_index)
+    
+    # Add label if provided
+    if solubility is not None:
+        data.y = torch.tensor([solubility], dtype=torch.float)
+    
+    return data
+```
+
+![5 steps](../../../../../resource/img/gnn/5steps.png)
+
+**Step 3.5: Testing the Conversion Pipeline**
+
+Test on molecules of varying complexity:
+
+<div style="background-color:#f5f5f5; padding:15px; border-radius:8px; margin:15px 0;">
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#e0e0e0;">
+            <th style="padding:10px; border:1px solid #bdbdbd; text-align:center;" colspan="3">Test Strategy</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #bdbdbd; background-color:#ffffff;">
+                <b>Test 1:</b><br>
+                Water (O)<br>
+                <span style="font-size:0.9em; color:#666;">3 atoms, 2 bonds</span>
+            </td>
+            <td style="padding:10px; border:1px solid #bdbdbd; background-color:#ffffff;">
+                <b>Test 2:</b><br>
+                Ethanol (CCO)<br>
+                <span style="font-size:0.9em; color:#666;">9 atoms, 8 bonds</span>
+            </td>
+            <td style="padding:10px; border:1px solid #bdbdbd; background-color:#ffffff;">
+                <b>Test 3:</b><br>
+                Benzene (c1ccccc1)<br>
+                <span style="font-size:0.9em; color:#666;">12 atoms, 12 bonds</span>
+            </td>
+        </tr>
+    </table>
+</div>
+
+
+```python
+test_molecules = [
+    ("O", "Water"),
+    ("CCO", "Ethanol"),
+    ("c1ccccc1", "Benzene")
+]
+
+print("Testing molecule to graph conversion:")
+print("-" * 60)
+
+for smiles, name in test_molecules:
+    graph = molecule_to_graph(smiles, solubility=0.0)
+    if graph:
+        print(f"{name} ({smiles}):")
+        print(f"  Atoms: {graph.x.shape[0]}")
+        print(f"  Features per atom: {graph.x.shape[1]}")
+        print(f"  Bonds: {graph.edge_index.shape[1] // 2}")
+        print(f"  Graph object: {graph}")
+        print()
+```
+
+![features](../../../../../resource/img/gnn/features.png)
+
+**Result Interpretation**:
+
+```
+Testing molecule to graph conversion:
+------------------------------------------------------------
+Water (O):
+  Atoms: 3
+  Features per atom: 5
+  Bonds: 2
+  Graph object: Data(x=[3, 5], edge_index=[2, 4], y=[1])
+
+Ethanol (CCO):
+  Atoms: 9
+  Features per atom: 5
+  Bonds: 8
+  Graph object: Data(x=[9, 5], edge_index=[2, 16], y=[1])
+
+Benzene (c1ccccc1):
+  Atoms: 12
+  Features per atom: 5
+  Bonds: 12
+  Graph object: Data(x=[12, 5], edge_index=[2, 24], y=[1])
+```
+
+**How to interpret "Data(x=[12, 5], edge_index=[2, 24], y=[1])" ?**
+
+* **x**: Node feature matrix `[num_atoms, num_features]`
+* **edge\_index**: COO-format edges `[2, num_edges]`
+* **y**: Target property (solubility)
+
+**Example – Benzene:**
+
+* 6 carbon atoms + 6 hydrogen atoms = 12 nodes
+* 6 C–C bonds + 6 C–H bonds = 12 undirected bonds
+* 12 undirected bonds × 2 directions = 24 directed edges
+
+![benzene](../../../../../resource/img/gnn/benzene.png)
+
+**What is COO Format?**
+COO (COOrdinate) format stores edges as pairs of node indices:
+
+* First row: source nodes `[0, 1, 1, 2, …]`
+* Second row: target nodes `[1, 0, 2, 1, …]`
+* Each column is one edge: `(0→1)`, `(1→0)`, `(1→2)`, `(2→1)`, …
+
+#### Step 4: Building the Graph Neural Network Architecture
+
+**Step 4.1: Review the GNN Design Principles**
+
+**Message Passing Framework:**
+As we have seen before, each GCN layer performs the following operation:
+
+$$
+h_i^{(l+1)} = \sigma\bigl(W^{(l)} \cdot \mathrm{AGG}(\{h_j^{(l)} : j \in N(i) \cup \{i\}\})\bigr)
+$$
+
+![pooling](../../../../../resource/img/gnn/pooling.png)
+
+**Breaking Down This Formula**
+
+- **$h_i^{(l)}$** — What atom *i* knows at layer *l*
+- **$N(i)$** — Atom *i*’s neighbors (bonded atoms)
+- **$\mathrm{AGG}()$** — Combine information from neighbors (usually average)
+- **$W^{(l)}$** — Learnable transformation (the “smart” part)
+- **$\sigma$** — Activation function (adds non-linearity)
+
+**Step 4.2: Set up the Model Architecture**
+
+| Design Choices                | Architecture Intuition                                    |
+|-------------------------------|----------------------------------------------------------|
+| **3 GCN layers**              | Why 3 layers? Most chemical effects happen within 3 bonds. <br/> Captures 3-hop neighborhoods (sufficient for most molecular patterns) |
+| **64 hidden dimensions**      | Why 64 dimensions? Enough to capture complexity, not too much to overfit. <br/> Balances expressiveness vs overfitting |
+| **Global mean pooling**       | Why mean pooling? Average all atom features to get molecule feature. <br/> Aggregates variable-sized molecules to fixed representation |
+| **Single output**             | Final value is log solubility — a continuous target. <br/> Predicts scalar solubility value |
+
+**Step 4.3: Class Definition and Initialization**
+
+<div style="background-color:#e3f2fd; padding:15px; border-radius:8px; margin:15px 0;">
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#90caf9;">
+            <th style="padding:10px; border:1px solid #42a5f5; text-align:center;" colspan="3">Model Architecture Components</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #64b5f6; background-color:#ffffff;">
+                <b>Component 1:</b><br>
+                GCN Layers<br>
+                <span style="font-size:0.9em; color:#666;">3 layers in ModuleList</span>
+            </td>
+            <td style="padding:10px; border:1px solid #64b5f6; background-color:#ffffff;">
+                <b>Component 2:</b><br>
+                Predictor<br>
+                <span style="font-size:0.9em; color:#666;">Linear layer (64→1)</span>
+            </td>
+            <td style="padding:10px; border:1px solid #64b5f6; background-color:#ffffff;">
+                <b>Flow:</b><br>
+                Atoms→GCN→Pool→Predict<br>
+                <span style="font-size:0.9em; color:#666;">Variable→Fixed size</span>
+            </td>
+        </tr>
+    </table>
+</div>
+
+
+```python
+class MolecularGNN(nn.Module):
+    """
+    Graph Neural Network for molecular property prediction
+    
+    Architecture Flow:
+    Atoms (5 features) → GCN layers → Molecular embedding (64) → Solubility (1)
+    """
+    
+    def __init__(self, num_features=5, hidden_dim=64, num_layers=3):
+        super(MolecularGNN, self).__init__()
+        
+        self.num_features = num_features
+        self.hidden_dim = hidden_dim
+        self.num_layers = num_layers
+        
+        # Build GCN layers
+        self.convs = nn.ModuleList()
+```
+
+**Step 4.3.1: Layer Construction**
+
+<div style="background-color:#f3e5f5; padding:15px; border-radius:8px; margin:15px 0;">
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#e1bee7;">
+            <th style="padding:10px; border:1px solid #ba68c8; text-align:center;" colspan="3">Layer Construction Process</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #ce93d8; background-color:#ffffff;">
+                <b>Layer 1:</b><br>
+                Input → Hidden<br>
+                <span style="font-size:0.9em; color:#666;">5 features → 64 dims</span>
+            </td>
+            <td style="padding:10px; border:1px solid #ce93d8; background-color:#ffffff;">
+                <b>Layers 2-3:</b><br>
+                Hidden → Hidden<br>
+                <span style="font-size:0.9em; color:#666;">64 dims → 64 dims</span>
+            </td>
+            <td style="padding:10px; border:1px solid #ce93d8; background-color:#ffffff;">
+                <b>Output Layer:</b><br>
+                Hidden → Prediction<br>
+                <span style="font-size:0.9em; color:#666;">64 dims → 1 value</span>
+            </td>
+        </tr>
+    </table>
+</div>
+
+
+```python
+        # First layer: 5 → 64
+        self.convs.append(GCNConv(num_features, hidden_dim))
+        
+        # Hidden layers: 64 → 64
+        for _ in range(num_layers - 1):
+            self.convs.append(GCNConv(hidden_dim, hidden_dim))
+        
+        # Output layer: 64 → 1
+        self.predictor = nn.Linear(hidden_dim, 1)
+```
+
+![layers](../../../../../resource/img/gnn/layers.png)
+
+**Step 4.3.2: Forward Pass Implementation**
+
+**Principle**: The forward pass implements message passing followed by pooling:
+
+<div style="background-color:#e8f5e9; padding:15px; border-radius:8px; margin:15px 0;">
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#a5d6a7;">
+            <th style="padding:10px; border:1px solid #66bb6a; text-align:center;" colspan="4">Forward Pass Flow</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #81c784; background-color:#ffffff;">
+                <b>Step 1:</b><br>
+                Message Passing<br>
+                <span style="font-size:0.9em; color:#666;">3 GCN layers</span>
+            </td>
+            <td style="padding:10px; border:1px solid #81c784; background-color:#ffffff;">
+                <b>Step 2:</b><br>
+                Activation<br>
+                <span style="font-size:0.9em; color:#666;">ReLU after each</span>
+            </td>
+            <td style="padding:10px; border:1px solid #81c784; background-color:#ffffff;">
+                <b>Step 3:</b><br>
+                Pooling<br>
+                <span style="font-size:0.9em; color:#666;">Atoms → Molecule</span>
+            </td>
+            <td style="padding:10px; border:1px solid #81c784; background-color:#ffffff;">
+                <b>Step 4:</b><br>
+                Prediction<br>
+                <span style="font-size:0.9em; color:#666;">64 → 1 value</span>
+            </td>
+        </tr>
+    </table>
+</div>
+
+
+```python
+    def forward(self, x, edge_index, batch):
+        """
+        Forward propagation through GNN
+        
+        Args:
+            x: Node features [num_atoms_in_batch, 5]
+            edge_index: Edge connectivity [2, num_edges_in_batch]
+            batch: Maps atoms to molecules [num_atoms_in_batch]
+        """
+        # Message passing layers
+        for conv in self.convs:
+            x = conv(x, edge_index)
+            x = F.relu(x)  # Non-linearity
+        
+        # Aggregate atoms → molecules
+        x = global_mean_pool(x, batch)
+        
+        # Predict property
+        return self.predictor(x)
+```
+
+![forwardpass](../../../../../resource/img/gnn/forwardpass.png)
+
+**What Actually Happens in Forward Pass?**
+
+1. **Input:** Each atom starts with 5 features
+2. **Layer 1:** Atoms exchange info with neighbors, transform to 64 features
+3. **Layer 2:** Exchange again, refine understanding
+4. **Layer 3:** Final exchange, atoms now “know” their 3-hop neighborhood
+5. **Pooling:** Average all atoms to get one molecule representation
+6. **Prediction:** Transform 64 features to 1 solubility value
+
+**Key Point:** The network learns **what** information to exchange and **how** to transform it!
+
+**Step 4.4: Model Analysis**
+
+Let's analyze the model architecture:
+
+<div style="background-color:#f5f5f5; padding:15px; border-radius:8px; margin:15px 0;">
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#e0e0e0;">
+            <th style="padding:10px; border:1px solid #bdbdbd; text-align:center;" colspan="2">Model Analysis Process</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #bdbdbd; background-color:#ffffff;">
+                <b>What we're doing:</b><br>
+                • Create model instance<br>
+                • Count parameters<br>
+                • Analyze complexity
+            </td>
+            <td style="padding:10px; border:1px solid #bdbdbd; background-color:#ffffff;">
+                <b>Why it matters:</b><br>
+                • Understand model size<br>
+                • Compare to other DNNs<br>
+                • Check if overfitting risk
+            </td>
+        </tr>
+    </table>
+</div>
+
+
+```python
+# Create model instance
+model = MolecularGNN(num_features=5, hidden_dim=64, num_layers=3)
+
+# Count parameters
+total_params = sum(p.numel() for p in model.parameters())
+print(f"Model architecture: MolecularGNN")
+print(f"  Input features: 5 (per atom)")
+print(f"  Hidden dimension: 64")
+print(f"  Number of GCN layers: 3")
+print(f"  Total parameters: {total_params:,}")
+```
+
+**Result**:
+
+```
+Model architecture: MolecularGNN
+  Input features: 5 (per atom)
+  Hidden dimension: 64
+  Number of GCN layers: 3
+  Total parameters: 8,769
+```
+
+**Step 4.5: Detailed Parameter Breakdown**
+
+<div style="background-color:#e1f5fe; padding:15px; border-radius:8px; margin:15px 0;">
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#81d4fa;">
+            <th style="padding:10px; border:1px solid #29b6f6; text-align:center;" colspan="2">Parameter Breakdown Analysis</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #4fc3f7; background-color:#ffffff;">
+                <b>Purpose:</b><br>
+                See where parameters are<br>
+                <span style="font-size:0.9em; color:#666;">Weights vs biases</span>
+            </td>
+            <td style="padding:10px; border:1px solid #4fc3f7; background-color:#ffffff;">
+                <b>Insight:</b><br>
+                Most params in hidden layers<br>
+                <span style="font-size:0.9em; color:#666;">64×64 = 4096 each</span>
+            </td>
+        </tr>
+    </table>
+</div>
+
+
+```python
+print("\nLayer-by-layer breakdown:")
+for name, param in model.named_parameters():
+    print(f"  {name}: {param.shape}")
+```
+
+**Result**:
+
+```
+Layer-by-layer breakdown:
+  convs.0.bias: torch.Size([64])
+  convs.0.lin.weight: torch.Size([64, 5])
+  convs.1.bias: torch.Size([64])
+  convs.1.lin.weight: torch.Size([64, 64])
+  convs.2.bias: torch.Size([64])
+  convs.2.lin.weight: torch.Size([64, 64])
+  predictor.weight: torch.Size([1, 64])
+  predictor.bias: torch.Size([1])
+```
+
+![paramsize](../../../../../resource/img/gnn/paramsize.png)
+
+#### Step 5: Preparing Training Data
+
+**Step 5.1: Dataset Conversion**
+
+Convert all molecules to graphs, handling potential failures:
+
+<div style="background-color:#fff3e0; padding:15px; border-radius:8px; margin:15px 0;">
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#ffe082;">
+            <th style="padding:10px; border:1px solid #ffc107; text-align:center;" colspan="4">Dataset Conversion Pipeline</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #ffd54f; background-color:#ffffff;">
+                <b>Step 1:</b><br>
+                Loop molecules<br>
+                <span style="font-size:0.9em; color:#666;">1000 total</span>
+            </td>
+            <td style="padding:10px; border:1px solid #ffd54f; background-color:#ffffff;">
+                <b>Step 2:</b><br>
+                Convert each<br>
+                <span style="font-size:0.9em; color:#666;">SMILES → Graph</span>
+            </td>
+            <td style="padding:10px; border:1px solid #ffd54f; background-color:#ffffff;">
+                <b>Step 3:</b><br>
+                Handle failures<br>
+                <span style="font-size:0.9em; color:#666;">Track bad SMILES</span>
+            </td>
+            <td style="padding:10px; border:1px solid #ffd54f; background-color:#ffffff;">
+                <b>Result:</b><br>
+                List of graphs<br>
+                <span style="font-size:0.9em; color:#666;">Ready for training</span>
+            </td>
+        </tr>
+    </table>
+</div>
+
+
+```python
+num_molecules = 1000  # Use subset for faster training
+graphs = []
+failed_molecules = []
+
+print(f"Converting {num_molecules} molecules to graphs...")
+
+for i in range(num_molecules):
+    smiles = smiles_list[i]
+    solubility = solubility_values[i]
+    
+    graph = molecule_to_graph(smiles, solubility)
+    if graph is not None:
+        graphs.append(graph)
+    else:
+        failed_molecules.append((i, smiles))
+```
+
+![trainpre](../../../../../resource/img/gnn/trainpre.png)
+
+**Conversion Results**:
+
+<div style="background-color:#e8f5e9; padding:15px; border-radius:8px; margin:15px 0;">
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#a5d6a7;">
+            <th style="padding:10px; border:1px solid #66bb6a; text-align:center;" colspan="2">Conversion Quality Check</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #81c784; background-color:#ffffff;">
+                <b>Success Rate:</b><br>
+                100% (1000/1000)<br>
+                <span style="font-size:0.9em; color:#666;">All SMILES valid</span>
+            </td>
+            <td style="padding:10px; border:1px solid #81c784; background-color:#ffffff;">
+                <b>Meaning:</b><br>
+                High quality dataset<br>
+                <span style="font-size:0.9em; color:#666;">Well-curated ESOL</span>
+            </td>
+        </tr>
+    </table>
+</div>
+
+
+```python
+print(f"Successfully converted: {len(graphs)} molecules")
+print(f"Failed conversions: {len(failed_molecules)} molecules")
+```
+
+**Result**:
+
+```
+Converting 1000 molecules to graphs...
+Successfully converted: 1000 molecules
+Failed conversions: 0 molecules
+```
+
+100% success rate indicates high-quality SMILES strings in the ESOL dataset. RDKit successfully parsed all molecules.
+
+**Step 5.2: Train-Test Split**
+
+Always evaluate on unseen data to assess generalization. We use 80/20 split:
+
+<div style="background-color:#e3f2fd; padding:15px; border-radius:8px; margin:15px 0;">
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#90caf9;">
+            <th style="padding:10px; border:1px solid #42a5f5; text-align:center;" colspan="3">Train-Test Split Strategy</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #64b5f6; background-color:#ffffff;">
+                <b>Training Set (80%):</b><br>
+                800 molecules<br>
+                <span style="font-size:0.9em; color:#666;">Model learns from these</span>
+            </td>
+            <td style="padding:10px; border:1px solid #64b5f6; background-color:#ffffff;">
+                <b>Test Set (20%):</b><br>
+                200 molecules<br>
+                <span style="font-size:0.9em; color:#666;">Never seen during training</span>
+            </td>
+            <td style="padding:10px; border:1px solid #64b5f6; background-color:#ffffff;">
+                <b>Purpose:</b><br>
+                Prevent overfitting<br>
+                <span style="font-size:0.9em; color:#666;">Test generalization</span>
+            </td>
+        </tr>
+    </table>
+</div>
+
+
+```python
+# 80/20 split (standard in ML)
+train_size = int(0.8 * len(graphs))
+train_graphs = graphs[:train_size]
+test_graphs = graphs[train_size:]
+
+print(f"\nDataset split:")
+print(f"  Training: {len(train_graphs)} molecules")
+print(f"  Testing: {len(test_graphs)} molecules")
+```
+
+**Result**:
+
+```
+Dataset split:
+  Training: 800 molecules
+  Testing: 200 molecules
+```
+
+![trainsplit](../../../../../resource/img/gnn/trainsplit.png)
+
+**Step 5.3: Creating DataLoaders**
+
+DataLoader automatically batches variable-sized graphs:
+
+<div style="background-color:#f3e5f5; padding:15px; border-radius:8px; margin:15px 0;">
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#e1bee7;">
+            <th style="padding:10px; border:1px solid #ba68c8; text-align:center;" colspan="3">DataLoader Configuration</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #ce93d8; background-color:#ffffff;">
+                <b>Batch Size:</b><br>
+                32 molecules/batch<br>
+                <span style="font-size:0.9em; color:#666;">Process together</span>
+            </td>
+            <td style="padding:10px; border:1px solid #ce93d8; background-color:#ffffff;">
+                <b>Shuffle:</b><br>
+                True for training<br>
+                <span style="font-size:0.9em; color:#666;">Random order helps</span>
+            </td>
+            <td style="padding:10px; border:1px solid #ce93d8; background-color:#ffffff;">
+                <b>Result:</b><br>
+                25 train batches<br>
+                <span style="font-size:0.9em; color:#666;">7 test batches</span>
+            </td>
+        </tr>
+    </table>
+</div>
+
+
+```python
+# Batch size 32 is typical for molecular property prediction
+train_loader = DataLoader(train_graphs, batch_size=32, shuffle=True)
+test_loader = DataLoader(test_graphs, batch_size=32, shuffle=False)
+
+print(f"Data loaders created:")
+print(f"  Training batches: {len(train_loader)}")
+print(f"  Test batches: {len(test_loader)}")
+print(f"  Batch size: 32")
+```
+
+**Result**:
+
+```
+Data loaders created:
+  Training batches: 25
+  Test batches: 7
+  Batch size: 32
+```
+
+![loader](../../../../../resource/img/gnn/loader.png)
+
+**Step 5.4: Batch Structure Analysis**:
+
+<div style="background-color:#fff9c4; padding:15px; border-radius:8px; margin:15px 0;">
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#fff176;">
+            <th style="padding:10px; border:1px solid #ffd600; text-align:center;" colspan="2">Understanding Batch Structure</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #ffeb3b; background-color:#ffffff;">
+                <b>Challenge:</b><br>
+                Molecules have different sizes<br>
+                • Water: 3 atoms<br>
+                • Aspirin: 21 atoms<br>
+                How to batch?
+            </td>
+            <td style="padding:10px; border:1px solid #ffeb3b; background-color:#ffffff;">
+                <b>Solution:</b><br>
+                Combine into one big graph<br>
+                • All atoms together<br>
+                • Batch tensor tracks ownership<br>
+                • No edges between molecules
+            </td>
+        </tr>
+    </table>
+</div>
+
+
+```python
+# Inspect batch structure
+for batch in train_loader:
+    print(f"\nExample batch:")
+    print(f"  Total atoms in batch: {batch.x.shape[0]}")
+    print(f"  Total molecules in batch: {batch.num_graphs}")
+    print(f"  Batch tensor shape: {batch.batch.shape}")
+    print(f"  Edge index shape: {batch.edge_index.shape}")
+    break
+```
+
+**Result**:
+
+```
+Example batch:
+  Total atoms in batch: 864
+  Total molecules in batch: 32
+  Batch tensor shape: torch.Size([864])
+  Edge index shape: torch.Size([2, 1744])
+```
+
+![combinegraph](../../../../../resource/img/gnn/combinegraph.png)
+
+**Batching Mechanism Explained:**
+
+* 32 molecules contain 864 atoms total (average ≈ 27 atoms/molecule)
+
+* **Batch tensor:**
+
+  ```
+  [0, 0, 0, ..., 1, 1, 1, ..., 31, 31, 31]
+  ```
+
+  Maps each atom to its parent molecule (0–31)
+
+* Edge index combines all molecular graphs into one large disconnected graph
+
+* Enables efficient parallel processing on GPU
+
+After combination, PyTorch Geometric treats a batch of graphs as one big disconnected graph!
+
+* Molecule 1: atoms 0–20
+* Molecule 2: atoms 21–35
+* No edges between molecules
+* Process all at once = FAST!
+
+
+#### Step 6: Training the Model
+
+**Step 6.1: Training Components Setup**
+
+**Step 6.1.1: Adam Optimizer** Combines momentum with adaptive learning rates
+
+$$
+\begin{aligned}
+m_t &= \beta_1 m_{t-1} + (1 - \beta_1)\,g_t \\
+v_t &= \beta_2 v_{t-1} + (1 - \beta_2)\,g_t^2 \\
+\theta_t &= \theta_{t-1} - \alpha\,\frac{m_t}{\sqrt{v_t + \epsilon}}
+\end{aligned}
+$$
+
+![optimizer](../../../../../resource/img/gnn/optimizer.png)
+
+* **$m_t$ (Momentum):**  
+  This term computes an exponential moving average of the gradients. It combines the current gradient $g_t$ with the historical average $m_{t-1}$:
+
+  $$
+  m_t = \beta_1 m_{t-1} + (1 - \beta_1) g_t
+  $$
+
+  Think of it as “smoothing out” the direction of updates. Instead of reacting to each new gradient immediately, $m_t$ helps the model maintain a stable direction over time.  
+  Imagine pushing a ball downhill: the more consistent the slope, the faster it builds momentum. Similarly, $m_t$ gives you an accumulated sense of which direction consistently reduces the loss.
+
+* **$v_t$ (Adaptive scaling):**  
+  This term accumulates the squared gradients to estimate how large and volatile each parameter’s updates are:
+
+  $$
+  v_t = \beta_2 v_{t-1} + (1 - \beta_2) g_t^2
+  $$
+
+  Unlike $m_t$, $v_t$ only tracks the **magnitude** of the gradients (not their direction). It tells you whether the updates for a certain parameter dimension have been large or small recently.  
+  If a direction has large or noisy gradients, $v_t$ becomes large, and the update will be smaller in that direction. Think of it as driving over bumpy terrain: the bumpier it is, the more cautiously you move forward.
+
+* **$\theta_t$ (Final update):**  
+  This is the final step that uses both $m_t$ and $v_t$ to update the model parameters:
+
+  $$
+  \theta_t = \theta_{t-1} - \alpha \cdot \frac{m_t}{\sqrt{v_t} + \epsilon}
+  $$
+
+  The numerator ($m_t$) tells you **which direction to move**, and the denominator ($\sqrt{v_t}$) controls **how big the step should be** in that direction.  
+  If $v_t$ is large (unstable or steep), the denominator increases, shrinking the step size. If $v_t$ is small (smooth), the update is larger.  
+  The learning rate $\alpha$ scales the entire step size globally (e.g., 0.001), while $\epsilon$ is a small number added for numerical stability.
+
+  This adaptive combination makes Adam very effective in complex landscapes — it balances speed and caution, moving quickly in flat regions and slowly where gradients are volatile.
+
+**Step 6.1.2: MSE Loss** For regression tasks
+
+$$
+L = \frac{1}{n} \sum_{i=1}^{n}\bigl(y_{\text{pred},i} - y_{\text{true},i}\bigr)^2
+$$
+
+![mse](../../../../../resource/img/gnn/mse.png)
+
+**Why MSE for Regression?**
+
+* Measures average squared error
+* Penalizes big mistakes more than small ones
+* Always positive (squaring removes sign)
+* Has nice mathematical properties for optimization
+
+**Step 6.2: Training Setup**
+
+<div style="background-color:#e3f2fd; padding:15px; border-radius:8px; margin:15px 0;">
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#90caf9;">
+            <th style="padding:10px; border:1px solid #42a5f5; text-align:center;" colspan="3">Training Setup Components</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #64b5f6; background-color:#ffffff;">
+                <b>Model:</b><br>
+                MolecularGNN<br>
+                <span style="font-size:0.9em; color:#666;">8,769 parameters</span>
+            </td>
+            <td style="padding:10px; border:1px solid #64b5f6; background-color:#ffffff;">
+                <b>Optimizer:</b><br>
+                Adam (lr=0.001)<br>
+                <span style="font-size:0.9em; color:#666;">Adaptive learning</span>
+            </td>
+            <td style="padding:10px; border:1px solid #64b5f6; background-color:#ffffff;">
+                <b>Loss:</b><br>
+                MSE Loss<br>
+                <span style="font-size:0.9em; color:#666;">For regression</span>
+            </td>
+        </tr>
+    </table>
+</div>
+
+
+```python
+# Initialize components
+model = MolecularGNN(num_features=5, hidden_dim=64, num_layers=3)
+optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
+criterion = nn.MSELoss()
+
+# Device handling
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+model = model.to(device)
+
+print("Training setup:")
+print(f"  Optimizer: Adam (lr=0.001)")
+print(f"  Loss function: MSE")
+print(f"  Device: {device}")
+```
+
+**Result**:
+
+```
+Training setup:
+  Optimizer: Adam (lr=0.001)
+  Loss function: MSE
+  Device: cpu
+```
+
+**1. How does the model actually learn?**
+
+* **Forward pass:** Input → Model → Prediction
+* **Loss calculation:** How wrong was the prediction?
+* **Backward pass:** Compute gradients (derivatives) using chain rule
+* **Update:** Adjust weights to reduce loss
+
+![gradient](../../../../../resource/img/gnn/gradient.png)
+
+**2. What is a gradient?**
+The gradient tells us “which way to adjust each parameter to reduce error.” Think of it like hiking—the gradient points uphill, so we go the opposite way to reach the valley (minimum loss).
+
+**3. Why learning rate = 0.001?**
+
+* Too large (0.1): Might overshoot the minimum
+* Too small (0.00001): Training takes forever
+* 0.001: Good default for Adam optimizer
+
+![learningrate](../../../../../resource/img/gnn/learningrate.png)
+
+**Step 6.3: Training Function Implementation**
+
+Each training epoch processes all batches once, following the 5 steps as we have learned before:
+
+<div style="background-color:#f3e5f5; padding:15px; border-radius:8px; margin:15px 0;">
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#e1bee7;">
+            <th style="padding:10px; border:1px solid #ba68c8; text-align:center;" colspan="5">Training Loop Steps</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #ce93d8; background-color:#ffffff;">
+                <b>Step 1:</b><br>
+                Zero gradients<br>
+                <span style="font-size:0.9em; color:#666;">Clear old values</span>
+            </td>
+            <td style="padding:10px; border:1px solid #ce93d8; background-color:#ffffff;">
+                <b>Step 2:</b><br>
+                Forward pass<br>
+                <span style="font-size:0.9em; color:#666;">Get predictions</span>
+            </td>
+            <td style="padding:10px; border:1px solid #ce93d8; background-color:#ffffff;">
+                <b>Step 3:</b><br>
+                Compute loss<br>
+                <span style="font-size:0.9em; color:#666;">How wrong?</span>
+            </td>
+            <td style="padding:10px; border:1px solid #ce93d8; background-color:#ffffff;">
+                <b>Step 4:</b><br>
+                Backward pass<br>
+                <span style="font-size:0.9em; color:#666;">Get gradients</span>
+            </td>
+            <td style="padding:10px; border:1px solid #ce93d8; background-color:#ffffff;">
+                <b>Step 5:</b><br>
+                Update weights<br>
+                <span style="font-size:0.9em; color:#666;">Improve model</span>
+            </td>
+        </tr>
+    </table>
+</div>
+
+
+```python
+def train_epoch(model, loader, optimizer, criterion, device):
+    """
+    One epoch of training
+    
+    Key steps:
+    1. Zero gradients (PyTorch accumulates by default)
+    2. Forward pass through GNN
+    3. Compute loss
+    4. Backpropagate gradients
+    5. Update weights
+    """
+    model.train()
+    total_loss = 0
+    
+    for batch in loader:
+        batch = batch.to(device)
+        
+        # Reset gradients
+        optimizer.zero_grad()
+        
+        # Forward pass
+        out = model(batch.x, batch.edge_index, batch.batch)
+        
+        # Compute loss
+        loss = criterion(out.squeeze(), batch.y)
+        
+        # Backward pass
+        loss.backward()
+        
+        # Update weights
+        optimizer.step()
+        
+        total_loss += loss.item() * batch.num_graphs
+    
+    return total_loss / len(loader.dataset)
+```
+
+![5gradient](../../../../../resource/img/gnn/5gradient.png)
+
+Now that we've seen how `optimizer.zero_grad()`, `loss.backward()`, and `optimizer.step()` appear in every training loop, it's important to understand what each of them **actually does** under the hood. These functions may look simple, but they each wrap a number of essential operations that make training work correctly.
+
+**1. optimizer.zero\_grad()**
+
+* PyTorch accumulates gradients by default
+* Without this, gradients would add up across batches
+* Like clearing a calculator before a new calculation
+
+**2. loss.backward()**
+
+* Computes gradient of loss w\.r.t. each parameter
+* Uses automatic differentiation (chain rule)
+* Fills the `.grad` attribute of each parameter
+
+**3. optimizer.step()**
+
+* Updates parameters using computed gradients
+* Applies the Adam update rule
+* Parameters move in the direction that reduces loss
+
+![3func](../../../../../resource/img/gnn/3func.png)
+
+**Step 6.4: Evaluation Function**
+
+Evaluation without gradient computation saves memory:
+
+<div style="background-color:#e8f5e9; padding:15px; border-radius:8px; margin:15px 0;">
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#a5d6a7;">
+            <th style="padding:10px; border:1px solid #66bb6a; text-align:center;" colspan="2">Training vs Evaluation Mode</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #81c784; background-color:#ffffff;">
+                <b>Training Mode:</b><br>
+                • Compute gradients<br>
+                • Update parameters<br>
+                • Dropout active
+            </td>
+            <td style="padding:10px; border:1px solid #81c784; background-color:#ffffff;">
+                <b>Evaluation Mode:</b><br>
+                • No gradients (save memory)<br>
+                • No parameter updates<br>
+                • Dropout inactive
+            </td>
+        </tr>
+    </table>
+</div>
+
+
+```python
+def evaluate(model, loader, criterion, device):
+    """Evaluation without gradient computation"""
+    model.eval()
+    total_loss = 0
+    
+    with torch.no_grad():  # Save memory
+        for batch in loader:
+            batch = batch.to(device)
+            out = model(batch.x, batch.edge_index, batch.batch)
+            loss = criterion(out.squeeze(), batch.y)
+            total_loss += loss.item() * batch.num_graphs
+    
+    return total_loss / len(loader.dataset)
+```
+
+![eval](../../../../../resource/img/gnn/eval.png)
+
+**Step 6.5: Training Execution**
+
+Train for 50 epochs with periodic logging:
+
+<div style="background-color:#fff3e0; padding:15px; border-radius:8px; margin:15px 0;">
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#ffe082;">
+            <th style="padding:10px; border:1px solid #ffc107; text-align:center;" colspan="3">Training Process Overview</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #ffd54f; background-color:#ffffff;">
+                <b>Epochs:</b><br>
+                50 total<br>
+                <span style="font-size:0.9em; color:#666;">Full dataset passes</span>
+            </td>
+            <td style="padding:10px; border:1px solid #ffd54f; background-color:#ffffff;">
+                <b>Monitoring:</b><br>
+                Train & test loss<br>
+                <span style="font-size:0.9em; color:#666;">Track progress</span>
+            </td>
+            <td style="padding:10px; border:1px solid #ffd54f; background-color:#ffffff;">
+                <b>Logging:</b><br>
+                Every 10 epochs<br>
+                <span style="font-size:0.9em; color:#666;">Avoid clutter</span>
+            </td>
+        </tr>
+    </table>
+</div>
+
+
+```python
+num_epochs = 50
+train_losses = []
+test_losses = []
+
+print("Starting training...")
+print("-" * 60)
+
+for epoch in range(num_epochs):
+    # Train
+    train_loss = train_epoch(model, train_loader, optimizer, criterion, device)
+    train_losses.append(train_loss)
+    
+    # Evaluate
+    test_loss = evaluate(model, test_loader, criterion, device)
+    test_losses.append(test_loss)
+    
+    # Log progress
+    if (epoch + 1) % 10 == 0:
+        print(f"Epoch {epoch+1:3d} | Train Loss: {train_loss:.4f} | Test Loss: {test_loss:.4f}")
+
+print("-" * 60)
+print("Training completed!")
+```
+
+![traineval](../../../../../resource/img/gnn/traineval.png)
+
+**Result**:
+
+```
+Starting training...
+------------------------------------------------------------
+Epoch  10 | Train Loss: 3.8593 | Test Loss: 4.1164
+Epoch  20 | Train Loss: 3.7131 | Test Loss: 4.0329
+Epoch  30 | Train Loss: 3.6504 | Test Loss: 4.0042
+Epoch  40 | Train Loss: 3.5853 | Test Loss: 3.8130
+Epoch  50 | Train Loss: 3.4851 | Test Loss: 3.7270
+------------------------------------------------------------
+Training completed!
+```
+
+**Training Analysis:**
+
+* Initial loss ≈ 10 (not shown) → Final loss ≈ 3.5
+* Test loss closely follows training loss (good generalization)
+* Loss of 3.7 corresponds to RMSE = $\sqrt{3.7}$ ≈ 1.92 log S
+* Small train–test gap (3.49 vs 3.73) indicates appropriate model capacity
+
+**Step 6.6: Visualizing Training Progress**
+
+<div style="background-color:#e1f5fe; padding:15px; border-radius:8px; margin:15px 0;">
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#81d4fa;">
+            <th style="padding:10px; border:1px solid #29b6f6; text-align:center;" colspan="2">Training Curves Analysis</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #4fc3f7; background-color:#ffffff;">
+                <b>What to look for:</b><br>
+                • Both curves decreasing<br>
+                • Test follows train<br>
+                • No divergence
+            </td>
+            <td style="padding:10px; border:1px solid #4fc3f7; background-color:#ffffff;">
+                <b>Warning signs:</b><br>
+                • Test loss increases<br>
+                • Large gap develops<br>
+                • Erratic behavior
+            </td>
+        </tr>
+    </table>
+</div>
+
+
+```python
+plt.figure(figsize=(10, 6))
+plt.plot(train_losses, label='Training Loss', linewidth=2)
+plt.plot(test_losses, label='Test Loss', linewidth=2)
+plt.xlabel('Epoch', fontsize=12)
+plt.ylabel('MSE Loss', fontsize=12)
+plt.title('Training Progress', fontsize=14)
+plt.legend(fontsize=12)
+plt.grid(True, alpha=0.3)
+plt.tight_layout()
+plt.show()
+```
+
+![Training Progress](../../../../../resource/img/gnn/training_progress.png)
+
+**Curve Interpretation**:
+
+- **Epochs 1-10**: Rapid loss decrease (learning basic patterns)
+- **Epochs 10-30**: Gradual improvement (fine-tuning)
+- **Epochs 30-50**: Plateau (approaching model capacity)
+- **No overfitting**: Test loss doesn't increase
+
+**Reading Training Curves:**
+
+* **Good sign:** Test loss follows training loss
+* **Bad sign:** Test loss increases while training decreases (overfitting)
+* **Our case:** Slight gap but both decrease = healthy learning!
+
+#### Step 7: Model Evaluation
+
+**Step 7.1 Understanding the Evaluation Metrics**
+
+<table style="border-collapse:collapse; width:100%;">
+    <tr style="background-color:#bbdefb;">
+        <th style="border:1px solid #64b5f6; padding:8px;">Metric</th>
+        <th style="border:1px solid #64b5f6; padding:8px;">Formula</th>
+        <th style="border:1px solid #64b5f6; padding:8px;">Interpretation</th>
+        <th style="border:1px solid #64b5f6; padding:8px;">What It Tells Us</th>
+    </tr>
+    <tr>
+        <td style="border:1px solid #64b5f6; padding:8px;">RMSE</td>
+        <td style="border:1px solid #64b5f6; padding:8px;">$\sqrt{\frac{1}{n}\sum_{i=1}^{n}(y_{pred} - y_{true})^2}$</td>
+        <td style="border:1px solid #64b5f6; padding:8px;">Average error magnitude</td>
+        <td style="border:1px solid #64b5f6; padding:8px;">Typical prediction error in log S units</td>
+    </tr>
+    <tr>
+        <td style="border:1px solid #64b5f6; padding:8px;">MAE</td>
+        <td style="border:1px solid #64b5f6; padding:8px;">$\frac{1}{n}\sum_{i=1}^{n}|y_{pred} - y_{true}|$</td>
+        <td style="border:1px solid #64b5f6; padding:8px;">Typical prediction error</td>
+        <td style="border:1px solid #64b5f6; padding:8px;">Less sensitive to outliers than RMSE</td>
+    </tr>
+    <tr>
+        <td style="border:1px solid #64b5f6; padding:8px;">R²</td>
+        <td style="border:1px solid #64b5f6; padding:8px;">$1 - \frac{SS_{res}}{SS_{tot}}$</td>
+        <td style="border:1px solid #64b5f6; padding:8px;">Variance explained (0-1)</td>
+        <td style="border:1px solid #64b5f6; padding:8px;">% of data variation our model captures</td>
+    </tr>
+</table>
+
+
+![3metrics](../../../../../resource/img/gnn/3metrics.png)
+
+**Understanding R² in Detail**
+
+The R² formula:
+
+$$
+R^2 = 1 - \frac{SS_{\text{res}}}{SS_{\text{tot}}}
+$$
+
+* **\$SS\_{\text{tot}}\$** = Total variance = $\sum (y_i - \bar{y})^2$
+* **\$SS\_{\text{res}}\$** = Residual variance = $\sum (y_i - \hat{y}_i)^2$
+* **\$\bar{y}\$** = Mean of true values
+* **\$\hat{y}\_i\$** = Our predictions
+
+**Interpretation:**
+
+* **R² = 1.0:** Perfect predictions
+* **R² = 0.5:** Model explains 50% of variance
+* **R² = 0.0:** No better than predicting the mean
+* **R² < 0.0:** Worse than predicting the mean!
+
+**Step 7.2: Prediction Extraction Function**
+
+<div style="background-color:#f5f5f5; padding:15px; border-radius:8px; margin:15px 0;">
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#e0e0e0;">
+            <th style="padding:10px; border:1px solid #bdbdbd; text-align:center;" colspan="3">Prediction Collection Process</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #bdbdbd; background-color:#ffffff;">
+                <b>Step 1:</b><br>
+                Set eval mode<br>
+                <span style="font-size:0.9em; color:#666;">No dropout</span>
+            </td>
+            <td style="padding:10px; border:1px solid #bdbdbd; background-color:#ffffff;">
+                <b>Step 2:</b><br>
+                Loop batches<br>
+                <span style="font-size:0.9em; color:#666;">Collect predictions</span>
+            </td>
+            <td style="padding:10px; border:1px solid #bdbdbd; background-color:#ffffff;">
+                <b>Step 3:</b><br>
+                Return arrays<br>
+                <span style="font-size:0.9em; color:#666;">For sklearn metrics</span>
+            </td>
+        </tr>
+    </table>
+</div>
+
+
+```python
+def get_predictions(model, loader, device):
+    """Extract all predictions for evaluation"""
+    model.eval()
+    predictions = []
+    true_values = []
+    
+    with torch.no_grad():
+        for batch in loader:
+            batch = batch.to(device)
+            out = model(batch.x, batch.edge_index, batch.batch)
+            predictions.extend(out.squeeze().cpu().numpy())
+            true_values.extend(batch.y.cpu().numpy())
+    
+    return np.array(predictions), np.array(true_values)
+```
+
+![evalmetric](../../../../../resource/img/gnn/evalmetric.png)
+
+**Step 7.3: Metric Calculation**
+
+<div style="background-color:#e3f2fd; padding:15px; border-radius:8px; margin:15px 0;">
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#90caf9;">
+            <th style="padding:10px; border:1px solid #42a5f5; text-align:center;" colspan="3">Evaluation Metrics Calculation</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #64b5f6; background-color:#ffffff;">
+                <b>RMSE:</b><br>
+                1.931 log S<br>
+                <span style="font-size:0.9em; color:#666;">Typical error size</span>
+            </td>
+            <td style="padding:10px; border:1px solid #64b5f6; background-color:#ffffff;">
+                <b>MAE:</b><br>
+                1.602 log S<br>
+                <span style="font-size:0.9em; color:#666;">Average absolute error</span>
+            </td>
+            <td style="padding:10px; border:1px solid #64b5f6; background-color:#ffffff;">
+                <b>R²:</b><br>
+                0.219<br>
+                <span style="font-size:0.9em; color:#666;">22% variance explained</span>
+            </td>
+        </tr>
+    </table>
+</div>
+
+
+```python
+# Get test set predictions
+test_preds, test_true = get_predictions(model, test_loader, device)
+
+# Calculate metrics
+rmse = np.sqrt(mean_squared_error(test_true, test_preds))
+mae = np.mean(np.abs(test_true - test_preds))
+r2 = r2_score(test_true, test_preds)
+
+print("Model Performance on Test Set:")
+print(f"  RMSE: {rmse:.3f} log S")
+print(f"  MAE:  {mae:.3f} log S")
+print(f"  R²:   {r2:.3f}")
+print(f"\nInterpretation:")
+print(f"  - On average, predictions are off by {mae:.2f} log units")
+print(f"  - The model explains {r2*100:.1f}% of the variance in solubility")
+```
+
+**Result**:
+
+```
+Model Performance on Test Set:
+  RMSE: 1.931 log S
+  MAE:  1.602 log S
+  R²:   0.219
+
+Interpretation:
+  - On average, predictions are off by 1.60 log units
+  - The model explains 21.9% of the variance in solubility
+```
+
+**Performance Reality Check:**
+
+* **MAE = 1.6 log units** → $10^{1.6} \approx 40 \times$ error in concentration
+* **$R^2 = 0.22$** means the model explains only 22% of variance
+* **Why seemingly poor performance?**
+
+  * Only 5 simple atomic features
+  * No bond features or 3D information
+  * Solubility spans 13 orders of magnitude!
+* State-of-the-art models achieve $R^2 \approx 0.9$ with richer features
+
+
+**Is $R^2 = 0.22$ Actually Bad?**
+
+* **For production:** Yes, too low for drug development
+* **For learning:** No! Shows our simple model captures real patterns
+* **Context:** Random guessing would give $R^2 \approx 0$
+* **Improvement potential:** Adding more features could reach $R^2 > 0.8$
+
+**Step 7.4: Prediction Visualization**
+
+Create scatter plot to visualize prediction quality:
+
+<div style="background-color:#f3e5f5; padding:15px; border-radius:8px; margin:15px 0;">
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#e1bee7;">
+            <th style="padding:10px; border:1px solid #ba68c8; text-align:center;" colspan="3">Scatter Plot Components</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #ce93d8; background-color:#ffffff;">
+                <b>Points:</b><br>
+                Test predictions<br>
+                <span style="font-size:0.9em; color:#666;">200 molecules</span>
+            </td>
+            <td style="padding:10px; border:1px solid #ce93d8; background-color:#ffffff;">
+                <b>Red line:</b><br>
+                Perfect predictions<br>
+                <span style="font-size:0.9em; color:#666;">y = x</span>
+            </td>
+            <td style="padding:10px; border:1px solid #ce93d8; background-color:#ffffff;">
+                <b>Gray band:</b><br>
+                ±1 log S error<br>
+                <span style="font-size:0.9em; color:#666;">10× concentration</span>
+            </td>
+        </tr>
+    </table>
+</div>
+
+
+```python
+plt.figure(figsize=(8, 8))
+
+# Scatter plot
+plt.scatter(test_true, test_preds, alpha=0.6, edgecolors='black', linewidth=0.5)
+
+# Perfect prediction line
+min_val = min(test_true.min(), test_preds.min())
+max_val = max(test_true.max(), test_preds.max())
+plt.plot([min_val, max_val], [min_val, max_val], 'r--', linewidth=2, label='Perfect predictions')
+
+# Error bands
+plt.fill_between([min_val, max_val], [min_val-1, max_val-1], [min_val+1, max_val+1], 
+                 alpha=0.2, color='gray', label='±1 log S error')
+
+plt.xlabel('True Solubility (log S)', fontsize=12)
+plt.ylabel('Predicted Solubility (log S)', fontsize=12)
+plt.title(f'GNN Predictions vs True Values (R² = {r2:.3f})', fontsize=14)
+plt.legend(fontsize=10)
+plt.grid(True, alpha=0.3)
+plt.tight_layout()
+plt.show()
+```
+
+![GNN Predictions vs True Values](../../../../../resource/img/gnn/predictions_scatter.png)
+
+**Scatter Plot Interpretation**:
+
+- **General trend captured**: Points follow diagonal direction
+- **High variance**: Significant scatter around ideal line
+- **Regression to mean**: Extreme values pulled toward center
+- **±1 log band**: Most predictions within acceptable error range
+
+**How to Read This Plot:**
+
+* **Perfect model:** All points on red dashed line
+* **Good model:** Points clustered near the line
+* **Our model:** General trend but wide spread
+* **Gray band:** ±1 log S is approximately a 10× error in real concentration
+
+**Step 7.5: Error Analysis**
+
+Error Distribution Visualization:
+
+<div style="background-color:#e8f5e9; padding:15px; border-radius:8px; margin:15px 0;">
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#a5d6a7;">
+            <th style="padding:10px; border:1px solid #66bb6a; text-align:center;" colspan="2">Error Analysis Plots</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #81c784; background-color:#ffffff;">
+                <b>Left plot:</b><br>
+                Error distribution<br>
+                • Should be centered at 0<br>
+                • Narrow = better
+            </td>
+            <td style="padding:10px; border:1px solid #81c784; background-color:#ffffff;">
+                <b>Right plot:</b><br>
+                Error vs true value<br>
+                • Look for patterns<br>
+                • Random = good
+            </td>
+        </tr>
+    </table>
+</div>
+
+
+```python
+# Calculate errors
+errors = test_preds - test_true
+
+plt.figure(figsize=(12, 5))
+
+# Error distribution
+plt.subplot(1, 2, 1)
+plt.hist(errors, bins=30, edgecolor='black', alpha=0.7)
+plt.axvline(x=0, color='red', linestyle='--', linewidth=2)
+plt.xlabel('Prediction Error (log S)', fontsize=12)
+plt.ylabel('Count', fontsize=12)
+plt.title('Distribution of Prediction Errors', fontsize=14)
+plt.grid(True, alpha=0.3)
+```
+
+**Error vs True Value**:
+
+```python
+# Error vs true value
+plt.subplot(1, 2, 2)
+plt.scatter(test_true, errors, alpha=0.6)
+plt.axhline(y=0, color='red', linestyle='--', linewidth=2)
+plt.xlabel('True Solubility (log S)', fontsize=12)
+plt.ylabel('Prediction Error (log S)', fontsize=12)
+plt.title('Prediction Error vs True Value', fontsize=14)
+plt.grid(True, alpha=0.3)
+
+plt.tight_layout()
+plt.show()
+```
+
+![Error Distribution and Analysis](../../../../../resource/img/gnn/error_analysis.png)
+
+**Error Statistics**:
+
+<div style="background-color:#fff3e0; padding:15px; border-radius:8px; margin:15px 0;">
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#ffe082;">
+            <th style="padding:10px; border:1px solid #ffc107; text-align:center;" colspan="2">Error Statistics Summary</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #ffd54f; background-color:#ffffff;">
+                <b>Central tendency:</b><br>
+                • Mean: -0.368 (slight bias)<br>
+                • Median: ~1.4 (typical error)
+            </td>
+            <td style="padding:10px; border:1px solid #ffd54f; background-color:#ffffff;">
+                <b>Spread:</b><br>
+                • Std dev: 1.895<br>
+                • 95% within ±3.5 log S
+            </td>
+        </tr>
+    </table>
+</div>
+
+
+```python
+print(f"Error Statistics:")
+print(f"  Mean error: {np.mean(errors):.3f} log S")
+print(f"  Std deviation: {np.std(errors):.3f} log S")
+print(f"  Median absolute error: {np.median(np.abs(errors)):.3f} log S")
+print(f"  95% of errors within: ±{np.percentile(np.abs(errors), 95):.3f} log S")
+```
+
+**Result**:
+
+```
+Error Statistics:
+  Mean error: -0.368 log S
+  Std deviation: 1.895 log S
+  Median absolute error: 1.448 log S
+  95% of errors within: ±3.480 log S
+```
+
+**Error Pattern Analysis:**
+
+* **Negative bias** (–0.368): The model slightly underpredicts solubility
+* **Normal distribution:** No systematic failures detected
+* **Heteroscedasticity:** Larger errors occur at extreme solubilities
+* **95% confidence:** Most errors are within ±3.5 log units
+
+For drug discovery screening, this level of accuracy is often sufficient to filter candidates.
+
+#### Step 8: Making Predictions on New Molecules
+
+**Step 8.1: Prediction Pipeline Function**
+
+Create user-friendly prediction function:
+
+<div style="background-color:#e3f2fd; padding:15px; border-radius:8px; margin:15px 0;">
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#90caf9;">
+            <th style="padding:10px; border:1px solid #42a5f5; text-align:center;" colspan="4">Prediction Pipeline Steps</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #64b5f6; background-color:#ffffff;">
+                <b>Step 1:</b><br>
+                SMILES → Graph<br>
+                <span style="font-size:0.9em; color:#666;">Convert molecule</span>
+            </td>
+            <td style="padding:10px; border:1px solid #64b5f6; background-color:#ffffff;">
+                <b>Step 2:</b><br>
+                Prepare batch<br>
+                <span style="font-size:0.9em; color:#666;">Single molecule</span>
+            </td>
+            <td style="padding:10px; border:1px solid #64b5f6; background-color:#ffffff;">
+                <b>Step 3:</b><br>
+                Model inference<br>
+                <span style="font-size:0.9em; color:#666;">Get prediction</span>
+            </td>
+            <td style="padding:10px; border:1px solid #64b5f6; background-color:#ffffff;">
+                <b>Step 4:</b><br>
+                Return value<br>
+                <span style="font-size:0.9em; color:#666;">Extract number</span>
+            </td>
+        </tr>
+    </table>
+</div>
+
+
+```python
+def predict_solubility(smiles, model, device):
+    """
+    Complete prediction pipeline for new molecules
+    
+    Steps:
+    1. SMILES → Graph conversion
+    2. Feature extraction
+    3. Model inference
+    4. Return prediction
+    """
+    # Convert to graph
+    graph = molecule_to_graph(smiles)
+    if graph is None:
+        return None, "Invalid SMILES"
+    
+    # Prepare for model
+    graph = graph.to(device)
+    batch = torch.zeros(graph.x.size(0), dtype=torch.long).to(device)
+    
+    # Predict
+    model.eval()
+    with torch.no_grad():
+        prediction = model(graph.x, graph.edge_index, batch)
+    
+    return prediction.item(), "Success"
+```
+
+![inference](../../../../../resource/img/gnn/inference.png)
+
+**Step 8.2: Testing on Known Molecules**
+
+Test predictions on common molecules:
+
+<div style="background-color:#f5f5f5; padding:15px; border-radius:8px; margin:15px 0;">
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#e0e0e0;">
+            <th style="padding:10px; border:1px solid #bdbdbd; text-align:center;" colspan="2">Test Molecule Selection</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #bdbdbd; background-color:#ffffff;">
+                <b>Categories:</b><br>
+                • Water & alcohols<br>
+                • Solvents<br>
+                • Hydrocarbons<br>
+                • Aromatics
+            </td>
+            <td style="padding:10px; border:1px solid #bdbdbd; background-color:#ffffff;">
+                <b>Purpose:</b><br>
+                • Test diverse structures<br>
+                • Check chemical intuition<br>
+                • Validate model behavior
+            </td>
+        </tr>
+    </table>
+</div>
+
+
+```python
+test_molecules = [
+    ("O", "Water"),
+    ("CCO", "Ethanol"),
+    ("CC(=O)C", "Acetone"),
+    ("c1ccccc1", "Benzene"),
+    ("CC(=O)O", "Acetic acid"),
+    ("CCCCCl", "1-Chlorobutane"),
+    ("CC(C)C", "Isobutane"),
+    ("C1CCCCC1", "Cyclohexane"),
+    ("c1ccc(O)cc1", "Phenol"),
+    ("CC(=O)Oc1ccccc1C(=O)O", "Aspirin")
+]
+```
+
+![testingpipe](../../../../../resource/img/gnn/testingpipe.png)
+
+**Step 8.2.1: Prediction Loop**:
+
+<div style="background-color:#e1f5fe; padding:15px; border-radius:8px; margin:15px 0;">
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#81d4fa;">
+            <th style="padding:10px; border:1px solid #29b6f6; text-align:center;" colspan="2">Prediction Results Format</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #4fc3f7; background-color:#ffffff;">
+                <b>Output format:</b><br>
+                • Molecule name<br>
+                • SMILES string<br>
+                • Predicted log S<br>
+                • Status
+            </td>
+            <td style="padding:10px; border:1px solid #4fc3f7; background-color:#ffffff;">
+                <b>Collection:</b><br>
+                • Store in list<br>
+                • For visualization<br>
+                • Analyze patterns
+            </td>
+        </tr>
+    </table>
+</div>
+
+
+```python
+print("Predictions for common molecules:")
+print("-" * 60)
+print(f"{'Molecule':<20} {'SMILES':<25} {'Predicted log S':<15} {'Status'}")
+print("-" * 60)
+
+predictions_list = []
+for smiles, name in test_molecules:
+    pred, status = predict_solubility(smiles, model, device)
+    if status == "Success":
+        predictions_list.append((name, pred))
+        print(f"{name:<20} {smiles:<25} {pred:>10.3f}      {status}")
+```
+
+**Result**:
+
+```
+Predictions for common molecules:
+------------------------------------------------------------
+Molecule             SMILES                    Predicted log S Status
+------------------------------------------------------------
+Water                O                              -1.126      Success
+Ethanol              CCO                            -2.384      Success
+Acetone              CC(=O)C                        -2.531      Success
+Benzene              c1ccccc1                       -4.061      Success
+Acetic acid          CC(=O)O                        -2.425      Success
+1-Chlorobutane       CCCCCl                         -2.853      Success
+Isobutane            CC(C)C                         -2.711      Success
+Cyclohexane          C1CCCCC1                       -3.037      Success
+Phenol               c1ccc(O)cc1                    -3.903      Success
+Aspirin              CC(=O)Oc1ccccc1C(=O)O          -3.580      Success
+```
+
+![testinglogic](../../../../../resource/img/gnn/testinglogic.png)
+
+**Chemical Interpretation**:
+
+- **Water (-1.126)**: Most soluble prediction (actual water has infinite solubility)
+- **Small polar molecules (-2.4 to -2.5)**: Ethanol, acetone, acetic acid show similar moderate solubility
+- **Hydrocarbons (-2.7 to -3.0)**: Isobutane and cyclohexane less soluble
+- **Aromatics (< -3.5)**: Benzene and phenol least soluble, reflecting hydrophobic π-systems
+
+**Step 8.2.2: Visualizing Predictions**
+
+Create bar chart with solubility-based coloring:
+
+<div style="background-color:#f3e5f5; padding:15px; border-radius:8px; margin:15px 0;">
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#e1bee7;">
+            <th style="padding:10px; border:1px solid #ba68c8; text-align:center;" colspan="3">Bar Chart Design</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #ce93d8; background-color:#ffffff;">
+                <b>Color scheme:</b><br>
+                • Green: > 0<br>
+                • Yellow: -3 to 0<br>
+                • Red: < -3
+            </td>
+            <td style="padding:10px; border:1px solid #ce93d8; background-color:#ffffff;">
+                <b>Features:</b><br>
+                • Values on bars<br>
+                • Rotated labels<br>
+                • Grid for clarity
+            </td>
+            <td style="padding:10px; border:1px solid #ce93d8; background-color:#ffffff;">
+                <b>Purpose:</b><br>
+                • Visual comparison<br>
+                • Group by solubility<br>
+                • Quick insights
+            </td>
+        </tr>
+    </table>
+</div>
+
+
+```python
+names, preds = zip(*predictions_list)
+
+plt.figure(figsize=(12, 6))
+bars = plt.bar(range(len(names)), preds, color='skyblue', edgecolor='navy', linewidth=1.5)
+
+# Color by solubility level
+for i, (bar, pred) in enumerate(zip(bars, preds)):
+    if pred > 0:
+        bar.set_color('lightgreen')
+    elif pred < -3:
+        bar.set_color('lightcoral')
+    else:
+        bar.set_color('lightyellow')
+```
+
+**Chart Completion**:
+
+```python
+plt.xlabel('Molecule', fontsize=12)
+plt.ylabel('Predicted Solubility (log S)', fontsize=12)
+plt.title('GNN Solubility Predictions for Common Molecules', fontsize=14)
+plt.xticks(range(len(names)), names, rotation=45, ha='right')
+plt.grid(True, alpha=0.3, axis='y')
+plt.axhline(y=0, color='black', linestyle='-', alpha=0.3)
+
+# Add values
+for i, (bar, pred) in enumerate(zip(bars, preds)):
+    plt.text(bar.get_x() + bar.get_width()/2, bar.get_height() + 0.1, 
+            f'{pred:.2f}', ha='center', va='bottom', fontsize=10)
+
+plt.tight_layout()
+plt.show()
+```
+
+![GNN Solubility Predictions for Common Molecules](../../../../../resource/img/gnn/molecule_predictions.png)
+
+**Bar Chart Interpretation**:
+
+- **Green bars**: Would indicate high solubility (> 0 log S) - none in our test set
+- **Yellow bars**: Moderate solubility (-3 to 0 log S) - most small organics
+- **Red bars**: Low solubility (< -3 log S) - aromatics like benzene and phenol
+- **Chemical sense**: Rankings match chemical intuition despite simple model
+
+#### Step 9: Analyzing Learned Patterns
+
+**Step 9.1: Structure-Activity Relationships Testing**
+
+Systematic testing of molecular features:
+
+<div style="background-color:#e8f5e9; padding:15px; border-radius:8px; margin:15px 0;">
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#a5d6a7;">
+            <th style="padding:10px; border:1px solid #66bb6a; text-align:center;" colspan="3">Structure-Activity Test Design</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #81c784; background-color:#ffffff;">
+                <b>Test 1: Functional Groups</b><br>
+                • Base: Hexane<br>
+                • Add: -OH, -COOH, -NH₂<br>
+                • Check: Effect on solubility
+            </td>
+            <td style="padding:10px; border:1px solid #81c784; background-color:#ffffff;">
+                <b>Test 2: Chain Length</b><br>
+                • C₂ → C₄ → C₆ → C₈<br>
+                • Track: Size effect<br>
+                • Expect: Decreasing solubility
+            </td>
+            <td style="padding:10px; border:1px solid #81c784; background-color:#ffffff;">
+                <b>Test 3: Aromaticity</b><br>
+                • Benzene vs Cyclohexane<br>
+                • Compare: π-system effect<br>
+                • Expect: Large difference
+            </td>
+        </tr>
+    </table>
+</div>
+
+
+```python
+functional_group_tests = [
+    # Base molecule
+    ("CCCCCC", "Hexane (hydrophobic)"),
+    # Add polar groups
+    ("CCCCCCO", "1-Hexanol (add -OH)"),
+    ("CCCCCC(=O)O", "Hexanoic acid (add -COOH)"),
+    ("CCCCCCN", "1-Hexylamine (add -NH2)"),
+    # Size series
+    ("CC", "Ethane"),
+    ("CCCC", "Butane"),
+    ("CCCCCCCC", "Octane"),
+    # Aromaticity comparison
+    ("c1ccccc1", "Benzene (aromatic)"),
+    ("C1CCCCC1", "Cyclohexane (aliphatic)")
+]
+```
+
+![testingcases](../../../../../resource/img/gnn/testingcases.png)
+
+**Step 9.2: Testing Loop**
+
+<div style="background-color:#fff3e0; padding:15px; border-radius:8px; margin:15px 0;">
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#ffe082;">
+            <th style="padding:10px; border:1px solid #ffc107; text-align:center;" colspan="2">Analysis Purpose</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #ffd54f; background-color:#ffffff;">
+                <b>What we're testing:</b><br>
+                • Model's chemical understanding<br>
+                • Feature importance<br>
+                • Learned patterns
+            </td>
+            <td style="padding:10px; border:1px solid #ffd54f; background-color:#ffffff;">
+                <b>Expected insights:</b><br>
+                • Which features work well<br>
+                • Model limitations<br>
+                • Improvement areas
+            </td>
+        </tr>
+    </table>
+</div>
+
+
+```python
+print("Analyzing functional group effects on solubility:")
+print("-" * 70)
+print(f"{'Description':<35} {'SMILES':<20} {'Predicted log S':<15}")
+print("-" * 70)
+
+for smiles, desc in functional_group_tests:
+    pred, _ = predict_solubility(smiles, model, device)
+    print(f"{desc:<35} {smiles:<20} {pred:>10.3f}")
+```
+
+**Result**:
+
+```
+Analyzing functional group effects on solubility:
+----------------------------------------------------------------------
+Description                         SMILES               Predicted log S
+----------------------------------------------------------------------
+Hexane (hydrophobic)                CCCCCC                     -2.808
+1-Hexanol (add -OH)                 CCCCCCO                    -2.759
+Hexanoic acid (add -COOH)           CCCCCC(=O)O                -2.795
+1-Hexylamine (add -NH2)             CCCCCCN                    -2.775
+Ethane                              CC                         -2.458
+Butane                              CCCC                       -2.710
+Octane                              CCCCCCCC                   -2.861
+Benzene (aromatic)                  c1ccccc1                   -4.061
+Cyclohexane (aliphatic)             C1CCCCC1                   -3.037
+```
+
+**Key Findings:**
+
+1. **Weak Functional Group Effects:**
+   - Hexane → Hexanol: Only 0.049 log unit improvement
+   - Expected: –OH should increase solubility by \~1–2 log units
+   - **Limitation:** Our 5 features don’t capture hydrogen bonding strength
+
+2. **Clear Size Trend:**
+   - C₂ (–2.458) → C₄ (–2.710) → C₆ (–2.808) → C₈ (–2.861)
+   - $\Delta \log S \approx -0.05$ per CH₂ group
+   - **Success:** Model learned hydrophobic effect of alkyl chains
+
+3. **Strong Aromaticity Effect:**
+   - Benzene vs. Cyclohexane: 1.024 log unit difference
+   - **Success:** Model recognizes π-system hydrophobicity
+   - Aromatic feature in our encoding is highly informative
+
+#### Summary and Conclusions
+
+**What We Built**
+
+**Complete GNN Pipeline:**
+
+1. **Data Processing:** SMILES → graph conversion with RDKit
+2. **Feature Engineering:** 5 atomic features + bidirectional edges
+3. **Model Architecture:** 3-layer GCN with 8,769 parameters
+4. **Training:** 800 molecules, 50 epochs, Adam optimizer
+5. **Deployment:** Prediction function for new molecules
+
+![review](../../../../../resource/img/gnn/review.png)
+
+**Performance Metrics:**
+
+* **RMSE:** 1.93 log S
+* **MAE:** 1.60 log S
+* **$R^2$:** 0.22
+* **95% predictions** within ± 3.5 log units
+
+**Limitations and Future Improvements**
+
+| Current Limitation                   | Proposed Solution                  | Expected Impact |
+| ------------------------------------ | ---------------------------------- | --------------- |
+| Weak functional group discrimination | Add H-bond donors/acceptors counts | +0.1-0.2 R²     |
+| No bond information                  | Include bond type, conjugation     | +0.15 R²        |
+| Simple mean pooling                  | Attention-based pooling            | +0.1 R²         |
+| Basic GCN layers                     | GAT or MPNN architectures          | +0.2-0.3 R²     |
+| No 3D information                    | Add 3D coordinates                 | +0.1-0.15 R²    |
+
+
+**Key Takeaways**
+
+**Scientific Insights:**
+
+* GNNs naturally handle variable-sized molecules without fixed fingerprints
+* Message passing captures local chemical environments effectively
+* Even simple features yield chemically sensible predictions
+* Model learned size effects and aromaticity impact correctly
+
+**Practical Considerations:**
+
+* $R^2 = 0.22$ is insufficient for production use but excellent for teaching
+* With proposed improvements, could reach $R^2 > 0.8$
+* Same architecture applies to any molecular property
+* Computational efficiency: \~1 ms per molecule prediction
+
+![insight](../../../../../resource/img/gnn/insight.png)
+
+**Applications Beyond Solubility:**
+
+* Drug–target binding affinity (change target to pIC50)
+* Toxicity prediction (classification instead of regression)
+* Material properties (glass transition, melting point)
+* Reaction outcome prediction (with reaction graphs)
+
+**What We Learned About Deep Learning**
+
+**Key Concepts Demystified:**
+
+* **Backpropagation:** Automatic calculation of gradients using chain rule
+* **Optimization:** Iteratively adjusting parameters to minimize loss
+* **Message Passing:** Atoms sharing information through bonds
+* **Batching:** Processing multiple graphs simultaneously for efficiency
+
+**What We Didn't Cover (But Should Know):**
+
+* **Parameter Initialization:** How weights start (Xavier, He initialization)
+* **Learning Rate Scheduling:** Adjusting learning rate during training
+* **Regularization:** Preventing overfitting (dropout, weight decay)
+* **Advanced GNN Issues:** Over-smoothing, gradient vanishing (covered in next section)
+
+The beauty of GNNs for chemistry lies in their natural alignment with molecular structure. While our simple model achieves modest performance, it demonstrates the complete pipeline from molecules to predictions. This foundation, enhanced with richer features and advanced architectures, powers modern drug discovery and materials design platforms.
+
+------
+
+### 3.3.4 Challenges and Interpretability in GNNs
+
+#### Completed and Compiled Code: [Click Here](https://colab.research.google.com/drive/1rtJ6voxMVK7KS-oZS97_7Jr1bBf7Z15T?usp=sharing)
+
+<div style="background-color:#f0f7ff; border:2px solid #1976d2; border-radius:10px; padding:20px; margin:20px 0;">
+    <h4>What We're Exploring: Fundamental Challenges in Graph Neural Networks</h4>
+    
+    <div style="background-color:#fff3e0; padding:15px; border-radius:8px; margin-bottom:15px;">
+        <p><b>Why Study GNN Challenges?</b></p>
+        <ul>
+            <li><b>Over-smoothing:</b> Why deeper isn't always better - node features become indistinguishable</li>
+            <li><b>Interpretability:</b> Understanding what the model learns - crucial for drug discovery</li>
+            <li><b>Real Impact:</b> These challenges affect whether GNNs can be trusted in production</li>
+        </ul>
+        <p><b>What you'll learn:</b> The fundamental limitations of GNNs and current solutions to overcome them</p>
+    </div>
+    
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#e3f2fd;">
+            <th style="padding:10px; border:1px solid #90caf9;">Challenge</th>
+            <th style="padding:10px; border:1px solid #90caf9;">What Happens</th>
+            <th style="padding:10px; border:1px solid #90caf9;">Why It Matters</th>
+            <th style="padding:10px; border:1px solid #90caf9;">Solutions</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #90caf9; background-color:#ffebee;"><b>Over-smoothing</b></td>
+            <td style="padding:10px; border:1px solid #90caf9;">Node features converge<br><span style="color:#666; font-size:0.9em;">All atoms look the same</span></td>
+            <td style="padding:10px; border:1px solid #90caf9;">Limits network depth<br><span style="color:#666; font-size:0.9em;">Can't capture long-range interactions</span></td>
+            <td style="padding:10px; border:1px solid #90caf9;">Residual connections<br><span style="color:#666; font-size:0.9em;">Skip connections, normalization</span></td>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #90caf9; background-color:#fff9c4;"><b>Interpretability</b></td>
+            <td style="padding:10px; border:1px solid #90caf9;">Black box predictions<br><span style="color:#666; font-size:0.9em;">Don't know why it predicts</span></td>
+            <td style="padding:10px; border:1px solid #90caf9;">No trust in predictions<br><span style="color:#666; font-size:0.9em;">Can't guide drug design</span></td>
+            <td style="padding:10px; border:1px solid #90caf9;">Attention visualization<br><span style="color:#666; font-size:0.9em;">Substructure explanations</span></td>
+        </tr>
+    </table>
+</div>
+
+While GNNs have shown remarkable success in molecular property prediction, they face several fundamental challenges that limit their practical deployment. In this section, we'll explore two critical issues: the over-smoothing phenomenon that limits network depth, and the interpretability challenge that makes it difficult to understand model predictions.
 
 #### The Power of Depth vs. The Curse of Over-smoothing
 
 In Graph Neural Networks (GNNs), adding more message-passing layers allows nodes (atoms) to gather information from increasingly distant parts of a graph (molecule). At first glance, it seems deeper networks should always perform better—after all, more layers mean more context. But in practice, there's a major trade-off known as **over-smoothing**.
+
+<div style="background-color:#ffebee; padding:15px; border-radius:8px; margin:20px 0;">
+    <h4>Understanding Over-smoothing</h4>
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#ffcdd2;">
+            <th style="padding:8px; border:1px solid #ef9a9a;">Concept</th>
+            <th style="padding:8px; border:1px solid #ef9a9a;">Simple Explanation</th>
+            <th style="padding:8px; border:1px solid #ef9a9a;">Molecular Context</th>
+        </tr>
+        <tr>
+            <td style="padding:8px; border:1px solid #ef9a9a;"><b>Message Passing</b></td>
+            <td style="padding:8px; border:1px solid #ef9a9a;">Atoms share info with neighbors</td>
+            <td style="padding:8px; border:1px solid #ef9a9a;">Like atoms "talking" through bonds</td>
+        </tr>
+        <tr>
+            <td style="padding:8px; border:1px solid #ef9a9a;"><b>Receptive Field</b></td>
+            <td style="padding:8px; border:1px solid #ef9a9a;">How far information travels</td>
+            <td style="padding:8px; border:1px solid #ef9a9a;">k layers = k-hop neighborhood</td>
+        </tr>
+        <tr>
+            <td style="padding:8px; border:1px solid #ef9a9a;"><b>Over-smoothing</b></td>
+            <td style="padding:8px; border:1px solid #ef9a9a;">All nodes become similar</td>
+            <td style="padding:8px; border:1px solid #ef9a9a;">Can't distinguish different atoms</td>
+        </tr>
+        <tr>
+            <td style="padding:8px; border:1px solid #ef9a9a;"><b>Critical Depth</b></td>
+            <td style="padding:8px; border:1px solid #ef9a9a;">~3-5 layers typically</td>
+            <td style="padding:8px; border:1px solid #ef9a9a;">Beyond this, performance drops</td>
+        </tr>
+    </table>
+</div>
 
 **What to Demonstrate**
 
 Before we jump into the code, here's **what it's trying to show**:
 
 We want to measure how **similar node embeddings become** as we increase the number of GCN layers. If all node vectors become nearly identical after several layers, that means the model is **losing resolution**—different atoms can't be distinguished anymore. This is called **over-smoothing**.
+
+<div style="background-color:#e3f2fd; padding:15px; border-radius:8px; margin:15px 0;">
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#90caf9;">
+            <th style="padding:10px; border:1px solid #42a5f5; text-align:center;" colspan="4">Key Functions and Concepts</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #64b5f6; background-color:#ffffff;">
+                <b>GCNConv</b><br>
+                Graph convolution layer<br>
+                <span style="font-size:0.9em; color:#666;">Aggregates neighbor features</span>
+            </td>
+            <td style="padding:10px; border:1px solid #64b5f6; background-color:#ffffff;">
+                <b>F.relu()</b><br>
+                Non-linear activation<br>
+                <span style="font-size:0.9em; color:#666;">Adds expressiveness</span>
+            </td>
+            <td style="padding:10px; border:1px solid #64b5f6; background-color:#ffffff;">
+                <b>F.normalize()</b><br>
+                L2 normalization<br>
+                <span style="font-size:0.9em; color:#666;">For cosine similarity</span>
+            </td>
+            <td style="padding:10px; border:1px solid #64b5f6; background-color:#ffffff;">
+                <b>torch.mm()</b><br>
+                Matrix multiplication<br>
+                <span style="font-size:0.9em; color:#666;">Computes similarity matrix</span>
+            </td>
+        </tr>
+    </table>
+</div>
 
 **Functions and Concepts Used**
 
@@ -1653,9 +4753,37 @@ We want to measure how **similar node embeddings become** as we increase the num
 
 We use a **6-node ring structure** as a simple molecular graph. Each node starts with a unique identity (using identity matrix `torch.eye(6)` as input features), and all nodes are connected in a cycle:
 
-<details>
-<summary>▶ Click to see code: Constructing a simple cyclic graph</summary>
-<pre><code class="language-python">
+<div style="background-color:#e8f5e9; padding:15px; border-radius:8px; margin:15px 0;">
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#a5d6a7;">
+            <th style="padding:10px; border:1px solid #66bb6a; text-align:center;" colspan="4">Graph Construction Process</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #81c784; background-color:#ffffff;">
+                <b>Step 1:</b><br>
+                Create node features<br>
+                <span style="font-size:0.9em; color:#666;">Identity matrix (6×6)</span>
+            </td>
+            <td style="padding:10px; border:1px solid #81c784; background-color:#ffffff;">
+                <b>Step 2:</b><br>
+                Define ring topology<br>
+                <span style="font-size:0.9em; color:#666;">Each node → 2 neighbors</span>
+            </td>
+            <td style="padding:10px; border:1px solid #81c784; background-color:#ffffff;">
+                <b>Step 3:</b><br>
+                Make bidirectional<br>
+                <span style="font-size:0.9em; color:#666;">12 directed edges total</span>
+            </td>
+            <td style="padding:10px; border:1px solid #81c784; background-color:#ffffff;">
+                <b>Result:</b><br>
+                PyG Data object<br>
+                <span style="font-size:0.9em; color:#666;">Ready for GNN</span>
+            </td>
+        </tr>
+    </table>
+</div>
+
+```python
 import torch
 from torch_geometric.data import Data
 
@@ -1670,16 +4798,38 @@ edge_index = torch.tensor([
 
 # Create PyTorch Geometric graph object
 data = Data(x=x, edge_index=edge_index)
-</code></pre>
-</details>
+```
 
 **Over-smoothing Analysis**
 
 Now we apply the same GCN layer multiple times to simulate a deeper GNN. After each layer, we re-compute the node embeddings and compare them using cosine similarity:
 
-<details>
-<summary>▶ Click to see code: Demonstrating over-smoothing</summary>
-<pre><code class="language-python">
+<div style="background-color:#f3e5f5; padding:15px; border-radius:8px; margin:15px 0;">
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#e1bee7;">
+            <th style="padding:10px; border:1px solid #ba68c8; text-align:center;" colspan="3">Over-smoothing Measurement Process</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #ce93d8; background-color:#ffffff;">
+                <b>Apply GCN layers:</b><br>
+                Stack 1-10 layers<br>
+                <span style="font-size:0.9em; color:#666;">Same layer repeated</span>
+            </td>
+            <td style="padding:10px; border:1px solid #ce93d8; background-color:#ffffff;">
+                <b>Compute similarity:</b><br>
+                Cosine between nodes<br>
+                <span style="font-size:0.9em; color:#666;">Average all pairs</span>
+            </td>
+            <td style="padding:10px; border:1px solid #ce93d8; background-color:#ffffff;">
+                <b>Track convergence:</b><br>
+                Plot vs depth<br>
+                <span style="font-size:0.9em; color:#666;">Watch similarity → 1</span>
+            </td>
+        </tr>
+    </table>
+</div>
+
+```python
 import torch
 import torch.nn.functional as F
 import matplotlib.pyplot as plt
@@ -1697,15 +4847,15 @@ def measure_smoothing(num_layers, data):
 
     # Normalize embeddings for cosine similarity
     x_norm = F.normalize(x, p=2, dim=1)
-
+    
     # Cosine similarity matrix
     similarity_matrix = torch.mm(x_norm, x_norm.t())
-
+    
     # Exclude diagonal (self-similarity) when averaging
     n = x.size(0)
     mask = ~torch.eye(n, dtype=torch.bool)
     avg_similarity = similarity_matrix[mask].mean().item()
-
+    
     return avg_similarity
 
 # Run for different GNN depths
@@ -1723,18 +4873,53 @@ plt.ylabel("Average Cosine Similarity")
 plt.title("Over-smoothing Effect in GNNs")
 plt.grid(True)
 plt.show()
-</code></pre>
-</details>
+```
 
 **Output**
-
 ```
 Depth 1: Average similarity = 0.406
 Depth 3: Average similarity = 0.995
 Depth 5: Average similarity = 0.993
 Depth 10: Average similarity = 1.000
 ```
+
 ![Over-smoothing in GNNs](../../resource/img/gnn/oversmoothing.png)
+
+<div style="background-color:#fff9c4; padding:15px; border-radius:8px; margin:15px 0;">
+    <h4>Interpretation of Results</h4>
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#fff176;">
+            <th style="padding:10px; border:1px solid #ffd600;">Depth</th>
+            <th style="padding:10px; border:1px solid #ffd600;">Similarity</th>
+            <th style="padding:10px; border:1px solid #ffd600;">What It Means</th>
+            <th style="padding:10px; border:1px solid #ffd600;">Practical Impact</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #ffeb3b; background-color:#ffffff;">1 layer</td>
+            <td style="padding:10px; border:1px solid #ffeb3b; background-color:#ffffff;">0.406</td>
+            <td style="padding:10px; border:1px solid #ffeb3b; background-color:#ffffff;">Nodes still distinct</td>
+            <td style="padding:10px; border:1px solid #ffeb3b; background-color:#ffffff;">Can identify different atoms</td>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #ffeb3b; background-color:#ffffff;">3 layers</td>
+            <td style="padding:10px; border:1px solid #ffeb3b; background-color:#ffffff;">0.995</td>
+            <td style="padding:10px; border:1px solid #ffeb3b; background-color:#ffffff;">Nearly identical</td>
+            <td style="padding:10px; border:1px solid #ffeb3b; background-color:#ffffff;">Losing atomic identity</td>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #ffeb3b; background-color:#ffffff;">5 layers</td>
+            <td style="padding:10px; border:1px solid #ffeb3b; background-color:#ffffff;">0.993</td>
+            <td style="padding:10px; border:1px solid #ffeb3b; background-color:#ffffff;">Effectively same</td>
+            <td style="padding:10px; border:1px solid #ffeb3b; background-color:#ffffff;">No useful information</td>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #ffeb3b; background-color:#ffffff;">10 layers</td>
+            <td style="padding:10px; border:1px solid #ffeb3b; background-color:#ffffff;">1.000</td>
+            <td style="padding:10px; border:1px solid #ffeb3b; background-color:#ffffff;">Complete collapse</td>
+            <td style="padding:10px; border:1px solid #ffeb3b; background-color:#ffffff;">Model is useless</td>
+        </tr>
+    </table>
+</div>
 
 *As shown above, as the number of message-passing layers increases, node representations converge. Initially distinct feature vectors (left) become nearly indistinguishable after several layers (right), resulting in the loss of structural information. This phenomenon is known as **over-smoothing** and is a critical limitation of deep GNNs.*
 
@@ -1742,8 +4927,43 @@ Depth 10: Average similarity = 1.000
 
 As we can see, even at just 3 layers, the node embeddings become nearly identical. By 10 layers, the model has effectively lost all ability to distinguish individual atoms. This is the core issue of **over-smoothing**—deep GNNs can blur out meaningful structural differences.
 
-To mitigate this problem, modern GNNs use techniques like:
+<div style="background-color:#e8f5e9; padding:15px; border-radius:8px; margin:15px 0;">
+    <h4>Solutions to Over-smoothing</h4>
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#a5d6a7;">
+            <th style="padding:10px; border:1px solid #66bb6a;">Technique</th>
+            <th style="padding:10px; border:1px solid #66bb6a;">How It Works</th>
+            <th style="padding:10px; border:1px solid #66bb6a;">Implementation</th>
+            <th style="padding:10px; border:1px solid #66bb6a;">Effectiveness</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #81c784; background-color:#ffffff;"><b>Residual Connections</b></td>
+            <td style="padding:10px; border:1px solid #81c784; background-color:#ffffff;">Skip connections preserve original features</td>
+            <td style="padding:10px; border:1px solid #81c784; background-color:#ffffff;">x = x + GCN(x)</td>
+            <td style="padding:10px; border:1px solid #81c784; background-color:#ffffff;">Very effective</td>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #81c784; background-color:#ffffff;"><b>Feature Concatenation</b></td>
+            <td style="padding:10px; border:1px solid #81c784; background-color:#ffffff;">Combine features from multiple layers</td>
+            <td style="padding:10px; border:1px solid #81c784; background-color:#ffffff;">concat(x₁, x₂, ...)</td>
+            <td style="padding:10px; border:1px solid #81c784; background-color:#ffffff;">Good for shallow nets</td>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #81c784; background-color:#ffffff;"><b>Batch Normalization</b></td>
+            <td style="padding:10px; border:1px solid #81c784; background-color:#ffffff;">Normalize features per layer</td>
+            <td style="padding:10px; border:1px solid #81c784; background-color:#ffffff;">BatchNorm after GCN</td>
+            <td style="padding:10px; border:1px solid #81c784; background-color:#ffffff;">Moderate help</td>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #81c784; background-color:#ffffff;"><b>Jumping Knowledge</b></td>
+            <td style="padding:10px; border:1px solid #81c784; background-color:#ffffff;">Aggregate all layer outputs</td>
+            <td style="padding:10px; border:1px solid #81c784; background-color:#ffffff;">JK networks</td>
+            <td style="padding:10px; border:1px solid #81c784; background-color:#ffffff;">State-of-the-art</td>
+        </tr>
+    </table>
+</div>
 
+To mitigate this problem, modern GNNs use techniques like:
 * **Residual connections** (skip connections that reintroduce raw input)
 * **Feature concatenation from earlier layers**
 * **Batch normalization or graph normalization**
@@ -1751,1764 +4971,315 @@ To mitigate this problem, modern GNNs use techniques like:
 
 When working with molecular graphs, you should **choose the depth of your GNN carefully**. It should be **deep enough** to capture important substructures, but **not so deep** that you lose atomic-level details.
 
-#### Summary: The Art and Science of Message Passing
+#### Interpretability in Molecular GNNs
 
-Message passing transforms the static molecular graph into a dynamic learning system. Through iterative neighborhood aggregation, GNNs build up molecular representations that capture both local atomic environments and global structural patterns. The key insights are:
+Beyond the technical challenge of over-smoothing, GNNs face a critical issue of interpretability. When a model predicts that a molecule might be toxic or have specific properties, chemists need to understand which structural features drive that prediction. This "black box" nature of neural networks is particularly problematic in chemistry, where understanding structure-activity relationships is fundamental to rational drug design.
 
-1. **Local to Global**: Information flows from immediate neighbors to distant atoms through bonds
-2. **Chemistry-Aware**: Different aggregation and update functions can encode chemical knowledge
-3. **Flexible Architecture**: Various GNN types offer different trade-offs for molecular applications
-4. **Depth Matters**: The number of layers controls the receptive field but risks over-smoothing
-
-Understanding these principles is essential for designing GNNs that can truly learn from molecular structure. In the next section, we'll put this knowledge into practice by building a complete molecular property prediction system.
-
-### 3.3.3 GNNs for Molecular Property Prediction
-
-#### Completed and Compiled Code: [Click Here](https://colab.research.google.com/drive/1IemDJyiQuDwBK-iTkaHBgqqfAiM065_b?usp=sharing)
-
-The true test of any machine learning approach lies in its ability to solve real-world problems. For Graph Neural Networks in chemistry, this means predicting molecular properties - from simple physical characteristics like boiling point to complex biological activities like drug efficacy. In this section, we'll build a complete GNN system for molecular property prediction, using water solubility as our target property.
-
-#### The Challenge of Molecular Property Prediction
-
-Predicting how molecules behave in the real world is one of chemistry's grand challenges. Consider water solubility - a property that seems simple but emerges from a complex interplay of factors:
-
-- **Molecular size**: Larger molecules generally dissolve less readily
-- **Polarity**: Polar groups like -OH and -NH₂ increase water solubility
-- **Hydrogen bonding**: Both donors and acceptors affect solubility
-- **Molecular shape**: Compact molecules pack better in water than extended ones
-- **Aromatic systems**: These tend to decrease solubility due to their hydrophobic nature
-
-Traditional approaches to solubility prediction relied on empirical rules like "like dissolves like" or complex equations with dozens of parameters. But these methods often fail for novel molecular structures or struggle to capture subtle effects. GNNs offer a fundamentally different approach: learn the structure-property relationship directly from data.
-
-#### Why Graphs for Molecules?
-
-To appreciate why GNNs excel at molecular property prediction, let's consider how molecules are traditionally represented in machine learning:
-
-**Molecular Fingerprints**: These encode molecular structure as fixed-length bit vectors. While useful, they lose precise connectivity information. Two very different molecules might have similar fingerprints, or subtle but important differences might be obscured.
-
-**Molecular Descriptors**: Calculated properties like molecular weight, logP, or polar surface area. These are interpretable but limited - they're human-designed features that might miss important patterns.
-
-**SMILES Strings**: Text representations that can be processed by sequence models. But SMILES treats molecules as linear sequences, losing the natural graph structure.
-
-In contrast, GNNs work with molecules as they truly are - graphs where atoms are nodes and bonds are edges. This preserves all structural information while allowing the model to learn what matters for the property at hand.
-
-#### Setting Up the Environment
-
-Before we begin building our GNN-based molecular property prediction system, we need to load a set of specialized Python libraries. These libraries fall into several functional categories:
-
-* **Deep Learning Core (PyTorch)**: We use PyTorch to define and train neural networks.
-* **Graph Neural Network Layers (PyTorch Geometric)**: These enable message passing and graph pooling, essential for processing molecular graphs.
-* **Chemical Representation (RDKit)**: RDKit provides SMILES parsing, hydrogen addition, and graph connectivity extraction from molecules.
-* **Data Processing and Visualization**: Standard tools like `pandas`, `numpy`, and `matplotlib` are used for loading data and plotting results.
-* **Model Evaluation**: Scikit-learn's metrics help assess our model's performance.
-* **I/O Utilities**: We use `requests` and `io` to fetch and process online datasets.
-
-These tools collectively allow us to transform raw molecular strings into structured graph data, feed them into a GNN, and evaluate the model's predictive power.
-
-<details>
-<summary>▶ Show Setup Code</summary>
-<pre><code class="language-python">
-# PyTorch: Core deep learning library
-import torch
-import torch.nn as nn
-import torch.nn.functional as F
-
-# PyTorch Geometric: GNN-specific operations
-from torch_geometric.nn import GCNConv, global_mean_pool
-from torch_geometric.data import Data, DataLoader
-
-# RDKit: Chemistry toolkit for molecular structures
-from rdkit import Chem
-
-# Standard numerical/data libraries
-import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
-
-# I/O utilities
-import requests
-import io
-
-# Evaluation metrics
-from sklearn.metrics import mean_squared_error, r2_score
-</code></pre>
-</details>
-
-This environment gives us everything needed to build, train, and evaluate a molecular graph neural network. Once initialized, we’ll move on to data loading and molecular graph construction.
-
-#### Understanding Molecular Data: The ESOL Dataset
-
-For our example, we'll use the ESOL (Estimated SOLubility) dataset – a carefully curated collection of 1,128 molecules with measured aqueous solubility values. This dataset has become a standard benchmark because it's large enough to train meaningful models yet small enough to experiment with quickly.
-
-<details>
-<summary>▶ Click to see code: Loading and exploring the ESOL dataset</summary>
-<pre><code class="language-python">
-# Load the ESOL dataset from an online CSV file
-# We use the requests module to download the file and pandas to parse it.
-import requests
-import pandas as pd
-import io
-
-url = "https://raw.githubusercontent.com/deepchem/deepchem/master/datasets/delaney-processed.csv"
-response = requests.get(url)
-data = pd.read_csv(io.StringIO(response.text))
-
-# Extract SMILES strings and target solubility values
-smiles_list = data['smiles'].tolist()
-solubility_values = data['measured log solubility in mols per litre'].tolist()
-
-print(f"Dataset contains {len(smiles_list)} molecules")
-print(f"Solubility range: {min(solubility_values):.2f} to {max(solubility_values):.2f} log S")
-
-# Display a few examples to understand what the data looks like
-print("\nExample molecules:")
-for i in range(3):
-    print(f"  {smiles_list[i]}: {solubility_values[i]:.2f} log S")
-</code></pre>
-</details>
-
-**Results**
-
-```
-Dataset contains 1128 molecules  
-Solubility range: -11.60 to 1.58 log S
-
-Example molecules:
-    OCC3OC(OCC2OC(OC(C#N)c1ccccc1)C(O)C(O)C2O)C(O)C(O)C3O : -0.77 log S
-    Cc1occc1C(=O)Nc2ccccc2 : -3.30 log S
-    CC(C)=CCCC(C)=CC(=O) : -2.06 log S
-```
-
-This dataset covers a wide dynamic range of water solubility. The log S values span more than 13 units, corresponding to a solubility difference of over 10 trillion times between the most and least soluble compounds. This range challenges the model to generalize across diverse structural and chemical properties.
-
-For example:
-
-* The first molecule, though large and containing polar groups, has moderate solubility (−0.77 log S).
-* The second includes aromatic and amide groups but is still quite insoluble (−3.30 log S), likely due to hydrophobicity.
-* The third is mostly hydrocarbon with a ketone, and also poorly soluble (−2.06 log S).
-
-Such variation ensures that the model must learn meaningful structure-property relationships, not just memorize molecular patterns.
-
-#### Converting Molecules to Graph Representations
-
-To use GNNs, we must first convert molecular structures into graph form. In a molecular graph:
-- **Nodes** represent atoms
-- **Edges** represent chemical bonds
-
-We'll use RDKit to extract this information.
-
-##### Atom Features
-
-Each atom must be encoded into a numerical vector capturing its basic properties. This vector serves as the node feature in the GNN.
-
-<details>
-<summary>▶ Click to see code: Atom feature extraction</summary>
-<pre><code class="language-python">
-from rdkit import Chem
-
-# Define a function to extract chemical features from an atom
-
-# These features are chosen for their relevance to chemical reactivity and structure
-
-def get\_atom\_features(atom):
-features = \[
-atom.GetAtomicNum(),        # Atomic number (C=6, N=7, O=8, etc.)
-atom.GetDegree(),           # Number of directly bonded atoms
-atom.GetFormalCharge(),     # Formal electric charge
-int(atom.GetIsAromatic()),  # Is the atom part of an aromatic ring?
-atom.GetTotalNumHs()        # Number of hydrogen atoms bonded
-]
-return features
-
-# Test on water (H2O)
-
-water = Chem.MolFromSmiles("O")
-water = Chem.AddHs(water)  # Add hydrogen atoms explicitly
-print("Water atom features:")
-for i, atom in enumerate(water.GetAtoms()):
-features = get\_atom\_features(atom)
-print(f"  {atom.GetSymbol()}: {features}") </code></pre>
-
-</details>
-
-**Results**
-
-```
-Water atom features:
-  O: [8, 2, 0, 0, 0]
-  H: [1, 1, 0, 0, 0]
-  H: [1, 1, 0, 0, 0]
-```
-
-In this example:
-
-* The oxygen atom has atomic number 8, is bonded to 2 hydrogens, and is non-aromatic.
-* Each hydrogen has atomic number 1 and is bonded to 1 atom (the oxygen).
-* These feature vectors form the **node features** for the GNN.
-
-##### Bond Connectivity
-
-To complete the molecular graph, we also need the edges – the bonds that connect pairs of atoms.
-
-<details>
-<summary>▶ Click to see code: Bond connectivity extraction</summary>
-<pre><code class="language-python">
-from rdkit import Chem
-
-# Extract pairwise bond connections as edge list for graph representation
-
-# Each bond is stored twice (i->j and j->i) for undirected graph processing
-
-def get\_bond\_connections(mol):
-edges = \[]
-for bond in mol.GetBonds():
-i = bond.GetBeginAtomIdx()
-j = bond.GetEndAtomIdx()
-edges.extend(\[\[i, j], \[j, i]])
-return edges
-
-# Test on ethanol (CH3CH2OH)
-
-ethanol = Chem.MolFromSmiles("CCO")
-ethanol = Chem.AddHs(ethanol)
-connections = get\_bond\_connections(ethanol)
-print(f"Ethanol has {ethanol.GetNumAtoms()} atoms and {len(connections)//2} bonds") </code></pre>
-
-</details>
-
-**Results**
-
-```
-Ethanol has 9 atoms and 8 bonds
-```
-
-This confirms that the fully hydrogenated ethanol molecule contains 9 atoms and 8 bonds (16 directed edges for GNN input).
-Each bond appears **twice** to support **bidirectional message passing**, a key mechanism in GNN architectures.
-
-#### The Graph Neural Network Architecture
-
-In this section, we define the GNN model that will predict molecular properties based on graph structure. The model has three main building blocks:
-
-1. **Graph convolutional layers** – to propagate information across atoms and bonds
-2. **Global pooling** – to summarize the whole molecule
-3. **Prediction head** – to output a numerical property value
-
-We first import the required modules:
-
-<details>
-<summary>▶ Click to see code: Import dependencies</summary>
-<pre><code class="language-python">
-import torch
-import torch.nn as nn
-import torch.nn.functional as F
-from torch_geometric.nn import GCNConv, global_mean_pool
-</code></pre>
-</details>
-
-* `GCNConv` is a graph convolution layer from PyTorch Geometric.
-* `global_mean_pool` is used to average node embeddings to get a graph-level representation.
-
-Next, we define the GNN model as a subclass of `torch.nn.Module`. We'll call it `MolecularGNN`.
-
-<details>
-<summary>▶ Click to see code: GNN class definition</summary>
-<pre><code class="language-python">
-class MolecularGNN(nn.Module):
-    def __init__(self, num_features=5, hidden_dim=64, num_layers=3):
-        """
-        Initialize a GNN for molecular property prediction.
-
-        Args:
-            num_features (int): Number of input features per atom
-            hidden_dim (int): Size of hidden representations
-            num_layers (int): Number of message passing rounds
-        """
-        super(MolecularGNN, self).__init__()
-        
-        # Create a list of GCN layers
-        self.gnn_layers = nn.ModuleList()
-
-        # First layer: map input features to hidden dim
-        self.gnn_layers.append(GCNConv(num_features, hidden_dim))
-
-        # Intermediate layers: message passing
-        for _ in range(num_layers - 1):
-            self.gnn_layers.append(GCNConv(hidden_dim, hidden_dim))
-
-        # Final prediction layer: hidden vector → scalar output
-        self.predictor = nn.Linear(hidden_dim, 1)
-
-    def forward(self, x, edge_index, batch):
-        """
-        Forward pass through the GNN.
-
-        Args:
-            x (Tensor): Node feature matrix
-            edge_index (Tensor): Graph connectivity (edges)
-            batch (Tensor): Batch vector assigning nodes to graphs
-
-        Returns:
-            Tensor: Predicted scalar property (e.g., solubility)
-        """
-        for layer in self.gnn_layers:
-            x = layer(x, edge_index)
-            x = torch.relu(x)
-
-        # Pool node features to get graph-level embedding
-        graph_embedding = global_mean_pool(x, batch)
-
-        # Predict property from graph embedding
-        return self.predictor(graph_embedding).squeeze(-1)
-</code></pre>
-</details>
-
-**Core ideas:**
-
-* `GCNConv`: Each layer performs message passing — it updates each atom’s feature based on its neighbors.
-* `ReLU`: After each layer, we apply a non-linearity to allow more flexible function approximation.
-* `global_mean_pool`: This compresses a variable-size set of atom vectors into one fixed-size vector per molecule.
-* `self.predictor`: Finally, a fully connected layer maps this vector to a scalar (e.g., solubility).
-
-**Why this design works well:**
-
-* Three GCN layers = each atom’s feature gets updated based on neighbors up to 3 bonds away.
-* Pooling = handles molecules of any size and preserves permutation invariance (atom order doesn’t matter).
-* The model is intentionally simple to reduce overfitting on small datasets.
-
-To train a GNN on molecular data, we must first convert each molecule from its SMILES string into a graph structure compatible with PyTorch Geometric. This means we need to provide:
-
-* **Node features**: information about atoms
-* **Edge indices**: bond connectivity (i.e., which atoms are connected)
-* **(Optional) Labels**: such as solubility, if it's a supervised task
-
-We encapsulate all this into a `torch_geometric.data.Data` object.
-
-<details>
-<summary>▶ Click to see code: Molecule to graph conversion</summary>
-<pre><code class="language-python">
-from rdkit import Chem
-import torch
-from torch_geometric.data import Data
-
-def molecule_to_graph(smiles, solubility=None):
-    """
-    Convert a SMILES string to a PyTorch Geometric graph.
+<div style="background-color:#f0f7ff; border:2px solid #1976d2; border-radius:10px; padding:20px; margin:20px 0;">
+    <h4>Why Interpretability Matters in Chemistry</h4>
     
-    Args:
-        smiles: String representation of the molecule.
-        solubility: Optional float value of log S for supervised learning.
-
-    Returns:
-        PyTorch Geometric Data object with x (node features), 
-        edge_index (bond connections), and optional y (label).
-    """
-    mol = Chem.MolFromSmiles(smiles)
-    if mol is None:
-        return None
-
-    mol = Chem.AddHs(mol)
-
-    atom_features = [get_atom_features(atom) for atom in mol.GetAtoms()]
-    x = torch.tensor(atom_features, dtype=torch.float)
-
-    edge_list = get_bond_connections(mol)
-    if len(edge_list) == 0:
-        edge_list = [[0, 0]]
-    edge_index = torch.tensor(edge_list, dtype=torch.long).t().contiguous()
-
-    data = Data(x=x, edge_index=edge_index)
-
-    if solubility is not None:
-        data.y = torch.tensor([solubility], dtype=torch.float)
-
-    return data
-
-# Quick test
-test_graph = molecule_to_graph("CCO", -0.77)
-print(f"Ethanol graph: {test_graph.x.shape[0]} atoms, {test_graph.edge_index.shape[1] // 2} bonds")
-</code></pre>
-</details>
-
-**Explanation:**
-
-* `Chem.AddHs` makes hydrogen atoms explicit. This ensures consistency across molecules.
-* `get_atom_features(atom)` returns a list of numerical descriptors for each atom.
-* `get_bond_connections(mol)` returns bidirectional bond pairs, e.g., `[[0,1],[1,0]]`.
-* The returned `Data` object contains:
-  * `x`: atom features
-  * `edge_index`: graph connectivity
-  * `y`: solubility label (optional)
-
-#### Training the Model
-
-Once we have graph representations of molecules, we can organize the data, initialize the model, and train it using mini-batch stochastic gradient descent.
-
-<details>
-<summary>▶ Click to see code: Training process</summary>
-<pre><code class="language-python">
-from torch_geometric.loader import DataLoader
-
-# Step 1: Convert molecules to graphs (first 1000 for speed)
-graphs = []
-for smiles, sol in zip(smiles_list[:1000], solubility_values[:1000]):
-    graph = molecule_to_graph(smiles, sol)
-    if graph is not None:
-        graphs.append(graph)
-
-# Step 2: Train/test split
-train_size = int(0.8 * len(graphs))
-train_graphs = graphs[:train_size]
-test_graphs = graphs[train_size:]
-
-# Step 3: Wrap in data loaders
-train_loader = DataLoader(train_graphs, batch_size=32, shuffle=True)
-test_loader = DataLoader(test_graphs, batch_size=32, shuffle=False)
-
-# Step 4: Model setup
-model = MolecularGNN(num_features=5, hidden_dim=64)
-optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
-criterion = nn.MSELoss()
-</code></pre>
-
-<pre><code class="language-python">
-# Step 5: One training epoch
-def train_epoch(model, loader, optimizer, criterion):
-    model.train()
-    total_loss = 0
-
-    for batch in loader:
-        optimizer.zero_grad()
-        prediction = model(batch.x, batch.edge_index, batch.batch)
-        loss = criterion(prediction.squeeze(), batch.y)
-        loss.backward()
-        optimizer.step()
-        total_loss += loss.item() * batch.num_graphs
-
-    return total_loss / len(loader.dataset)
-</code></pre>
-
-<pre><code class="language-python">
-# Step 6: Training loop
-print("Training GNN on ESOL dataset...")
-for epoch in range(50):
-    loss = train_epoch(model, train_loader, optimizer, criterion)
-    if epoch % 10 == 0:
-        print(f"Epoch {epoch}: Loss = {loss:.3f}")
-</code></pre>
-</details>
-
-**Explanation:**
-
-* `molecule_to_graph(...)` ensures all molecules are consistently converted.
-* PyG’s `DataLoader` batches graphs for efficiency.
-* `model(batch.x, batch.edge_index, batch.batch)` feeds batched graph data into the GNN.
-* `.squeeze()` flattens predictions to align with `batch.y`.
-* The training loop prints loss every 10 epochs for monitoring.
-
-**Results**
-
-```
-Training GNN on ESOL dataset...
-Epoch 0: Loss = 7.583
-Epoch 10: Loss = 3.824
-Epoch 20: Loss = 3.767
-Epoch 30: Loss = 3.584
-Epoch 40: Loss = 3.396
-```
-
-Over the course of 50 epochs, the training loss steadily decreases from **7.583** to **3.396**, showing that the model is learning to fit the solubility data. While the improvement slows after epoch 20, the continued decline suggests the model is gradually refining its predictions. The relatively high starting loss reflects the complexity of the task and the broad range of solubility values (over 13 log units). Further training or tuning (e.g., more epochs, dropout, better features) could yield additional improvements.
-
-#### Making Predictions
-
-Once the GNN has been trained, we can use it to estimate the solubility of molecules that the model has never seen before. This demonstrates its ability to generalize.
-
-To do this, we need to:
-- Convert the input SMILES string to a PyTorch Geometric graph.
-- Create a batch index (required by the model).
-- Put the model in evaluation mode.
-- Use `torch.no_grad()` to disable gradient tracking and save memory.
-
-<details>
-<summary>▶ Click to see code: Making predictions</summary>
-<pre><code class="language-python">
-def predict_solubility(smiles, model):
-    """Predict solubility for a new molecule."""
-    graph = molecule_to_graph(smiles)
-    if graph is None:
-        return None
-
-    # Create dummy batch index (for a single molecule)
-    batch = torch.zeros(graph.x.size(0), dtype=torch.long)
-
-    # Run model in evaluation mode without gradient tracking
-    model.eval()
-    with torch.no_grad():
-        prediction = model(graph.x, graph.edge_index, batch)
-
-    return prediction.item()
-
-# Try out the model on some well-known molecules
-test_molecules = [
-    ("O", "Water"),
-    ("CCO", "Ethanol"),
-    ("CC(C)=O", "Acetone"),
-    ("c1ccccc1", "Benzene"),
-    ("CC(=O)O", "Acetic acid")
-]
-
-print("\nPredictions for common molecules:")
-for smiles, name in test_molecules:
-    pred = predict_solubility(smiles, model)
-    print(f"  {name}: {pred:.2f} log S")
-</code></pre>
-</details>
-
-This test set includes:
-
-* **Water** and **Ethanol**, which are small and highly polar (high solubility)
-* **Benzene**, a non-polar aromatic compound (low solubility)
-* **Acetone** and **Acetic acid**, which are moderately soluble due to polarity and functional groups
-
-**Results**
-
-```
-Predictions for common molecules:
-  Water: 0.32 log S
-  Ethanol: -1.59 log S
-  Acetone: -1.76 log S
-  Benzene: -3.44 log S
-  Acetic acid: -1.30 log S
-```
-
-The predictions align well with chemical intuition:
-
-* **Water** is predicted to be highly soluble (**0.32 log S**), which is consistent with its strong polarity and hydrogen bonding capacity.
-* **Ethanol** also shows good solubility (**−1.59 log S**), reflecting its polar hydroxyl group and small molecular size.
-* **Acetone** (**−1.76**) and **Acetic acid** (**−1.30**) fall in a moderate solubility range, as expected due to their polar functional groups (ketone and carboxyl).
-* **Benzene** is correctly predicted as poorly soluble (**−3.44**), consistent with its non-polar aromatic structure.
-
-These results suggest the model has learned to distinguish basic solubility trends based on molecular structure, even for molecules it did not see during training. Though not perfect, the outputs are **chemically plausible** and demonstrate the GNN’s capacity to generalize.
-
-#### Understanding Model Performance
-
-Evaluating the model on a held-out test set gives us a more objective view of performance. We’ll compute:
-- **RMSE**: Root Mean Square Error between predicted and true values
-- **$R^2$**: Coefficient of determination (variance explained)
-
-<details>
-<summary>▶ Click to see code: Model evaluation</summary>
-<pre><code class="language-python"> 
-# Evaluate the model on unseen molecules
-model.eval()
-predictions = []
-true_values = []
-
-with torch.no_grad():
-    for batch in test_loader:
-        pred = model(batch.x, batch.edge_index, batch.batch)
-        predictions.extend(pred.squeeze().tolist())
-        true_values.extend(batch.y.tolist())
-
-# Calculate standard regression metrics
-rmse = np.sqrt(mean_squared_error(true_values, predictions))
-r2 = r2_score(true_values, predictions)
-
-print("\nModel Performance:")
-print(f"  RMSE: {rmse:.2f} log S units")
-print(f"  R² Score: {r2:.3f}")
-
-# Visualize prediction vs. truth
-plt.figure(figsize=(8, 6))
-plt.scatter(true_values, predictions, alpha=0.5)
-plt.plot(
-    [min(true_values), max(true_values)],
-    [min(true_values), max(true_values)],
-    'r--'
-)
-plt.xlabel('True Solubility (log S)')
-plt.ylabel('Predicted Solubility (log S)')
-plt.title('GNN Solubility Predictions')
-plt.grid(True)
-plt.show()
-</code></pre>
-</details>
-
-The RMSE quantifies the average deviation between predicted and true solubility values, expressed in **log S units**. In our case, the model achieved an RMSE of **1.84**, which indicates moderate prediction error across the test set.
-
-The \$R^2\$ score (coefficient of determination) is defined as:
-
-$$
-R^2 = 1 - \frac{\sum_i (y_i - \hat{y}_i)^2}{\sum_i (y_i - \bar{y})^2}
-$$
-
-Our model obtained an \$R^2\$ score of **0.288**, meaning it explains approximately **28.8% of the variance** in solubility. While this is far from perfect, it is still meaningful considering the simplicity of the model and the limited input features (only five per atom). There is clear room for improvement, but the results confirm that the GNN is capturing **non-trivial structure–property relationships**.
-
-The scatter plot of predicted vs. true values remains a valuable diagnostic tool. Points near the diagonal indicate accurate predictions, while vertical scatter reveals prediction error. Outliers often correspond to **large**, **structurally complex**, or **unusual** molecules—highlighting where the model may need more expressive power or richer input features.
-
-![GNN Solubility Predictions](/resource/img/gnn/solubility.png)
-
-#### The Power of Learned Representations
-
-What makes GNNs particularly powerful is their ability to learn task-specific molecular representations. Unlike fixed molecular descriptors, the GNN learns which structural patterns matter for solubility:
-
-- The model might learn to recognize hydrogen bond donors and acceptors
-- It could identify hydrophobic regions that decrease water solubility  
-- Aromatic systems might be recognized as generally decreasing solubility
-- The size and shape of molecules emerge naturally from the graph structure
-
-These learned patterns are not programmed explicitly - they emerge from the training data through the optimization process. This flexibility allows GNNs to potentially discover new structure-property relationships that human chemists haven't recognized.
-
-#### Limitations and Future Directions
-
-While our model shows promising results, there's significant room for improvement:
-
-**Richer Atom Features**: We used only five basic features. Adding hybridization, partial charges, or chirality information could improve predictions.
-
-**Edge Features**: Our model ignores bond types (single, double, aromatic). Including these could better capture electronic effects.
-
-**Advanced Architectures**: Attention mechanisms could help the model focus on the most relevant parts of molecules. Residual connections could enable deeper networks without over-smoothing.
-
-**3D Information**: Our model uses only 2D connectivity. Including 3D coordinates could capture conformational effects on solubility.
-
-**Uncertainty Quantification**: Knowing when the model is confident versus uncertain would be valuable for practical applications.
-
-#### Summary: From Structure to Properties
-
-We've built a complete system that learns to predict molecular solubility directly from chemical structure. The key achievements:
-
-1. **Natural Representation**: Molecules are processed as graphs, preserving all structural information
-2. **End-to-End Learning**: The model learns features automatically, no hand-crafting required
-3. **Generalizable Framework**: The same architecture works for any molecular property
-4. **Interpretable Process**: Message passing has clear chemical meaning
-5. **Practical Performance**: Even our simple model achieves meaningful predictions
-
-This foundation opens the door to more sophisticated molecular property prediction. By combining domain knowledge with powerful graph learning algorithms, GNNs are revolutionizing computational chemistry and drug discovery. In the next section, we'll explore concrete implementations and advanced techniques that push these capabilities even further.
-
-### 3.3.4 Code Example: GNN on a Molecular Dataset
-
-#### Completed and Compiled Code: [Click Here](https://colab.research.google.com/drive/1qKnKQH4nC5jVzxtsJSUrmwrGu3-YbZha?usp=sharing)
-
-In Section 3.3.3 we sketched a minimal GNN for solubility. Here, we’ll **teach** you how to build a **complete**, **production-ready** pipeline—with commentary at every step—so you understand **why** we do each part, not just **how**.
-
-#### 1. Data Loading & Exploration
-
-Before any modeling, get to know your data: size, range, and quirks.  
-
-```python
-import pandas as pd, io, requests
-
-# Download ESOL
-url  = "https://raw.githubusercontent.com/deepchem/deepchem/master/datasets/delaney-processed.csv"
-data = pd.read_csv(io.StringIO(requests.get(url).text))
-
-print(f"Rows: {len(data)}, Columns: {list(data.columns)}")
-display(data.head(3))
-````
-
-**Why?**
-
-* Confirm column names
-* Catch missing or malformed entries
-* Ensure SMILES and solubility are present
-
-```python
-import matplotlib.pyplot as plt
-
-sols = data['measured log solubility in mols per litre']
-plt.hist(sols, bins=25, edgecolor='k', alpha=0.7)
-plt.title('ESOL Solubility Distribution')
-plt.xlabel('Log S'); plt.ylabel('Count')
-plt.show()
-```
-![Solubility Distribution](/resource/img/gnn/solubility_distribution.png)
-
-**Why?**
-
-* Check for imbalance or outliers
-* Decide if you need data augmentation or clipping
-
-</details>
-
-#### 2. Chemical Featurization
-
-Atoms and bonds carry the signal your GNN will learn. We choose features that encode **element identity**, **electronic state**, and **geometry**.
-
-```python
-from rdkit import Chem
-
-def atom_feats(a):
-    return [
-      a.GetAtomicNum(),
-      a.GetDegree(),
-      a.GetFormalCharge(),
-      int(a.GetHybridization()),
-      int(a.GetIsAromatic()),
-      a.GetMass()*0.01,
-      a.GetTotalValence(),
-      int(a.IsInRing()),
-      a.GetTotalNumHs(),
-      int(a.GetChiralTag()!=0)
-    ]
-
-def bond_feats(b):
-    m = {Chem.BondType.SINGLE:1, Chem.BondType.DOUBLE:2,
-         Chem.BondType.TRIPLE:3,  Chem.BondType.AROMATIC:4}
-    return [m.get(b.GetBondType(),0),
-            int(b.GetIsAromatic()),
-            int(b.IsInRing())]
-```
-
-**Why?**
-
-* Hybridization & aromaticity reflect electronic configuration
-* Chirality preserves 3D information
-* Bond types distinguish single/double/aromatic interactions
-
-```python
-mol = Chem.MolFromSmiles(data.smiles.iloc[0])
-print("Atom 0 feats:", atom_feats(mol.GetAtomWithIdx(0)))
-```
-
-**Expected**
-
-```
-Atom 0 feats: [8, 1, 0, 4, 0, 0.15999000000000002, 2, 0, 1, 0]
-```
-
-#### 3. Dataset & DataLoader
-
-Wrap each molecule in a `torch_geometric.data.Data` for batching. Handle edge cases (e.g. single-atom molecules).
-
-```python
-import torch
-from torch_geometric.data import Data, Dataset
-
-class MoleculeDataset(Dataset):
-    def __init__(self, smiles, targets=None):
-        super().__init__()
-        self._data = []
-        for i, smi in enumerate(smiles):
-            mol = Chem.MolFromSmiles(smi)
-            if not mol: continue
-            mol = Chem.AddHs(mol)
-            x = torch.tensor([atom_feats(a) for a in mol.GetAtoms()], dtype=torch.float)
-            edges, e_feats = [], []
-            for b in mol.GetBonds():
-                u,v = b.GetBeginAtomIdx(), b.GetEndAtomIdx()
-                bf = bond_feats(b)
-                edges += [[u,v],[v,u]]; e_feats += [bf,bf]
-            if not edges:
-                edges, e_feats = [[0,0]], [[0,0,0]]
-            edge_index = torch.tensor(edges, dtype=torch.long).t().contiguous()
-            self._data.append(Data(x=x, edge_index=edge_index, y=torch.tensor([targets[i]], dtype=torch.float) if targets else None))
-    def len(self): return len(self._data)
-    def get(self, i): return self._data[i]
-```
-
-**Why?**
-
-* `Data` encapsulates node features, edges, and labels
-* Bidirectional edges support undirected message passing
-* Graceful handling of invalid SMILES
-
-```python
-import numpy as np
-from torch_geometric.loader import DataLoader
-
-idx = np.random.choice(len(data), 500, replace=False)
-smis = data.smiles.iloc[idx].tolist()
-sols = data['measured log solubility in mols per litre'].iloc[idx].tolist()
-
-ds = MoleculeDataset(smis, sols)
-train_ds, test_ds = torch.utils.data.random_split(ds, [400,100])
-train_loader = DataLoader(train_ds, batch_size=32, shuffle=True)
-test_loader  = DataLoader(test_ds,  batch_size=32, shuffle=False)
-```
-
-**Why?**
-
-* Subsample for fast iteration
-* Train/test split for honest evaluation
-
-#### 4. GNN Architecture
-
-We combine **residual GCN layers**, **attention**, and **multi-pooling** to capture both **local** and **global** structure.
-
-```python
-import torch.nn as nn, torch.nn.functional as F
-from torch_geometric.nn import GCNConv, GATConv, global_mean_pool, global_max_pool, global_add_pool
-
-class AdvancedMolecularGNN(nn.Module):
-    def __init__(self, in_dim, hidden=128, layers=4):
-        super().__init__()
-        self.embed = nn.Linear(in_dim, hidden)
-        self.convs = nn.ModuleList([GCNConv(hidden,hidden) for _ in range(layers)])
-        self.bns   = nn.ModuleList([nn.BatchNorm1d(hidden) for _ in range(layers)])
-        self.attn  = GATConv(hidden, hidden, heads=4, concat=False)
-        self.head  = nn.Sequential(
-            nn.Linear(hidden*3, hidden), nn.ReLU(),
-            nn.BatchNorm1d(hidden), nn.Dropout(0.2),
-            nn.Linear(hidden, hidden//2), nn.ReLU(), nn.Dropout(0.1),
-            nn.Linear(hidden//2,1)
-        )
-    def forward(self, x, edge_index, batch):
-        x = F.relu(self.embed(x))
-        for i,(conv,bn) in enumerate(zip(self.convs,self.bns)):
-            xn = F.relu(bn(conv(x,edge_index)))
-            x  = x + xn if i>0 else xn
-        x = self.attn(x, edge_index)
-        p = torch.cat([
-            global_mean_pool(x,batch),
-            global_max_pool(x,batch),
-            global_add_pool(x,batch)
-        ], dim=1)
-        return self.head(p).squeeze(-1)
-```
-
-**Why?**
-
-* **Residuals** mitigate over-smoothing as depth increases
-* **GAT** layer highlights important neighbors
-* **Mean/max/add pooling** fuses complementary graph summaries
-
-#### 5. Training Loop
-
-Use **Adam**, **LR scheduler**, and **MSELoss**. Monitor both training and validation to detect overfitting.
-
-```python
-import torch.optim as optim
-from sklearn.metrics import mean_squared_error, r2_score
-
-device    = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-model     = AdvancedMolecularGNN(in_dim=10).to(device)
-opt       = optim.Adam(model.parameters(), lr=1e-3, weight_decay=1e-5)
-sched     = optim.lr_scheduler.ReduceLROnPlateau(opt, patience=5)
-crit      = nn.MSELoss()
-train_losses, test_losses = [], []
-
-for epoch in range(1,51):
-    # training
-    model.train(); tl=0
-    for b in train_loader:
-        b=b.to(device); opt.zero_grad()
-        loss = crit(model(b.x,b.edge_index,b.batch), b.y)
-        loss.backward(); opt.step()
-        tl += loss.item()*b.num_graphs
-    tl /= len(train_loader.dataset)
-    # validation
-    model.eval(); vl=0; preds=[]; trues=[]
-    with torch.no_grad():
-        for b in test_loader:
-            b=b.to(device)
-            out = model(b.x,b.edge_index,b.batch)
-            vl += crit(out,b.y).item()*b.num_graphs
-            preds += out.cpu().tolist(); trues += b.y.cpu().tolist()
-    vl /= len(test_loader.dataset)
-    sched.step(vl)
-    train_losses.append(tl); test_losses.append(vl)
-    if epoch%10==0:
-        print(f"Epoch {epoch}: Train {tl:.3f}, Test {vl:.3f}")
-
-rmse = mean_squared_error(trues,preds, squared=False)
-r2   = r2_score(trues,preds)
-print(f"\nFinal → RMSE: {rmse:.3f},  R²: {r2:.3f}")
-```
-
-**Logs**
-
-```
-Epoch 10: Train 2.42, Test 3.59  
-Epoch 20: Train 1.87, Test 3.21  
-Epoch 30: Train 1.53, Test 3.05  
-...
-Final → RMSE: 1.69,  R²: 0.12
-```
-
-#### 6. Diagnostics & Visualization
-
-Always **visualize** your learning curves and prediction scatter to understand model behavior.
-
-```python
-import matplotlib.pyplot as plt
-
-fig, (ax1,ax2) = plt.subplots(1,2,figsize=(12,5))
-ax1.plot(train_losses,label='Train'); ax1.plot(test_losses,label='Test')
-ax1.set(title='Loss vs Epoch', xlabel='Epoch', ylabel='MSE'); ax1.legend()
-ax2.scatter(trues,preds,alpha=0.6)
-ax2.plot([min(trues),max(trues)]*2, 'r--')
-ax2.set(title=f'Pred vs True (R²={r2:.2f})', xlabel='True', ylabel='Pred')
-plt.show()
-```
-
-![Training Progress](/resource/img/gnn/training_and_predictions.png)
-
-#### 7. Inference on New Molecules
-
-Wrap your preprocessing + forward pass in a function for easy use.
-
-<details>
-<summary>▶ Prediction function</summary>
-
-```python
-def predict_sol(smi):
-    mol = Chem.MolFromSmiles(smi)
-    if not mol: return None
-    x = torch.tensor([atom_feats(a) for a in Chem.AddHs(mol).GetAtoms()],
-                     dtype=torch.float).to(device)
-    edges = [[b.GetBeginAtomIdx(),b.GetEndAtomIdx()] for b in mol.GetBonds()]
-    edges += [[v,u] for u,v in edges] or [[0,0]]
-    ei = torch.tensor(edges,dtype=torch.long).t().contiguous().to(device)
-    batch = torch.zeros(x.size(0),dtype=torch.long).to(device)
-    model.eval()
-    with torch.no_grad():
-        return model(x,ei,batch).item()
-
-for smi,name in [("O","Water"),("CCO","Ethanol"),("c1ccccc1","Benzene"),("CC(=O)O","Acetic acid")]:
-    print(f"{name:<10}{smi:<10}→ {predict_sol(smi):.2f} log S")
-```
-
-**Results**
-
-```
-Water      O         →  0.28  
-Ethanol    CCO       → -1.45  
-Benzene    c1ccccc1  → -3.12  
-Acetic acid CC(=O)O  → -1.20  
-```
-
-</details>
-
-## Key Takeaways
-
-1. **Explore & visualize** your data before modeling.
-2. **Rich featurization** (10D atom + 3D bond) captures chemical nuance.
-3. **Residual GCN + GAT + multi-pooling** yields expressive graph embeddings.
-4. **Monitor train vs validation** to detect overfitting.
-5. Wrap up inference in a **reusable function**.
-
-With this structured, well-commented pipeline you can confidently adapt the same pattern to **any** molecular property prediction task.
-
-### 3.3.5 Challenges and Interpretability in GNNs
-
-#### Completed and Compiled Code: [Click Here](https://colab.research.google.com/drive/1rtJ6voxMVK7KS-oZS97_7Jr1bBf7Z15T?usp=sharing)
-
-The journey from a working GNN to a trustworthy chemical prediction system is paved with challenges. While we've seen how GNNs can learn to predict molecular properties, the real test comes when we deploy these models in high-stakes scenarios: drug discovery, toxicity screening, or materials design. In these applications, understanding not just what the model predicts, but why it makes those predictions, becomes paramount.
-
-This section delves into the fundamental challenges facing molecular GNNs and the innovative solutions being developed to address them. We'll explore the mysterious phenomenon of over-smoothing, uncover the hidden biases in molecular representations, and most importantly, learn how to make our models interpretable to both machines and chemists.
-
-#### The Over-smoothing Dilemma: When Deeper Becomes Worse
-
-Imagine you're at a crowded conference where everyone is sharing their research findings. In the first round of conversations, each person shares their unique discoveries. But as people continue to mingle and share, something interesting happens - everyone's story starts to sound remarkably similar. By the end of the conference, the unique insights have blended into a homogeneous narrative. This is precisely what happens in deep GNNs through a phenomenon called over-smoothing.
-
-In molecular GNNs, each atom starts with distinct features - a nitrogen knows it's a nitrogen, a carbon in an aromatic ring knows it's aromatic. But as we add more message-passing layers, these distinct identities begin to blur. After enough layers, every atom's representation converges toward the average molecular feature, losing the very distinctions that make chemistry interesting.
-
-<details>
-<summary>▶ Click to see code: Demonstrating over-smoothing</summary>
-
-```python
-import torch
-import torch.nn as nn
-import torch.nn.functional as F
-from torch_geometric.nn import GCNConv
-from torch_geometric.data import Data
-import matplotlib.pyplot as plt
-import numpy as np
-
-def analyze_over_smoothing(graph_data, max_layers=6):
-    """Analyze how node representations become similar with depth"""
-    similarities = []
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#e3f2fd;">
+            <th style="padding:10px; border:1px solid #90caf9;">Stakeholder</th>
+            <th style="padding:10px; border:1px solid #90caf9;">Need</th>
+            <th style="padding:10px; border:1px solid #90caf9;">Example</th>
+            <th style="padding:10px; border:1px solid #90caf9;">Impact</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #90caf9;"><b>Medicinal Chemists</b></td>
+            <td style="padding:10px; border:1px solid #90caf9;">Understand SAR<br><span style="color:#666; font-size:0.9em;">Structure-Activity Relationships</span></td>
+            <td style="padding:10px; border:1px solid #90caf9;">Which groups increase potency?</td>
+            <td style="padding:10px; border:1px solid #90caf9;">Guide drug optimization</td>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #90caf9;"><b>Regulatory Bodies</b></td>
+            <td style="padding:10px; border:1px solid #90caf9;">Safety justification<br><span style="color:#666; font-size:0.9em;">Why is it safe?</span></td>
+            <td style="padding:10px; border:1px solid #90caf9;">Explain toxicity predictions</td>
+            <td style="padding:10px; border:1px solid #90caf9;">FDA approval</td>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #90caf9;"><b>Researchers</b></td>
+            <td style="padding:10px; border:1px solid #90caf9;">Scientific insight<br><span style="color:#666; font-size:0.9em;">New mechanisms</span></td>
+            <td style="padding:10px; border:1px solid #90caf9;">Discover new pharmacophores</td>
+            <td style="padding:10px; border:1px solid #90caf9;">Advance knowledge</td>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #90caf9;"><b>Industry</b></td>
+            <td style="padding:10px; border:1px solid #90caf9;">Risk assessment<br><span style="color:#666; font-size:0.9em;">Confidence in predictions</span></td>
+            <td style="padding:10px; border:1px solid #90caf9;">Why invest in this molecule?</td>
+            <td style="padding:10px; border:1px solid #90caf9;">Resource allocation</td>
+        </tr>
+    </table>
+</div>
+
+Recent advances in GNN interpretability for molecular applications have taken several promising directions:
+
+**Attention-Based Methods**: 
+
+<div style="background-color:#e3f2fd; padding:15px; border-radius:8px; margin:15px 0;">
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#90caf9;">
+            <th style="padding:10px; border:1px solid #42a5f5; text-align:center;" colspan="4">Attention-Based Interpretability</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #64b5f6; background-color:#ffffff;">
+                <b>Method:</b><br>
+                Graph Attention Networks<br>
+                <span style="font-size:0.9em; color:#666;">GATs</span>
+            </td>
+            <td style="padding:10px; border:1px solid #64b5f6; background-color:#ffffff;">
+                <b>How it works:</b><br>
+                Learn importance weights<br>
+                <span style="font-size:0.9em; color:#666;">α_ij for each edge</span>
+            </td>
+            <td style="padding:10px; border:1px solid #64b5f6; background-color:#ffffff;">
+                <b>Visualization:</b><br>
+                Highlight important bonds<br>
+                <span style="font-size:0.9em; color:#666;">Thicker = more important</span>
+            </td>
+            <td style="padding:10px; border:1px solid #64b5f6; background-color:#ffffff;">
+                <b>Reference:</b><br>
+                Veličković et al., 2017<br>
+                <span style="font-size:0.9em; color:#666;">ICLR</span>
+            </td>
+        </tr>
+    </table>
+</div>
+
+Graph Attention Networks (GATs) provide built-in interpretability through their attention mechanisms, allowing researchers to visualize which atoms or bonds the model considers most important for a given prediction [1,2]. This approach naturally aligns with chemical intuition about reactive sites and functional groups.
+
+**Substructure-Based Explanations**: 
+
+<div style="background-color:#f3e5f5; padding:15px; border-radius:8px; margin:15px 0;">
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#e1bee7;">
+            <th style="padding:10px; border:1px solid #ba68c8; text-align:center;" colspan="4">Substructure Mask Explanation (SME)</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #ce93d8; background-color:#ffffff;">
+                <b>Innovation:</b><br>
+                Fragment-based<br>
+                <span style="font-size:0.9em; color:#666;">Not just atoms</span>
+            </td>
+            <td style="padding:10px; border:1px solid #ce93d8; background-color:#ffffff;">
+                <b>Alignment:</b><br>
+                Chemical intuition<br>
+                <span style="font-size:0.9em; color:#666;">Functional groups</span>
+            </td>
+            <td style="padding:10px; border:1px solid #ce93d8; background-color:#ffffff;">
+                <b>Application:</b><br>
+                Toxicophore detection<br>
+                <span style="font-size:0.9em; color:#666;">Find toxic substructures</span>
+            </td>
+            <td style="padding:10px; border:1px solid #ce93d8; background-color:#ffffff;">
+                <b>Reference:</b><br>
+                Nature Comms, 2023<br>
+                <span style="font-size:0.9em; color:#666;">14, 2585</span>
+            </td>
+        </tr>
+    </table>
+</div>
+
+The Substructure Mask Explanation (SME) method represents a significant advance by providing interpretations based on chemically meaningful molecular fragments rather than individual atoms or edges [3]. This approach uses established molecular segmentation methods to ensure explanations align with chemists' understanding, making it particularly valuable for identifying pharmacophores and toxicophores.
+
+**Integration of Chemical Knowledge**: 
+
+<div style="background-color:#e8f5e9; padding:15px; border-radius:8px; margin:15px 0;">
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#a5d6a7;">
+            <th style="padding:10px; border:1px solid #66bb6a; text-align:center;" colspan="4">Pharmacophore-Integrated GNNs</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #81c784; background-color:#ffffff;">
+                <b>Concept:</b><br>
+                Hierarchical modeling<br>
+                <span style="font-size:0.9em; color:#666;">Multi-level structure</span>
+            </td>
+            <td style="padding:10px; border:1px solid #81c784; background-color:#ffffff;">
+                <b>Benefit 1:</b><br>
+                Better performance<br>
+                <span style="font-size:0.9em; color:#666;">Domain knowledge helps</span>
+            </td>
+            <td style="padding:10px; border:1px solid #81c784; background-color:#ffffff;">
+                <b>Benefit 2:</b><br>
+                Natural interpretability<br>
+                <span style="font-size:0.9em; color:#666;">Pharmacophore-level</span>
+            </td>
+            <td style="padding:10px; border:1px solid #81c784; background-color:#ffffff;">
+                <b>Reference:</b><br>
+                J Cheminformatics, 2022<br>
+                <span style="font-size:0.9em; color:#666;">14, 49</span>
+            </td>
+        </tr>
+    </table>
+</div>
+
+Recent work has shown that incorporating pharmacophore information hierarchically into GNN architectures not only improves prediction performance but also enhances interpretability by explicitly modeling chemically meaningful substructures [4]. This bridges the gap between data-driven learning and domain expertise.
+
+**Gradient-Based Attribution**: 
+
+<div style="background-color:#fff3e0; padding:15px; border-radius:8px; margin:15px 0;">
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#ffe082;">
+            <th style="padding:10px; border:1px solid #ffc107; text-align:center;" colspan="4">SHAP for Molecular GNNs</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #ffd54f; background-color:#ffffff;">
+                <b>Method:</b><br>
+                SHapley values<br>
+                <span style="font-size:0.9em; color:#666;">Game theory based</span>
+            </td>
+            <td style="padding:10px; border:1px solid #ffd54f; background-color:#ffffff;">
+                <b>Advantage:</b><br>
+                Rigorous foundation<br>
+                <span style="font-size:0.9em; color:#666;">Additive features</span>
+            </td>
+            <td style="padding:10px; border:1px solid #ffd54f; background-color:#ffffff;">
+                <b>Output:</b><br>
+                Feature importance<br>
+                <span style="font-size:0.9em; color:#666;">Per atom/bond</span>
+            </td>
+            <td style="padding:10px; border:1px solid #ffd54f; background-color:#ffffff;">
+                <b>Reference:</b><br>
+                Lundberg & Lee, 2017<br>
+                <span style="font-size:0.9em; color:#666;">NeurIPS</span>
+            </td>
+        </tr>
+    </table>
+</div>
+
+Methods like SHAP (SHapley Additive exPlanations) have been successfully applied to molecular property prediction, providing feature importance scores that help identify which molecular characteristics most influence predictions [5,6]. These approaches are particularly useful for understanding global model behavior across different molecular classes.
+
+**Comparative Studies**: 
+
+<div style="background-color:#ffebee; padding:15px; border-radius:8px; margin:15px 0;">
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#ffcdd2;">
+            <th style="padding:10px; border:1px solid #ef9a9a; text-align:center;" colspan="4">GNNs vs Traditional Methods</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #ef9a9a; background-color:#ffffff;">
+                <b>Aspect</b></td>
+            <td style="padding:10px; border:1px solid #ef9a9a; background-color:#ffffff;">
+                <b>GNNs</b></td>
+            <td style="padding:10px; border:1px solid #ef9a9a; background-color:#ffffff;">
+                <b>Descriptor-based</b></td>
+            <td style="padding:10px; border:1px solid #ef9a9a; background-color:#ffffff;">
+                <b>Recommendation</b></td>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #ef9a9a; background-color:#ffffff;">
+                Performance</td>
+            <td style="padding:10px; border:1px solid #ef9a9a; background-color:#ffffff;">
+                Often superior<br><span style="font-size:0.9em; color:#666;">Complex patterns</span></td>
+            <td style="padding:10px; border:1px solid #ef9a9a; background-color:#ffffff;">
+                Good baseline<br><span style="font-size:0.9em; color:#666;">Well-understood</span></td>
+            <td style="padding:10px; border:1px solid #ef9a9a; background-color:#ffffff;">
+                Task-dependent</td>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #ef9a9a; background-color:#ffffff;">
+                Interpretability</td>
+            <td style="padding:10px; border:1px solid #ef9a9a; background-color:#ffffff;">
+                Challenging<br><span style="font-size:0.9em; color:#666;">Requires extra work</span></td>
+            <td style="padding:10px; border:1px solid #ef9a9a; background-color:#ffffff;">
+                Built-in<br><span style="font-size:0.9em; color:#666;">Known features</span></td>
+            <td style="padding:10px; border:1px solid #ef9a9a; background-color:#ffffff;">
+                Hybrid approach</td>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #ef9a9a; background-color:#ffffff;">
+                Reference</td>
+            <td style="padding:10px; border:1px solid #ef9a9a; background-color:#ffffff;" colspan="3">
+                Jiang et al., 2021, J Cheminformatics</td>
+        </tr>
+    </table>
+</div>
+
+Recent comparative studies have shown that while GNNs excel at learning complex patterns, traditional descriptor-based models often provide better interpretability through established chemical features, suggesting a potential hybrid approach combining both paradigms [6].
+
+<div style="background-color:#f0f4c3; padding:15px; border-radius:8px; margin:20px 0;">
+    <h4>The Future: Interpretable-by-Design</h4>
+    <p>The field is moving toward interpretable-by-design architectures rather than post-hoc explanation methods. As noted by researchers, some medicinal chemists value interpretability over raw accuracy if a small sacrifice in performance can significantly enhance understanding of the model's reasoning [3]. This reflects a broader trend in molecular AI toward building systems that augment rather than replace human chemical intuition.</p>
     
-    for depth in range(1, max_layers + 1):
-        # Build GCN with current depth
-        layers = [GCNConv(graph_data.x.size(1), 32)]
-        for _ in range(depth - 1):
-            layers.append(GCNConv(32, 32))
-        
-        model = nn.Sequential(*layers)
-        model.eval()
-        
-        # Forward pass and similarity calculation
-        x = graph_data.x.float()
-        with torch.no_grad():
-            for layer in model:
-                x = torch.relu(layer(x, graph_data.edge_index))
-        
-        # Calculate pairwise cosine similarity
-        x_norm = F.normalize(x, p=2, dim=1)
-        sim_matrix = torch.mm(x_norm, x_norm.t())
-        
-        # Average similarity (excluding diagonal)
-        mask = ~torch.eye(sim_matrix.size(0), dtype=bool)
-        avg_similarity = sim_matrix[mask].mean().item()
-        similarities.append(avg_similarity)
-        
-        print(f"Depth {depth}: Average node similarity = {avg_similarity:.3f}")
+    <table style="width:100%; border-collapse:collapse; margin-top:15px;">
+        <tr style="background-color:#fff176;">
+            <th style="padding:10px; border:1px solid #ffd600;">Design Principle</th>
+            <th style="padding:10px; border:1px solid #ffd600;">Implementation</th>
+            <th style="padding:10px; border:1px solid #ffd600;">Example</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #ffeb3b; background-color:#ffffff;">Chemical hierarchy</td>
+            <td style="padding:10px; border:1px solid #ffeb3b; background-color:#ffffff;">Multi-scale architectures</td>
+            <td style="padding:10px; border:1px solid #ffeb3b; background-color:#ffffff;">Atom → Group → Molecule</td>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #ffeb3b; background-color:#ffffff;">Explicit substructures</td>
+            <td style="padding:10px; border:1px solid #ffeb3b; background-color:#ffffff;">Pharmacophore encoding</td>
+            <td style="padding:10px; border:1px solid #ffeb3b; background-color:#ffffff;">H-bond donors as nodes</td>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #ffeb3b; background-color:#ffffff;">Modular predictions</td>
+            <td style="padding:10px; border:1px solid #ffeb3b; background-color:#ffffff;">Separate property modules</td>
+            <td style="padding:10px; border:1px solid #ffeb3b; background-color:#ffffff;">Solubility + Toxicity branches</td>
+        </tr>
+    </table>
+</div>
+
+**References:**
+
+[1] Veličković, P., Cucurull, G., Casanova, A., Romero, A., Liò, P., & Bengio, Y. (2017). Graph Attention Networks. *International Conference on Learning Representations*.
+
+[2] Yuan, H., Yu, H., Gui, S., & Ji, S. (2022). Explainability in graph neural networks: A taxonomic survey. *IEEE Transactions on Pattern Analysis and Machine Intelligence*.
+
+[3] Chemistry-intuitive explanation of graph neural networks for molecular property prediction with substructure masking. (2023). *Nature Communications*, 14, 2585.
+
+[4] Integrating concept of pharmacophore with graph neural networks for chemical property prediction and interpretation. (2022). *Journal of Cheminformatics*, 14, 52.
+
+[5] Lundberg, S. M., & Lee, S. I. (2017). A unified approach to interpreting model predictions. *Advances in Neural Information Processing Systems*, 30, 4765-4774.
+
+[6] Jiang, D., Wu, Z., Hsieh, C. Y., Chen, G., Liao, B., Wang, Z., ... & Hou, T. (2021). Could graph neural networks learn better molecular representation for drug discovery? A comparison study of descriptor-based and graph-based models. *Journal of Cheminformatics*, 13(1), 1-23.
+
+#### Summary
+
+<div style="background-color:#e3f2fd; padding:15px; border-radius:8px;">
+    <h4>Key Takeaways: Challenges and Solutions</h4>
     
-    return similarities
-
-# Create a simple molecular graph (benzene ring)
-# 6 carbon atoms in a ring
-x = torch.randn(6, 10)  # 6 atoms, 10 features each
-edge_index = torch.tensor([
-    [0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 0],
-    [1, 0, 2, 1, 3, 2, 4, 3, 5, 4, 0, 5]
-], dtype=torch.long)
-
-benzene_graph = Data(x=x, edge_index=edge_index)
-
-# Analyze over-smoothing
-print("Analyzing over-smoothing in a benzene ring:")
-similarities = analyze_over_smoothing(benzene_graph)
-
-# Visualize the results
-plt.figure(figsize=(10, 6))
-plt.plot(range(1, len(similarities) + 1), similarities, 'bo-', linewidth=2, markersize=8)
-plt.xlabel('Number of GNN Layers', fontsize=12)
-plt.ylabel('Average Node Similarity', fontsize=12)
-plt.title('Over-smoothing in Graph Neural Networks', fontsize=14)
-plt.grid(True, alpha=0.3)
-plt.ylim(0, 1)
-plt.show()
-```
-
-</details>
-
-The results are striking. With just one layer, nodes maintain their distinctiveness with similarities around 0.3-0.4. But by layer 5 or 6, similarities approach 0.9 or higher - the atoms have essentially lost their individual identities. For a molecule, this is catastrophic. The difference between a reactive site and an inert carbon is precisely what determines chemical behavior.
-
-But why does this happen? Mathematically, each message-passing layer can be viewed as a form of graph convolution that acts like a low-pass filter, smoothing out high-frequency information (the differences between nodes) while preserving low-frequency information (the average properties). After multiple applications, only the lowest frequency remains - the global average.
-
-#### The Expressiveness Challenge: What GNNs Can and Cannot Distinguish
-
-A more fundamental limitation of GNNs lies in their theoretical expressiveness. The Weisfeiler-Lehman (WL) test provides a framework for understanding what graph structures GNNs can distinguish. Surprisingly, there are many pairs of different molecules that standard GNNs cannot tell apart!
-
-<details>
-<summary>▶ Click to see code: Demonstrating GNN limitations</summary>
-
-```python
-from rdkit import Chem
-from rdkit.Chem import Draw
-
-def create_indistinguishable_molecules():
-    """Create pairs of molecules that basic GNNs cannot distinguish"""
+    <table style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#90caf9;">
+            <th style="padding:10px; border:1px solid #42a5f5;">Challenge</th>
+            <th style="padding:10px; border:1px solid #42a5f5;">Impact</th>
+            <th style="padding:10px; border:1px solid #42a5f5;">Current Solutions</th>
+            <th style="padding:10px; border:1px solid #42a5f5;">Future Directions</th>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #64b5f6; background-color:#ffffff;"><b>Over-smoothing</b></td>
+            <td style="padding:10px; border:1px solid #64b5f6; background-color:#ffffff;">Limits depth to 3-5 layers<br><span style="font-size:0.9em; color:#666;">Can't capture long-range</span></td>
+            <td style="padding:10px; border:1px solid #64b5f6; background-color:#ffffff;">• Residual connections<br>• Jumping knowledge<br>• Normalization</td>
+            <td style="padding:10px; border:1px solid #64b5f6; background-color:#ffffff;">Novel architectures<br><span style="font-size:0.9em; color:#666;">Beyond message passing</span></td>
+        </tr>
+        <tr>
+            <td style="padding:10px; border:1px solid #64b5f6; background-color:#ffffff;"><b>Interpretability</b></td>
+            <td style="padding:10px; border:1px solid #64b5f6; background-color:#ffffff;">Low trust & adoption<br><span style="font-size:0.9em; color:#666;">Can't guide design</span></td>
+            <td style="padding:10px; border:1px solid #64b5f6; background-color:#ffffff;">• Attention visualization<br>• SHAP values<br>• Substructure masking</td>
+            <td style="padding:10px; border:1px solid #64b5f6; background-color:#ffffff;">Interpretable-by-design<br><span style="font-size:0.9em; color:#666;">Chemical hierarchy</span></td>
+        </tr>
+    </table>
     
-    # Example 1: Structural isomers with same local environments
-    # Both have the same atom types and local connectivity patterns
-    mol1_smiles = "CC(C)CC"  # 2-methylbutane
-    mol2_smiles = "CCCCC"    # n-pentane
-    
-    # Example 2: More complex case - same connectivity different 3D
-    mol3_smiles = "C1CCCCC1"  # Cyclohexane (chair conformation)
-    mol4_smiles = "C1CCCCC1"  # Cyclohexane (boat conformation)
-    
-    molecules = [
-        (mol1_smiles, "2-methylbutane"),
-        (mol2_smiles, "n-pentane"),
-    ]
-    
-    return molecules
-
-# Visualize indistinguishable molecules
-molecules = create_indistinguishable_molecules()
-mols = [Chem.MolFromSmiles(smiles) for smiles, _ in molecules]
-labels = [label for _, label in molecules]
-
-print("Molecules that challenge basic GNNs:")
-img = Draw.MolsToGridImage(mols, molsPerRow=2, subImgSize=(300, 300), legends=labels)
-```
-
-</details>
-
-These examples highlight a crucial limitation: basic message-passing GNNs are limited by the WL test's expressiveness. They cannot distinguish between graphs that have the same pattern of local neighborhoods, even if the global structure differs. This is particularly problematic in chemistry where:
-
-- **Stereoisomers** have identical connectivity but different 3D arrangements
-- **Long-range interactions** like hydrogen bonding across a molecule aren't captured
-- **Conformational differences** that affect properties are invisible to topology-only GNNs
-
-#### Making the Black Box Transparent: Approaches to Interpretability
-
-The need for interpretability in molecular GNNs goes beyond academic curiosity. When a model predicts that a molecule might be toxic, chemists need to understand which structural features drive that prediction. Is it a reactive functional group? An unusual substitution pattern? Without this understanding, the model remains a black box that's difficult to trust or learn from.
-
-Let's explore three powerful approaches to GNN interpretability:
-
-##### 1. Attention-Based Interpretability
-
-Graph Attention Networks (GATs) provide built-in interpretability through their attention mechanisms:
-
-<details>
-<summary>▶ Click to see code: Extracting and visualizing attention weights</summary>
-
-```python
-from torch_geometric.nn import GATConv, global_mean_pool
-from rdkit.Chem import rdDepictor
-from rdkit.Chem.Draw import rdMolDraw2D
-import io
-from PIL import Image
-
-class InterpretableGAT(nn.Module):
-    """GAT model that exposes attention weights for interpretation"""
-    
-    def __init__(self, in_features, hidden_dim=64, heads=4):
-        super().__init__()
-        self.gat1 = GATConv(in_features, hidden_dim, heads=heads, concat=False)
-        self.gat2 = GATConv(hidden_dim, hidden_dim, heads=heads, concat=False)
-        self.predictor = nn.Linear(hidden_dim, 1)
-        
-    def forward(self, x, edge_index, batch=None, return_attention=False):
-        if return_attention:
-            x1, (edge_index1, attention1) = self.gat1(x, edge_index, return_attention_weights=True)
-            x1 = F.relu(x1)
-            x2, (edge_index2, attention2) = self.gat2(x1, edge_index, return_attention_weights=True)
-            x2 = F.relu(x2)
-            
-            if batch is not None:
-                x2 = global_mean_pool(x2, batch)
-            
-            output = self.predictor(x2)
-            return output, (attention1, attention2)
-        else:
-            x = F.relu(self.gat1(x, edge_index))
-            x = F.relu(self.gat2(x, edge_index))
-            if batch is not None:
-                x = global_mean_pool(x, batch)
-            return self.predictor(x)
-
-def visualize_attention_on_molecule(smiles, attention_weights, layer=0):
-    """Visualize attention weights on molecular structure"""
-    mol = Chem.MolFromSmiles(smiles)
-    
-    # Compute 2D coordinates
-    rdDepictor.Compute2DCoords(mol)
-    
-    # Average attention weights for each atom
-    num_atoms = mol.GetNumAtoms()
-    atom_attention = torch.zeros(num_atoms)
-    
-    # Aggregate attention weights by atom
-    edge_list = attention_weights[0]
-    att_weights = attention_weights[1]
-    
-    for i in range(edge_list.size(1)):
-        src, dst = edge_list[0, i].item(), edge_list[1, i].item()
-        if src < num_atoms and dst < num_atoms:
-            atom_attention[dst] += att_weights[i].mean().item()
-    
-    # Normalize
-    atom_attention = atom_attention / atom_attention.max()
-    
-    # Create color map
-    colors = {}
-    for i in range(num_atoms):
-        intensity = atom_attention[i].item()
-        colors[i] = (1.0, 1.0 - intensity, 1.0 - intensity)  # Red intensity
-    
-    # Draw molecule with attention highlighting
-    drawer = rdMolDraw2D.MolDraw2DCairo(400, 400)
-    drawer.DrawMolecule(mol, highlightAtoms=list(range(num_atoms)),
-                       highlightAtomColors=colors)
-    drawer.FinishDrawing()
-    
-    # Convert to PIL Image
-    bio = io.BytesIO(drawer.GetDrawingText())
-    img = Image.open(bio)
-    
-    return img, atom_attention
-
-# Example: Analyze attention for aspirin
-smiles = "CC(=O)Oc1ccccc1C(=O)O"  # Aspirin
-print(f"Analyzing attention patterns for: {smiles}")
-
-# Create dummy data for demonstration
-mol = Chem.MolFromSmiles(smiles)
-mol = Chem.AddHs(mol)
-num_atoms = mol.GetNumAtoms()
-
-# Simple features: just atomic numbers
-x = torch.tensor([[atom.GetAtomicNum()] for atom in mol.GetAtoms()], dtype=torch.float)
-
-# Build edge index from bonds
-edge_list = []
-for bond in mol.GetBonds():
-    i, j = bond.GetBeginAtomIdx(), bond.GetEndAtomIdx()
-    edge_list.extend([[i, j], [j, i]])
-edge_index = torch.tensor(edge_list, dtype=torch.long).t()
-
-# Create model and get attention
-model = InterpretableGAT(in_features=1)
-output, (att1, att2) = model(x, edge_index, return_attention=True)
-
-# Visualize attention
-img, atom_att = visualize_attention_on_molecule(smiles, att1)
-plt.figure(figsize=(8, 6))
-plt.imshow(img)
-plt.axis('off')
-plt.title('Attention Visualization for Aspirin\n(Redder = Higher Attention)')
-plt.show()
-```
-
-</details>
-
-The attention visualization reveals which atoms the model considers most important. For drug molecules, we often see high attention on:
-- Functional groups that determine activity (pharmacophores)
-- Reactive sites that might cause toxicity
-- Hydrogen bond donors/acceptors that affect binding
-
-##### 2. Gradient-Based Attribution
-
-Another powerful approach uses gradients to understand feature importance:
-
-<details>
-<summary>▶ Click to see code: Gradient-based molecular attribution</summary>
-
-```python
-def integrated_gradients(model, x, edge_index, batch, steps=50):
-    """
-    Compute integrated gradients for molecular attribution.
-    Shows which features most influence the prediction.
-    """
-    # Create baseline (zero features)
-    baseline = torch.zeros_like(x)
-    
-    # Generate interpolated inputs
-    alphas = torch.linspace(0, 1, steps).view(-1, 1, 1)
-    interpolated = baseline.unsqueeze(0) + alphas * (x.unsqueeze(0) - baseline.unsqueeze(0))
-    
-    # Compute gradients
-    gradients = []
-    
-    for i in range(steps):
-        interp_x = interpolated[i].requires_grad_(True)
-        output = model(interp_x, edge_index, batch)
-        
-        # Compute gradients
-        grad = torch.autograd.grad(output.sum(), interp_x)[0]
-        gradients.append(grad)
-    
-    # Aggregate gradients
-    gradients = torch.stack(gradients)
-    avg_gradients = gradients.mean(dim=0)
-    
-    # Compute integrated gradients
-    integrated_grads = (x - baseline) * avg_gradients
-    
-    # Aggregate by atom
-    atom_importance = integrated_grads.abs().sum(dim=1)
-    
-    return atom_importance
-
-def visualize_atom_importance(smiles, importance_scores):
-    """Visualize atom importance scores on molecular structure"""
-    mol = Chem.MolFromSmiles(smiles)
-    
-    # Normalize importance scores
-    importance_scores = importance_scores / importance_scores.max()
-    
-    # Create highlight colors based on importance
-    colors = {}
-    radii = {}
-    for i in range(mol.GetNumAtoms()):
-        if i < len(importance_scores):
-            score = importance_scores[i].item()
-            # Color: blue (low) to red (high)
-            colors[i] = (score, 0, 1-score)
-            radii[i] = 0.3 + 0.4 * score
-    
-    # Draw molecule
-    rdDepictor.Compute2DCoords(mol)
-    drawer = rdMolDraw2D.MolDraw2DCairo(400, 400)
-    drawer.DrawMolecule(mol, highlightAtoms=list(colors.keys()),
-                       highlightAtomColors=colors,
-                       highlightAtomRadii=radii)
-    drawer.FinishDrawing()
-    
-    bio = io.BytesIO(drawer.GetDrawingText())
-    img = Image.open(bio)
-    
-    return img
-
-# Example: Analyze feature importance for a drug molecule
-drug_smiles = "Cc1ccc(cc1Nc2nccc(n2)c3cccnc3)NC(=O)c4ccc(cc4)CN5CCN(CC5)C"  # Imatinib
-print(f"Analyzing feature importance for Imatinib (anticancer drug)")
-
-# Note: In practice, you would use your trained model and real features
-# This is a demonstration of the technique
-```
-
-</details>
-
-Integrated gradients reveal a different perspective than attention weights. While attention shows where the model "looks," gradients show which features, when changed, would most affect the prediction. This is particularly valuable for:
-- Identifying key pharmacophores in drug molecules
-- Understanding which modifications might improve properties
-- Debugging when models make unexpected predictions
-
-##### 3. Substructure Analysis
-
-Perhaps the most chemically intuitive approach is to analyze which molecular substructures correlate with predictions:
-
-<details>
-<summary>▶ Click to see code: Substructure importance analysis</summary>
-
-```python
-from rdkit.Chem import AllChem
-from collections import defaultdict
-import pandas as pd
-
-def analyze_substructure_contributions(smiles_list, predictions, model, radius=2):
-    """
-    Analyze which molecular substructures contribute to predictions.
-    Uses Morgan fingerprint fragments.
-    """
-    fragment_scores = defaultdict(list)
-    fragment_smiles = {}
-    
-    for smiles, pred in zip(smiles_list, predictions):
-        mol = Chem.MolFromSmiles(smiles)
-        if mol is None:
-            continue
-            
-        # Generate Morgan fingerprint with fragment information
-        info = {}
-        fp = AllChem.GetMorganFingerprint(mol, radius, bitInfo=info)
-        
-        # For each fragment in this molecule
-        for bit, atoms_list in info.items():
-            for atoms in atoms_list:
-                # Extract the substructure
-                env = Chem.FindAtomEnvironmentOfRadiusN(mol, radius, atoms[0])
-                submol = Chem.PathToSubmol(mol, env)
-                
-                if submol.GetNumAtoms() > 0:
-                    frag_smiles = Chem.MolToSmiles(submol)
-                    fragment_scores[bit].append(pred)
-                    fragment_smiles[bit] = frag_smiles
-    
-    # Calculate average contribution of each fragment
-    fragment_contributions = {}
-    for bit, scores in fragment_scores.items():
-        if len(scores) >= 5:  # Only consider fragments appearing in 5+ molecules
-            avg_score = np.mean(scores)
-            std_score = np.std(scores)
-            fragment_contributions[bit] = {
-                'smiles': fragment_smiles.get(bit, 'Unknown'),
-                'mean_prediction': avg_score,
-                'std_prediction': std_score,
-                'count': len(scores)
-            }
-    
-    # Convert to DataFrame for analysis
-    df = pd.DataFrame.from_dict(fragment_contributions, orient='index')
-    df = df.sort_values('mean_prediction', ascending=False)
-    
-    return df
-
-def visualize_important_fragments(fragment_df, top_n=10):
-    """Visualize the most important molecular fragments"""
-    
-    # Get top positive and negative contributors
-    top_positive = fragment_df.head(top_n//2)
-    top_negative = fragment_df.tail(top_n//2)
-    
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
-    
-    # Positive contributors
-    ax1.barh(range(len(top_positive)), top_positive['mean_prediction'])
-    ax1.set_yticks(range(len(top_positive)))
-    ax1.set_yticklabels([f"Frag {i+1}" for i in range(len(top_positive))])
-    ax1.set_xlabel('Average Prediction Value')
-    ax1.set_title('Top Positive Contributing Fragments')
-    ax1.grid(True, alpha=0.3)
-    
-    # Negative contributors
-    ax2.barh(range(len(top_negative)), top_negative['mean_prediction'])
-    ax2.set_yticks(range(len(top_negative)))
-    ax2.set_yticklabels([f"Frag {i+1}" for i in range(len(top_negative))])
-    ax2.set_xlabel('Average Prediction Value')
-    ax2.set_title('Top Negative Contributing Fragments')
-    ax2.grid(True, alpha=0.3)
-    
-    plt.tight_layout()
-    plt.show()
-    
-    # Print fragment SMILES
-    print("\nTop Positive Contributing Fragments:")
-    for idx, row in top_positive.iterrows():
-        print(f"  {row['smiles']}: {row['mean_prediction']:.3f} (n={row['count']})")
-    
-    print("\nTop Negative Contributing Fragments:")
-    for idx, row in top_negative.iterrows():
-        print(f"  {row['smiles']}: {row['mean_prediction']:.3f} (n={row['count']})")
-
-# Example analysis (using dummy data for demonstration)
-# In practice, you would use real predictions from your model
-example_smiles = [
-    "CCO", "CCCO", "CCCCO", "CC(C)O", "c1ccccc1O",
-    "CC(=O)O", "CCC(=O)O", "c1ccccc1C(=O)O", "CCN", "CCCN"
-]
-# Dummy predictions (in reality, these would come from your model)
-example_predictions = [0.5, 0.3, 0.1, 0.6, -0.2, 0.8, 0.7, 0.2, 0.4, 0.2]
-
-fragment_analysis = analyze_substructure_contributions(
-    example_smiles, example_predictions, None, radius=1
-)
-
-print("Substructure contribution analysis completed")
-```
-
-</details>
-
-This substructure analysis bridges the gap between model predictions and chemical intuition. By identifying which fragments correlate with high or low predictions, we can:
-- Discover structure-activity relationships (SAR)
-- Guide medicinal chemistry optimization
-- Validate that the model has learned chemically reasonable patterns
-
-#### Advanced Solutions to GNN Challenges
-
-The field has developed several innovative solutions to address these fundamental challenges:
-
-##### 1. Combating Over-smoothing with Residual Connections
-
-<details>
-<summary>▶ Click to see code: Implementing residual GNN architectures</summary>
-
-```python
-class ResidualGCN(nn.Module):
-    """GCN with residual connections to combat over-smoothing"""
-    
-    def __init__(self, in_features, hidden_dim, num_layers, dropout=0.1):
-        super().__init__()
-        
-        self.initial_project = nn.Linear(in_features, hidden_dim)
-        
-        self.layers = nn.ModuleList()
-        self.norms = nn.ModuleList()
-        self.dropouts = nn.ModuleList()
-        
-        for _ in range(num_layers):
-            self.layers.append(GCNConv(hidden_dim, hidden_dim))
-            self.norms.append(nn.LayerNorm(hidden_dim))
-            self.dropouts.append(nn.Dropout(dropout))
-    
-    def forward(self, x, edge_index):
-        x = self.initial_project(x)
-        
-        for conv, norm, dropout in zip(self.layers, self.norms, self.dropouts):
-            identity = x  # Save for residual connection
-            
-            out = conv(x, edge_index)
-            out = F.relu(out)
-            out = dropout(out)
-            out = norm(out)
-            
-            x = out + identity  # Residual connection
-        
-        return x
-
-def compare_architectures(graph_data):
-    """Compare standard GCN vs Residual GCN for over-smoothing"""
-    
-    depths = [1, 3, 5, 7, 10]
-    standard_similarities = []
-    residual_similarities = []
-    
-    for depth in depths:
-        # Standard GCN
-        standard = nn.Sequential(*[GCNConv(32 if i > 0 else graph_data.x.size(1), 32) 
-                                  for i in range(depth)])
-        
-        # Residual GCN
-        residual = ResidualGCN(graph_data.x.size(1), 32, depth)
-        
-        # Evaluate similarity for both
-        with torch.no_grad():
-            # Standard
-            x_standard = graph_data.x.float()
-            for layer in standard:
-                x_standard = F.relu(layer(x_standard, graph_data.edge_index))
-            
-            x_norm = F.normalize(x_standard, p=2, dim=1)
-            sim_matrix = torch.mm(x_norm, x_norm.t())
-            mask = ~torch.eye(sim_matrix.size(0), dtype=bool)
-            standard_similarities.append(sim_matrix[mask].mean().item())
-            
-            # Residual
-            x_residual = residual(graph_data.x.float(), graph_data.edge_index)
-            
-            x_norm = F.normalize(x_residual, p=2, dim=1)
-            sim_matrix = torch.mm(x_norm, x_norm.t())
-            residual_similarities.append(sim_matrix[mask].mean().item())
-    
-    # Plot comparison
-    plt.figure(figsize=(10, 6))
-    plt.plot(depths, standard_similarities, 'ro-', label='Standard GCN', linewidth=2)
-    plt.plot(depths, residual_similarities, 'bo-', label='Residual GCN', linewidth=2)
-    plt.xlabel('Number of Layers')
-    plt.ylabel('Average Node Similarity')
-    plt.title('Over-smoothing: Standard vs Residual GCN')
-    plt.legend()
-    plt.grid(True, alpha=0.3)
-    plt.show()
-    
-    return standard_similarities, residual_similarities
-
-# Compare architectures
-print("Comparing standard and residual GCN architectures:")
-std_sim, res_sim = compare_architectures(benzene_graph)
-```
-
-</details>
-
-Residual connections dramatically reduce over-smoothing by preserving node-specific information across layers. This allows us to build much deeper GNNs that can capture long-range molecular interactions without losing local chemical information.
-
-##### 2. Enhancing Expressiveness with Higher-Order Features
-
-<details>
-<summary>▶ Click to see code: Implementing higher-order GNN features</summary>
-
-```python
-class HigherOrderGNN(nn.Module):
-    """
-    GNN that incorporates higher-order structural features
-    to distinguish molecules that basic GNNs cannot.
-    """
-    
-    def __init__(self, node_features, hidden_dim, use_cycles=True, use_motifs=True):
-        super().__init__()
-        
-        # Calculate extended feature dimension
-        extended_features = node_features
-        if use_cycles:
-            extended_features += 3  # 3,4,5-member rings
-        if use_motifs:
-            extended_features += 5  # Common chemical motifs
-        
-        self.use_cycles = use_cycles
-        self.use_motifs = use_motifs
-        
-        self.conv1 = GCNConv(extended_features, hidden_dim)
-        self.conv2 = GCNConv(hidden_dim, hidden_dim)
-        self.conv3 = GCNConv(hidden_dim, hidden_dim)
-        
-    def extract_cycle_features(self, mol):
-        """Extract cycle membership features for each atom"""
-        cycle_features = []
-        
-        for atom_idx in range(mol.GetNumAtoms()):
-            features = [0, 0, 0]  # 3,4,5-member rings
-            
-            # Check if atom is in rings of different sizes
-            for ring_size, feat_idx in [(3, 0), (4, 1), (5, 2)]:
-                if mol.GetRingInfo().IsAtomInRingOfSize(atom_idx, ring_size):
-                    features[feat_idx] = 1
-            
-            cycle_features.append(features)
-        
-        return torch.tensor(cycle_features, dtype=torch.float)
-    
-    def extract_motif_features(self, mol):
-        """Extract common chemical motif features"""
-        # Define common motifs
-        motif_smarts = [
-            "[OH]",      # Hydroxyl
-            "C(=O)",     # Carbonyl
-            "C(=O)O",    # Carboxyl
-            "N",         # Amine
-            "c"          # Aromatic
-        ]
-        
-        motif_features = []
-        
-        for atom_idx in range(mol.GetNumAtoms()):
-            features = [0] * len(motif_smarts)
-            atom = mol.GetAtomWithIdx(atom_idx)
-            
-            # Check each motif
-            for i, smarts in enumerate(motif_smarts):
-                pattern = Chem.MolFromSmarts(smarts)
-                matches = mol.GetSubstructMatches(pattern)
-                
-                for match in matches:
-                    if atom_idx in match:
-                        features[i] = 1
-                        break
-            
-            motif_features.append(features)
-        
-        return torch.tensor(motif_features, dtype=torch.float)
-    
-    def forward(self, x, edge_index, mol=None):
-        # Add higher-order features if molecule is provided
-        if mol is not None:
-            features_to_concat = [x]
-            
-            if self.use_cycles:
-                cycle_feats = self.extract_cycle_features(mol)
-                features_to_concat.append(cycle_feats)
-            
-            if self.use_motifs:
-                motif_feats = self.extract_motif_features(mol)
-                features_to_concat.append(motif_feats)
-            
-            x = torch.cat(features_to_concat, dim=1)
-        
-        # Standard GNN forward pass
-        x = F.relu(self.conv1(x, edge_index))
-        x = F.relu(self.conv2(x, edge_index))
-        x = self.conv3(x, edge_index)
-        
-        return x
-
-# Demonstrate on molecules that standard GNNs struggle with
-test_molecules = [
-    ("C1CC1", "Cyclopropane"),
-    ("C1CCC1", "Cyclobutane"),
-    ("c1ccccc1", "Benzene"),
-    ("CC(=O)O", "Acetic acid"),
-    ("CCO", "Ethanol")
-]
-
-print("Extracting higher-order features for test molecules:")
-for smiles, name in test_molecules:
-    mol = Chem.MolFromSmiles(smiles)
-    model = HigherOrderGNN(node_features=5, hidden_dim=32)
-    
-    # Extract basic features
-    x = torch.randn(mol.GetNumAtoms(), 5)
-    
-    # Extract edge index
-    edge_list = []
-    for bond in mol.GetBonds():
-        i, j = bond.GetBeginAtomIdx(), bond.GetEndAtomIdx()
-        edge_list.extend([[i, j], [j, i]])
-    edge_index = torch.tensor(edge_list, dtype=torch.long).t()
-    
-    # Forward pass with higher-order features
-    output = model(x, edge_index, mol)
-    
-    print(f"\n{name} ({smiles}):")
-    print(f"  Number of atoms: {mol.GetNumAtoms()}")
-    print(f"  Output shape: {output.shape}")
-```
-
-</details>
-
-By incorporating higher-order structural features like ring membership and chemical motifs, we can distinguish between molecules that standard GNNs see as identical. This is crucial for applications where subtle structural differences lead to different properties.
-
-##### 3. Uncertainty Quantification in Molecular Predictions
-
-<details>
-<summary>▶ Click to see code: Implementing uncertainty-aware GNNs</summary>
-
-```python
-class BayesianGNN(nn.Module):
-    """
-    GNN with uncertainty quantification using Monte Carlo Dropout
-    """
-    
-    def __init__(self, in_features, hidden_dim, dropout_rate=0.2):
-        super().__init__()
-        
-        self.conv1 = GCNConv(in_features, hidden_dim)
-        self.conv2 = GCNConv(hidden_dim, hidden_dim)
-        self.conv3 = GCNConv(hidden_dim, hidden_dim)
-        
-        self.dropout = nn.Dropout(dropout_rate)
-        self.predictor = nn.Linear(hidden_dim, 1)
-        
-        # Enable dropout during inference for uncertainty
-        self.dropout_rate = dropout_rate
-    
-    def forward(self, x, edge_index, batch, enable_dropout=False):
-        # Apply convolutions with dropout
-        x = F.relu(self.conv1(x, edge_index))
-        x = self.dropout(x) if enable_dropout else F.dropout(x, p=self.dropout_rate, training=self.training)
-        
-        x = F.relu(self.conv2(x, edge_index))
-        x = self.dropout(x) if enable_dropout else F.dropout(x, p=self.dropout_rate, training=self.training)
-        
-        x = F.relu(self.conv3(x, edge_index))
-        x = self.dropout(x) if enable_dropout else F.dropout(x, p=self.dropout_rate, training=self.training)
-        
-        # Pool and predict
-        x = global_mean_pool(x, batch)
-        return self.predictor(x)
-    
-    def predict_with_uncertainty(self, x, edge_index, batch, n_samples=100):
-        """
-        Make predictions with uncertainty estimation using MC Dropout
-        """
-        self.train()  # Enable dropout
-        predictions = []
-        
-        for _ in range(n_samples):
-            with torch.no_grad():
-                pred = self.forward(x, edge_index, batch, enable_dropout=True)
-                predictions.append(pred)
-        
-        predictions = torch.cat(predictions, dim=1)
-        mean_pred = predictions.mean(dim=1)
-        std_pred = predictions.std(dim=1)
-        
-        return mean_pred, std_pred
-
-def visualize_uncertainty(smiles_list, mean_preds, std_preds):
-    """Visualize predictions with uncertainty bars"""
-    
-    fig, ax = plt.subplots(figsize=(12, 6))
-    
-    x_pos = np.arange(len(smiles_list))
-    
-    # Plot predictions with error bars
-    ax.bar(x_pos, mean_preds, yerr=std_preds, capsize=5, 
-           color='skyblue', edgecolor='navy', linewidth=1.5)
-    
-    # Customize plot
-    ax.set_xlabel('Molecule', fontsize=12)
-    ax.set_ylabel('Predicted Property', fontsize=12)
-    ax.set_title('Molecular Property Predictions with Uncertainty', fontsize=14)
-    ax.set_xticks(x_pos)
-    ax.set_xticklabels(smiles_list, rotation=45, ha='right')
-    ax.grid(True, alpha=0.3, axis='y')
-    
-    # Add confidence intervals
-    for i, (mean, std) in enumerate(zip(mean_preds, std_preds)):
-        ax.text(i, mean + std + 0.1, f'±{std:.2f}', 
-               ha='center', va='bottom', fontsize=8)
-    
-    plt.tight_layout()
-    plt.show()
-
-# Example: Predictions with uncertainty
-test_smiles = ["CCO", "c1ccccc1", "CC(=O)O", "CCCCCCCC", "c1ccccc1O"]
-mean_preds = [2.3, -1.5, 1.8, -3.2, 0.5]
-std_preds = [0.3, 0.8, 0.2, 1.2, 0.5]
-
-print("Visualizing predictions with uncertainty:")
-visualize_uncertainty(test_smiles, mean_preds, std_preds)
-```
-
-</details>
-
-Uncertainty quantification is crucial for real-world deployment. High uncertainty might indicate:
-- The molecule is very different from training data
-- The prediction is in a region of chemical space where the model is less confident
-- Additional experimental validation is needed
-
-#### The Path Forward: Building Trustworthy Molecular AI
-
-As we've seen throughout this section, the challenges facing molecular GNNs are significant but not insurmountable. The key to building trustworthy molecular AI systems lies in:
-
-1. **Understanding Limitations**: Recognizing what GNNs can and cannot do helps set appropriate expectations and guide model selection.
-
-2. **Incorporating Domain Knowledge**: Higher-order features, chemical motifs, and 3D information can overcome fundamental expressiveness limitations.
-
-3. **Prioritizing Interpretability**: Models that can explain their reasoning are more valuable than black boxes with slightly higher accuracy.
-
-4. **Quantifying Uncertainty**: Knowing when a model is uncertain is as important as the predictions themselves.
-
-5. **Continuous Validation**: Regular testing on diverse chemical spaces ensures models remain reliable as they're deployed.
-
-The future of molecular machine learning isn't just about achieving higher accuracy - it's about building systems that chemists can understand, trust, and learn from. As we continue to develop more sophisticated architectures and interpretation methods, the goal remains constant: augmenting human chemical intuition with powerful computational tools that are both accurate and explainable.
-
-By addressing these challenges head-on, we're not just improving models - we're building the foundation for a new era of AI-assisted molecular discovery, where human expertise and machine learning work hand in hand to solve some of chemistry's most pressing challenges.
+    <p style="margin-top:15px;"><b>The Path Forward:</b></p>
+    <ul>
+        <li><b>Balance accuracy with interpretability</b> - Sometimes 90% accuracy with clear explanations beats 95% black box</li>
+        <li><b>Incorporate domain knowledge</b> - Chemical principles should guide architecture design</li>
+        <li><b>Develop hybrid approaches</b> - Combine GNN power with traditional descriptor interpretability</li>
+        <li><b>Focus on augmenting chemists</b> - Tools should enhance, not replace, human expertise</li>
+    </ul>
+</div>
+
+The challenges facing molecular GNNs—over-smoothing and interpretability—are significant but surmountable. Over-smoothing limits the depth of networks we can effectively use, constraining the model's ability to capture long-range molecular interactions. Meanwhile, the interpretability challenge affects trust and adoption in real-world applications where understanding model decisions is crucial.
+
+Current solutions include architectural innovations like residual connections to combat over-smoothing, and various interpretability methods ranging from attention visualization to substructure-based explanations. The key insight is that effective molecular AI systems must balance predictive power with chemical interpretability, ensuring that models not only make accurate predictions but also provide insights that align with and enhance human understanding of chemistry.
+
+As the field progresses, the focus is shifting from purely accuracy-driven models to systems that provide transparent, chemically meaningful explanations for their predictions. This evolution is essential for GNNs to fulfill their promise as tools for accelerating molecular discovery and understanding.
 
 ---
 
@@ -3663,9 +5434,8 @@ For continuous property prediction (regression), we need to pool node features t
 </details>
 
 <details>
-<summary>▶ Show Solution Code</summary>
-
-```python
+<summary>▶ Click to see code: Complete GNN architecture for solubility prediction</summary>
+<pre><code class="language-python">
 # Complete GNN for solubility prediction
 class SolubilityGNN(nn.Module):
     def __init__(self, node_features, hidden_dim=64):
@@ -3679,8 +5449,7 @@ class SolubilityGNN(nn.Module):
         x = F.relu(self.conv2(x, edge_index))
         x = global_mean_pool(x, batch)  # Pool to molecular level
         return self.predictor(x)        # Single continuous output
-```
-
+</code></pre>
 </details>
 
 ---
@@ -3708,9 +5477,8 @@ This scenario describes distribution shift, where the model was trained on one c
 </details>
 
 <details>
-<summary>▶ Show Solution Code</summary>
-
-```python
+<summary>▶ Click to see code: Data augmentation for chemical space diversity</summary>
+<pre><code class="language-python">
 # Data augmentation to improve generalization
 def augment_chemical_space(original_smiles_list):
     """Expand training data with structural diversity"""
@@ -3735,6 +5503,5 @@ diverse_training_data = combine_datasets([
     'natural_products.csv', 
     'synthetic_compounds.csv'
 ])
-```
-
+</code></pre>
 </details>
