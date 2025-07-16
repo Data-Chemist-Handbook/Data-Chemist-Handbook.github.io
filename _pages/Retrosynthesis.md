@@ -25,7 +25,7 @@ Currently, several commercial retrosynthesis solutions exist, such as CAS Retros
 
 Furthermore, many existing tools are rule-based, template-driven, or rely on decision trees (e.g., the CAS retrosynthetic analysis software), which may struggle to generalize beyond well-studied reaction templates or to handle novel compound classes. This is where machine learning–based models have a distinct advantage: they can learn directly from data, identify patterns beyond explicit rules, and adapt more flexibly to new tasks.
 
-**Summary of Key Terms Used in the Chapter**
+## Summary of Key Terms Used in the Chapter
 
 | Term                 | Definition |
 | :------------------: | :--------- |
@@ -330,8 +330,8 @@ tokenizer.pad_token="<pad>"
 tokenizer.add_special_tokens({"additional_special_tokens": ["[RXN_TYPE_1]", "[RXN_TYPE_2]","[RXN_TYPE_3]","[RXN_TYPE_4]","[RXN_TYPE_5]","[RXN_TYPE_6]","[RXN_TY>
 
 # print bos, eos, pad token ids for reference
-print("BOS token:", tokenizer.bos_token, "→ ID:", tokenizer.bos_token_id)
-print("EOS token:", tokenizer.eos_token, "→ ID:", tokenizer.eos_token_id)
+print("BOS token:", tokenizer.bos_token, "-> ID:", tokenizer.bos_token_id)
+print("EOS token:", tokenizer.eos_token, "-> ID:", tokenizer.eos_token_id)
 print("Pad token:", tokenizer.pad_token, "-> ID", tokenizer.pad_token_id)
 print()
 ```
