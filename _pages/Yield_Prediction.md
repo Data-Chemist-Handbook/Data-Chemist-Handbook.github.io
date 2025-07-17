@@ -293,7 +293,7 @@ class YieldRNN(nn.Module):
 ```
 
 #### 6. Training & Evaluation  
-Here we train for 60 epochs with MSE loss (on scaled 0–1 yields), print validation MSE every 10 epochs then output % yields and plot actual vs predicted.
+Here we train for 60 epochs with MSE loss (on scaled 0–1 yields), print train and validation MSE every 10 epochs.
 ```python
 import torch
 import matplotlib.pyplot as plt
@@ -302,15 +302,15 @@ import math
 
 # 1. Set up steps
 # Using GPU instead of cpu if possible
-device    = 'cuda' if torch.cuda.is_available() else 'cpu'
-model     = YieldRNN(len(vocab)).to(device)
-# Using MSELoss function and Adam to optmize
+device = 'cuda' if torch.cuda.is_available() else 'cpu'
+model = YieldRNN(len(vocab)).to(device)
 criterion = nn.MSELoss()
 optim     = torch.optim.Adam(model.parameters(), lr=1e-3)
 
-# 2 Training loop
-for epoch in range(1, 61):
+# ------------- 3. Training loop -----------------------------------------------------
+for epoch in range(1, 301):          # 60 epochs
     model.train()
+    train_mse, n_train = 0.0, 0
     for X, L, y in train_loader:
         X, L, y = X.to(device), L.to(device), y.to(device)
         optim.zero_grad()
@@ -318,42 +318,59 @@ for epoch in range(1, 61):
         loss = criterion(pred, y)
         loss.backward()
         optim.step()
-
+        train_mse += loss.item() * y.size(0)
+        n_train   += y.size(0)
+    train_mse /= n_train
+    # ---- validation every 10 epochs ----
     if epoch % 10 == 0:
-        model.eval()
-        total_mse, n = 0.0, 0
+        model.eval(); mse = 0; n = 0
         with torch.no_grad():
             for X, L, y in test_loader:
                 X, L, y = X.to(device), L.to(device), y.to(device)
-                mse = criterion(model(X, L), y).item()
-                total_mse += mse * y.size(0)
-                n += y.size(0)
-        print(f"Epoch {epoch:2d} — Val MSE: {total_mse/n:.4f}")
+                mse += criterion(model(X, L), y).item() * len(y)
+                n  += len(y)
+        print(f"Epoch {epoch:3d} Train MSE: {train_mse}  Val MSE: {mse/n:.4f} ")
 
-# 3 Inference & plotting
+```
+#### 6. Model Evaluation on the Test Set
+
+Once training is complete, we switch the model into evaluation mode and measure how well it predicts unseen reactions:   
+```python
 model.eval()
 preds, trues = [], []
 with torch.no_grad():
     for X, L, y in test_loader:
         X, L = X.to(device), L.to(device)
-        out = model(X, L).cpu().numpy() * 100  # rescale to %
-        preds.extend(out)
+        preds.extend(model(X, L).cpu().numpy() * 100)
         trues.extend(y.numpy() * 100)
 
-# Compute RMSE on % yield
-rmse = math.sqrt(((np.array(preds) - np.array(trues))**2).mean())
-print(f"Test RMSE: {rmse:.1f}% yield")
+import numpy as np, matplotlib.pyplot as plt, math
+preds, trues = np.array(preds), np.array(trues)
+rmse = math.sqrt(((preds - trues)**2).mean())
+print(f"RMSE on test set: {rmse:.1f}% yield")
 
-# Scatter plot
-plt.figure(figsize=(5,5))
 plt.scatter(trues, preds, alpha=0.6, edgecolors='k')
-plt.plot([0,100],[0,100],'--',c='gray')
-plt.xlabel("Actual Yield (%)")
-plt.ylabel("Predicted Yield (%)")
-plt.title("Buchwald–Hartwig: Actual vs. Predicted Yields")
+plt.plot([0,100],[0,100],'--',c='gray'); plt.xlabel('Actual %'); plt.ylabel('Predicted %')
+plt.title('Yield prediction (test set)')
 plt.show()
 
+from sklearn.metrics import r2_score
+
+r2 = r2_score(np.array(trues), np.array(preds))
+print(f"R² on test set: {r2:.3f}")
 ```
+**Output**: After training for 300 epochs, the model converged to a stable performance on the held‑out test set:
+- Validation convergence:  
+    - Final validation MSE ≈ 0.0030  
+    - Corresponding RMSE ≈ √0.0030 ≈ 0.055 → 5.5 % yield error  
+- Test‐set metrics  
+    - RMSE on test set: 5.2% yield    
+    - R² on test set: 0.932  
+- Interpretation  
+    - An RMSE of 5.2 % means that, on average, the model’s predicted yields deviate from the true yields by just over ±5 percentage points. The level of accuracy on par with many published HTE yield‐prediction models.  
+    - An R² of 0.93 indicates the network captures 93 % of the variance in experimental yields, demonstrating strong predictive power.
+- Scatter plot  
+![Plot](../../resource/img/yield_prediction/plot_RNN.png)
 
 ---
 
