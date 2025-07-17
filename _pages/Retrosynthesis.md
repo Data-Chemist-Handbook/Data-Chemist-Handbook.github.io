@@ -275,9 +275,9 @@ This step involves adding known reaction classes to our input as it can potentia
 
 ```python
 # Add Reaction Class to Input 
-train2_X = [f"[RX_TYPE_{rx_type}] {smiles}" for rx_type, smiles in zip(trxntype, train_X)]
-val2_X = [f"[RX_TYPE_{rx_type}] {smiles}" for rx_type, smiles in zip(vrxntype, val_X)]
-test2_X = [f"[RX_TYPE_{rx_type}] {smiles}" for rx_type, smiles in zip(tstrxntype, test_rxns)]
+train_X = [f"[RX_TYPE_{rx_type}] {smiles}" for rx_type, smiles in zip(trxntype, train_X)]
+val_X = [f"[RX_TYPE_{rx_type}] {smiles}" for rx_type, smiles in zip(vrxntype, val_X)]
+test_X = [f"[RX_TYPE_{rx_type}] {smiles}" for rx_type, smiles in zip(tstrxntype, test_rxns)]
 ```
 
 **Step 7: Prepare to Tokenize**
@@ -285,24 +285,14 @@ test2_X = [f"[RX_TYPE_{rx_type}] {smiles}" for rx_type, smiles in zip(tstrxntype
 Add Beginning-of-Sequence and End-of-Sequence tokens: 
 
 ```python
-# Add BOS and EOS tokens manually
+# Add BOS and EOS tokens manually if they are not already present
+# only for train and val 
 train_y = [f"<s> {seq}" if not seq.startswith("<s>") else seq for seq in train_y]
 train_y = [f"{seq} </s>" if not seq.endswith("</s>") else seq for seq in train_y]
 
 val_y = [f"<s> {seq}" if not seq.startswith("<s>") else seq for seq in val_y]
 val_y = [f"{seq} </s>" if not seq.endswith("</s>") else seq for seq in val_y]
 
-test_y = [f"<s> {seq}" if not seq.startswith("<s>") else seq for seq in test_y]
-test_y = [f"{seq} </s>" if not seq.endswith("</s>") else seq for seq in test_y]
-
-train_X = [f"<s> {seq}" if not seq.startswith("<s>") else seq for seq in train2_X]
-train_X = [f"{seq} </s>" if not seq.endswith("</s>") else seq for seq in train_X]
-
-val_X = [f"<s> {seq}" if not seq.startswith("<s>") else seq for seq in val2_X]
-val_X = [f"{seq} </s>" if not seq.endswith("</s>") else seq for seq in val_X]
-
-test_X = [f"<s> {seq}" if not seq.startswith("<s>") else seq for seq in test2_X]
-test_X = [f"{seq} </s>" if not seq.endswith("</s>") else seq for seq in test_X]
 
 # print some to verify
 for x in range(5):
