@@ -527,7 +527,7 @@ class Seq2Seq(nn.Module):
 
 **Step 12: Create the Training and Evaluation Functions**
 
-The `train_epoch` function handles one training pass over the training dataset (epoch).
+The `train_epoch` function handles one training pass over the training dataset (epoch). here, we have trained using teacher forcing ...
 
 ```python
 def train_epoch(model, dataloader, criterion, optimizer, vocab_size, epoch, max_len):
@@ -608,7 +608,9 @@ def evaluate(model, dataloader, criterion, vocab_size, max_len):
 ```
 
 **Step 13: Test Function**
-Finally, we have the `test_beam_searcg` function which performs beam search decoding and exact-match checking of the tested model's output against ground truth for the test dataset. This is a sequence-level accuracy check, as mentioned in Step 7, and is much stricter than the token-level checks used for training. We also calculate the average normalized Levenshtein distance of the predictions.
+Finally, we have the `test_beam_search` function which performs beam search decoding and exact-match checking of the tested model's output against ground truth for the test dataset. This is a sequence-level accuracy check, as mentioned in Step 7, and is much stricter than the token-level checks used for training. We also calculate the average normalized Levenshtein distance of the predictions.
+
+Beam search is...
 
 ```python
 # Beam decoding test implementation
@@ -747,7 +749,7 @@ def test_beam_search(model, test_loader, tokenizer, max_len=600, beam_width=5, p
 
 The `train` function handles the complete training workflow for the Seq2Seq LSTM, with support for hyperparameter tuning via wandb. The function sets up the training, validation, and test data loaders. It loads hyperparameter values from the wandb.config object, which is defined through a sweep configuration (refer Step 7 for `sweep_config`). Alternatively, you may replace a parameter (`config.<param>` here) with fixed values to manually define your hyperparameters.
 
-For each epoch, the model is trained using `train_epoch()`, and validation is performed using `evaluate()`. The test fucntion used is `test_exactmatch`. Key metrics are logged to wandb for tracking. After training completes, the final model is saved locally and also uploaded to wandb for record-keeping or future use.
+For each epoch, the model is trained using `train_epoch()`, and validation is performed using `evaluate()`. The test fucntion used is `test_beam_search`. Key metrics are logged to wandb for tracking. After training completes, the final model is saved locally and also uploaded to wandb for record-keeping or future use.
 
 ```python
 # Training loop, with wandb
