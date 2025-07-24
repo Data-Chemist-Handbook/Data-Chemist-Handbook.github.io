@@ -44,7 +44,7 @@ Furthermore, many existing tools are rule-based, template-driven, or rely on dec
 | attention            | a mechanism to determine the importance of components in a sequence relative to other components in that sequence, allowing the model to pay attention to the most relevant parts of the sequence. |
 | normalize | the process of adjusting values measured on different scales to a common scale, often between 0 and 1. For example, in our sequence comparison, it involves dividing a raw score by the length of the reference or target sequence to convert the score into a relative metric, making it comparable across examples of different lengths.  |
 | Levenshtein distance | a metric for measuring the minimum number of single-character edits (insertions, deletions, or substitutions) required to change one string into another. It is commonly used to evaluate the similarity between sequences. |
-| greedy decoding | . |
+| greedy decoding | a decoding strategy where, at each time step, the model selects the token with the highest probability as the next word |
 | beam search decoding | . |
 | transformer | a neural network that transforms an input sequence into an output sequence, using self-attention mechanisms to learn contextual relationships between tokens across the entire sequence.  |
 
@@ -297,7 +297,7 @@ test_X = [f"[RX_TYPE_{rx_type}] {smiles}" for rx_type, smiles in zip(tstrxntype,
 
 **Step 7: Prepare to Tokenize**
 
-Add Beginning-of-Sequence and End-of-Sequence tokens: 
+Add Beginning-of-Sequence (BOS) and End-of-Sequence (EOS) tokens. These signal the start and end of a sequence and help the mdoel learn where to start predicted sequences and when to stop. 
 
 ```python
 # Add BOS and EOS tokens manually if they are not already present
@@ -317,7 +317,7 @@ for x in range(5):
     print("Some train e.g.: ", test_X[x], "from: ", test_y[x])
 ```
 
-Define tokenizer and special tokens:
+Next, define the tokenizer and some special tokens. Tehse special tokens are not part of the vocabulary i.e., not among the tokens predicted, but the tokenizer must be able to recognize them.
 
 ```python
 from transformers import RobertaTokenizerFast
@@ -342,6 +342,8 @@ print()
 
 **Step 8: Tokenize SMILES**
 
+In this step, we take the human-readable SMILES strings and convert them into machine-friendly encodings
+.
 ```python
 # Create function for tokenization
 def tokenize_smiles_bpe(smiles_list, tokenizer, max_length=600):
@@ -427,7 +429,7 @@ sweep_config = {
 
 **Step 10: Attention**
 
-Attention is the key to a model that generalizes well and is able to predict reactant SMILES quite accurately. We noted a drastic improvement in model performance with the addition of addition, with sequence level accuracy jumping from ~0.04% to ~69.6% on our test set!
+Attention is the key to a model that generalizes well and is able to predict reactant SMILES quite accurately. We noted a drastic improvement in model performance with the addition of addition, with sequence level accuracy jumping from ~0% to ~69.6% on our test set!
 
 ```python
 # Add Attention Support
@@ -527,7 +529,11 @@ class Seq2Seq(nn.Module):
 
 **Step 12: Create the Training and Evaluation Functions**
 
-The `train_epoch` function handles one training pass over the training dataset (epoch). here, we have trained using teacher forcing ...
+The `train_epoch` function handles one training pass over the training dataset (epoch). 
+
+Here, we have trained the model using teacher forcing. 
+
+**Note on teacher forcing:** In teacher forcing, instead of the model using its own previous prediction, the teacher i.e. the training program prompts the student (seq2seq LSTM) with the next correct token from the ground truth. However, we do not do this for every single token. Rather we set a teacher forcing ratio determines how much of the sequence will be "taught" to the model. In the example code below, we start with a ratio of 0.5 i.e., the model is taught 50% of the sequence. However, this can result in the model relying on correct tokens and any single incorrect token during inference (when there is no teacher-forcing) can make the predictions go haywire. To address this, we "wean" the model away from teacher forcing by gradually reducing the teacher forcing ratio to xero. We do this using the decay rate. 
 
 ```python
 def train_epoch(model, dataloader, criterion, optimizer, vocab_size, epoch, max_len):
@@ -573,7 +579,7 @@ def train_epoch(model, dataloader, criterion, optimizer, vocab_size, epoch, max_
     return total_loss / len(dataloader), total_acc/len(dataloader)
 ```
 
-Next, the `evaluate` function runs a validation pass over the validation dataset, and returns the average loss and accuracy over the evaluation set.
+Next, we create the `evaluate` function which runs a validation pass over the validation dataset, and returns the average loss and accuracy over the validation set.
 
 ```python
 def evaluate(model, dataloader, criterion, vocab_size, max_len):
@@ -610,7 +616,9 @@ def evaluate(model, dataloader, criterion, vocab_size, max_len):
 **Step 13: Test Function**
 Finally, we have the `test_beam_search` function which performs beam search decoding and exact-match checking of the tested model's output against ground truth for the test dataset. This is a sequence-level accuracy check, as mentioned in Step 7, and is much stricter than the token-level checks used for training. We also calculate the average normalized Levenshtein distance of the predictions.
 
-Beam search is...
+**Note on Beam search: **
+
+**Note on Average Normalized Levenshtein Distance:**
 
 ```python
 # Beam decoding test implementation
