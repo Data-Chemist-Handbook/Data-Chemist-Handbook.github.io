@@ -62,6 +62,8 @@ This process is often represented as a tree structure: the root is the target mo
 
 Each of these intermediate steps can be viewed as an independent retrosynthesis problem, referred to as single-step retrosynthesis. In other words, the retrosynthetic process can be broken down into discrete stages, each addressing a single chemical transformation. These are known as single-step retrosynthesis tasks. At each step, the target molecule is split into one or more simpler reactants. 
 
+<image>
+    
 However, even inferring a single-step retrosynthesis is not trivial. Both it and retrosynthetic planning have historically relied on the expertise, domain-knowledge and experience of chemists, as well as costly trial and error.
 
 ## 7.2 Computational Approaches to Retrosynthesis
@@ -121,7 +123,7 @@ Overall, Seq2Seq LSTM is a conceptually clean and easy-to-train baseline for ret
 
 **Complete code:** [Click here](https://colab.research.google.com/drive/1s0l_0kBmZCmnXqwTekuPG3Zn2kVpOMNu?usp=sharing)
 
-**Dataset:** The USPTO-50k dataset was used for this model. Link: [Click here](https://figshare.com/articles/dataset/USPTO-50K_raw_/25459573?file=45206101)
+**Dataset:** The USPTO-50k dataset was used for this model. Link: [Click here](https://figshare.com/articles/dataset/USPTO-50K_raw_/25459573?file=45206101). The files with reaction classes are present here: <link1>,<link2>,<link3>,<link4>
 
 In this section, we provide a step-by-step process for creating an LSTM for single-step retrosynthesis. We have chosen the small USPTO-50k dataset which contains 50,000 reactions for this demonstration for ease of explanation and limited computational resources.
 
@@ -621,8 +623,9 @@ Finally, we have the `test_beam_search` function which performs beam search deco
 **Note on Average Normalized Levenshtein Distance:**
 
 ```python
-# Beam decoding test implementation
+# Test implementation with beam search decoding
 
+# Remove eos, bos, pad tokens in case they remain
 def strip_special_tokens(seq, bos_id, eos_id):
     if isinstance(seq, torch.Tensor):
         seq = seq.squeeze().tolist()
@@ -634,6 +637,7 @@ def strip_special_tokens(seq, bos_id, eos_id):
         seq = seq[:seq.index(eos_id)]
     return seq
 
+# Remove starting signal tokens (none-few characters + whitespace)
 def clean(pred_seq):
   pred_seq = pred_seq.split()
   if len(pred_seq)==1:
@@ -641,14 +645,13 @@ def clean(pred_seq):
   else:
     return pred_seq[1]
 
-import Levenshtein
+import Levenshtein # used to calculate edit distance
 
 def test_beam_search(model, test_loader, tokenizer, max_len=600, beam_width=5, pad_token_id=tokenizer.pad_token_id, batch_size=1):
     model.eval()
-    total_exact_undecoded_matches = 0
     total_sequences = 0
-    exact_instr = 0
-    total_levenshtein = 0.0  # <-- For normalized Levenshtein
+    exact_instr = 0 # For storing exact string matches between prediction and truth
+    total_levenshtein = 0.0  # For normalized Levenshtein
     bos_token_id = tokenizer.bos_token_id
     eos_token_id = tokenizer.eos_token_id
     vocab_size = tokenizer.vocab_size
@@ -693,7 +696,7 @@ def test_beam_search(model, test_loader, tokenizer, max_len=600, beam_width=5, p
 
                             seq_len = tokens_so_far.size(1) + 1
                             alpha = 0.6
-                            length_penalty = ((5 + seq_len) / 6) ** alpha
+                            length_penalty = ((5 + seq_len) / 6) ** alpha # Length penalty to ensure model does not overly and incorrectly favor shorter predicitons
                             normalized_score = raw_score / length_penalty
 
                             new_seq = torch.cat([
@@ -731,6 +734,7 @@ def test_beam_search(model, test_loader, tokenizer, max_len=600, beam_width=5, p
                 pred_str = clean(tokenizer.decode(pred_seq, skip_special_tokens=True))
                 true_str = tokenizer.decode(true_seq, skip_special_tokens=True)
 
+                # Print for debug purposes 
                 if i < 5:
                     print("Pred:", pred_str)
                     print("True:", true_str)
@@ -742,7 +746,6 @@ def test_beam_search(model, test_loader, tokenizer, max_len=600, beam_width=5, p
                 total_levenshtein += norm_lev_dist
 
                 total_sequences += 1
-                total_exact_undecoded_matches += int(pred_seq == true_seq)
                 exact_instr += int(pred_str.strip() == true_str.strip())
 
     accuracy = exact_instr / total_sequences if total_sequences > 0 else 0.0
