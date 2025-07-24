@@ -62,7 +62,7 @@ This process is often represented as a tree structure: the root is the target mo
 
 Each of these intermediate steps can be viewed as an independent retrosynthesis problem, referred to as single-step retrosynthesis. In other words, the retrosynthetic process can be broken down into discrete stages, each addressing a single chemical transformation. These are known as single-step retrosynthesis tasks. At each step, the target molecule is split into one or more simpler reactants. 
 
-<image>
+*image here*
     
 However, even inferring a single-step retrosynthesis is not trivial. Both it and retrosynthetic planning have historically relied on the expertise, domain-knowledge and experience of chemists, as well as costly trial and error.
 
@@ -123,7 +123,7 @@ Overall, Seq2Seq LSTM is a conceptually clean and easy-to-train baseline for ret
 
 **Complete code:** [Click here](https://colab.research.google.com/drive/1s0l_0kBmZCmnXqwTekuPG3Zn2kVpOMNu?usp=sharing)
 
-**Dataset:** The USPTO-50k dataset was used for this model. Link: [Click here](https://figshare.com/articles/dataset/USPTO-50K_raw_/25459573?file=45206101). The files with reaction classes are present here: <link1>,<link2>,<link3>,<link4>
+**Dataset:** The USPTO-50k dataset was used for this model. Link: [Click here](https://figshare.com/articles/dataset/USPTO-50K_raw_/25459573?file=45206101). The files with reaction classes are present here: *links here*
 
 In this section, we provide a step-by-step process for creating an LSTM for single-step retrosynthesis. We have chosen the small USPTO-50k dataset which contains 50,000 reactions for this demonstration for ease of explanation and limited computational resources.
 
