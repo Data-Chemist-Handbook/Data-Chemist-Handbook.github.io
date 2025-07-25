@@ -123,7 +123,7 @@ Overall, Seq2Seq LSTM is a conceptually clean and easy-to-train baseline for ret
 
 **Complete code:** [Click here](https://colab.research.google.com/drive/1s0l_0kBmZCmnXqwTekuPG3Zn2kVpOMNu?usp=sharing)
 
-**Dataset:** The USPTO-50k dataset was used for this model. Link: [Click here](https://figshare.com/articles/dataset/USPTO-50K_raw_/25459573?file=45206101). The files with reaction classes are present here: *links here*
+**Dataset:** The USPTO-50k [dataset](https://figshare.com/articles/dataset/USPTO-50K_raw_/25459573?file=45206101) was used for this model. A version of this dataset with reaction classes included and train, validation, and test files split as used in this tutorial can be found here: [Click here!](https://www.kaggle.com/datasets/anonytemp/uspto-50k-with-reaction-classes)
 
 In this section, we provide a step-by-step process for creating an LSTM for single-step retrosynthesis. We have chosen the small USPTO-50k dataset which contains 50,000 reactions for this demonstration for ease of explanation and limited computational resources.
 
@@ -133,7 +133,7 @@ We tested this model on Reaction Class 10 rather than all reaction classes due t
 
 **Step 1: Download the data files and upload them to Colab**
 
-The provided link has downloadable raw files split into `raw_train.csv`, `raw_val.csv`, and `raw_test.csv`. Download the zip, extract files, and upload into the Colab notebook.
+The provided [link](https://www.kaggle.com/datasets/anonytemp/uspto-50k-with-reaction-classes) has downloadable raw files split into `rxn_train.csv`, `rxn_val.csv`, `rxn_test.csv`,  files and `rxnclass10_test.csv`. Download the zip, extract files, and upload into the Colab notebook.
 
 **Step 2: Install and Import Required Libraries**
 
@@ -152,6 +152,7 @@ import torch.optim as optim
 from torch.utils.data import TensorDataset, DataLoader
 import wandb # Optional: Used for hyperparameter tuning or logging models (See below)
 ```
+
 **Hyperparameter tuning**: In machine learning, hyperparameters are configuration values that govern the training process of machine learning models. They are used during the learning phase of the model, but they are not part of the final resulting model. Examples include the learning rate, number of layers, hidden dimensions, dropout rate, and batch size. As these values can have a significant impact on model performance, choosing the right set of hyperparameters is essential to achieving the optimal model. This process of selection is known as hyperparameter tuning.
 
 ***Note:*** *To use transformers library, add your HuggingFace token to the Colab notebook. The HuggingFace token can be found in "Settings>>Access Tokens" when logged in to HuggingFace (more information [here](https://huggingface.co/docs/hub/en/security-tokens)). To add the key to Colab, click on the key icon on the left side panel of the notebook and paste the token in the value field. Name the token "HF_TOKEN" and toggle notebook access for the key.* 
@@ -170,9 +171,9 @@ access_token = os.environ.get('HF_TOKEN')
 ```python
 # Data loading and Processing
 # Paths to data files
-train_file = "raw_train.csv"
-val_file = "raw_val.csv"
-test_file = "raw_test.csv"
+train_file = "rxn_train.csv"
+val_file = "rxn_val.csv"
+test_file = "rxnclass10_test.csv" # Or, use rxn_test.csv to test model on entire test set
 
 # Load the data
 train_df = pd.read_csv(train_file)
@@ -618,7 +619,7 @@ def evaluate(model, dataloader, criterion, vocab_size, max_len):
 **Step 13: Test Function**
 Finally, we have the `test_beam_search` function which performs beam search decoding and exact-match checking of the tested model's output against ground truth for the test dataset. This is a sequence-level accuracy check, as mentioned in Step 7, and is much stricter than the token-level checks used for training. We also calculate the average normalized Levenshtein distance of the predictions.
 
-**Note on Beam search: **
+**Note on Beam search:**
 
 **Note on Average Normalized Levenshtein Distance:**
 
