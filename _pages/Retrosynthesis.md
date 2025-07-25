@@ -44,7 +44,7 @@ Furthermore, many existing tools are rule-based, template-driven, or rely on dec
 | normalize | the process of adjusting values measured on different scales to a common scale, often between 0 and 1. For example, in our sequence comparison, it involves dividing a raw score by the length of the reference or target sequence to convert the score into a relative metric, making it comparable across examples of different lengths.  |
 | Levenshtein distance | a metric for measuring the minimum number of single-character edits (insertions, deletions, or substitutions) required to change one string into another. It is commonly used to evaluate the similarity between sequences. |
 | greedy decoding | a decoding strategy where, at each time step, the model selects the token with the highest probability as the next word |
-| beam search decoding | . |
+| beam search decoding | a decoding algorithm that keeps track of the top k most probable partial sequences (beams) at each time step. It balances between exploration and exploitation, allowing for better sequences than greedy decoding by considering multiple paths. |
 | transformer | a neural network that transforms an input sequence into an output sequence, using self-attention mechanisms to learn contextual relationships between tokens across the entire sequence.  |
 
 ## 7.1 Retrosynthesis
@@ -344,8 +344,8 @@ print()
 
 **Step 8: Tokenize SMILES**
 
-In this step, we take the human-readable SMILES strings and convert them into machine-friendly encodings
-.
+In this step, we take the human-readable SMILES strings and convert them into machine-friendly encodings.
+
 ```python
 # Create function for tokenization
 def tokenize_smiles_bpe(smiles_list, tokenizer, max_length=600):
@@ -535,7 +535,9 @@ The `train_epoch` function handles one training pass over the training dataset (
 
 Here, we have trained the model using teacher forcing. 
 
-**Note on teacher forcing:** In teacher forcing, instead of the model using its own previous prediction, the teacher i.e. the training program prompts the student (seq2seq LSTM) with the next correct token from the ground truth. However, we do not do this for every single token. Rather we set a teacher forcing ratio to determine how much of the sequence will be "taught" to the model. In the example code below, we start with a ratio of 0.5 i.e., the model is taught 50% of the sequence. However, this can result in the model relying on correct tokens and any single incorrect token during inference (when there is no teacher-forcing) can make the predictions go haywire. To address this, we "wean" the model away from teacher forcing by gradually reducing the teacher forcing ratio to zero. We do this using the decay rate. 
+**Note on teacher forcing:**
+
+In teacher forcing, instead of the model using its own previous prediction, the teacher i.e. the training program prompts the student (seq2seq LSTM) with the next correct token from the ground truth. However, we do not do this for every single token. Rather we set a teacher forcing ratio to determine how much of the sequence will be "taught" to the model. In the example code below, we start with a ratio of 0.5 i.e., the model is taught 50% of the sequence. However, this can result in the model relying on correct tokens and any single incorrect token during inference (when there is no teacher-forcing) can make the predictions go haywire. To address this, we "wean" the model away from teacher forcing by gradually reducing the teacher forcing ratio to zero. We do this using the decay rate. 
 
 ```python
 def train_epoch(model, dataloader, criterion, optimizer, vocab_size, epoch, max_len):
@@ -616,13 +618,16 @@ def evaluate(model, dataloader, criterion, vocab_size, max_len):
 ```
 
 **Step 13: Test Function**
+
 Finally, we have the `test_beam_search` function which performs beam search decoding and exact-match checking of the tested model's output against ground truth for the test dataset. This is a sequence-level accuracy check, as mentioned in Step 7, and is much stricter than the token-level checks used for training. We also calculate the average normalized Levenshtein distance of the predictions.
 
-**Note on Beam Search Decoding:** Beam search decoding is a search algorithm used in sequence generation tasks (like this one) to find the most likely output sequence given a model’s learned probability distribution over sequences. Unlike greedy decoding, which we use in our evaluation loop, and which considers only one path (best at each step), beam search decoding explores multiple paths by keeping track of multiple (top k) options at each step. 
+**Note on Beam Search Decoding:** 
 
-In brief, greedy decoding chooses the best token at each step, possibly missing globally optimal sequences but beam search explores multiple candidate sequences, improving the chance of finding higher-probability completions, while remaining computationally feasible.
+Beam search is a search algorithm used in sequence generation tasks (like this one) to find the most likely output sequence given a model’s learned probability distribution over sequences. Unlike greedy decoding, which we use in our evaluation loop, and which considers only one path (best at each step), beam search decoding explores multiple paths by keeping track of multiple (top k) options at each step. In brief, greedy decoding chooses the best token at each step, possibly missing globally optimal sequences but beam search explores multiple candidate sequences, improving the chance of finding higher-probability completions, while remaining computationally feasible.
 
 **Note on Average Normalized Levenshtein Distance:** 
+
+The average normalized Levenshtein distance is a metric used to evaluate the similarity between predicted and target sequences. It is based on the Levenshtein distance, which counts the minimum number of single-character edits (insertions, deletions, or substitutions) required to transform one sequence into another. To normalize this value, the raw distance is divided by the length of the longer sequence between the prediction and the reference, resulting in a score between 0 (exact match) and 1 (completely different). This normalization makes comparisons fair across sequences of different lengths. By calculating the normalized Levenshtein distance for each pair of predicted and target sequences in a dataset and averaging the results, we obtain the average normalized Levenshtein distance. This metric is especially valuable because it captures how close predictions are to the correct answer even when they are not exact matches, offering a more nuanced view of model performance than strict exact match accuracy.
 
 ```python
 # Test implementation with beam search decoding
@@ -833,7 +838,7 @@ def train():
     return model
 ```
 
-**(If using wandb) Step 13: Start wandb Sweep**
+**(If using wandb) Step 15: Start wandb Sweep**
 
 ```python
 wandb.login()
