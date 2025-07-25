@@ -5,7 +5,6 @@ date: 2024-08-17
 category: Jekyll
 layout: post
 ---
-Dataset: USPTO subset (https://pubs.acs.org/doi/full/10.1021/acscentsci.7b00064)
 
 ## Overview
 This chapter explores the problem of retrosynthetic analysis and how it is approached using modern machine learning techniques. We begin by introducing the chemical basis of retrosynthesis, including the distinction between single-step and multi-step retrosynthetic planning. We then shift to computational perspectives, introducing both template-based methods and modern template-free approaches that leverage machine learning.
@@ -129,7 +128,7 @@ In this section, we provide a step-by-step process for creating an LSTM for sing
 
 In this handbook, we have implemented a seq2seq LSTM that uses attention. It is trained using teacher forcing, with the teacher forcing ratio being decayed at every epoch. Additionally, we included the reaction classes in training and inference. All three of these are optional, though they may influence model performance, and the Colab notebook above provides alternative code should you wish to not include any one of them.
 
-We tested this model on Reaction Class 10 rather than all reaction classes due to limitations on time and computaional resources. Our model achieved Top-1 accuracy = 69.56%, with an average normalized Levenshtein distance of 0.0163, which is excellent on this subset.
+We tested this model on Reaction Class 10 rather than all reaction classes due to limitations on time and computational resources. Our model achieved Top-1 accuracy = 69.56%, with an average normalized Levenshtein distance of 0.0163, which is excellent on this subset.
 
 **Step 1: Download the data files and upload them to Colab**
 
@@ -300,7 +299,7 @@ test_X = [f"[RX_TYPE_{rx_type}] {smiles}" for rx_type, smiles in zip(tstrxntype,
 
 **Step 7: Prepare to Tokenize**
 
-Add Beginning-of-Sequence (BOS) and End-of-Sequence (EOS) tokens. These signal the start and end of a sequence and help the mdoel learn where to start predicted sequences and when to stop. 
+Add Beginning-of-Sequence (BOS) and End-of-Sequence (EOS) tokens. These signal the start and end of a sequence and help the model learn where to start predicted sequences and when to stop. 
 
 ```python
 # Add BOS and EOS tokens manually if they are not already present
@@ -320,7 +319,7 @@ for x in range(5):
     print("Some train e.g.: ", test_X[x], "from: ", test_y[x])
 ```
 
-Next, define the tokenizer and some special tokens. Tehse special tokens are not part of the vocabulary i.e., not among the tokens predicted, but the tokenizer must be able to recognize them.
+Next, define the tokenizer and some special tokens. These special tokens are not part of the vocabulary i.e., not among the tokens predicted, but the tokenizer must be able to recognize them.
 
 ```python
 from transformers import RobertaTokenizerFast
@@ -393,7 +392,7 @@ def create_dataloader(enc_inputs, dec_inputs, batch_size):
     return DataLoader(dataset, batch_size=batch_size, shuffle=True)
 ```
 
-Next, we define the `compute_accuracy` function which calculates token-level accuracy of predictions from the model, while ignoring padded positions. Token-level accuracy is used here during the training and evaluation loops as sequence-level comparisions may be too harsh for the model to learn. During testing, sequence-level checking may be used e.g., exact match or top-k accuracy.
+Next, we define the `compute_accuracy` function which calculates token-level accuracy of predictions from the model, while ignoring padded positions. Token-level accuracy is used here during the training and evaluation loops as sequence-level comparisons may be too harsh for the model to learn. During testing, sequence-level checking may be used e.g., exact match or top-k accuracy.
 
 ```python
 # Helper function
@@ -536,7 +535,7 @@ The `train_epoch` function handles one training pass over the training dataset (
 
 Here, we have trained the model using teacher forcing. 
 
-**Note on teacher forcing:** In teacher forcing, instead of the model using its own previous prediction, the teacher i.e. the training program prompts the student (seq2seq LSTM) with the next correct token from the ground truth. However, we do not do this for every single token. Rather we set a teacher forcing ratio determines how much of the sequence will be "taught" to the model. In the example code below, we start with a ratio of 0.5 i.e., the model is taught 50% of the sequence. However, this can result in the model relying on correct tokens and any single incorrect token during inference (when there is no teacher-forcing) can make the predictions go haywire. To address this, we "wean" the model away from teacher forcing by gradually reducing the teacher forcing ratio to xero. We do this using the decay rate. 
+**Note on teacher forcing:** In teacher forcing, instead of the model using its own previous prediction, the teacher i.e. the training program prompts the student (seq2seq LSTM) with the next correct token from the ground truth. However, we do not do this for every single token. Rather we set a teacher forcing ratio to determine how much of the sequence will be "taught" to the model. In the example code below, we start with a ratio of 0.5 i.e., the model is taught 50% of the sequence. However, this can result in the model relying on correct tokens and any single incorrect token during inference (when there is no teacher-forcing) can make the predictions go haywire. To address this, we "wean" the model away from teacher forcing by gradually reducing the teacher forcing ratio to zero. We do this using the decay rate. 
 
 ```python
 def train_epoch(model, dataloader, criterion, optimizer, vocab_size, epoch, max_len):
@@ -555,7 +554,7 @@ def train_epoch(model, dataloader, criterion, optimizer, vocab_size, epoch, max_
         decoder_hidden = hidden
 
         tfri = 0.5  # initial teacher forcing ratio, set this as a hyperparameter if desired
-        decay_rate = 0.05  # teacher foricng ratio reduces to 0 in ~10 epochs
+        decay_rate = 0.05  # teacher forcing ratio reduces to 0 in ~10 epochs
         teacher_forcing_ratio = max(0.0, tfri - epoch * decay_rate)
 
         for t in range(max_len):
@@ -619,9 +618,11 @@ def evaluate(model, dataloader, criterion, vocab_size, max_len):
 **Step 13: Test Function**
 Finally, we have the `test_beam_search` function which performs beam search decoding and exact-match checking of the tested model's output against ground truth for the test dataset. This is a sequence-level accuracy check, as mentioned in Step 7, and is much stricter than the token-level checks used for training. We also calculate the average normalized Levenshtein distance of the predictions.
 
-**Note on Beam search:**
+**Note on Beam Search Decoding:** Beam search decoding is a search algorithm used in sequence generation tasks (like this one) to find the most likely output sequence given a model’s learned probability distribution over sequences. Unlike greedy decoding, which we use in our evaluation loop, and which considers only one path (best at each step), beam search decoding explores multiple paths by keeping track of multiple (top k) options at each step. 
 
-**Note on Average Normalized Levenshtein Distance:**
+In brief, greedy decoding chooses the best token at each step, possibly missing globally optimal sequences but beam search explores multiple candidate sequences, improving the chance of finding higher-probability completions, while remaining computationally feasible.
+
+**Note on Average Normalized Levenshtein Distance:** 
 
 ```python
 # Test implementation with beam search decoding
@@ -697,7 +698,7 @@ def test_beam_search(model, test_loader, tokenizer, max_len=600, beam_width=5, p
 
                             seq_len = tokens_so_far.size(1) + 1
                             alpha = 0.6
-                            length_penalty = ((5 + seq_len) / 6) ** alpha # Length penalty to ensure model does not overly and incorrectly favor shorter predicitons
+                            length_penalty = ((5 + seq_len) / 6) ** alpha # Length penalty to ensure model does not overly and incorrectly favor shorter predictions
                             normalized_score = raw_score / length_penalty
 
                             new_seq = torch.cat([
@@ -761,7 +762,7 @@ def test_beam_search(model, test_loader, tokenizer, max_len=600, beam_width=5, p
 
 The `train` function handles the complete training workflow for the Seq2Seq LSTM, with support for hyperparameter tuning via wandb. The function sets up the training, validation, and test data loaders. It loads hyperparameter values from the wandb.config object, which is defined through a sweep configuration (refer Step 7 for `sweep_config`). Alternatively, you may replace a parameter (`config.<param>` here) with fixed values to manually define your hyperparameters.
 
-For each epoch, the model is trained using `train_epoch()`, and validation is performed using `evaluate()`. The test fucntion used is `test_beam_search`. Key metrics are logged to wandb for tracking. After training completes, the final model is saved locally and also uploaded to wandb for record-keeping or future use.
+For each epoch, the model is trained using `train_epoch()`, and validation is performed using `evaluate()`. The test function used is `test_beam_search`. Key metrics are logged to wandb for tracking. After training completes, the final model is saved locally and also uploaded to wandb for record-keeping or future use.
 
 ```python
 # Training loop, with wandb
@@ -771,7 +772,7 @@ def train():
 
     vocab_size = tokenizer.vocab_size
     batch_size = 64 # Batch size can also be configurable and performance may change
-    # but, parallelisation was used to utilise multiple GPUs and memory limitations restricted us to batch size based on current availabity
+    # but, parallelisation was used to utilise multiple GPUs and memory limitations restricted us to batch size based on current availability
 
     # Data loaders
     train_loader = create_dataloader(train_enc_input, train_dec_input, batch_size)
