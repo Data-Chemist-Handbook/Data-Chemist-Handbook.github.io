@@ -1,0 +1,10 @@
+title: Bootcamp for Data Chemistry
+description: Hands‑on AI × Chemistry workshop
+# choose **one** of the following:
+
+# Option A – built‑in GitHub theme
+theme: minima            # or "dinky", "cayman", "midnight", "architect", …
+
+# Option B – remote theme from any public repo
+#remote_theme: pmarsceill/just-the-docs   # docs‑oriented look
+#remote_theme: pages-themes/slate         # darker landing style
