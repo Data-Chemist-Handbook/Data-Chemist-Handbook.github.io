@@ -4,7 +4,7 @@ layout: default
 title: "Bootcamp for Data Chemistry"
 permalink: /bootcamp/
 nav\_order: 2
--------------
+---
 
 # Bootcamp for Data Chemistry
 
