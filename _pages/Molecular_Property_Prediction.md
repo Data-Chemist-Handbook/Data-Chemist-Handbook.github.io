@@ -643,6 +643,122 @@ In Chapter 4.2, we’ll explore an alternative that completely steps away from S
 
 ---
 
+### Section 4.1 – Quiz Questions
+
+#### 1) Factual Questions
+
+##### Question 1
+What is the main advantage of using RNNs for SMILES strings in molecular property prediction?
+
+**A.** They automatically generate 3D structures  
+**B.** They capture sequential dependencies in molecular representations  
+**C.** They guarantee the optimal molecule with one training run  
+**D.** They only require molecular fingerprints as input  
+
+<details>
+<summary>▶ Click to show answer</summary>
+
+Correct Answer: B
+</details>
+
+<details>
+<summary>▶ Click to show explanation</summary>
+
+Explanation: RNNs process SMILES character-by-character while maintaining a hidden state, allowing them to capture sequential and structural dependencies in molecules.
+</details>
+
+---
+
+##### Question 2
+Which RNN variant is designed to mitigate vanishing gradient problems and capture long-range dependencies?
+
+**A.** CNN  
+**B.** GRU or LSTM  
+**C.** Transformer  
+**D.** k-Nearest Neighbors  
+
+<details>
+<summary>▶ Click to show answer</summary>
+
+Correct Answer: B
+</details>
+
+<details>
+<summary>▶ Click to show explanation</summary>
+
+Explanation: GRUs and LSTMs use gating mechanisms that help retain important information over longer sequences, making them better than vanilla RNNs for long-range chemical dependencies.
+</details>
+
+---
+
+##### Question 3
+What is the role of the embedding layer in a GRU-based SMILES classifier?
+
+**A.** It generates 3D coordinates for each atom  
+**B.** It reduces overfitting by randomly dropping tokens  
+**C.** It maps characters to dense vectors that capture chemical context  
+**D.** It computes molecular descriptors directly  
+
+<details>
+<summary>▶ Click to show answer</summary>
+
+Correct Answer: C
+</details>
+
+<details>
+<summary>▶ Click to show explanation</summary>
+
+Explanation: The embedding layer learns continuous vector representations for characters, allowing chemically similar symbols (e.g., O and N) to occupy nearby positions in embedding space.
+</details>
+
+---
+
+#### 2) Conceptual Questions
+
+##### Question 4
+Why might canonicalizing SMILES strings before training an RNN be necessary?
+
+**A.** To reduce GPU memory usage  
+**B.** To ensure consistent representation of equivalent molecules  
+**C.** To speed up convergence by using shorter sequences  
+**D.** To automatically generate molecular fingerprints  
+
+<details>
+<summary>▶ Click to show answer</summary>
+
+Correct Answer: B
+</details>
+
+<details>
+<summary>▶ Click to show explanation</summary>
+
+Explanation: The same molecule can be represented by multiple valid SMILES. Canonicalization ensures consistency so the RNN doesn’t treat equivalent molecules as different.
+</details>
+
+---
+
+##### Question 5
+What is one limitation of RNNs compared to Transformers when applied to SMILES?
+
+**A.** RNNs cannot tokenize SMILES strings  
+**B.** RNNs struggle with capturing long-range dependencies across sequences  
+**C.** RNNs cannot be trained on small datasets  
+**D.** RNNs require 3D structures instead of 1D sequences  
+
+<details>
+<summary>▶ Click to show answer</summary>
+
+Correct Answer: B
+</details>
+
+<details>
+<summary>▶ Click to show explanation</summary>
+
+Explanation: Even with GRUs or LSTMs, RNNs can struggle to capture very long-distance dependencies in SMILES, such as ring closures. Transformers handle global context more effectively.
+</details>
+
+---
+
 ## 4.2 Graph Neural Networks
 In cheminformatics, molecules are often represented in ways that strip away structural context—such as SMILES strings (linearized text) or tabular descriptors (e.g., LogP, molecular weight). While these formats are convenient for storage or computation, they lose the **graph-based nature of chemical structure**, where atoms are nodes and bonds are edges.
 
@@ -1671,6 +1787,122 @@ This basic model is highly extensible. By incorporating richer features (e.g., a
 
 ---
 
+### Section 4.2 – Quiz Questions
+
+#### 1) Factual Questions
+
+##### Question 1
+Why are Graph Neural Networks (GNNs) especially suitable for molecular property prediction?
+
+**A.** They require only global molecular descriptors  
+**B.** They operate directly on molecular graphs, preserving atom–bond connectivity  
+**C.** They convert molecules into images for CNNs  
+**D.** They only need SMILES strings without features  
+
+<details>
+<summary>▶ Click to show answer</summary>
+
+Correct Answer: B
+</details>
+
+<details>
+<summary>▶ Click to show explanation</summary>
+
+Explanation: GNNs consume node (atom) and edge (bond) features on the molecular graph, preserving local and global topology for learning.
+</details>
+
+---
+
+##### Question 2
+In a PyTorch Geometric `Data` object for molecules, what does `edge_index` represent?
+
+**A.** The 3D coordinates of atoms  
+**B.** The indices of nodes connected by bonds (as a COO-format edge list)  
+**C.** The global molecular descriptor vector  
+**D.** The attention weights learned by a GAT  
+
+<details>
+<summary>▶ Click to show answer</summary>
+
+Correct Answer: B
+</details>
+
+<details>
+<summary>▶ Click to show explanation</summary>
+
+Explanation: `edge_index` is a 2×E tensor listing source/target node indices for each directed edge.
+</details>
+
+---
+
+##### Question 3
+What is the role of **global pooling** (e.g., `global_mean_pool`) in graph-level prediction?
+
+**A.** It computes bond orders from atom types  
+**B.** It aggregates node embeddings into a single graph embedding  
+**C.** It canonicalizes SMILES strings  
+**D.** It normalizes edge features to unit length  
+
+<details>
+<summary>▶ Click to show answer</summary>
+
+Correct Answer: B
+</details>
+
+<details>
+<summary>▶ Click to show explanation</summary>
+
+Explanation: Pooling reduces variable-size node sets to a fixed-size vector so a classifier can make a graph-level prediction.
+</details>
+
+---
+
+#### 2) Conceptual Questions
+
+##### Question 4
+Which statement best describes **message passing** in GNNs for molecules?
+
+**A.** Atoms independently update features without neighbors  
+**B.** Each atom updates its features by aggregating transformed features from neighboring atoms/bonds  
+**C.** Bonds are ignored; only atom features matter  
+**D.** Messages are passed only once at initialization  
+
+<details>
+<summary>▶ Click to show answer</summary>
+
+Correct Answer: B
+</details>
+
+<details>
+<summary>▶ Click to show explanation</summary>
+
+Explanation: Message passing iteratively aggregates neighbor information (and optionally edge features) to refine node embeddings.
+</details>
+
+---
+
+##### Question 5
+Why might a **GAT** (attention-based GNN) be preferred over a plain GCN in some chemistry tasks?
+
+**A.** GATs remove the need for any node features  
+**B.** GATs can learn which neighbors are more important, aiding both accuracy and interpretability  
+**C.** GATs eliminate the need for pooling layers  
+**D.** GATs require no training data  
+
+<details>
+<summary>▶ Click to show answer</summary>
+
+Correct Answer: B
+</details>
+
+<details>
+<summary>▶ Click to show explanation</summary>
+
+Explanation: Attention coefficients weight neighbors by importance, often improving performance and enabling atom-level importance visualization.
+</details>
+
+---
+
 ## 4.3 Random Forests
 
 In cheminformatics, selecting the right machine learning model often requires balancing predictive power, interpretability, and ease of implementation. Deep learning architectures like Recurrent Neural Networks (RNNs) and Graph Neural Networks (GNNs) can uncover intricate patterns in molecular data, but they typically demand large datasets, significant computational resources, and specialized expertise.
@@ -2257,6 +2489,122 @@ While powerful, Random Forests may not be ideal in these scenarios:
 Random Forests remain a workhorse model in cheminformatics. They are particularly effective when working with hand-crafted features derived from molecular descriptors. Their interpretability helps chemists connect ML predictions with known chemical intuition, making them an ideal starting point for predictive modeling in drug discovery, materials science, and beyond.
 
 **Coming Up Next:** In Section 4.4, we’ll revisit fully connected Neural Networks — this time using molecular descriptors instead of sequences — and compare their strengths and limitations alongside Random Forests.
+
+---
+
+### Section 4.3 – Quiz Questions
+
+#### 1) Factual Questions
+
+##### Question 1
+What core idea allows a Random Forest to generalize better than a single decision tree?
+
+**A.** Using SMILES instead of descriptors  
+**B.** Averaging predictions from many trees trained on different data subsets  
+**C.** Applying gradient descent to a single deep tree  
+**D.** Converting molecules to graphs first  
+
+<details>
+<summary>▶ Click to show answer</summary>
+
+Correct Answer: B
+</details>
+
+<details>
+<summary>▶ Click to show explanation</summary>
+
+Explanation: Random Forests reduce variance by aggregating many de-correlated trees (bagging + feature subsampling), improving generalization.
+</details>
+
+---
+
+##### Question 2
+Which of the following is a common advantage of Random Forests for cheminformatics?
+
+**A.** They require 3D coordinates for every molecule  
+**B.** They do not need feature scaling and handle mixed feature types well  
+**C.** They always outperform GNNs on graph data  
+**D.** They cannot output prediction probabilities  
+
+<details>
+<summary>▶ Click to show answer</summary>
+
+Correct Answer: B
+</details>
+
+<details>
+<summary>▶ Click to show explanation</summary>
+
+Explanation: Trees are invariant to monotonic transforms and work with numeric/categorical features without scaling.
+</details>
+
+---
+
+##### Question 3
+What does `predict_proba()` from scikit-learn’s `RandomForestClassifier` return?
+
+**A.** Feature importance scores  
+**B.** The impurity of each split  
+**C.** Class membership probabilities for each sample  
+**D.** The out-of-bag error rate  
+
+<details>
+<summary>▶ Click to show answer</summary>
+
+Correct Answer: C
+</details>
+
+<details>
+<summary>▶ Click to show explanation</summary>
+
+Explanation: `predict_proba()` provides per-class probabilities, enabling confidence-aware decisions.
+</details>
+
+---
+
+#### 2) Conceptual Questions
+
+##### Question 4
+Why might **TPSA**, **LogP**, and **Molecular Weight** often appear among top features for BBB permeability?
+
+**A.** They are easy to compute, not because they’re relevant  
+**B.** They correlate with membrane diffusion and size constraints that govern BBB crossing  
+**C.** Random Forests inflate their importance by design  
+**D.** They encode stereochemistry directly  
+
+<details>
+<summary>▶ Click to show answer</summary>
+
+Correct Answer: B
+</details>
+
+<details>
+<summary>▶ Click to show explanation</summary>
+
+Explanation: BBB penetration relates to polarity (TPSA), lipophilicity (LogP), and size (MW), which affect passive diffusion.
+</details>
+
+---
+
+##### Question 5
+When would you **prefer Random Forests** over RNNs/GNNs for molecular prediction?
+
+**A.** When you only have raw SMILES and millions of labeled molecules  
+**B.** When you have well-defined descriptors, modest data, and need interpretability quickly  
+**C.** When you must model long-range graph interactions explicitly  
+**D.** When 3D conformers are mandatory for the task  
+
+<details>
+<summary>▶ Click to show answer</summary>
+
+Correct Answer: B
+</details>
+
+<details>
+<summary>▶ Click to show explanation</summary>
+
+Explanation: RFs shine with descriptor-based inputs, smaller/noisy datasets, and when feature importance aids chemical insight.
+</details>
 
 ---
 
@@ -2870,6 +3218,145 @@ Interpreting neural network outputs transforms a predictive model into a decisio
 * Going beyond accuracy to understand what drives predictions.
 * Using permutation importance or SHAP to find key molecular features.
 * Investigating both global patterns and local anomalies.
+
+
+---
+
+### Section 4.4 – Quiz Questions
+
+#### 1) Factual Questions
+
+##### Question 1
+Which input format is a **feedforward neural network** (FNN) best suited for in cheminformatics?
+
+**A.** Raw SMILES strings processed character-by-character  
+**B.** Molecular graphs with explicit bonds as edges  
+**C.** Fixed-length descriptor or fingerprint vectors  
+**D.** Unaligned protein–ligand 3D grids
+
+<details>
+<summary>▶ Click to show answer</summary>
+
+Correct Answer: C
+</details>
+
+<details>
+<summary>▶ Click to show explanation</summary>
+
+Explanation: FNNs expect fixed-size numerical inputs, making descriptor/fingerprint vectors ideal.
+</details>
+
+---
+
+##### Question 2
+For **binary classification** (e.g., BBB permeability) with an FNN, which output activation and loss are standard?
+
+**A.** Softmax + Categorical cross-entropy  
+**B.** Sigmoid + Binary cross-entropy  
+**C.** ReLU + Hinge loss  
+**D.** Linear + Mean squared error
+
+<details>
+<summary>▶ Click to show answer</summary>
+
+Correct Answer: B
+</details>
+
+<details>
+<summary>▶ Click to show explanation</summary>
+
+Explanation: A sigmoid outputs a probability in [0,1]; binary cross-entropy measures error for two classes.
+</details>
+
+---
+
+##### Question 3
+Why is **feature scaling** (e.g., StandardScaler) commonly applied before training an FNN on descriptors?
+
+**A.** It increases the number of training samples  
+**B.** It prevents class imbalance  
+**C.** It stabilizes optimization by keeping features on comparable scales  
+**D.** It guarantees higher test accuracy
+
+<details>
+<summary>▶ Click to show answer</summary>
+
+Correct Answer: C
+</details>
+
+<details>
+<summary>▶ Click to show explanation</summary>
+
+Explanation: Normalized inputs help gradient-based optimizers converge more reliably.
+</details>
+
+---
+
+##### Question 4
+What is the main purpose of **Dropout** layers in an FNN?
+
+**A.** Speed up inference by pruning neurons permanently  
+**B.** Enforce sparsity in the input descriptors  
+**C.** Reduce overfitting by randomly deactivating neurons during training  
+**D.** Convert regression to classification
+
+<details>
+<summary>▶ Click to show answer</summary>
+
+Correct Answer: C
+</details>
+
+<details>
+<summary>▶ Click to show explanation</summary>
+
+Explanation: Dropout regularizes the network by preventing co-adaptation of neurons.
+</details>
+
+---
+
+#### 2) Conceptual Questions
+
+##### Question 5
+When might you **prefer an FNN over a Random Forest** for descriptor-based prediction?
+
+**A.** When you have very small data and need quick interpretability  
+**B.** When you expect complex nonlinear interactions and have enough data/computation to tune a neural net  
+**C.** When you need built-in feature importance without extra tooling  
+**D.** When features are mostly categorical and unscaled
+
+<details>
+<summary>▶ Click to show answer</summary>
+
+Correct Answer: B
+</details>
+
+<details>
+<summary>▶ Click to show explanation</summary>
+
+Explanation: With sufficient data, FNNs can model richer nonlinearities than tree ensembles.
+</details>
+
+---
+
+##### Question 6
+**Permutation importance** (used for interpreting FNNs) measures:
+
+**A.** The gradient magnitude of each weight  
+**B.** The drop in model performance when a feature’s values are randomly shuffled  
+**C.** The number of times a feature appears in hidden layers  
+**D.** The variance of activations across epochs
+
+<details>
+<summary>▶ Click to show answer</summary>
+
+Correct Answer: B
+</details>
+
+<details>
+<summary>▶ Click to show explanation</summary>
+
+Explanation: Shuffling breaks the feature–label relationship; larger performance drops imply greater importance.
+</details>
 
 ---
 
