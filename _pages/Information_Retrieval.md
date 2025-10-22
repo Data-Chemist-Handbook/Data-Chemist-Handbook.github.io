@@ -179,8 +179,8 @@ In the above prompt, we:
 - **State the output style**: If you want a list, ask for a list. If you want an explanation, say so. e.g. “List the steps…”, “Explain why…”  
 - **Avoid ambiguity**: If a term could be interpreted in different ways, clarify it. For instance, “Lewis structure of NO₂” might be interpreted as needing a drawing (which the model can’t provide in text), so instead ask “Describe the bonding and electron arrangement in NO₂ (nitrogen dioxide) in words.”  
 - **Refine iteratively**: If the answer isn’t what you want, you can tweak the prompt and try again. Prompt engineering is often an iterative process, you adjust the wording until the model’s output meets your needs.  
-
-By mastering prompt engineering, you essentially learn to “program” the LLM with natural language. This is a powerful skill for chemists using AI, ensuring that you get accurate, relevant, and insightful answers to drive your research forward.  
+  
+  
 ---
 
 ### Section 10.2 - Quiz Questions
