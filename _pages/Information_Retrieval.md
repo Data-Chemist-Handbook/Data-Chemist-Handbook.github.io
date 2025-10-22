@@ -179,8 +179,10 @@ In the above prompt, we:
 - **State the output style**: If you want a list, ask for a list. If you want an explanation, say so. e.g. “List the steps…”, “Explain why…”  
 - **Avoid ambiguity**: If a term could be interpreted in different ways, clarify it. For instance, “Lewis structure of NO₂” might be interpreted as needing a drawing (which the model can’t provide in text), so instead ask “Describe the bonding and electron arrangement in NO₂ (nitrogen dioxide) in words.”  
 - **Refine iteratively**: If the answer isn’t what you want, you can tweak the prompt and try again. Prompt engineering is often an iterative process, you adjust the wording until the model’s output meets your needs.  
-  
-  
+
+By mastering prompt engineering, you essentially learn to “program” the LLM with natural language. This is a powerful skill for chemists using AI, ensuring that you get accurate, relevant, and insightful answers to drive your research forward.   
+
+
 ---
 
 ### Section 10.2 - Quiz Questions
@@ -327,7 +329,7 @@ A few things to note here:
 - We set a system role message to prime the assistant with a persona or style (expert chemist, answer in Markdown). This can help get more accurate and well-formatted answers.  
 - The user message contains the actual question.  
 - Temperature=0.5 controls randomness (0 is deterministic, 1 is quite random). For factual questions, a lower temperature is usually better.  
-- Max_tokens=200 limits the length of the answer (since we don’t need a super long explanation for a simple question).   ￼ ￼
+- Max_tokens=200 limits the length of the answer (since we don’t need a super long explanation for a simple question).  
 - The model returns a JSON with potential multiple choices; here we just take the first answer’s content.  
 
 7. **Using the LLM with your data**: You can also incorporate data into the prompt. For example, if you loaded a DataFrame df with some chemical info, you might do  
@@ -348,7 +350,6 @@ print(response["choices"][0]["message"]["content"])
 The model will see the data snippet and the question, and attempt to answer using both its trained knowledge and the provided data.  
 
 8. **Evaluate the results**: Once the model gives an output, you might want to evaluate its correctness. For simple factual Q&A or classification tasks, you can compare the answer to a ground truth. For instance, if you have a CSV of test questions and answers, you could loop through them, get model answers, and calculate accuracy. Here’s a conceptual example using a benchmark from ChemLLMBench
-Suppose we have a CSV with two columns: "SMILES" and "IUPAC" (the correct IUPAC name)
 ```python
 import pandas as pd
 test_df = pd.read_csv("https://raw.githubusercontent.com/ChemFoundationModels/ChemLLMBench/main/data/name_prediction/llm_test.csv")
@@ -526,8 +527,9 @@ If the response isn’t what you expected, you can tweak the prompt (maybe speci
 
 ### A Note on Monitoring and Limits  
 When working interactively, especially in a loop or multiple rapid-fire queries, be mindful of API rate limits and costs. OpenAI APIs might rate-limit you if you send too many requests too quickly. If you plan to do heavy usage (like evaluating on hundreds of questions), consider adding time.sleep() pauses between calls or using batch requests if available. Also, print intermediate results to make sure the process is doing what you expect.  
-  
-Last but not least, always validate important outputs manually. LLMs can produce convincing-sounding answers that are incorrect. An interactive session with an LLM is a partnership: the AI provides drafts or suggestions, and the human chemist reviews and verifies them.  
+
+Finally, always validate important outputs manually. LLMs can produce convincing-sounding answers that are incorrect. An interactive session with an LLM is a partnership: the AI provides drafts or suggestions, and the human chemist reviews and verifies them.  
+
 ---
 
 ### Section 10.4 – Quiz Questions
