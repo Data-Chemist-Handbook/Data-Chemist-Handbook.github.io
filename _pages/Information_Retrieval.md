@@ -348,8 +348,8 @@ print(response["choices"][0]["message"]["content"])
 The model will see the data snippet and the question, and attempt to answer using both its trained knowledge and the provided data.  
 
 8. **Evaluate the results**: Once the model gives an output, you might want to evaluate its correctness. For simple factual Q&A or classification tasks, you can compare the answer to a ground truth. For instance, if you have a CSV of test questions and answers, you could loop through them, get model answers, and calculate accuracy. Here’s a conceptual example using a benchmark from ChemLLMBench
+Suppose we have a CSV with two columns: "SMILES" and "IUPAC" (the correct IUPAC name)
 ```python
-# Suppose we have a CSV with two columns: "SMILES" and "IUPAC" (the correct IUPAC name)
 import pandas as pd
 test_df = pd.read_csv("https://raw.githubusercontent.com/ChemFoundationModels/ChemLLMBench/main/data/name_prediction/llm_test.csv")
 def query_iupac(smiles):
@@ -526,8 +526,8 @@ If the response isn’t what you expected, you can tweak the prompt (maybe speci
 
 ### A Note on Monitoring and Limits  
 When working interactively, especially in a loop or multiple rapid-fire queries, be mindful of API rate limits and costs. OpenAI APIs might rate-limit you if you send too many requests too quickly. If you plan to do heavy usage (like evaluating on hundreds of questions), consider adding time.sleep() pauses between calls or using batch requests if available. Also, print intermediate results to make sure the process is doing what you expect.  
-
-Finally, always validate important outputs manually. LLMs can produce convincing-sounding answers that are incorrect. An interactive session with an LLM is a partnership: the AI provides drafts or suggestions, and the human chemist reviews and verifies them.  
+  
+Last but not least, always validate important outputs manually. LLMs can produce convincing-sounding answers that are incorrect. An interactive session with an LLM is a partnership: the AI provides drafts or suggestions, and the human chemist reviews and verifies them.  
 ---
 
 ### Section 10.4 – Quiz Questions
