@@ -138,7 +138,7 @@ _Example:_ “…Given the SMILES string of a molecule, provide the IUPAC name.�
 3. **Input Data (if any):** Provide the specific data or question.  
 _Example:_ "SMILES: `CC(=O)OC1=CC=CC=C1C(=O)O` "(which is aspirin’s structure).  
 
-4. **Desired Output Forma:** Specify how you want the answer. 
+4. **Desired Output Format:** Specify how you want the answer. 
 _Example:_ “Output the product as a SMILES string only, with no extra commentary.”  
 
 5. **Additional Constraints or Details::** Include any other relevant info or requirements.
