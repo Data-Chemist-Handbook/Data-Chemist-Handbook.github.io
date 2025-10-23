@@ -448,8 +448,8 @@ Let’s continue with the Google Colab scenario from 10.3, and demonstrate a mor
 
 ### Colab Tips for Using API Keys  
 When working in Colab (especially if you plan to share the notebook), you should avoid hard-coding your API key into the code. Colab has a “Secrets” feature:  
-#### 1.	In Colab, click on the sidebar (the 🔒 icon) and add a new secret. Name it something like OPENAI_API_KEY and paste your key in the value field. Enable the notebook to access it.  
-#### 2.	Now, in your code, you can fetch this secure value. For example:  
+##### 1. In Colab, click on the sidebar (the 🔒 icon) and add a new secret. Name it something like OPENAI_API_KEY and paste your key in the value field. Enable the notebook to access it.  
+##### 2. Now, in your code, you can fetch this secure value. For example:  
 ```python
 import os
 from google.colab import auth, runtime
