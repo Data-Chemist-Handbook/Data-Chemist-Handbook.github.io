@@ -6,18 +6,15 @@ category: Jekyll
 layout: post
 ---
 
-**Chemical Reaction Yield**: In any chemical reaction, the yield refers to the percentage of the reactants that is succesfully converted to desired product. For chemists, predicting this yield is crucial because a high predicted yield can save time and resources by guiding experiment planning, while a low yield might indicate an inefficient route Traditionally, chemists have used domain knowledge or trial-and-error to
-estimate yields, but modern machine learning methods can learn yield patterns from data and make fast predictions.  
+**Chemical Reaction Yield**: In any chemical reaction, the yield refers to the fraction (often expressed as a percentage) of reactants successfully converted to the desired product. Predicting reaction yields is crucial for chemists – a high predicted yield can save time and resources by guiding which experiments to pursue, while a low predicted yield might signal an inefficient route. Traditionally, chemists have used domain knowledge, intuition, or trial-and-error to estimate yields. However, modern machine learning methods can learn patterns from data and make fast quantitative yield predictions. In this section, we explore how several machine learning models can be applied to reaction yield prediction.  
 
-**Machine Learning Mode**:Predicting reaction yield can be approached with a variety of machine learning models, ranging from
-classical ensemble methods to modern deep neural networks. In this section, we discuss how Recurrent Neural Networks (RNNs), Graph Neural Networks (GNNs), Random Forests, and Neural Networks have been applied to chemical yield prediction. For each model type, we explain its fundamental working principle in accessible terms, why it suits yield prediction, give chemistry-focused
-examples (including datasets like reaction screens and patent data), and provide simple code Python examples. We also compare typical performance metrics reported on benchmark reaction yield datasets.
+**Machine Learning Mode**:Predicting reaction yield can be tackled with a range of models, from classical ensemble methods to deep neural networks. Here we focus on four types, Recurrent Neural Networks (RNNs), Graph Neural Networks (GNNs), Random Forests, and Feed-Forward Neural Networks, and discuss why each is suited to yield prediction in chemistry. For each model type, we explain its role in yield prediction, provide chemistry-focused examples, include simple Python code demonstrations (using the Buchwald-Hartwig dataset to evaluate the accuracy of model), and compare typical performance on benchmark datasets. By the end, you’ll see how these models transform chemical information (like molecules or reaction conditions) into a yield prediction, and understand the pros and cons of each approach.  
 
 ---
 
-## 8.1 Recurrent Neural Networks (RNNs)
+## 8.1 Recurrent Neural Networks (RNNs)  
 
-### Why using RNN ?
+### Why using RNN ?  
 Early data-driven yield prediction models often used fixed descriptors or one-hot encodings of reactants (e.g. encoding presence/absence of certain functional groups) and then applied algorithms like Random Forests. While useful, those approaches treat
 each reaction as a bag of features, potentially missing the structure of the molecular and reaction conditions influence yield. Recent advances bring a big advancement into yield prediction field which is deep learning model. In particular, treating a reaction’s representation as a sequence – analogous to a sentence in a chemical “language” – has proven a high potential. For example, a reaction can be written as a SMILES string (a text encoding of molecules), and deep learning models can be trained to read this string and predict the yield . One way to do this is with Recurrent Neural Networks (RNNs), which are designed to handle sequential data.  
 
