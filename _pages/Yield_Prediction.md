@@ -119,7 +119,7 @@ def generate_buchwald_hartwig_rxns(df):
 ```
 
 #### 4. Preprocessing & Data Preparation
-We will load the raw Excel file, generate reaction SMILES, split into train/test, build a character‑level vocabulary, and wrap everything in PyTorch format so that we could run on RNN model later.
+We will load the raw Excel file, generate reaction SMILES, split into train/test, build a character‑level vocabulary, and wrap everything in PyTorch format so that we could run on RNN model later.  
 ```python
 import pandas as pd
 import torch
@@ -281,10 +281,10 @@ print(f"R² on test set: {r2:.3f}")
     - Corresponding RMSE ≈ √0.0030 ≈ 0.055 → 5.5 % yield error  
 - Test‐set metrics  
     - RMSE on test set: 5.2% yield    
-    - R² on test set: 0.932  
+    - R² on test set: 0.957  
 - Interpretation  
     - An RMSE of 5.2 % means that, on average, the model’s predicted yields deviate from the true yields by just over ±5 percentage points. The level of accuracy on par with many published HTE yield‐prediction models.  
-    - An R² of 0.93 indicates the network captures 93 % of the variance in experimental yields, demonstrating strong predictive power.
+    - An R² of 0.957 indicates the network captures 95.7 % of the variance in experimental yields, demonstrating strong predictive power.
 - Scatter plot  
 ![Plot](../../resource/img/yield_prediction/plot_RNN.png)
 
