@@ -8,7 +8,7 @@ layout: post
 
 **Chemical Reaction Yield**: In any chemical reaction, the yield refers to the fraction (often expressed as a percentage) of reactants successfully converted to the desired product. Predicting reaction yields is crucial for chemists; a high predicted yield can save time and resources by guiding which experiments to pursue, while a low predicted yield might signal an inefficient route. Traditionally, chemists have used domain knowledge, intuition, or trial-and-error to estimate yields. However, modern machine learning methods can learn patterns from data and make fast quantitative yield predictions. In this section, we explore how several machine learning models can be applied to reaction yield prediction.  
 
-**Machine Learning Mode**:Predicting reaction yield can be tackled with a range of models, from classical ensemble methods to deep neural networks. Here we focus on four types, Recurrent Neural Networks (RNNs), Graph Neural Networks (GNNs), Random Forests, and Feed-Forward Neural Networks, and discuss why each is suited to yield prediction in chemistry. For each model type, we explain its role in yield prediction, provide chemistry-focused examples, include simple Python code demonstrations (using the Buchwald-Hartwig dataset to evaluate the accuracy of model), and compare typical performance on benchmark datasets. By the end, you’ll see how these models transform chemical information (like molecules or reaction conditions) into a yield prediction, and understand the pros and cons of each approach.  
+**Machine Learning Mode**: Predicting reaction yield can be tackled with a range of models, from classical ensemble methods to deep neural networks. Here we focus on four types, Recurrent Neural Networks (RNNs), Graph Neural Networks (GNNs), Random Forests, and Feed-Forward Neural Networks, and discuss why each is suited to yield prediction in chemistry. For each model type, we explain its role in yield prediction, provide chemistry-focused examples, include simple Python code demonstrations (using the Buchwald-Hartwig dataset to evaluate the accuracy of model), and compare typical performance on benchmark datasets. By the end, you’ll see how these models transform chemical information (like molecules or reaction conditions) into a yield prediction, and understand the pros and cons of each approach.  
 
 ---
 
@@ -30,7 +30,7 @@ For example, consider an RNN analyzing the reaction “aryl bromide + amine → 
 - **Sequence Awareness**: RNNs process input sequences in order, which is useful in yield prediction because the order of components (and the context they appear in) can matter. For example, an RNN can learn that a brominated reactan at the start of a SMILES might indicate a different reactivity pattern than chlorinated due to bromine being a better leaving group.  
 - **Hidden State (Memory)**: The hidden state acts like a chemist’s running notebook, remembering earlier parts of the reaction. This helps capture long-range effects (e.g., something at the start of a SMILES string affecting the outcome at the end). Advanced variants like LSTM (Long Short-Term Memory) and GRU (Gated Recurrent Unit) have special gating mechanisms to better preserve important information over long sequences. These have been used in chemistry to ensure that crucial early tokens (e.g., a particular functional group or catalyst identity) are not forgotten by the time the network reaches the yield output.  
 
-![RNN Diagram](../../resource/img/yield_prediction/RNN_Process.png)
+![RNN Diagram](../../resource/img/yield_prediction/RNN_Process.png)  
 Figure 1: The reaction is encoded as a sequence of tokens. At each step t, the input token 𝑥_𝑡 (e.g., “Br”, “Ph”, “R”) enters an RNN cell. That cell combines the new input with the previous hidden state hₜ₋₁ to produce the updated hidden state hₜ. Arrows show the flow: horizontal arrows carry the hidden state forward through time, and vertical arrows inject each new chemistry token into the cell. This illustrates how the network incrementally builds a memory of the reaction’s components, accumulating context that will ultimately be used to predict the reaction’s yield.  
 
 In summary, an RNN reads a reaction like a chemist reads a procedure, forming an expectation of yield as it goes. This approach can capture nuanced patterns (like synergistic effects of reagents) that might be hard to encode with fixed descriptors.  
@@ -48,7 +48,7 @@ RNNs excel at capturing sequential patterns. In chemistry, this means they natur
 
 Let’s walk through an example of building and training an RNN model to predict reaction yields using Python and PyTorch. We will use a real-world dataset for demonstration. For instance, the Buchwald– Hartwig amination HTE dataset (Ahneman et al., Science 2018) contains thousands of C–N cross-coupling reactions with measured yields. Each data point in this dataset is a reaction (specific aryl halide, amine, base, ligand, etc.) and the resulting yield.  
   
-#### 1. Set Up The Environment
+#### 1. Set Up The Environment  
 - Open google-colab/Python  
 - Instal core packages for RNN:  
 ```python
@@ -59,6 +59,7 @@ Let’s walk through an example of building and training an RNN model to predict
 ```python
     pip intall rdkit
 ```  
+
 #### 2. Download the dataset  
 Download Buchwald-Hartwig dataset then store in "yield_data.csv" file  
 ```python
@@ -146,7 +147,6 @@ vocab  = {ch: i for i, ch in enumerate(chars)}
 PAD_IDX = 0
 
 def encode(smi):
-    “Turn a SMILES string into a list of integer token IDs.”
     return [vocab[ch] for ch in smi]
 
 # 1.6 Define a Dataset that pads & scales yields 0–1
@@ -216,15 +216,14 @@ import matplotlib.pyplot as plt
 import numpy as np
 import math
 
-# 1. Set up steps
-# Using GPU instead of cpu if possible
+# Using GPU instead of CPU if possible
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 model = YieldRNN(len(vocab)).to(device)
 criterion = nn.MSELoss()
 optim     = torch.optim.Adam(model.parameters(), lr=1e-3)
 
-# ------------- 3. Training loop -----------------------------------------------------
-for epoch in range(1, 301):          # 60 epochs
+# Training loop
+for epoch in range(300):
     model.train()
     train_mse, n_train = 0.0, 0
     for X, L, y in train_loader:
