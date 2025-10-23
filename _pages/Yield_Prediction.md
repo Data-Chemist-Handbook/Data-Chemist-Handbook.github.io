@@ -14,150 +14,65 @@ layout: post
 
 ## 8.1 Recurrent Neural Networks (RNNs)  
 
-### Why using RNN ?  
-Early data-driven yield prediction models often used fixed descriptors or one-hot encodings of reactants (e.g. encoding presence/absence of certain functional groups) and then applied algorithms like Random Forests. While useful, those approaches treat
-each reaction as a bag of features, potentially missing the structure of the molecular and reaction conditions influence yield. Recent advances bring a big advancement into yield prediction field which is deep learning model. In particular, treating a reaction’s representation as a sequence – analogous to a sentence in a chemical “language” – has proven a high potential. For example, a reaction can be written as a SMILES string (a text encoding of molecules), and deep learning models can be trained to read this string and predict the yield . One way to do this is with Recurrent Neural Networks (RNNs), which are designed to handle sequential data.  
+### Why using RNN for Yield Prediction?    
+One way to represent a chemical reaction is as a sequence of characters or tokens. For example, a reaction SMILES string that lists reactants, reagents, and products. A Recurrent Neural Network (RNN) is naturally suited to sequential data. It processes input one token at a time and maintains an internal memory of what came before. This makes RNNs powerful for capturing the context in a reaction sequence that might influence yield.  
 
-### What is RNN actually ?
-Imagine reading a recipe for a chemical reaction step by step. An RNN does something similar: it reads a
-sequence (like a reaction encoded as text) one element at a time, remembering what came before. This
-memory is what we call the hidden state. At each step in the sequence, the RNN updates its hidden state
-based on the current input and the previous state, and optionally produces an output (in our case,
-eventually an estimated yield). Figuratively, you can think of the hidden state as the RNN’s interpretation of
-the reaction so far.  
-In a chemistry context, consider an RNN reading a reaction SMILES string token by token. When it sees the “Br” token (aryl bromide), it updates its hidden state to reflect the presence of a highly reactive aryl halide (which often increases yield). Later, encountering a token for a bulky base, it further adjusts the hidden state to represent potential steric hindrance (which can lower yield). In this way, the RNN builds a running summary of the reaction, step by step incorporating each component’s influence on the final yield.  
+In yield prediction, treating a reaction like a “sentence” allows the model to learn subtle order-dependent patterns. For instance, an RNN reading a reaction SMILES might learn that seeing an aryl bromide token early on (e.g. Br on a benzene ring) often correlates with higher yields, whereas encountering a bulky substituent token later might signal steric hindrance and thus lower yield. Traditional models that use reactions as unordered sets of features could miss such sequence context relationships.  
+
+RNNs were among the early deep learning models applied to reaction informatics. They brought a new ability: to learn directly from raw text representations of reactions rather than relying on hand-crafted descriptors. This sequential approach can know how the arrangement of reactant fragments and conditions relate to outcomes like yield.  
+
+### How RNNs Work?  
+An RNN can be imagined as a reader moving through the reaction, updating its memory at each step. At any point in the sequence, the RNN has a hidden state summarizing all the tokens seen so far. When a new token is read, the hidden state is updated. In our context, the tokens could be atomic symbols, bonds, or even entire molecular fragments in a tokenized SMILES. The hidden state after reading the full sequence becomes a learned representation of the entire reaction, which the RNN can then map to a yield prediction.  
+
+For example, consider an RNN analyzing the reaction “aryl bromide + amine → coupling product” under certain conditions. Initially, the RNN’s hidden state is empty. It reads “Br” (bromide) and updates its state to reflect a very reactive leaving group is present (often a sign of a favorable reaction). Next it reads the amine component; if the amine is hindered, the RNN adjusts its state to account for possible lower reactivity. As it reads the catalyst and base tokens, it further modulates its expectations, perhaps recognizing a particularly effective ligand or an incompatible additive. By the end of the sequence, the RNN’s hidden vector encodes a combination of all these factors. This vector is then passed to an output layer to produce a number: the predicted yield.    
 
 #### Key characteristics of RNNs  
-- **Sequence Awareness:** RNNs process input sequences in order, which is useful in chemistry because
-the order of components (and the context they appear in) can matter. For example, an RNN can learn
-that a brominated reactan at the start of a SMILES might indicate a different reactivity pattern than chlorinated due to bromine being a better leaving group.  
-- **Hidden State (Memory):** As the RNN reads through the sequence, it carries a hidden state vector.
-This is like the running summary of what has been “seen” so far. In chemistry, you can compare it to
-a chemist keeping track of which functional groups have appeared in a reaction and adjusting
-expectations of yield accordingly.  
-- **Reusability of Structure:** The RNN uses the same network cell for each step (recurrently). This is
-analogous to applying the same reasoning rules to each part of a molecule or reaction. No matter
-where a particular functional group appears in the SMILES, the RNN cell can recognize it and update
-the state in a consistent way.  
+- **Sequence Awareness**: RNNs process input sequences in order, which is useful in yield prediction because the order of components (and the context they appear in) can matter. For example, an RNN can learn that a brominated reactan at the start of a SMILES might indicate a different reactivity pattern than chlorinated due to bromine being a better leaving group.  
+- **Hidden State (Memory)**: The hidden state acts like a chemist’s running notebook, remembering earlier parts of the reaction. This helps capture long-range effects (e.g., something at the start of a SMILES string affecting the outcome at the end). Advanced variants like LSTM (Long Short-Term Memory) and GRU (Gated Recurrent Unit) have special gating mechanisms to better preserve important information over long sequences. These have been used in chemistry to ensure that crucial early tokens (e.g., a particular functional group or catalyst identity) are not forgotten by the time the network reaches the yield output.  
 
 ![RNN Diagram](../../resource/img/yield_prediction/RNN_Process.png)
-Figure 1: A schematic “unrolling” of the RNN over three time steps as it reads a reaction sequence token-by-token. At each step t, the input token 𝑥_𝑡 (e.g., “Br”, “Ph”, “R”) enters an RNN cell. That cell combines the new input with the previous hidden state hₜ₋₁ to produce the updated hidden state hₜ. Arrows show the flow: horizontal arrows carry the hidden state forward through time, and vertical arrows inject each new chemistry token into the cell. This illustrates how the network incrementally builds a memory of the reaction’s components, accumulating context that will ultimately be used to predict the reaction’s yield.  
+Figure 1: The reaction is encoded as a sequence of tokens. At each step t, the input token 𝑥_𝑡 (e.g., “Br”, “Ph”, “R”) enters an RNN cell. That cell combines the new input with the previous hidden state hₜ₋₁ to produce the updated hidden state hₜ. Arrows show the flow: horizontal arrows carry the hidden state forward through time, and vertical arrows inject each new chemistry token into the cell. This illustrates how the network incrementally builds a memory of the reaction’s components, accumulating context that will ultimately be used to predict the reaction’s yield.  
 
-Chemically speaking, an RNN can learn patterns by seeing many examples. It remembers the
-presence of the previous states while reading the rest of the reaction. This ability to capture context and sequence is
-what sets RNNs apart from simpler models in yield prediction.  
+In summary, an RNN reads a reaction like a chemist reads a procedure, forming an expectation of yield as it goes. This approach can capture nuanced patterns (like synergistic effects of reagents) that might be hard to encode with fixed descriptors.  
 
-### RNN Architecture for Yield Prediction
-To understand how an RNN predicts yields, let’s break down its architecture into parts, relating each to a
-chemistry analogy:  
-- **Input Layer (Encoding the Reaction):** First, we need to encode the reaction (e.g., as a SMILES
-string). This could be done at the character level or using chemical tokens. For simplicity, imagine we
-feed the SMILES one character at a time into the RNN. We typically convert characters to numeric
-vectors via an embedding layer so it is essentially a lookup table that turns each symbol (like C , Br ,
-= , . etc.) into a vector of numbers. This is analogous to encoding chemical species properties:
-just as we might encode an element or functional group with descriptors, here we learn a vector
-representation for each character or token.
-- **Recurrent Layer (the “RNN cell”):** This is the heart of the network. A basic RNN cell takes two things
-as input: the current input vector (from the reaction sequence) and the previous hidden state. It
-combines them (through weighted summation and a nonlinear function) to produce a new hidden
-state. Mathematically, one common formulation is: **hₜ = tanh(W ⋅ xₜ + U ⋅ hₜ₋₁ + b)** where xₜ is the input at step t, hₜ₋₁ is the hidden state from the previous step, W, U and b are learnable parameters (matrices/vectors) . The new hidden state is then passed to the next step. You can picture this like an assembly line: each station (time step) takes the current reagent
-(input) and the accumulated mixture info (hidden state) to update the mixture’s status.  
-- **Output Layer:**: After processing the entire sequence (the RNN has seen the whole reaction), we use
-the final hidden state (or some aggregation of all hidden states) to predict the yield value. Typically,
-a simple fully-connected layer takes the last hidden state and outputs a number (which we interpret as the predicted yield). We often apply a suitable activation if needed (for regression usually identity or ensure the output is within 0-100 range by clamping or using a function, though many models just predict a real number and we treat it as yield %).  
-- **Longer-term Dependencies – LSTM/GRU:** One issue with basic RNNs is that their memory can fade for long sequences (vanishing gradient problem). In lengthy SMILES or very complex reactions, something seen at the start can be “forgotten” by the end. Advanced RNN variants like Long Short-Term Memory (LSTM) networks and Gated Recurrent Units (GRUs) address this by having gated mechanisms that control information flow. In chemical analogy, an LSTM is like a careful lab notebook. It decides what to write down or erase at each step, so critical information isn’t lost by the time the network finishes reading the reaction. These gated RNNs maintain a more persistent cell state in addition to the hidden state, which helps in capturing long-range effects (e.g., a reagent mentioned at the beginning of a protocol affecting the final outcome). Many state-of-the-art sequence models for chemistry use LSTMs or GRUs under the hood because of these benefits.  
+### Why RNNs Succeed (and Where They Struggle)  
+#### Advantage    
+RNNs excel at capturing sequential patterns. In chemistry, this means they naturally take into account the presence and context of each component in a reaction. They can, for example, learn that “having ligand X together with base Y” is a pattern associated with high yield, whereas models that treat X and Y as independent features might miss that interaction.    
 
-**RNN Diagram**  
-![RNN Diagram](../../resource/img/yield_prediction/RNN.png)
-A compact schematic of an RNN unrolled over three time steps for yield forecasting. Blue circles (hₜ₋₁, hₜ, hₜ₊₁) are the hidden‐state vectors; at t - 1, the model ingests the reaction condition (orange), updates to hₜ, then outputs the yield at 𝑡. That yield feeds back into the next step, combining with hₜ to form hₜ₊₁, which produces the predicted yield at t+1.  
-### How RNNs Learn – The Math Behind the Scenes  
-How does an RNN actually learn these chemical yield patterns from data? It all happens during the training
-process via backpropagation. Here’s an overview, tied into our yield prediction scenario:
-- **1. Training Data:** We provide the RNN with many example reactions and their yields. For instance, a dataset might contain thousands of reactions (as SMILES or similar text) each labeled with an experimentally measured yield (as a percentage) . An example entry might be: “Some Reaction – Yield: 85%”. The model doesn’t know chemistry, but it will try to map from the reaction string to that number.  
-- **2. Forward Pass:** For each training reaction, the RNN processes the sequence of tokens, updating its
-hidden state, and finally produces a predicted yield $\hat{y}$ (a single number). Initially, these
-predictions are basically random, since weights are random at start.  
-- **3. Loss Calculation:** We measure the error of the prediction using a loss function. In regression tasks
-like yield, a common choice is Mean Squared Error (MSE): $\mathcal{L}$ = ($\hat{y}$ − y)^2 where y is the true yield and $\hat{y}$ is the predicted yield. For example, if the true yield was 85 and the model predicted 60, the error is $(60 - 85)^2 = 625$ – quite large. The model will try to reduce this.
-- **4. Backpropagation Through Time (BPTT):** This is where the “magic” happens. The model computes how the loss $\mathcal{L}$ changes with respect to each of the RNN’s parameters. Because the RNN’s output depends on all the steps (all the way back to the first token of the reaction), the error is back-propagated through each time step of the RNN. Essentially, the RNN unrolls through the sequence and perform backpropagation through that unrolled network. During training, the gradient $\displaystyle \frac{\partial \mathcal{L}}{\partial W_{Br}}$ tells us how much the loss changes if we tweak the weight on the “Br” token. For instance,  $\displaystyle \frac{\partial \mathcal{L}}{\partial W_{Br}}$=−0.5, then increasing $W_{Br}$ by a small step (say, 0.1) will reduce the loss increase yield prediction by 5 for this reaction.  
-- **5. Parameter Update:** Using an optimization algorithm (like Adam or simple gradient descent), we adjust the weights slightly in the direction that reduces the error. For example, if the network underestimated yields whenever a bromide ( Br ) was present, the gradients will nudge the relevant weights to boost yield predictions in presence of Br. The model learns that bromides often lead to higher yields (compared to chlorides, perhaps) because that adjustment reduces overall prediction error across training examples.  
-- **6. Iterate:** The process repeats for many epochs (passes through the data). Over time, the RNN’s hidden state representations become tuned to capture factors that influence yield. It might learn numeric encodings corresponding to “presence of electron donor”, “high temperature used”, “watersensitive reagent present” etc., without being explicitly told these concepts – they emerge from the training if those factors consistently affect yield in the data.  
-  
-Mathematically, the training is adjusting the matrices like $W, U$ (from the RNN cell) and the output layer
-weights to minimize the loss across all training reactions. One can think of the hidden state at final time as
-computing some function $f(\text{reaction}) = h_{\text{final}}$, and then the output layer does $y = w^\top
-h_{\text{final}} + b$. Training tunes $f$ and $w$ so that $y$ is close to the true yield for all training
-reactions.  
-  
-From a chemistry standpoint, during training the model might discover, for example, that “if nitrogen is
-present in the base, yields tend to be lower” because every time a reaction with, say, a nitrogenous
-base had lower yield, the model was penalized until it adjusted to predict that lower yield. Similarly, it might
-learn “reactions with certain protecting groups never go to completion” and incorporate that into its hidden
-state memory.   
-  
-It’s worth noting that RNNs don’t have built-in knowledge of chemistry; they learn purely from data
-correlations. Thus, they require sufficient examples of various factors to generalize well. If an RNN is trained
-on a high-throughput experimentation (HTE) dataset (like the Buchwald-Hartwig amination yields from Doyle’s group ), it can achieve very high accuracy on similar reactions. However, if it is asked a very different chemistry than it saw in training, it might falter. Just like humans, we tend to perform poorly on tasks we haven’t learned before.  
-
-**Training an RNN:** summary of steps:  
-- Prepare lots of reaction examples with known yields.  
-- Convert reactions to sequences of numeric tokens (characters or chemical tokens).  
-- Initialize an RNN model (random weights).  
-- Repeatedly do forward passes to get predictions, compute loss (e.g., MSE between predicted and true yield), backpropagate errors, and update weights.  
-- Over many iterations, the RNN parameters adjust to minimize the error on training reactions.  
-  
-The result is a trained RNN model that, when given a new reaction (that it hasn’t seen), can process the sequence and output a predicted yield. Importantly, the model’s hidden state approach means it has learned which parts of the sequence matter – effectively which functional groups or sequence patterns correlate with high or low yield, even though we didn’t explicitly hard-code any chemistry rules.
-
-### Advantages
-- **Captures Temporal Patterns**: RNNs excel at modeling sequential data. They can learn how earlier time points in a reaction influence later time points and final results.  
-- **Dynamic Prediction**: As the RNN processes each new measurement (e.g. hourly temperature or conversion), you can “pause” the sequence and ask it for a yield estimate based on what it’s seen so far. For instance, after 2 hours of data the RNN might predict a 40 % final yield; by hour 4 it updates that to 55 %; and at hour 8 it refines to 65 %. This lets you make in fast decisions like add more catalyst or change temperature before the reaction finishes.  
-- **Flexible Input Length**: RNNs can handle sequences of varying length by processing one step at a time, making them versatile for different processes.  
-
-### Limitations
-- **Data Requirements**: Training RNNs typically requires a substantial amount of sequential data. If most reactions in your dataset are only recorded as final yields (no time series of intermediate data), RNNs can’t be directly applied.  
+#### Limitations  
+- **Data Requirements**: RNNs are data-hungry and require many examples to train well. If we had a much smaller dataset, an RNN might overfit or fail to learn meaningful patterns.    
 - **Vanishing Gradients on Long Sequences**: Standard RNNs can struggle with very long sequences due to vanishing or exploding gradients, making it hard to learn long-range dependencies. Architectural improvements like LSTM mitigate this but add complexity.  
 - **Complexity for Beginners**: The mathematical formulation of RNNs (with looping states and backpropagation through time) is more complex than a simple feed-forward network. This can be challenge for those new to machine learning.  
 
 ### Implementation Example: RNN for Yield Prediction
 
-Let’s walk through an example of building and training an RNN model to predict reaction yields using
-Python and PyTorch. We will use a real-world dataset for demonstration. For instance, the Buchwald–
-Hartwig amination HTE dataset (Ahneman et al., Science 2018) contains thousands of C–N cross-coupling
-reactions with measured yields. Each data point in this dataset is a reaction (specific aryl halide, amine,
-base, ligand, etc.) and the resulting yield.  
+Let’s walk through an example of building and training an RNN model to predict reaction yields using Python and PyTorch. We will use a real-world dataset for demonstration. For instance, the Buchwald– Hartwig amination HTE dataset (Ahneman et al., Science 2018) contains thousands of C–N cross-coupling reactions with measured yields. Each data point in this dataset is a reaction (specific aryl halide, amine, base, ligand, etc.) and the resulting yield.  
   
 #### 1. Set Up The Environment
 - Open google-colab/Python  
 - Instal core packages for RNN:  
 ```python
     pip install torch torchvision torchaudio  
-    pip install pandas scikit-learn matplotlib requests  
-```
+    pip install pandas scikit-learn matplotlib requests   
+```  
 - Install chemistry helpers package:  
 ```python
     pip intall rdkit
-```
+```  
 #### 2. Download the dataset  
 Download Buchwald-Hartwig dataset then store in "yield_data.csv" file  
 ```python
     import requests
-
-    # URL of the raw CSV data
     url = "https://raw.githubusercontent.com/rxn4chemistry/rxn_yields/master/data/Buchwald-Hartwig/Dreher_and_Doyle_input_data.xlsx"
     resp = requests.get(url)
-
     with open("yield_data.csv", "wb") as f:
         f.write(resp.content)
-
     print("Dataset downloaded and saved as yield_data.csv")
-```
+```  
 
 #### 3. Get helpers function and generate reaction SMILES
 Transforms the spreadsheet style HTE dataset into standard reaction SMILES format  
 ```python 
-
-__all__ = ['canonicalize_with_dict', 'generate_buchwald_hartwig_rxns']
-
 from rdkit import Chem
 from rdkit.Chem import rdChemReactions
 
@@ -240,6 +155,10 @@ class RxnDataset(Dataset):
         self.seqs   = [torch.tensor(encode(s), dtype=torch.long) for s in df.rxn_smiles]
         self.length = [len(s) for s in self.seqs]
         self.y      = torch.tensor(df['yield'].values / 100, dtype=torch.float32)
+    def __len__(self):
+        return len(self.seqs)
+    def __getitem__(self,idx):
+        return self.seqs[idx], self.length[idx], self.y[idx]
 
 
 def collate(batch):
@@ -290,7 +209,7 @@ class YieldRNN(nn.Module):
 ```
 
 #### 6. Training & Evaluation  
-Here we train for 60 epochs with MSE loss (on scaled 0–1 yields), print train and validation MSE every 10 epochs.
+Here we train for 300 epochs with MSE loss (on scaled 0–1 yields), print train and validation MSE every 10 epochs.
 ```python
 import torch
 import matplotlib.pyplot as plt

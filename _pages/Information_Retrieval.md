@@ -512,6 +512,9 @@ This would print the answer in a nice Markdown format in Colab, potentially incl
 
 If the response isn’t what you expected, you can tweak the prompt (maybe specify the property name exactly, or ask for results in bullet points) and run again. This interactivity is great for prompt debugging.  
 
+### Example Notebook: 
+https://colab.research.google.com/drive/1OTwuTwfE9ZoYIVrPvTgSCFYa4JXOrTtR#scrollTo=6UyCksNPwlP5
+
 ### A Note on Monitoring and Limits  
 When working interactively, especially in a loop or multiple rapid-fire queries, be mindful of API rate limits and costs. OpenAI APIs might rate-limit you if you send too many requests too quickly. If you plan to do heavy usage (like evaluating on hundreds of questions), consider adding time.sleep() pauses between calls or using batch requests if available. Also, print intermediate results to make sure the process is doing what you expect.  
 
