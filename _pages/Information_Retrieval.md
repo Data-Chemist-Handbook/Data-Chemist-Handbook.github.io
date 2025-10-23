@@ -5,9 +5,7 @@ date: 2024-08-20
 category: Jekyll
 layout: post
 ---
-Large Language Models (LLMs) are advanced AI systems trained on massive text datasets that can understand context and generate human-like text. They act as foundational models in natural language processing, capable of completing sentences, answering questions, writing code, and more. In chemistry, LLMs offer a powerful new way to accelerate research and education. These models have been fine-tuned to perform tasks ranging from predicting molecular properties to summarizing literature, sometimes matching or even outperforming specialized chemical machine learning models (especially when data is scarce). Because LLMs are trained on vast internet text (including scientific articles), they carry a wealth of chemical knowledge that can be utilized with the right prompts.  
-
-Chemistry researchers are beginning to leverage LLMs as intelligent assistants. For example, an LLM like ChatGPT can rapidly scan and summarize hundreds of papers, helping chemists extract key insights from literature in a fraction of the time. Benchmarks such as ChemLLMBench have been created to rigorously evaluate what LLMs can do in chemistry. This benchmark covers eight diverse tasks, including molecule name translation, property prediction, reaction outcome prediction, retrosynthesis planning, molecule design from text descriptions, molecule captioning, and reagent selection. Results show that current LLMs (e.g. GPT-4, Llama-2) perform impressively on some tasks (especially those involving language understanding and explanation) but struggle with others requiring precise chemical reasoning. We’ll explore what LLMs are, why they’re useful for chemists, and how to use them effectively.  
+Large Language Models are advanced AI systems trained on massive text datasets that can understand context and generate human-like text. They act as foundational models in natural language processing, capable of completing sentences, answering questions, writing code, and more. In chemistry, LLMs offer a powerful new way to accelerate research and education. These models have been fine-tuned to perform tasks ranging from predicting molecular properties to summarizing literature, sometimes matching or even outperforming specialized chemical machine learning models, especially when data is scarce. Because LLMs are trained on vast internet text (including scientific articles), they carry a wealth of chemical knowledge that can be utilized with the right prompts.  
     
   
   
@@ -16,9 +14,9 @@ Chemistry researchers are beginning to leverage LLMs as intelligent assistants. 
   
              
 ![LLM Chemist](../../resource/img/Information_retrieval/LLM_Chemist.png)  
-Chemists are beginning to use AI assistants (like ChatGPT) to sift through literature and even propose experiments. In one study, ChatGPT was prompted through carefully designed steps to read 228 papers on metal–organic frameworks (MOFs) and automatically extract over 26,000 experimental factors. Those data were used to train a model predicting MOF crystallization outcomes. The illustration above (from an ACS Press release) depicts a chemist teaming up with a ChatGPT-based assistant to glean new insights in materials chemistry.  
+The illustration above (from an ACS Press release) depicts a chemist teaming up with a ChatGPT-based assistant to glean new insights in materials chemistry.  
 
-Of course, LLMs are not magic oracles. They have limitations, an LLM might sound confident while giving an incorrect chemical fact, or treat chemical notation as just text and produce unrealistic structures. For instance, without proper guidance an LLM may manipulate a SMILES string by simple text substitutions (adding or changing characters) rather than truly understanding chemical validity. This can lead to nonsensical molecules or invalid formulas. In one case, an LLM (Anthropic’s Claude) suggested analogs of a molecule by replacing a -CF₃ group with -CF<sub>3</sub> or -CH<sub>3</sub> text, yielding strings that were not valid SMILES and couldn’t be parsed. It even kept elongating an alkyl chain step-by-step (“methyl, ethyl, futile”) without any chemical rationale. Such errors highlight that LLMs do not inherently know chemistry rules, they only predict likely text patterns. With careful prompts and domain checks, however, these pitfalls can be mitigated.  
+Of course, LLMs are not magic oracles. They have limitations; an LLM might sound confident while giving an incorrect chemical fact, or treat chemical notation as just text and produce unrealistic structures. For instance, without proper guidance, an LLM may manipulate a SMILES string by simple text substitutions (adding or changing characters) rather than truly understanding chemical validity. This can lead to nonsensical molecules or invalid formulas. In other words, LLMs do not inherently know chemistry rules. They only predict likely text patterns. However, with careful prompts and domain checks, these pitfalls can be mitigated.  
     
   
   
@@ -27,9 +25,9 @@ Of course, LLMs are not magic oracles. They have limitations, an LLM might sound
   
           
 ![LLM Mistake in chain-extension](../../resource/img/Information_retrieval/chain-extension-LLM.png)  
-An illustration of an LLM erroneously extending a chemical structure by lengthening an alkyl chain repeatedly (each step adding one more carbon). The model was essentially treating the SMILES string as malleable text without understanding the chemistry, resulting in a series of increasingly long (and pointless) alkyl chains. This “methyl-ethyl-futile” behavior underscores the importance of validating LLM outputs with chemical common sense.
+An illustration of an LLM erroneously extending a chemical structure by lengthening an alkyl chain repeatedly (each step adding one more carbon). The model was essentially treating the SMILES string as malleable text without understanding the chemistry, resulting in a series of increasingly long and pointless alkyl chains. This “methyl-ethyl-futile” behavior underscores the importance of validating LLM outputs with chemical common sense.  
 
-So, what exactly are LLMs and why are they so powerful for chemistry? Let’s dive in.  
+So, what exactly are LLMs, and why are they so powerful for chemists? How to use them effectively? Let’s dive in.  
 
 ## 10.1 Introduction of LLMs
 
@@ -41,13 +39,12 @@ So, what exactly are LLMs and why are they so powerful for chemistry? Let’s di
 
 ### What can they do?  
 
-- **Understand questions and context**: LLMs can parse complex, open-ended questions in chemistry and figure out what information is being sought. They can read the query and any provided context (like experiment details or data tables) to grasp the problem.  
+- **Understand questions and context**: LLMs can parse complex, open-ended questions in chemistry and figure out what information is being sought. They can read the query and any provided context, like experiment details or data tables, to grasp the problem.  
 - **Generate human-like answers**: Given a prompt, LLMs produce text that often reads as if written by a human. They can explain concepts, summarize documents, or draft reports in coherent prose. For example, an LLM could write a summary of a 50-page synthesis protocol or explain a reaction mechanism in simple terms.  
-- **Retrieve and synthesize knowledge**: Because they were trained on vast amounts of text, LLMs have a large knowledge base. They can recall facts (e.g. boiling points, chemical formulas) and even combine pieces of knowledge to answer complex questions.  
-- **Translate between representations**: LLMs can convert information from one format to another. For instance, you can ask for the IUPAC name of a molecule given its SMILES string, or vice versa, and the model will attempt to translate it. They can also summarize a molecular structure in plain English, or interpret a reaction described in words and output reactants/products in chemical notation.   
+- **Retrieve and synthesize knowledge**: Because they were trained on vast amounts of text, LLMs have a large knowledge base. They can recall facts (e.g., boiling points, chemical formulas) and even combine pieces of knowledge to answer complex questions.  
+- **Translate between representations**: LLMs can convert information from one format to another. For instance, you can ask for the IUPAC name of a molecule given its SMILES string, or vice versa, and the model will attempt to translate it. They can also summarize a molecular structure in plain English, or interpret a reaction described in words and output reactants/products in chemical notation.  
 - **Automate tedious tasks**: In research, LLMs can automate literature searches and data extraction. Instead of manually reading hundreds of papers, a chemist can have an LLM pull out specific data (yields, conditions, safety notes) from those papers. LLMs can also draft emails, write code for data analysis, or format references, saving time on routine chores.  
-
-- **Brainstorm and hypothesize**: LLMs can serve as creative partners. They might suggest potential reagents for a transformation, propose mechanisms, or generate new ideas. They excel at summarizing and rewording, which helps in preparing reports or simplifying complex information for students.   
+- **Brainstorm and hypothesize**: LLMs can serve as creative partners. They might suggest potential reagents for a reaction, propose mechanisms, or generate new ideas. They excel at summarizing and rewording, which helps in preparing reports or simplifying complex information for students.   
 
 In short, LLMs act as versatile language assistants. They help make complex information clearer and easier to work with, even if you don’t have a deep chemistry background. By offloading tasks like summarization, translation, or information retrieval to an AI, chemists can free up time for deeper analysis and creativity.  
 
@@ -125,7 +122,7 @@ Only option B references elements specific to chemistry reports (procedure, haz
 ## 10.2 Prompt Engineering
 
 ### Definition:
-Prompt engineering is the art of writing effective inputs or instructions for an LLM to get the desired output. Think of it as formulating your question or task in the clearest, most precise way so the AI understands exactly what you need. In chemistry (or any specialized field), how you ask a question greatly influences the usefulness of the answer you get.  
+Prompt engineering is the art of writing effective inputs or instructions for an LLM to get the desired output. Think of it as formulating your question or task in the clearest, most precise way so the AI understands exactly what you need. In chemistry or any specialized field, how you ask a question greatly influences the usefulness of the answer you get.  
 
 ### Why is it important in chemistry?
 Chemistry questions can be complex and nuanced. A poorly worded prompt might confuse the model or yield a generic answer. By contrast, a well-crafted prompt can guide the LLM to provide a detailed, accurate, and context-aware response. For example, asking “What happens if I mix chemical A and B?” is vague. A better prompt would be: “You are a chemist. Explain the reaction (if any) between acetone and sodium metal, including any relevant equations and safety precautions.” The second prompt gives context (chemist), specifics (acetone and sodium), and what to include (equations, safety), so the model knows what’s expected.  
@@ -133,7 +130,7 @@ Chemistry questions can be complex and nuanced. A poorly worded prompt might con
 ### Format of a Good Prompt:  
 A comprehensive prompt may include several components to set the stage:  
 1. **Role or Context**: Tell the model who it is or what perspective to take.  
-_Example:_ “You are an expert synthetic organic chemist…” This can make the answers more authoritative and domain-specificas.    
+_Example:_ “You are an expert synthetic organic chemist…” This can make the answers more authoritative and domain-specific.    
 
 2. **Task/Instruction**: Clearly state what you want.  
 _Example:_ “…Given the SMILES string of a molecule, provide the IUPAC name.”  
@@ -163,7 +160,7 @@ A naive prompt might be: “What happens when H₂ is added to H₂O?” But thi
 “You are a chemical safety expert. Explain what happens when hydrogen gas (H₂) is introduced into water at room temperature and pressure. Include in your answer:  
 - Whether any chemical reaction occurs (and why or why not)  
 - Physical behavior of H₂ in water (solubility, etc.)    
-- Any potential hazards or safety considerations (e.g. flammability)  
+- Any potential hazards or safety considerations (e.g., flammability)  
 - An equation if a reaction happens (or a note that no reaction happens under normal conditions)  
 - The reasoning in plain language  
 
@@ -171,7 +168,7 @@ Example format:
 When chlorine gas (Cl₂) is bubbled into water:  
 - Reaction: Cl₂ reacts with H₂O to form HCl and HOCl.   
 - Details: Cl₂ is moderately soluble; it’s a green gas that will dissolve and undergo a hydrolysis equilibrium. The reaction is exothermic but won’t boil the water under ambient conditions. The solution becomes acidic (due to HCl) and acts as a bleach (HOCl is an oxidizer).   
-- Hazards: Cl₂ is toxic and the acid formed is corrosive. Proper ventilation and protective equipment are required.  
+- Hazards: Cl₂ is toxic, and the acid formed is corrosive. Proper ventilation and protective equipment are required.  
 
 Now, following that format, explain the H₂ and H₂O case.”  
 
@@ -179,16 +176,16 @@ In the above prompt, we:
 - Set the role (“chemical safety expert”).  
 - Clearly asked for an explanation of H₂ in water.  
 - Listed bullet points of what to include.  
-- Even gave an example with chlorine so the model knows the level of detail and format we want.  
+- Even gave an example with chlorine, so the model knows the level of detail and format we want.  
 
 ### Tips for Effective Prompts:   
 - **Be specific**: Clearly identify compounds by name, formula, or structure. For example, instead of “this compound,” say “ethanol (CH₃CH₂OH).”
-- **Provide context**: If the question relates to a particular field (analytical chemistry, organic synthesis, etc.), mention it. For example,“In polymer chemistry, explain…”  
+- **Provide context**: If the question relates to a particular field (analytical chemistry, organic synthesis, etc.), mention it. For example, “In polymer chemistry, explain…”  
 - **State the output style**: If you want a list, ask for a list. If you want an explanation, say so. For example, “List the steps…”, “Explain why…”  
 - **Avoid ambiguity**: If a term could be interpreted in different ways, clarify it. For instance, “Lewis structure of NO₂” might be interpreted as needing a drawing (which the model can’t provide in text), so instead ask “Describe the bonding and electron arrangement in NO₂ (nitrogen dioxide) in words.”  
-- **Refine iteratively**: If the answer isn’t what you want, you can tweak the prompt and try again. Prompt engineering is often an iterative process, you adjust the wording until the model’s output meets your needs.  
+- **Refine iteratively**: If the answer isn’t what you want, you can tweak the prompt and try again. Prompt engineering is often an iterative process. You adjust the wording until the model’s output meets your needs.  
 
-By mastering prompt engineering, you essentially learn to “program” the LLM with natural language. This is a powerful skill for chemists using AI, ensuring that you get accurate, relevant, and insightful answers to drive your research forward.   
+By mastering prompt engineering, you essentially learn to “program” the LLM with natural language. This is a powerful skill for chemists using AI, ensuring that you get accurate, relevant, and insightful answers.   
 
 
 ---
@@ -262,17 +259,16 @@ Explicit output restrictions steer the model to a parsable answer.
 
 ## 10.3 Usage of LLM APIs
 
-LLMs can be accessed via web interfaces (like chatbots) or through APIs (Application Programming Interfaces) that allow you to integrate the model into your own programs and tools. For chemists, using an API means you can connect an LLM to a data analysis pipeline, a lab notebook, or a chemical inventory system. This opens up exciting possibilities: automated literature reviews, AI-driven hypothesis generation, chemical data mining, etc., all from your custom environment.  
+LLMs can be accessed via web interfaces or through APIs (Application Programming Interfaces) that allow you to integrate the model into your own programs and tools. For chemists, using an API means you can connect an LLM to a data analysis pipeline, a lab notebook, or a chemical inventory system.  
 
-Let’s focus on OpenAI’s API (as an example) and walk through how to set it up in a Google Colab notebook. Colab is convenient because it lets you run Python code in the cloud without installing anything locally.  
-
+Let’s focus on OpenAI’s API and walk through how to set it up in a Google Colab notebook. Colab is convenient because it lets you run Python code in the cloud without installing anything locally.  
 
 ### Setting Up OpenAI API (Google Colab)
 
 #### 1. Open a notebook:  
 Go to https://colab.research.google.com and create a new Python 3 notebook. This gives you an environment to write and run code interactively.  
 #### 2. Install required packages:  
-In a Colab cell, install the libraries you’ll need. For example, you might need the OpenAI package (to call the API), pandas/numpy for data handling and kaggleb to install dataset. Use pip to install    
+In a Colab cell, install the libraries you’ll need. For example, you might need the OpenAI package (to call the API), pandas/numpy for data handling, and kaggleb to install the dataset. Use pip to install    
 ```bash
 !pip install openai pandas numpy kagglehub
 ```  
@@ -287,7 +283,7 @@ os.environ['OPENAI_API_KEY'] = userdata.get('OPENAI_API_KEY')
 ```  
 This ensures the key is stored securely in the session environment (the OpenAI library will read it from there).  
 #### 4. Load or prepare data (Optional):  
-If you want to ask the LLM questions about a dataset (say a CSV of chemical compounds), load that data in Python. For example, let’s load a dataset of blood-brain barrier permeability (BBBP) from Kaggle:  
+If you want to ask the LLM questions about a dataset (a CSV file of chemical compounds), load that data in Python. For example, let’s load a dataset of blood-brain barrier permeability (BBBP) from Kaggle:  
 ```python
 import kagglehub, pandas as pd
 path = kagglehub.dataset_download("priyanagda/bbbp-smiles")
@@ -303,7 +299,7 @@ open("data.csv", 'wb').write(r.content)
 df = pd.read_csv("data.csv")
 ```  
 #### 5. Make an API call to the LLM:   
-Using the OpenAI Python library, you construct a chat completion request. This involves specifying the model (e.g. "gpt-4" or another available model), and providing a list of messages (which include your prompt).   
+Using the OpenAI Python library, you construct a chat completion request. This involves specifying the model (e.g., "gpt-4" or another available model) and providing a list of messages.     
 ```python
 from openai import OpenAI
 client = OpenAI()
@@ -325,7 +321,7 @@ A few things to note here:
 - The user message contains the actual question.  
 - Temperature=0.5 controls randomness (0 is deterministic, 1 is quite random). For factual questions, a lower temperature is usually better.  
 - Max_tokens=200 limits the length of the answer (since we don’t need a super long explanation for a simple question).  
-- The model returns a JSON with potential multiple choices; here we just take the first answer’s content.  
+- The model returns a JSON with multiple potential choices. Here, we just take the first answer’s content.  
 
 #### 6. Using the LLM with your data (Optional):    
 You can also incorporate data into the prompt. For example, if you loaded a DataFrame df with some chemical info, you might do   
@@ -372,9 +368,7 @@ accuracy = correct / len(test_df)
 print(f"Model accuracy on SMILES→IUPAC test: {accuracy:.2%}")
 ```   
 
-This loop goes through each SMILES in the test set, asks the model to provide an IUPAC name, and checks if it exactly matches the known correct name. The result might show a very low accuracy, reflecting the fact that direct SMILES-to-name translation is a difficult task for current LLMs. (Note: This kind of brute-force evaluation can be slow and cost API credits if the test set is large. It’s often wise to test on a subset first or use efficient batching if supported.)  
-
-Through the API, the possibilities are endless: you could build an app that, for example, watches your lab instrument data and asks an LLM to summarize any anomalies, or a chatbot that assists students with homework by referring to specific textbook sections. Remember that each API call costs tokens (which correspond to a portion of your API usage credits).  
+This loop goes through each SMILES in the test set, asks the model to provide an IUPAC name, and checks if it exactly matches the known correct name. The result might show a very low accuracy, reflecting the fact that direct SMILES-to-name translation is a difficult task for current LLMs. Remember that each API call costs tokens (which correspond to a portion of your API usage credits).   
 
 ---
 
@@ -454,7 +448,7 @@ Setting both temperature and top_p to 0 removes all randomness, forcing the mode
 
 Interactive programming refers to using tools like Jupyter Notebooks or Colab to write code in small chunks and immediately see results. This is incredibly useful when working with LLMs, because you can try a prompt, see the output, and iteratively refine your approach in real time. In a chemistry context, you might use an interactive notebook to prototype how an LLM analyzes a dataset or answers a set of chemistry questions, adjusting on the fly.  
 
-Let’s continue with the Google Colab scenario from 10.3, and demonstrate a more interactive workflow, including how to safely store secrets and build a reusable query function.  
+Let’s continue with the Google Colab scenario from 10.3 and demonstrate a more interactive workflow, including how to safely store secrets and build a reusable query function.  
 
 ### Colab Tips for Using API Keys  
 When working in Colab (especially if you plan to share the notebook), you should avoid hard-coding your API key into the code. Colab has a “Secrets” feature:  
@@ -468,10 +462,10 @@ os.environ['OPENAI_API_KEY'] = userdata.get('OPENAI_API_KEY')
 ```  
 This way, the key is not visible in your code or output. It’s stored in Colab’s backend and injected at run-time. If someone else opens your notebook, they won’t see your secret value.  
 
-Storing keys as secret variables keeps them out of the notebook content (and out of version control or shared links), which is a much safer practice than putting the raw key in a cell.  
+Storing keys as secret variables keeps them out of the notebook content, which is a much safer practice than putting the raw key in a cell.  
 
 ### Creating a Helper Function for Queries
-To streamline repeated calls, it’s handy to wrap the API call in a function. You can also integrate data loading or formatting in it. For example:  
+To streamline repeated calls, it’s handy to wrap the API call in a function. You can also integrate data loading or formatting into it. For example:  
 ```python
 def ask_chemistry_gpt(prompt, data_path=None):
     """
@@ -502,7 +496,7 @@ def ask_chemistry_gpt(prompt, data_path=None):
 ```  
 
 What this function does:  
-- If data_path is given and is a CSV, it reads the file with pandas and appends the first five rows (as a quick preview) to the prompt. This helps the LLM get an idea of the dataset structure (column names, etc.) without overloading it with the entire data. Seeing df.head() can help catch formatting issues or give context.  
+- If data_path is given and is a CSV, it reads the file with pandas and appends the first five rows (as a quick preview) to the prompt. This helps the LLM get an idea of the dataset structure (column names, etc.) without overloading it with the entire dataset. Seeing df.head() can help catch formatting issues or give context.  
 - It defines a basic system prompt to set the tone (helpful chemistry assistant).  
 - It sends the user prompt plus any data sample as the user message.  
 - It returns the model’s answer text.  
@@ -526,7 +520,7 @@ If the response isn’t what you expected, you can tweak the prompt (maybe speci
 https://colab.research.google.com/drive/1OTwuTwfE9ZoYIVrPvTgSCFYa4JXOrTtR#scrollTo=6UyCksNPwlP5
 
 ### A Note on Monitoring and Limits  
-When working interactively, especially in a loop or multiple rapid-fire queries, be mindful of API rate limits and costs. OpenAI APIs might rate-limit you if you send too many requests too quickly. If you plan to do heavy usage (like evaluating on hundreds of questions), consider adding time.sleep() pauses between calls or using batch requests if available. Also, print intermediate results to make sure the process is doing what you expect.  
+When working interactively, especially in a loop or multiple rapid-fire queries, be mindful of API rate limits and costs. OpenAI APIs might rate-limit you if you send too many requests too quickly. If you plan to do heavy usage (like evaluating hundreds of questions), consider adding time.sleep() pauses between calls or using batch requests if available. Also, print intermediate results to make sure the process is doing what you expect.  
 
 Finally, always validate important outputs manually. LLMs can produce convincing-sounding answers that are incorrect. An interactive session with an LLM is a partnership: the AI provides drafts or suggestions, and the human chemist reviews and verifies them.  
 
