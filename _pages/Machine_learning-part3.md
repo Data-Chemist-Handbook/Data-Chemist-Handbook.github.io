@@ -11,7 +11,7 @@ layout: post
 A persistent limitation of descriptor-based QSAR is that it flattens **connectivity**: two molecules can exhibit similar counts (e.g., heavy atoms, heteroatoms, rings) while differing widely in properties because **where** and **how** those parts connect matters. Graph neural networks (GNNs) address this by **learning directly on molecular graphs**—atoms as nodes, bonds as edges—so that **local neighborhoods and topology** are preserved in the representation (Wu et al., 2018). Within practical cheminformatics, a particularly reliable introductory choice is the **Directed Message Passing Neural Network (D-MPNN)**, popularized via the open-source **Chemprop** package (Yang et al., 2019; Heid et al., 2023). D-MPNN places hidden states on **directed bonds** (u→v) rather than only on atoms, reducing trivial back-tracking (the “totter” effect) and yielding stable baselines across public and industrial datasets (Yang et al., 2019).
 
 **What we will do in 3.1.**
-We load a small, well-known dataset—**ESOL** (aqueous solubility, log S)—and **visualize the target distribution** to understand task difficulty prior to modeling (Delaney, 2004; Wu et al., 2018). No large code blocks, no images; just a single, meaningful figure.
+We load a small, well-known dataset—**ESOL** (aqueous solubility, log S)—and **visualize the target distribution** to understand task difficulty prior to modeling (Delaney, 2004; Wu et al., 2018). No large code blocks.
 
 **Where the citations are used.**
 
@@ -38,7 +38,7 @@ plt.xlabel("log S"); plt.ylabel("Count")
 plt.grid(alpha=0.3)
 plt.show()
 ```
-
+![targetdist](../../../../../resource/img/GNNfig/targetdist.png)
 **Reading the plot.** ESOL spans a wide dynamic range (roughly a dozen log units). Such spread increases the chance of **heteroscedastic errors** and **nonlinearity**, making it a good teaching dataset for structure-aware models rather than linear baselines.
 
 **Key ideas to carry forward.**
