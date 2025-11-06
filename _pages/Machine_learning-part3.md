@@ -6,11 +6,11 @@ category: Jekyll
 layout: post
 ---
 
-## 3.1 From Descriptors to Molecular Graphs: Why D-MPNN (Chemprop)
+### 3.3.1 From Descriptors to Molecular Graphs: Why D-MPNN (Chemprop)
 
 A persistent limitation of descriptor-based QSAR is that it flattens **connectivity**: two molecules can exhibit similar counts (e.g., heavy atoms, heteroatoms, rings) while differing widely in properties because **where** and **how** those parts connect matters. Graph neural networks (GNNs) address this by **learning directly on molecular graphs**—atoms as nodes, bonds as edges—so that **local neighborhoods and topology** are preserved in the representation (Wu et al., 2018). Within practical cheminformatics, a particularly reliable introductory choice is the **Directed Message Passing Neural Network (D-MPNN)**, popularized via the open-source **Chemprop** package (Yang et al., 2019; Heid et al., 2023). D-MPNN places hidden states on **directed bonds** (u→v) rather than only on atoms, reducing trivial back-tracking (the “totter” effect) and yielding stable baselines across public and industrial datasets (Yang et al., 2019).
 
-**What we will do in 3.1.**
+**What we will do in 3.3.1.**
 We load a small, well-known dataset—**ESOL** (aqueous solubility, log S)—and **visualize the target distribution** to understand task difficulty prior to modeling (Delaney, 2004; Wu et al., 2018). No large code blocks.
 
 **Where the citations are used.**
@@ -19,7 +19,7 @@ We load a small, well-known dataset—**ESOL** (aqueous solubility, log S)—and
 * D-MPNN design choice references Yang et al. (2019) and Chemprop’s software paper (Heid et al., 2023).
 * ESOL provenance references Delaney (2004).
 
-### 3.1.1 Colab: Peek at ESOL and Plot the Target Distribution
+#### 3.3.1 Colab: Peek at ESOL and Plot the Target Distribution
 
 ```python
 # 3.1 — ESOL target distribution (one small cell, one figure)
@@ -47,7 +47,7 @@ plt.show()
 * **Start simple, stay reproducible.** D-MPNN/Chemprop is a stable, community-used baseline (Yang et al., 2019; Heid et al., 2023).
 * **Look before you train.** Diagnose label ranges and skew early to guide metrics and expectations (Delaney, 2004).
 
-#### References (3.1)
+##### References (3.3.1)
 
 * Delaney, J. (2004). **ESOL: Estimating aqueous solubility directly from molecular structure**. *Journal of Chemical Information and Computer Sciences, 44*(3), 1000–1005.
 * Heid, E., et al. (2023). **Chemprop: A machine learning package for chemical property prediction**. *Journal of Chemical Information and Modeling, 63*(22), 5962–5972.
@@ -56,11 +56,11 @@ plt.show()
 
 ---
 
-## 3.2 Message Passing as Chemical Reasoning (A Mini D-MPNN)
+### 3.3.2 Message Passing as Chemical Reasoning (A Mini D-MPNN)
 
 Message passing is a computational metaphor for **how local electronic environments shape properties**: each update lets an atom incorporate information from its neighbors; deeper stacks grow the receptive field (Gilmer et al., 2017). **D-MPNN** shifts the hidden state from nodes to **directed bonds (u→v)** and **excludes the reverse edge (v→u)** in the same update step, mitigating immediate “echoes” that can blur gradients and inflate variance (Yang et al., 2019). This seemingly small bias has repeatedly shown practical benefits in molecular property prediction (Yang et al., 2019; Heid et al., 2023).
 
-**What we will do in 3.2 (two tiny cells, one plot).**
+**What we will do in 3.3.2.**
 
 * Define an **educational mini D-MPNN-style layer** (~dozens of lines) to make the flow concrete.
 * Run a **tiny training loop** on a small ESOL slice, comparing loss when we **exclude vs. allow** immediate back-tracking. We visualize **one figure**: the two training-loss curves.
@@ -72,7 +72,7 @@ Message passing is a computational metaphor for **how local electronic environme
 * The directed-bond, anti-totter idea credits Yang et al. (2019).
 * Practical stability claim ties to Chemprop’s software practice (Heid et al., 2023).
 
-### 3.2.1 Colab: A Mini D-MPNN-Style Layer
+#### 3.3.2.1 Colab: A Mini D-MPNN-Style Layer
 
 ```python
 # 3.2A — Mini D-MPNN-style layer
@@ -112,7 +112,7 @@ class MiniDMPNN(nn.Module):
         return self.readout(g)
 ```
 
-### 3.2.2 Colab: Tiny Training and a Single Loss-Curve Figure
+#### 3.3.2.2 Colab: Tiny Training and a Single Loss-Curve Figure
 
 ```python
 # 3.2B — Loss curve comparison on a small ESOL slice
@@ -188,7 +188,7 @@ plt.grid(alpha=0.3); plt.legend(); plt.show()
 
 **Interpreting the figure.** Runs that exclude trivial back-tracking typically show **slightly lower and smoother** training loss on small slices—consistent with D-MPNN’s motivation (Yang et al., 2019). The gap may be modest in tiny demos but grows with scale/heterogeneity.
 
-#### References (3.2)
+##### References (3.3.2)
 
 * Gilmer, J., et al. (2017). **Neural message passing for quantum chemistry**. In *Proceedings of ICML* (pp. 1263–1272).
 * Heid, E., et al. (2023). **Chemprop software for chemical property prediction**. *Journal of Chemical Information and Modeling, 63*(22), 5962–5972.
@@ -197,11 +197,11 @@ plt.grid(alpha=0.3); plt.legend(); plt.show()
 
 ---
 
-## 3.3 End-to-End with Chemprop: Train, Validate, Explain
+### 3.3.3 End-to-End with Chemprop: Train, Validate, Explain
 
 We now run a **small, reproducible Chemprop training** on ESOL. Chemprop defaults to **D-MPNN** and provides a compact CLI for end-to-end training and prediction (Heid et al., 2023). To keep the classroom runtime tight, we use **few epochs** and **single model**—sacrificing a bit of accuracy for speed. You can later scale to scaffold splits, ensembling, and richer features (Bemis & Murcko, 1996; Sheridan, 2013).
 
-**What we will do in 3.3 (three tiny cells, two figures + one sanity bar chart).**
+**What we will do in 3.3.3 (three tiny cells, two figures + one sanity bar chart).**
 
 1. Prepare an ESOL CSV with columns `smiles, logS`.
 2. Train Chemprop (20 epochs).
@@ -215,7 +215,7 @@ We now run a **small, reproducible Chemprop training** on ESOL. Chemprop default
 * ESOL provenance references Delaney (2004).
 * On evaluation splits and scaffold reasoning we reference Bemis & Murcko (1996) and Sheridan (2013).
 
-### 3.3.1 Colab: Prepare ESOL CSV
+#### 3.3.3.1 Colab: Prepare ESOL CSV
 
 ```python
 # 3.3A — Build esol.csv (smiles, logS)
@@ -230,7 +230,7 @@ df[["smiles","logS"]].to_csv("esol.csv", index=False)
 df.head(3)
 ```
 
-### 3.3.2 Colab: Train a Small D-MPNN (Chemprop)
+#### 3.3.3.2 Colab: Train a Small D-MPNN (Chemprop)
 
 ```python
 # 3.3B — Chemprop quick training (D-MPNN by default)
@@ -259,7 +259,7 @@ print(" ".join(cmd))
 subprocess.run(cmd, check=True)
 ```
 
-### 3.3.3 Colab: Parity & Loss Curves + A Tiny Sanity Check
+#### 3.3.3.3 Colab: Parity & Loss Curves + A Tiny Sanity Check
 
 ```python
 # 3.3C — Parity plot, loss curves (if logged), and a sanity bar chart
@@ -343,7 +343,7 @@ plt.grid(axis='y', alpha=0.3); plt.tight_layout(); plt.show()
 * **Ensembling.** `--ensemble_size 5` usually improves stability/R² without code changes.
 * **Uncertainty.** For decision support, add calibration or quantile regression.
 
-#### References (3.3)
+##### References (3.3.3)
 
 * Bemis, G. W., & Murcko, M. A. (1996). **The properties of known drugs. 1. Molecular frameworks**. *Journal of Medicinal Chemistry, 39*(15), 2887–2893.
 * Delaney, J. (2004). **ESOL**. *Journal of Chemical Information and Computer Sciences, 44*(3), 1000–1005.
@@ -353,7 +353,7 @@ plt.grid(axis='y', alpha=0.3); plt.tight_layout(); plt.show()
 
 ---
 
-### Section Recap (3.1–3.3)
+#### Section Recap (3.3.1–3.3.3)
 
 * **3.1** motivated moving from descriptor tables to **graph-based learning**, justified the **D-MPNN/Chemprop** backbone, and plotted **label distribution** (Delaney, 2004; Wu et al., 2018; Yang et al., 2019; Heid et al., 2023).
 * **3.2** made message passing concrete with a **mini D-MPNN-style layer** and **one training-loss comparison**—no duplicate diagrams (Gilmer et al., 2017; Yang et al., 2019).
