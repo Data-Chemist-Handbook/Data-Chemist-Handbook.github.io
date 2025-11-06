@@ -5,35 +5,35 @@ date: 2024-08-13
 category: Jekyll
 layout: post
 ---
+
+
 ## 3.3 Graph Neural Networks
 
-A **Graph Neural Network (GNN)** operates directly on **graph-structured data**. Instead of forcing inputs into fixed-length vectors, GNNs propagate information along **edges** to update **node** (and optionally edge) embeddings, then compress a whole graph with a **readout** into a task-level representation.
+A **Graph Neural Network (GNN)** operates directly on **graphs**: nodes (atoms) connected by edges (bonds). Instead of flattening molecules into descriptor vectors, a GNN **passes messages along bonds** and updates node states, then compresses the whole graph via a **readout** to make a prediction.
 
-**Structure**
-A typical GNN alternates **message passing** and **state updates**. Each layer aggregates neighbor information and updates hidden states; stacking layers expands the receptive field across the graph. A final **pooling/readout** step produces a graph-level embedding for prediction (classification or regression).
+**Structure.** Layers alternate **message passing → state update**. With (k) layers, a node’s embedding summarizes its (k)-hop chemical neighborhood. A final **pooling/readout** (e.g., sum/mean) aggregates node embeddings into a molecule-level vector for classification/regression.
 
-**Functioning**
-At each layer, messages travel along edges (e.g., chemical bonds) and are aggregated at destination nodes. Nonlinear transforms (MLPs or GRUs) update node states, capturing **local structural context** consistent with connectivity.
+**Functioning.** Along each bond, an edge-conditioned transformation computes a message; destination atoms **aggregate neighbor messages** and **update** their embeddings through nonlinear functions (e.g., MLP/GRU). This preserves **topology and local chemical context**.
 
-**Learning Process**
-Training minimizes a task loss by backpropagating **through the graph**. Because node states depend on neighbors, gradients flow along edges, updating both local and global relational patterns. This makes GNNs well-suited for **molecular property prediction**, where **structure is signal**.
+**Learning Process.** Supervised training minimizes a task loss (e.g., BCEWithLogits for classification) and backpropagates **through the graph connectivity**, adjusting how atoms “listen” to their neighbors—well-suited to molecular property prediction where **structure is signal**.
 
-**From Theory to Practice**
-In cheminformatics, GNNs replace handcrafted descriptors with **learned, structure-aware representations** that model not only *what atoms are present* but also *how they are connected*. Below we use the public **OGB `ogbg-molhiv`** dataset (binary HIV activity) to build a clean, reproducible pipeline with PyTorch Geometric (Fey & Lenssen, 2019; Hu et al., 2020; Wu et al., 2018).
+**From Theory to Practice.** We will use the **OGB `ogbg-molhiv`** dataset (HIV activity; binary classification) with **PyTorch Geometric**. Section 3.3.1 prepares the data and EDA, 3.3.2 builds a **bond‑aware MPNN** (via `NNConv` + GRU), and 3.3.3 compares **GCN vs MPNN** on the same split.
 
 ---
 
 ### 3.3.1 From Descriptors to Molecular Graphs: OGB `ogbg-molhiv`
 
-Descriptor-only QSAR flattens **connectivity**: molecules with similar counts (atoms, rings, heteroatoms) can behave very differently because **where** and **how** those parts connect matters. Modern graph benchmarks address this by **learning on molecular graphs**—**atoms as nodes** (9-dim features) and **bonds as edges** (3-dim features)—so that neighborhoods and topology are preserved (Hu et al., 2020; Wu et al., 2018).
+Descriptor-based QSAR often ignores **connectivity**. Two molecules may share counts but differ drastically because **where** substructures connect matters. Benchmarks like **MoleculeNet / OGB** instead feed **graphs** (atoms = nodes, bonds = edges) into GNNs so that neighborhood structure is learned (Wu et al., 2018; Hu et al., 2020; Fey & Lenssen, 2019).
 
 **What we do in 3.3.1**
-Download → *official split* → EDA (labels & graph sizes) → DataLoaders → *sanity check a batch*.
+Download & parse **MolHIV** → official train/valid/test split → **EDA** (label balance, sizes) → dataloaders → batch sanity check.
+*Pipeline:* **Download → Split → EDA → DataLoaders → Inspect**
 
-**Code cell 1 — Load & split (official OGB)**
+**Cell 1 — Load dataset & official split**
 
 ```python
-import numpy as np, pandas as pd, matplotlib.pyplot as plt, torch
+# 3.3.1.A — Load OGB MolHIV and build official splits
+import numpy as np, matplotlib.pyplot as plt, torch
 from ogb.graphproppred import PygGraphPropPredDataset
 from torch_geometric.loader import DataLoader
 
@@ -45,32 +45,30 @@ print(dataset)
 print(f"Graphs: total={len(dataset)} | train/valid/test = {len(train_set)}/{len(valid_set)}/{len(test_set)}")
 ```
 
-**Code cell 2 — Quick EDA (label balance & graph sizes)**
+**Cell 2 — Quick EDA (labels & graph sizes)**
 
 ```python
+# 3.3.1.B — Label distribution + nodes/edges per molecule
 labels = dataset.data.y.view(-1).cpu().numpy()
 num_nodes = [g.num_nodes for g in dataset]
 num_edges = [g.num_edges for g in dataset]
 
 fig, axs = plt.subplots(1, 3, figsize=(12, 3.6), dpi=140)
-axs[0].hist(labels, bins=[-0.5,0.5,1.5], rwidth=0.8, edgecolor="black")
-axs[0].set_xticks([0,1]); axs[0].set_title("Label distribution"); axs[0].grid(alpha=0.3)
-axs[1].hist(num_nodes, bins=40, edgecolor="black"); axs[1].set_title("Nodes per graph"); axs[1].grid(alpha=0.3)
-axs[2].hist(num_edges, bins=40, edgecolor="black"); axs[2].set_title("Edges per graph"); axs[2].grid(alpha=0.3)
+axs[0].hist(labels, bins=[-0.5, 0.5, 1.5], rwidth=0.8, edgecolor="black")
+axs[0].set_xticks([0,1]); axs[0].set_title("HIV label distribution"); axs[0].grid(alpha=0.3)
+axs[1].hist(num_nodes, bins=40, edgecolor="black"); axs[1].set_title("Nodes per molecule"); axs[1].grid(alpha=0.3)
+axs[2].hist(num_edges, bins=40, edgecolor="black"); axs[2].set_title("Bonds per molecule"); axs[2].grid(alpha=0.3)
 plt.tight_layout(); plt.show()
 ```
 
-**Code cell 3 — DataLoaders (reused later)**
+**Cell 3 — Dataloaders & batch sanity check**
 
 ```python
+# 3.3.1.C — DataLoaders + inspect one batch
 train_loader = DataLoader(train_set, batch_size=64, shuffle=True)
 valid_loader = DataLoader(valid_set, batch_size=256, shuffle=False)
 test_loader  = DataLoader(test_set,  batch_size=256, shuffle=False)
-```
 
-**Code cell 4 — Peek a batch (features & shapes)**
-
-```python
 batch = next(iter(train_loader))
 print("num_graphs:", batch.num_graphs,
       "| node_feat_dim:", batch.x.size(-1),
@@ -78,28 +76,32 @@ print("num_graphs:", batch.num_graphs,
       "| y shape:", tuple(batch.y.view(-1).shape))
 ```
 
-**Why this matters.** `molhiv` is moderately imbalanced (fewer positives) and graphs vary in size; both motivate **BCEWithLogitsLoss** and **ROC-AUC** as the main metric.
+**How to read this.** Labels are imbalanced (positives < negatives); molecules vary in size. We’ll therefore use **BCEWithLogitsLoss** and evaluate with **ROC‑AUC**, which is robust to imbalance.
 
 **References (3.3.1)**
 
-* Fey, M., & Lenssen, J. E. (2019). *PyTorch Geometric*. ICLR Workshop.
-* Hu, W., Fey, M., et al. (2020). *Open Graph Benchmark*. NeurIPS Datasets & Benchmarks.
-* Wu, Z., Ramsundar, B., et al. (2018). *MoleculeNet*. Chemical Science, 9(2), 513–530.
+* Wu, Z. et al. (2018). **MoleculeNet**. *Chemical Science*, 9(2), 513–530.
+* Hu, W. et al. (2020). **Open Graph Benchmark**. *NeurIPS Datasets & Benchmarks*.
+* Fey, M., & Lenssen, J. E. (2019). **PyTorch Geometric**. *ICLR Workshop*.
 
 ---
 
-### 3.3.2 Message Passing as Chemical Reasoning (Edge-Aware MPNN)
+### 3.3.2 Message Passing as Chemical Reasoning (Edge‑Aware MPNN)
 
-**Idea.** After (k) message-passing layers, an atom’s embedding reflects its (k)-hop chemical context (Gilmer et al., 2017). To use **bond features** explicitly, we adopt **edge-conditioned convolution** (Simonovsky & Komodakis, 2017) via PyG’s **`NNConv`**: an **edge network** maps each bond’s feature vector into a filter that modulates messages. We add a **GRU** across layers to stabilize updates, then **sum-pool** to graph level for HIV activity prediction.
+Message passing lets each atom **listen to its neighbors**; after (k) layers, its embedding encodes a (k)-hop **chemical context** (Gilmer et al., 2017). To inject **bond information** into messages, we use **Edge‑Conditioned Convolution** (ECC; Simonovsky & Komodakis, 2017), implemented in PyG as **`NNConv`**: an **edge network** maps each bond feature vector to a filter that modulates messages. We add a **GRU** to stabilize layer‑to‑layer updates, then **sum‑pool** to a molecule embedding and classify HIV activity.
 
 **What we do in 3.3.2**
-Batched graphs → EdgeNet (bond feats → filters) → NNConv → GRU → SumPool → Linear → Sigmoid → **ROC-AUC**.
+Batched molecular graphs → **EdgeNet**(bond feats → filters) → **NNConv** → **GRU** → **sum‑pool** → sigmoid → **ROC‑AUC**.
+*Pipeline:* **Graphs → EdgeNet → NNConv (+GRU) → Pool → Logits → AUC**
 
-**Code cell 1 — Seed, device, and (self-contained) loaders**
+**Cell 1 — Setup (seed, device, dataset & loaders)**
 
 ```python
-import torch, random, numpy as np
+# 3.3.2.A — Setup: seed, device, loaders
+import torch, torch.nn as nn, torch.nn.functional as F, numpy as np, matplotlib.pyplot as plt, random
+from torch_geometric.nn import NNConv, global_add_pool
 from torch_geometric.loader import DataLoader
+from sklearn.metrics import roc_auc_score, roc_curve
 from ogb.graphproppred import PygGraphPropPredDataset
 
 def set_seed(s=1):
@@ -116,11 +118,10 @@ test_loader  = DataLoader(dataset[split["test"]],  batch_size=256, shuffle=False
 D_x, D_e = dataset.num_node_features, dataset.num_edge_features
 ```
 
-**Code cell 2 — Edge network (bond features → filters)**
+**Cell 2 — Model (edge network + NNConv + GRU)**
 
 ```python
-import torch.nn as nn, torch.nn.functional as F
-
+# 3.3.2.B — Edge-aware MPNN
 class EdgeNet(nn.Module):
     def __init__(self, edge_in, hidden):
         super().__init__()
@@ -129,14 +130,8 @@ class EdgeNet(nn.Module):
             nn.Linear(hidden*hidden, hidden*hidden)
         )
         self.hidden = hidden
-    def forward(self, e):
+    def forward(self, e):  # [E, edge_in] → [E, hidden*hidden]
         return self.net(e)
-```
-
-**Code cell 3 — MPNN with `NNConv` + GRU + sum pooling**
-
-```python
-from torch_geometric.nn import NNConv, global_add_pool
 
 class MPNN_NNConv_GRU(nn.Module):
     def __init__(self, node_in, edge_in, hidden=128, layers=3, dropout=0.2):
@@ -147,28 +142,25 @@ class MPNN_NNConv_GRU(nn.Module):
         self.gru = nn.GRU(hidden, hidden)
         self.dropout = dropout
         self.readout = nn.Linear(hidden, 1)
-
     def forward(self, data):
         x, edge_index, edge_attr, batch = data.x, data.edge_index, data.edge_attr, data.batch
-        x = self.embed(x.float())  # dtype guard for node features
-        edge_attr = (edge_attr.float() if edge_attr is not None
+        x = self.embed(x.float())                                  # dtype guard
+        edge_attr = (edge_attr.float()
+                     if edge_attr is not None
                      else torch.zeros((edge_index.size(1), D_e), dtype=torch.float, device=x.device))
         h = x.unsqueeze(0)
         for conv in self.convs:
             m = F.relu(conv(x, edge_index, edge_attr))
             m = F.dropout(m, p=self.dropout, training=self.training).unsqueeze(0)
-            out, h = self.gru(m, h)
-            x = out.squeeze(0)
-        g = global_add_pool(x, batch)
-        return self.readout(g).view(-1)
+            out, h = self.gru(m, h); x = out.squeeze(0)
+        g = global_add_pool(x, batch)                              # molecule embedding
+        return self.readout(g).view(-1)                            # logits
 ```
 
-**Code cell 4 — Train for one epoch; evaluate ROC-AUC**
+**Cell 3 — Train, validate, test, and plot**
 
 ```python
-from sklearn.metrics import roc_auc_score, roc_curve
-import matplotlib.pyplot as plt
-
+# 3.3.2.C — Train/eval loop + ROC plot
 def train_epoch(model, loader, opt, crit):
     model.train(); total, n = 0.0, 0
     for data in loader:
@@ -188,14 +180,8 @@ def eval_auc(model, loader):
         p = torch.sigmoid(model(data)).cpu().numpy()
         y_true.append(data.y.view(-1).cpu().numpy()); y_prob.append(p)
     y_true = np.concatenate(y_true); y_prob = np.concatenate(y_prob)
-    auc = roc_auc_score(y_true, y_prob)
-    fpr, tpr, _ = roc_curve(y_true, y_prob)
-    return auc, (fpr, tpr)
-```
+    return roc_auc_score(y_true, y_prob), roc_curve(y_true, y_prob)[:2]
 
-**Code cell 5 — Train, select best on valid, test & plot**
-
-```python
 model = MPNN_NNConv_GRU(D_x, D_e, hidden=128, layers=3, dropout=0.2).to(device)
 opt = torch.optim.Adam(model.parameters(), lr=1e-3, weight_decay=1e-5)
 crit = nn.BCEWithLogitsLoss()
@@ -215,6 +201,7 @@ model.load_state_dict({k: v.to(device) for k, v in best_state.items()})
 test_auc, (fpr, tpr) = eval_auc(model, test_loader)
 print(f"[MPNN/NNConv] Best valid AUC = {best_val:.4f} | Test AUC = {test_auc:.4f}")
 
+# Curves
 fig, axs = plt.subplots(1, 2, figsize=(11, 4), dpi=150)
 axs[0].plot(train_curve, label="Train loss"); axs[0].plot(val_curve, label="Valid AUC")
 axs[0].set_title("Training progress"); axs[0].set_xlabel("epoch"); axs[0].grid(alpha=0.3); axs[0].legend()
@@ -224,28 +211,30 @@ axs[1].set_title("ROC on test"); axs[1].grid(alpha=0.3); axs[1].legend()
 plt.tight_layout(); plt.show()
 ```
 
-**What to look for.** Training loss should drop; validation **AUC** should rise then stabilize. A ROC curve close to the top-left indicates stronger ranking of actives vs inactives.
+**How to read this.** You should see training loss decrease and validation ROC‑AUC rise to a plateau. The ROC curve near the top-left indicates good ranking of actives vs inactives. If validation AUC drops, reduce depth/width or add dropout.
 
 **References (3.3.2)**
 
-* Gilmer, J. et al. (2017). *Neural Message Passing for Quantum Chemistry*. ICML.
-* Simonovsky, M., & Komodakis, N. (2017). *Edge-Conditioned Convolution on Graphs*. CVPR.
-* Fey, M., & Lenssen, J. E. (2019). *PyTorch Geometric*. ICLR Workshop.
-* Hu, W. et al. (2020). *Open Graph Benchmark*. NeurIPS D&B.
+* Gilmer, J. et al. (2017). **Neural Message Passing for Quantum Chemistry**. *ICML*.
+* Simonovsky, M., & Komodakis, N. (2017). **Edge‑Conditioned Convolution on Graphs**. *CVPR*.
+* Fey, M., & Lenssen, J. E. (2019). **PyTorch Geometric**. *ICLR Workshop*.
+* Hu, W. et al. (2020). **OGB**. *NeurIPS Datasets & Benchmarks*.
 
 ---
 
-### 3.3.3 End-to-End Comparison: **GCNConv** vs **NNConv-MPNN**
+### 3.3.3 End‑to‑End Comparison: **GCNConv** vs **NNConv‑MPNN**
 
-To show the impact of **bond features**, we compare a **GCN baseline** (no edge network) with the **edge-aware MPNN**. Both use the same official splits and schedule; we report **test ROC-AUC** and visualize both **ROC curves** and an **AUC bar chart**.
+To highlight the value of **bond features**, we compare a **GCN baseline** (no edge network) with the **edge‑aware MPNN** from 3.3.2 on the **same** OGB split and schedule. We report **test ROC‑AUC** and visualize **both** ROC curves and a compact **AUC bar chart**。
 
 **What we do in 3.3.3**
-Same split → Train **GCN** → Train **MPNN** → Select best on valid AUC → Test → ROC curves + AUC bars.
+Same split → train **GCN** & **MPNN** → pick best by valid AUC → test → plot ROC (both) + AUC bars.
+*Pipeline:* **Data → GCN / MPNN → Valid select → Test → ROC + AUC bar**
 
-**Code cell 1 — (self-contained) loaders & dims**
+**Cell 1 — Setup & loaders**
 
 ```python
-import torch, numpy as np, matplotlib.pyplot as plt, torch.nn as nn, torch.nn.functional as F, random
+# 3.3.3.A — Seed, device, dataset, loaders
+import torch, torch.nn as nn, torch.nn.functional as F, numpy as np, matplotlib.pyplot as plt, random
 from torch_geometric.nn import GCNConv, NNConv, global_add_pool
 from torch_geometric.loader import DataLoader
 from sklearn.metrics import roc_auc_score, roc_curve
@@ -264,16 +253,16 @@ test_loader  = DataLoader(dataset[split["test"]],  batch_size=256, shuffle=False
 D_x, D_e = dataset.num_node_features, dataset.num_edge_features
 ```
 
-**Code cell 2 — Baseline GCN (no edge nets)**
+**Cell 2 — Define both models**
 
 ```python
+# 3.3.3.B — Models: GCN baseline vs MPNN (edge-aware)
 class GCN_Baseline(nn.Module):
     def __init__(self, in_dim, hidden=128, layers=3, dropout=0.2):
         super().__init__()
         self.embed = nn.Linear(in_dim, hidden)
         self.convs = nn.ModuleList([GCNConv(hidden, hidden) for _ in range(layers)])
-        self.dropout = dropout
-        self.readout = nn.Linear(hidden, 1)
+        self.dropout = dropout; self.readout = nn.Linear(hidden, 1)
     def forward(self, data):
         x, edge_index, batch = data.x, data.edge_index, data.batch
         x = self.embed(x.float())
@@ -281,11 +270,7 @@ class GCN_Baseline(nn.Module):
             x = F.relu(conv(x, edge_index))
             x = F.dropout(x, p=self.dropout, training=self.training)
         return self.readout(global_add_pool(x, batch)).view(-1)
-```
 
-**Code cell 3 — EdgeNet and edge-aware MPNN**
-
-```python
 class EdgeNet(nn.Module):
     def __init__(self, edge_in, hidden):
         super().__init__()
@@ -303,8 +288,7 @@ class MPNN_NNConv(nn.Module):
         self.edge_net = EdgeNet(edge_in, hidden)
         self.convs = nn.ModuleList([NNConv(hidden, hidden, self.edge_net, aggr='add') for _ in range(layers)])
         self.gru = nn.GRU(hidden, hidden)
-        self.dropout = dropout
-        self.readout = nn.Linear(hidden, 1)
+        self.dropout = dropout; self.readout = nn.Linear(hidden, 1)
     def forward(self, data):
         x, edge_index, edge_attr, batch = data.x, data.edge_index, data.edge_attr, data.batch
         x = self.embed(x.float())
@@ -319,9 +303,10 @@ class MPNN_NNConv(nn.Module):
         return self.readout(global_add_pool(x, batch)).view(-1)
 ```
 
-**Code cell 4 — Train/validate helper (select best on valid AUC)**
+**Cell 3 — Train/validate/test both, then plot**
 
 ```python
+# 3.3.3.C — Train both models, select best by valid AUC, evaluate on test
 def run_model(tag, model, epochs=15, lr=1e-3):
     model = model.to(device)
     opt = torch.optim.Adam(model.parameters(), lr=lr, weight_decay=1e-5)
@@ -329,7 +314,6 @@ def run_model(tag, model, epochs=15, lr=1e-3):
     best_val, best = -1.0, None
 
     for ep in range(1, epochs+1):
-        # train
         model.train(); tot, n = 0.0, 0
         for data in train_loader:
             data = data.to(device); y = data.y.view(-1).float()
@@ -344,9 +328,7 @@ def run_model(tag, model, epochs=15, lr=1e-3):
                 y_true.append(data.y.view(-1).cpu().numpy()); y_prob.append(p)
         y_true = np.concatenate(y_true); y_prob = np.concatenate(y_prob)
         val_auc = roc_auc_score(y_true, y_prob)
-        if val_auc > best_val:
-            best_val = val_auc
-            best = {k: v.cpu() for k, v in model.state_dict().items()}
+        if val_auc > best_val: best_val, best = val_auc, {k: v.cpu() for k, v in model.state_dict().items()}
         print(f"[{tag}] epoch {ep:02d} | train {tot/n:.4f} | valid AUC {val_auc:.4f}")
 
     # test best
@@ -358,18 +340,14 @@ def run_model(tag, model, epochs=15, lr=1e-3):
             p = torch.sigmoid(model(data)).cpu().numpy()
             y_true.append(data.y.view(-1).cpu().numpy()); y_prob.append(p)
     y_true = np.concatenate(y_true); y_prob = np.concatenate(y_prob)
-    test_auc = roc_auc_score(y_true, y_prob)
-    fpr, tpr, _ = roc_curve(y_true, y_prob)
+    test_auc = roc_auc_score(y_true, y_prob); fpr, tpr, _ = roc_curve(y_true, y_prob)
     print(f"[{tag}] BEST valid AUC {best_val:.4f} | TEST AUC {test_auc:.4f}")
     return test_auc, (fpr, tpr)
-```
 
-**Code cell 5 — Run both models and plot results**
-
-```python
 gcn_auc, (gcn_fpr, gcn_tpr) = run_model("GCN",  GCN_Baseline(D_x))
 mpn_auc, (mpn_fpr, mpn_tpr) = run_model("MPNN", MPNN_NNConv(D_x, D_e))
 
+# Visualize ROC + AUC bars
 fig, ax = plt.subplots(1, 2, figsize=(11, 4), dpi=150)
 ax[0].plot(gcn_fpr, gcn_tpr, lw=2, label=f"GCN (AUC={gcn_auc:.3f})")
 ax[0].plot(mpn_fpr, mpn_tpr, lw=2, label=f"MPNN/NNConv (AUC={mpn_auc:.3f})")
@@ -377,30 +355,21 @@ ax[0].plot([0,1],[0,1],"--",color="gray"); ax[0].set_xlabel("FPR"); ax[0].set_yl
 ax[0].set_title("ROC on test"); ax[0].grid(alpha=0.3); ax[0].legend()
 
 ax[1].bar(["GCN","MPNN"], [gcn_auc, mpn_auc], edgecolor="black", alpha=0.9)
-for x, v in zip(["GCN","MPNN"], [gcn_auc, mpn_auc]):
-    ax[1].text(x, v+0.01, f"{v:.3f}", ha="center", va="bottom")
+for x,v in zip(["GCN","MPNN"], [gcn_auc, mpn_auc]): ax[1].text(x, v+0.01, f"{v:.3f}", ha="center", va="bottom")
 ax[1].set_ylim(0, 1.05); ax[1].set_ylabel("AUC"); ax[1].set_title("AUC comparison"); ax[1].grid(axis="y", alpha=0.3)
 plt.tight_layout(); plt.show()
 ```
 
-**Reading the comparison.** The **edge-aware MPNN** typically outperforms the GCN baseline on molecular tasks because **bond features** (type, conjugation, ring membership) carry crucial chemical signal that plain GCN does not exploit.
+**How to read this.** On molecular classification, the **edge‑aware MPNN** typically beats the GCN baseline because **bond features** (type, conjugation, ring info) carry essential chemical signal that vanilla GCN does not exploit.
 
 **References (3.3.3)**
 
-* Kipf, T. N., & Welling, M. (2017). *Semi-Supervised Classification with Graph Convolutional Networks*. ICLR.
-* Simonovsky, M., & Komodakis, N. (2017). *Edge-Conditioned Convolution on Graphs*. CVPR.
-* Fey, M., & Lenssen, J. E. (2019). *PyTorch Geometric*. ICLR Workshop.
-* Hu, W. et al. (2020). *OGB: MolHIV benchmark*. NeurIPS D&B.
+* Kipf, T. N., & Welling, M. (2017). **Semi‑Supervised Classification with GCNs**. *ICLR*.
+* Simonovsky, M., & Komodakis, N. (2017). **Edge‑Conditioned Convolution**. *CVPR*.
+* Fey, M., & Lenssen, J. E. (2019). **PyTorch Geometric**. *ICLR Workshop*.
+* Hu, W. et al. (2020). **OGB: MolHIV benchmark**. *NeurIPS Datasets & Benchmarks*.
 
 ---
-
-**Key ideas to carry forward**
-
-* **Structure is signal.** Molecular topology (atoms + bonds) drives properties; **edge-aware** message passing leverages bonds explicitly.
-* **Simple, reproducible baselines.** Start with GCN vs NNConv-GRU; use OGB’s **official split** and **ROC-AUC**.
-* **Look before you train.** Check label balance and graph sizes; verify batch tensors (`x`, `edge_attr`, `y`) before modeling.
-
-------
 
 ### 3.3.4 Challenges and Interpretability in GNNs
 
