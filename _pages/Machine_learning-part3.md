@@ -961,17 +961,17 @@ def get_atom_features(atom):
             <td style="padding:10px; border:1px solid #ce93d8; background-color:#f3e5f5; width:40%; text-align:center;">
                 <b>→ Extract 5 Features →</b><br>
                 <span style="font-size:0.9em;">
-                1. Element type<br>
-                2. Bond count<br>
-                3. Charge state<br>
-                4. Aromaticity<br>
-                5. H-bond potential
+               1. Atomic number (Z)<br>
+               2. Degree (connectivity)<br>
+               3. Polarity / partial charge (e.g., C=O dipole)<br>
+               4. Aromaticity (Hückel 4n+2)<br>
+               5. H-bond potential (donor/acceptor)
                 </span>
             </td>
             <td style="padding:10px; border:1px solid #ce93d8; background-color:#ffffff; width:30%;">
                 <b>Output:</b><br>
                 List of 5 numbers<br>
-                <span style="font-size:0.9em; color:#666;">[8, 2, 0, 0, 0] for oxygen</span>
+                <span style="font-size:0.9em; color:#666;">[8, 2, 0, 0, 1] for a typical neutral oxygen atom</span>
             </td>
         </tr>
     </table>
@@ -979,11 +979,11 @@ def get_atom_features(atom):
 
 **Why These 5 Features?**
 
-* **Atomic Number:** Oxygen atoms love water, carbon atoms don't
-* **Degree (Connectivity):** Highly connected atoms are "buried" in the molecule
-* **Formal Charge:** Charged molecules dissolve like salt in water
-* **Aromaticity:** Benzene rings are oily, not watery
-* **H Count:** More hydrogens = more hydrogen bonding with water
+* **Atomic Number:** Use (Z=#\text{protons}); oxygen-containing functional groups raise polarity and often increase water solubility
+* **Degree (Connectivity):** Branching vs. linear chains changes exposure of the polar group and can change solubility (e.g., t-BuOH vs 1-butanol)
+* **Formal Charge:** Think **polarity** rather than “all charged dissolves”: carbonyl (C{=}O) dipoles markedly improve miscibility in water
+* **Aromaticity:** Apply Hückel’s rule ((4n{+}2) π electrons) to judge aromaticity—no need to label rings as “oily”
+* **H Count:** Don’t count all H atoms—count H-bond **donors** (–OH, –NH) and **acceptors** (C=O, –O–) to estimate aqueous solubility
 
 ![why5features](../../../../../resource/img/gnn/why5features.png)
 
