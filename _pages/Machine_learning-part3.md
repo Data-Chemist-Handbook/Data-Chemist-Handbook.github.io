@@ -26,7 +26,7 @@ In molecular machine learning, GNNs replace manually crafted descriptors with **
 A persistent limitation of descriptor-based QSAR is that it flattens **connectivity**: two molecules can exhibit similar counts (e.g., heavy atoms, heteroatoms, rings) while differing widely in properties because **where** and **how** those parts connect matters. Graph neural networks (GNNs) address this by **learning directly on molecular graphs**—atoms as nodes, bonds as edges—so that **local neighborhoods and topology** are preserved in the representation (Wu et al., 2018). Within practical cheminformatics, a particularly reliable introductory choice is the **Directed Message Passing Neural Network (D-MPNN)**, popularized via the open-source **Chemprop** package (Yang et al., 2019; Heid et al., 2023). D-MPNN places hidden states on **directed bonds** (u→v) rather than only on atoms, reducing trivial back-tracking (the “totter” effect) and yielding stable baselines across public and industrial datasets (Yang et al., 2019).
 
 **What we will do in 3.3.1.**
-We load a small, well-known dataset—**ESOL** (aqueous solubility, log S)—and **visualize the target distribution** to understand task difficulty prior to modeling (Delaney, 2004; Wu et al., 2018). No large code blocks.
+We load a small, well-known dataset—**ESOL** (aqueous solubility, log S)—and **visualize the target distribution** to understand task difficulty prior to modeling (Delaney, 2004; Wu et al., 2018). 
 
 **Where the citations are used.**
 
@@ -35,6 +35,8 @@ We load a small, well-known dataset—**ESOL** (aqueous solubility, log S)—and
 * ESOL provenance references Delaney (2004).
 
 #### 3.3.1 Colab: Peek at ESOL and Plot the Target Distribution
+
+#### Completed and Compiled Code: [Click Here](https://colab.research.google.com/drive/1N-l-FtWKgWbO_RmExjdzlTAW1qNkQzDJ?usp=sharing)
 
 ```python
 # 3.1 — ESOL target distribution (one small cell, one figure)
@@ -78,9 +80,8 @@ Message passing is a computational metaphor for **how local electronic environme
 
 **What we will do in 3.3.2.**
 
-* Define an **educational mini D-MPNN-style layer** (~dozens of lines) to make the flow concrete.
+* Define an **mini D-MPNN-style layer** (~dozens of lines) to make the flow concrete.
 * Run a **tiny training loop** on a small ESOL slice, comparing loss when we **exclude vs. allow** immediate back-tracking. We visualize **one figure**: the two training-loss curves.
-* We do not duplicate diagrams already explained in prose; one figure suffices.
 
 **Where the citations are used.**
 
