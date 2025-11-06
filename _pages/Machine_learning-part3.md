@@ -26,7 +26,9 @@ A **Graph Neural Network (GNN)** operates directly on **graphs**: nodes (atoms) 
 Descriptor-based QSAR often ignores **connectivity**. Two molecules may share counts but differ drastically because **where** substructures connect matters. Benchmarks like **MoleculeNet / OGB** instead feed **graphs** (atoms = nodes, bonds = edges) into GNNs so that neighborhood structure is learned (Wu et al., 2018; Hu et al., 2020; Fey & Lenssen, 2019).
 
 **What we do in 3.3.1**
+
 Download & parse **MolHIV** → official train/valid/test split → **EDA** (label balance, sizes) → dataloaders → batch sanity check.
+
 *Pipeline:* **Download → Split → EDA → DataLoaders → Inspect**
 
 **Cell 1 — Load dataset & official split**
@@ -76,7 +78,9 @@ print("num_graphs:", batch.num_graphs,
       "| y shape:", tuple(batch.y.view(-1).shape))
 ```
 
-**How to read this.** Labels are imbalanced (positives < negatives); molecules vary in size. We’ll therefore use **BCEWithLogitsLoss** and evaluate with **ROC‑AUC**, which is robust to imbalance.
+**How to read this.** 
+
+Labels are imbalanced (positives < negatives); molecules vary in size. We’ll therefore use **BCEWithLogitsLoss** and evaluate with **ROC‑AUC**, which is robust to imbalance.
 
 **References (3.3.1)**
 
@@ -91,7 +95,9 @@ print("num_graphs:", batch.num_graphs,
 Message passing lets each atom **listen to its neighbors**; after (k) layers, its embedding encodes a (k)-hop **chemical context** (Gilmer et al., 2017). To inject **bond information** into messages, we use **Edge‑Conditioned Convolution** (ECC; Simonovsky & Komodakis, 2017), implemented in PyG as **`NNConv`**: an **edge network** maps each bond feature vector to a filter that modulates messages. We add a **GRU** to stabilize layer‑to‑layer updates, then **sum‑pool** to a molecule embedding and classify HIV activity.
 
 **What we do in 3.3.2**
+
 Batched molecular graphs → **EdgeNet**(bond feats → filters) → **NNConv** → **GRU** → **sum‑pool** → sigmoid → **ROC‑AUC**.
+
 *Pipeline:* **Graphs → EdgeNet → NNConv (+GRU) → Pool → Logits → AUC**
 
 **Cell 1 — Setup (seed, device, dataset & loaders)**
@@ -211,7 +217,9 @@ axs[1].set_title("ROC on test"); axs[1].grid(alpha=0.3); axs[1].legend()
 plt.tight_layout(); plt.show()
 ```
 
-**How to read this.** You should see training loss decrease and validation ROC‑AUC rise to a plateau. The ROC curve near the top-left indicates good ranking of actives vs inactives. If validation AUC drops, reduce depth/width or add dropout.
+**How to read this.** 
+
+You should see training loss decrease and validation ROC‑AUC rise to a plateau. The ROC curve near the top-left indicates good ranking of actives vs inactives. If validation AUC drops, reduce depth/width or add dropout.
 
 **References (3.3.2)**
 
@@ -227,7 +235,9 @@ plt.tight_layout(); plt.show()
 To highlight the value of **bond features**, we compare a **GCN baseline** (no edge network) with the **edge‑aware MPNN** from 3.3.2 on the **same** OGB split and schedule. We report **test ROC‑AUC** and visualize **both** ROC curves and a compact **AUC bar chart**。
 
 **What we do in 3.3.3**
+
 Same split → train **GCN** & **MPNN** → pick best by valid AUC → test → plot ROC (both) + AUC bars.
+
 *Pipeline:* **Data → GCN / MPNN → Valid select → Test → ROC + AUC bar**
 
 **Cell 1 — Setup & loaders**
@@ -360,7 +370,9 @@ ax[1].set_ylim(0, 1.05); ax[1].set_ylabel("AUC"); ax[1].set_title("AUC compariso
 plt.tight_layout(); plt.show()
 ```
 
-**How to read this.** On molecular classification, the **edge‑aware MPNN** typically beats the GCN baseline because **bond features** (type, conjugation, ring info) carry essential chemical signal that vanilla GCN does not exploit.
+**How to read this.** 
+
+On molecular classification, the **edge‑aware MPNN** typically beats the GCN baseline because **bond features** (type, conjugation, ring info) carry essential chemical signal that vanilla GCN does not exploit.
 
 **References (3.3.3)**
 
