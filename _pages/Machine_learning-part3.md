@@ -5,6 +5,21 @@ date: 2024-08-13
 category: Jekyll
 layout: post
 ---
+## 3.3 Graph Neural Networks
+
+A **Graph Neural Network (GNN)** is a type of neural network designed to operate directly on **graph-structured data**, where entities (nodes) and their relationships (edges) form the core of representation. Unlike traditional neural networks that assume fixed-size vector inputs, GNNs can model systems where **connectivity and topology** are essential—such as molecules, social networks, or knowledge graphs.
+
+**Structure**:
+A typical GNN consists of alternating **message-passing** and **update** steps. Each node aggregates information from its neighbors and updates its hidden state accordingly. Layers of message passing expand the “receptive field,” allowing information to flow across the graph. Finally, a **readout** or **pooling** operation combines node-level features into a global graph representation for tasks such as classification or regression.
+
+**Functioning**:
+At each layer, messages are computed along edges (bonds in a molecule) and aggregated at destination nodes. These aggregated messages are then passed through nonlinear transformations (often via MLPs or GRUs) to update node or edge embeddings. This process captures **local structural context**, ensuring that nearby nodes influence one another in a way consistent with the graph’s connectivity.
+
+**Learning Process**:
+Training a GNN follows the same principle as other neural networks—minimizing prediction error through gradient-based optimization. However, because each node’s representation depends on its neighbors, the gradient flows through the **graph structure**, updating both local and global relational patterns. This makes GNNs particularly suited to tasks where **relationships define meaning**, such as molecular property prediction.
+
+**From Theory to Practice**:
+In molecular machine learning, GNNs replace manually crafted descriptors with **learned, structure-aware representations**. They understand not just *what atoms are present* but also *how they are connected*. This transition—from fixed descriptors to learned molecular graphs—marks a key evolution in cheminformatics, which we explore in the following subsections.
 
 ### 3.3.1 From Descriptors to Molecular Graphs: Why D-MPNN (Chemprop)
 
@@ -39,7 +54,8 @@ plt.grid(alpha=0.3)
 plt.show()
 ```
 ![targetdist](../../../../../resource/img/GNNfig/targetdist.png)
-**Reading the plot.** ESOL spans a wide dynamic range (roughly a dozen log units). Such spread increases the chance of **heteroscedastic errors** and **nonlinearity**, making it a good teaching dataset for structure-aware models rather than linear baselines.
+
+**Reading the plot.** The ESOL dataset spans a wide dynamic range (roughly 12 log units). Such variability often introduces heteroscedasticity and nonlinear effects, making it a valuable benchmark for structure-aware models like GNNs rather than simple linear baselines.
 
 **Key ideas to carry forward.**
 
