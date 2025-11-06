@@ -3104,8 +3104,6 @@ def predict_solubility(smiles, model, device):
     return prediction.item(), "Success"
 ```
 
-![inference](../../../../../resource/img/gnn/inference.png)
-
 **Step 8.2: Testing on Known Molecules**
 
 Test predictions on common molecules:
