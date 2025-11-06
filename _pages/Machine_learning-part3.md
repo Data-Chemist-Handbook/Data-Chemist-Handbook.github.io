@@ -74,143 +74,318 @@ plt.show()
 
 ---
 
-### 3.3.2 Message Passing as Chemical Reasoning (A Mini D-MPNN)
+### 3.3.2 Message Passing as Chemical Reasoning (Mini D-MPNN on Lipophilicity)
 
-Message passing is a computational metaphor for **how local electronic environments shape properties**: each update lets an atom incorporate information from its neighbors; deeper stacks grow the receptive field (Gilmer et al., 2017). **D-MPNN** shifts the hidden state from nodes to **directed bonds (u→v)** and **excludes the reverse edge (v→u)** in the same update step, mitigating immediate “echoes” that can blur gradients and inflate variance (Yang et al., 2019). This seemingly small bias has repeatedly shown practical benefits in molecular property prediction (Yang et al., 2019; Heid et al., 2023).
+A **message-passing** layer lets each part of a molecule aggregate information from its neighborhood; after (k) layers, an atom’s embedding reflects roughly its (k)-hop chemical context (Gilmer et al., 2017). The **Directed Message Passing Neural Network (D-MPNN)** (Yang et al., 2019), implemented in **Chemprop** (Heid et al., 2023), places hidden states on **directed bonds** ((u!\to!v)) and suppresses immediate **back-tracking** ((v!\to!u)) within the same update—reducing “echo” loops and stabilizing learning.
 
 **What we will do in 3.3.2.**
 
-* Define an **mini D-MPNN-style layer** (~dozens of lines) to make the flow concrete.
-* Run a **tiny training loop** on a small ESOL slice, comparing loss when we **exclude vs. allow** immediate back-tracking. We visualize **one figure**: the two training-loss curves.
+* Install Chemprop and dependencies (Colab-friendly).
+* Download **Lipophilicity** and prepare a two-column CSV (`smiles,logD`).
+* Train a **small** D-MPNN (fast classroom settings).
+* Visualize **one** training diagnostic (loss/RMSE curves) and **one** result diagnostic (parity plot ŷ vs y).
 
 **Where the citations are used.**
 
-* The message-passing formalism credits Gilmer et al. (2017).
-* The directed-bond, anti-totter idea credits Yang et al. (2019).
-* Practical stability claim ties to Chemprop’s software practice (Heid et al., 2023).
+* Message passing idea → Gilmer et al. (2017).
+* D-MPNN design & benefits → Yang et al. (2019).
+* Chemprop software & defaults → Heid et al. (2023).
+* Lipophilicity (MoleculeNet) dataset → Wu et al. (2018).
 
-#### 3.3.2.1 Colab: A Mini D-MPNN-Style Layer
+#### 3.3.2.1 Colab: Minimal Setup (Chemprop + RDKit)
+
+**Completed and Compiled Code: *self-contained below; run cells in order***
 
 ```python
-# 3.2A — Mini D-MPNN-style layer
-# !pip -q install torch torch-geometric torch-scatter rdkit-pypi pandas scikit-learn
+# 3.3.2.1 — Runtime deps (works in Colab)
+%pip -q install --upgrade pip
+%pip -q install chemprop rdkit tensorboard pandas matplotlib scikit-learn
 
-import torch, torch.nn as nn, torch.nn.functional as F
-from torch_scatter import scatter_add
-from torch_geometric.nn import global_mean_pool
+import os, sys, platform, subprocess, pathlib, random, math, json, glob
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
 
-class MiniDMPNN(nn.Module):
-    def __init__(self, node_in, edge_in, hidden=64, T=3, exclude_backtrack=True):
-        super().__init__()
-        self.T = T
-        self.exclude_backtrack = exclude_backtrack
-        self.edge_init  = nn.Linear(node_in + edge_in, hidden)
-        self.edge_gru   = nn.GRUCell(hidden, hidden)
-        self.node_proj  = nn.Linear(node_in + hidden, hidden)
-        self.readout    = nn.Linear(hidden, 1)  # scalar regression
+import rdkit
+from rdkit import Chem
+from rdkit.Chem import Draw
+from rdkit.Chem.Scaffolds import MurckoScaffold
 
-    def forward(self, data):
-        x, ei, ea, batch = data.x, data.edge_index, data.edge_attr, data.batch
-        src, dst = ei
-        h_e = F.relu(self.edge_init(torch.cat([x[src], ea], dim=1)))  # edge states
+import chemprop
 
-        for _ in range(self.T - 1):
-            # Aggregate incoming edge states at destination node
-            m_v = scatter_add(h_e, dst, dim=0, dim_size=x.size(0))
-            ctx = m_v[src]  # send node context back to source side of each edge
-            if self.exclude_backtrack:
-                # Conceptual slot: here we would subtract the trivial reverse contribution
-                pass
-            h_e = self.edge_gru(ctx, h_e)
+print(f"Python: {platform.python_version()}")
+print(f"Chemprop: {chemprop.__version__}")
+print(f"RDKit: {rdkit.__version__}")
 
-        m_v = scatter_add(h_e, dst, dim=0, dim_size=x.size(0))
-        h_v = F.relu(self.node_proj(torch.cat([x, m_v], dim=1)))
-        g   = global_mean_pool(h_v, batch)
-        return self.readout(g)
+# Output folders
+os.makedirs("figs", exist_ok=True)
+os.makedirs("cp_runs/lipo_demo", exist_ok=True)
 ```
 
-#### 3.3.2.2 Colab: Tiny Training and a Single Loss-Curve Figure
+---
+
+#### 3.3.2.2 Colab: Fetch Lipophilicity (MoleculeNet) and Prepare CSV
 
 ```python
-# 3.2B — Loss curve comparison on a small ESOL slice
-import io, requests, pandas as pd, numpy as np, matplotlib.pyplot as plt
-import torch
+# 3.3.2.2 — Download Lipophilicity and prepare 'lipophilicity.csv'
+import pandas as pd
+
+URL = "http://deepchem.io.s3-website-us-west-1.amazonaws.com/datasets/Lipophilicity.csv"
+df_raw = pd.read_csv(URL)
+assert {"smiles","exp"}.issubset(df_raw.columns), "Expected columns 'smiles' and 'exp' not found."
+
+df = df_raw.rename(columns={"exp": "logD"})[["smiles","logD"]].dropna().reset_index(drop=True)
+df.to_csv("lipophilicity.csv", index=False)
+display(df.head(5))
+
+# Quick EDA: distribution of logD
+import matplotlib.pyplot as plt
+plt.figure(figsize=(6,4))
+plt.hist(df["logD"].values, bins=40)
+plt.xlabel("logD (pH 7.4)")
+plt.ylabel("Count")
+plt.title("Lipophilicity — logD distribution")
+plt.tight_layout()
+plt.savefig("figs/lipo_hist.png", dpi=300)
+plt.show()
+
+# ---- Paste this in your doc after copying figs/lipo_hist.png to resource/img/GNNfig/ ----
+print("![](../../../../../resource/img/GNNfig/lipo_hist.png)")
+```
+
+![](../../../../../resource/img/GNNfig/lipo_hist.png)
+
+---
+
+#### 3.3.2.3 Colab: Visual Sanity Check (Molecule Grid)
+
+```python
+# 3.3.2.3 — Draw a small grid of molecules with RDKit
 from rdkit import Chem
-from torch_geometric.data import Data, DataLoader
-from sklearn.model_selection import train_test_split
-import torch.nn as nn
+from rdkit.Chem import Draw
 
-def atom_features(a):
-    return [a.GetAtomicNum(), a.GetDegree(), a.GetFormalCharge(),
-            int(a.GetIsAromatic()), a.GetTotalNumHs()]
+sample = df.sample(n=20, random_state=0)
+mols = [Chem.MolFromSmiles(s) for s in sample["smiles"]]
+legends = [f"logD={v:.2f}" for v in sample["logD"].values]
 
-BOND_TYPES = {Chem.BondType.SINGLE:0, Chem.BondType.DOUBLE:1,
-              Chem.BondType.TRIPLE:2, Chem.BondType.AROMATIC:3}
+img = Draw.MolsToGridImage(mols, molsPerRow=5, subImgSize=(250,250), legends=legends)
+img_path = "figs/lipo_samples_grid.png"
+img.save(img_path)
 
-def bond_features(b):
-    bt = [0,0,0,0]; bt[BOND_TYPES.get(b.GetBondType(),0)] = 1
-    return bt + [int(b.GetIsConjugated()), int(b.IsInRing())]
+from IPython.display import display
+display(img)
 
-def smiles_graph(smiles, y=None):
+# ---- Paste this in your doc after copying figs/lipo_samples_grid.png ----
+print("![](../../../../../resource/img/GNNfig/lipo_samples_grid.png)")
+```
+
+![](../../../../../resource/img/GNNfig/lipo_samples_grid.png)
+
+---
+
+#### 3.3.2.4 Colab: Scaffold-Aware Predefined Splits (train/val/test)
+
+```python
+# 3.3.2.4 — Create predefined splits with Murcko scaffolds
+from rdkit.Chem.Scaffolds import MurckoScaffold
+
+def murcko_scaffold(smiles: str) -> str:
     mol = Chem.MolFromSmiles(smiles)
-    if mol is None: return None
-    mol = Chem.AddHs(mol)
-    x = torch.tensor([atom_features(a) for a in mol.GetAtoms()], dtype=torch.float)
-    ei_i, ei_j, eattr = [], [], []
-    for b in mol.GetBonds():
-        i, j = b.GetBeginAtomIdx(), b.GetEndAtomIdx()
-        f = bond_features(b)
-        ei_i += [i, j]; ei_j += [j, i]; eattr += [f, f]
-    edge_index = torch.tensor([ei_i, ei_j], dtype=torch.long)
-    edge_attr  = torch.tensor(eattr, dtype=torch.float)
-    d = Data(x=x, edge_index=edge_index, edge_attr=edge_attr)
-    if y is not None: d.y = torch.tensor([y], dtype=torch.float)
-    return d
+    if mol is None:
+        return ""
+    return MurckoScaffold.MurckoScaffoldSmiles(mol=mol)
 
-URL = "https://raw.githubusercontent.com/deepchem/deepchem/master/datasets/delaney-processed.csv"
-df = pd.read_csv(io.StringIO(requests.get(URL).text))
-smiles = df["smiles"].tolist()[:240]
-targets= df["measured log solubility in mols per litre"].tolist()[:240]
-graphs = [smiles_graph(s, y) for s, y in zip(smiles, targets)]
-graphs = [g for g in graphs if g is not None]
-train, test = train_test_split(graphs, test_size=0.2, random_state=0)
-train_loader = DataLoader(train, batch_size=32, shuffle=True)
+df["scaffold"] = df["smiles"].map(murcko_scaffold)
 
-def train_curve(exclude_backtrack=True, epochs=15):
-    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    model = MiniDMPNN(train[0].x.size(1), train[0].edge_attr.size(1),
-                      hidden=64, T=3, exclude_backtrack=exclude_backtrack).to(device)
-    opt = torch.optim.Adam(model.parameters(), lr=1e-3)
-    mse = nn.MSELoss()
-    log = []
-    for _ in range(epochs):
-        model.train(); tot = 0; N = 0
-        for b in train_loader:
-            b = b.to(device); opt.zero_grad()
-            pred = model(b).squeeze()
-            loss = mse(pred, b.y); loss.backward(); opt.step()
-            tot += loss.item() * b.num_graphs; N += b.num_graphs
-        log.append(tot/N)
-    return log
+import random
+random.seed(42)
+scaffolds = list(df["scaffold"].unique())
+random.shuffle(scaffolds)
 
-loss_excl = train_curve(True)
-loss_incl = train_curve(False)
+n = len(scaffolds)
+test_cut = int(round(0.2 * n))
+val_cut  = test_cut + int(round(0.1 * n))
+
+test_scafs = set(scaffolds[:test_cut])
+val_scafs  = set(scaffolds[test_cut:val_cut])
+
+def assign_split(scaf: str) -> str:
+    if scaf in test_scafs: return "test"
+    if scaf in val_scafs:  return "val"
+    return "train"
+
+df["split"] = df["scaffold"].map(assign_split)
+df_splits = df[["smiles","logD","split"]].copy()
+df_splits.to_csv("lipo_splits.csv", index=False)
+df_splits["split"].valueCounts() if hasattr(pd.Series, "valueCounts") else df_splits["split"].value_counts()
+```
+
+---
+
+#### 3.3.2.5 Colab: Train a Small **D-MPNN** (Chemprop v2 CLI)
+
+```python
+# 3.3.2.5 — Train a compact D-MPNN quickly (≈20 epochs)
+import subprocess
+
+cmd = [
+    "chemprop", "train",
+    "--data-path", "lipo_splits.csv",
+    "--task-type", "regression",
+    "--smiles-columns", "smiles",
+    "--target-columns", "logD",
+    "--splits-column", "split",
+    "--output-dir", "cp_runs/lipo_demo",
+    "--epochs", "20",                 # fast demo; increase for better accuracy
+    "--batch-size", "32",
+    "--message-hidden-dim", "160",    # D-MPNN hidden size (v2 arg)
+    "--depth", "3",
+    "--ffn-hidden-dim", "128",
+    "--ffn-num-layers", "2",
+    "--dropout", "0.1",
+    "--metric", "rmse",
+    "--num-workers", "0",
+    "--seed", "1",
+]
+print("Running:\n", " ".join(cmd))
+subprocess.run(cmd, check=True)
+```
+
+---
+
+#### 3.3.2.6 Colab: Training Diagnostics (Read TensorBoard Scalars)
+
+```python
+# 3.3.2.6 — Plot training/validation curves from TensorBoard scalars
+from tensorboard.backend.event_processing.event_accumulator import EventAccumulator
+import glob, os
+import matplotlib.pyplot as plt
+
+def find_event_files(base_dir: str):
+    patt = os.path.join(base_dir, "model_*", "trainer_logs", "version_*", "events.out.tfevents.*")
+    return glob.glob(patt)
+
+def load_scalars(event_file: str):
+    ea = EventAccumulator(event_file)
+    ea.Reload()
+    tags = ea.Tags().get('scalars', [])
+    data = {}
+    for t in tags:
+        events = ea.Scalars(t)
+        xs = [e.step for e in events]
+        ys = [e.value for e in events]
+        data[t] = (xs, ys)
+    return data
+
+event_files = find_event_files("cp_runs/lipo_demo")
+scalar_bank = {}
+for ef in event_files:
+    scalars = load_scalars(ef)
+    for k, (xs, ys) in scalars.items():
+        scalar_bank.setdefault(k, []).append((xs, ys))
+
+candidate_tags = [
+    "train_loss", "val_loss",
+    "train/rmse", "val/rmse",
+    "rmse/train", "rmse/val",
+    "val_rmse", "train_rmse"
+]
+available = [t for t in candidate_tags if t in scalar_bank]
 
 plt.figure(figsize=(7,4))
-plt.plot(loss_excl, label="Exclude immediate back-tracking")
-plt.plot(loss_incl, label="Allow immediate back-tracking")
-plt.xlabel("Epoch"); plt.ylabel("Train MSE"); plt.title("Mini D-MPNN: training behavior")
-plt.grid(alpha=0.3); plt.legend(); plt.show()
+plotted = False
+for tag in available:
+    xs, ys = scalar_bank[tag][0]  # first run for simplicity
+    plt.plot(xs, ys, label=tag)
+    plotted = True
+
+plt.xlabel("Step")
+plt.ylabel("Loss / RMSE")
+plt.title("Chemprop (D-MPNN) — Training diagnostics")
+plt.grid(alpha=0.3)
+if plotted:
+    plt.legend()
+plt.tight_layout()
+plt.savefig("figs/lipo_training_curves.png", dpi=300)
+plt.show()
+
+# ---- Paste this in your doc after copying figs/lipo_training_curves.png ----
+print("![](../../../../../resource/img/GNNfig/lipo_training_curves.png)")
 ```
 
-**Interpreting the figure.** Runs that exclude trivial back-tracking typically show **slightly lower and smoother** training loss on small slices—consistent with D-MPNN’s motivation (Yang et al., 2019). The gap may be modest in tiny demos but grows with scale/heterogeneity.
+![](../../../../../resource/img/GNNfig/lipo_training_curves.png)
+
+---
+
+#### 3.3.2.7 Colab: Parity Plot (ŷ vs y) on Held-Out Test Split
+
+```python
+# 3.3.2.7 — Predict and plot parity (ŷ vs y) on test split
+import pandas as pd, subprocess
+from sklearn.metrics import mean_squared_error, r2_score
+import matplotlib.pyplot as plt
+import numpy as np
+import os
+
+# Prepare test-only CSV from our predefined split
+test = pd.read_csv("lipo_splits.csv")
+test = test[test["split"] == "test"][["smiles","logD"]].reset_index(drop=True)
+test_path = "lipo_test_only.csv"
+test.to_csv(test_path, index=False)
+
+# Predict with trained models
+pred_cmd = [
+    "chemprop", "predict",
+    "--test-path", test_path,
+    "--model-paths", "cp_runs/lipo_demo",
+    "--preds-path", "lipo_test_preds.csv"
+]
+print("Running:\n", " ".join(pred_cmd))
+subprocess.run(pred_cmd, check=True)
+
+pred = pd.read_csv("lipo_test_preds.csv")
+y_true = test["logD"].values
+y_pred = pred.iloc[:, 0].values
+
+rmse = mean_squared_error(y_true, y_pred, squared=False)
+r2   = r2_score(y_true, y_pred)
+
+plt.figure(figsize=(6,6))
+plt.scatter(y_true, y_pred, alpha=0.6, edgecolors="black", linewidths=0.5)
+lo = min(y_true.min(), y_pred.min())
+hi = max(y_true.max(), y_pred.max())
+plt.plot([lo, hi], [lo, hi], linestyle="--", linewidth=1.5, label="Ideal")
+plt.fill_between([lo, hi], [lo-0.5, hi-0.5], [lo+0.5, hi+0.5], alpha=0.15, label="±0.5 logD")
+
+plt.title(f"Chemprop (D-MPNN) — Lipophilicity parity\nRMSE={rmse:.2f}, R²={r2:.2f}")
+plt.xlabel("True logD (pH 7.4)")
+plt.ylabel("Predicted logD")
+plt.grid(alpha=0.3)
+plt.legend()
+plt.tight_layout()
+plt.savefig("figs/lipo_parity.png", dpi=300)
+plt.show()
+
+# ---- Paste this in your doc after copying figs/lipo_parity.png ----
+print("![](../../../../../resource/img/GNNfig/lipo_parity.png)")
+```
+
+![](../../../../../resource/img/GNNfig/lipo_parity.png)
+
+---
+
+**Interpreting the outputs.**
+
+* **Training curves.** Healthy runs show training loss decreasing and validation loss trending down or plateauing. If validation rises early, try shallower depth (2–3), dropout, or ensembling.
+* **Parity plot.** Points close to the diagonal indicate accurate predictions. The **±0.5 logD** band is an informal yardstick for quick runs; with longer training and scaffold-aware splits you should see tighter calibration (Yang et al., 2019; Heid et al., 2023).
+
 
 ##### References (3.3.2)
 
-* Gilmer, J., et al. (2017). **Neural message passing for quantum chemistry**. In *Proceedings of ICML* (pp. 1263–1272).
-* Heid, E., et al. (2023). **Chemprop software for chemical property prediction**. *Journal of Chemical Information and Modeling, 63*(22), 5962–5972.
-* Xu, K., et al. (2019). **How powerful are graph neural networks?** In *Proceedings of ICLR*.
-* Yang, K., et al. (2019). **D-MPNN for molecular property prediction**. *Journal of Chemical Information and Modeling, 59*(8), 3370–3388.
+* Gilmer, J., Schoenholz, S. S., Riley, P. F., Vinyals, O., & Dahl, G. E. (2017). Neural message passing for quantum chemistry. *ICML*, 1263–1272.
+* Yang, K., Swanson, K., Jin, W., et al. (2019). Analyzing learned molecular representations for property prediction. *JCIM, 59*(8), 3370–3388.
+* Heid, E., Greenman, K., Roszak, R., et al. (2023). Chemprop: A machine learning package for chemical property prediction. *JCIM, 63*(22), 5962–5972.
+* Wu, Z., Ramsundar, B., Feinberg, E. N., et al. (2018). MoleculeNet: A benchmark for molecular machine learning. *Chemical Science, 9*(2), 513–530.
 
 ---
 
@@ -367,14 +542,6 @@ plt.grid(axis='y', alpha=0.3); plt.tight_layout(); plt.show()
 * Heid, E., et al. (2023). **Chemprop software**. *Journal of Chemical Information and Modeling, 63*(22), 5962–5972.
 * Sheridan, R. P. (2013). **Time-split cross-validation as a method for estimating the goodness of prospective prediction**. *Journal of Chemical Information and Modeling, 53*(4), 783–790.
 * Yang, K., et al. (2019). **D-MPNN**. *Journal of Chemical Information and Modeling, 59*(8), 3370–3388.
-
----
-
-#### Section Recap (3.3.1–3.3.3)
-
-* **3.1** motivated moving from descriptor tables to **graph-based learning**, justified the **D-MPNN/Chemprop** backbone, and plotted **label distribution** (Delaney, 2004; Wu et al., 2018; Yang et al., 2019; Heid et al., 2023).
-* **3.2** made message passing concrete with a **mini D-MPNN-style layer** and **one training-loss comparison**—no duplicate diagrams (Gilmer et al., 2017; Yang et al., 2019).
-* **3.3** delivered an **end-to-end Chemprop** run with two **essential figures** (parity, loss) plus a tiny **sanity check**, and pointed to **scaffold splits**, **ensembling**, and **feature enrichment** as the next practical steps (Yang et al., 2019; Heid et al., 2023; Bemis & Murcko, 1996; Sheridan, 2013).
 
 ------
 
@@ -979,20 +1146,6 @@ Recent comparative studies have shown that while GNNs excel at learning complex 
     </table>
 </div>
 
-**References:**
-
-[1] Veličković, P., Cucurull, G., Casanova, A., Romero, A., Liò, P., & Bengio, Y. (2017). Graph Attention Networks. *International Conference on Learning Representations*.
-
-[2] Yuan, H., Yu, H., Gui, S., & Ji, S. (2022). Explainability in graph neural networks: A taxonomic survey. *IEEE Transactions on Pattern Analysis and Machine Intelligence*.
-
-[3] Chemistry-intuitive explanation of graph neural networks for molecular property prediction with substructure masking. (2023). *Nature Communications*, 14, 2585.
-
-[4] Integrating concept of pharmacophore with graph neural networks for chemical property prediction and interpretation. (2022). *Journal of Cheminformatics*, 14, 52.
-
-[5] Lundberg, S. M., & Lee, S. I. (2017). A unified approach to interpreting model predictions. *Advances in Neural Information Processing Systems*, 30, 4765-4774.
-
-[6] Jiang, D., Wu, Z., Hsieh, C. Y., Chen, G., Liao, B., Wang, Z., ... & Hou, T. (2021). Could graph neural networks learn better molecular representation for drug discovery? A comparison study of descriptor-based and graph-based models. *Journal of Cheminformatics*, 13(1), 1-23.
-
 #### Summary
 
 <div style="background-color:#e3f2fd; padding:15px; border-radius:8px;">
@@ -1034,6 +1187,15 @@ Current solutions include architectural innovations like residual connections to
 
 As the field progresses, the focus is shifting from purely accuracy-driven models to systems that provide transparent, chemically meaningful explanations for their predictions. This evolution is essential for GNNs to fulfill their promise as tools for accelerating molecular discovery and understanding.
 
+##### References (3.3.4)
+
+* Veličković, P., Cucurull, G., Casanova, A., Romero, A., Liò, P., & Bengio, Y. (2017). Graph Attention Networks. *International Conference on Learning Representations*.
+* Yuan, H., Yu, H., Gui, S., & Ji, S. (2022). Explainability in graph neural networks: A taxonomic survey. *IEEE Transactions on Pattern Analysis and Machine Intelligence*.
+* Chemistry-intuitive explanation of graph neural networks for molecular property prediction with substructure masking. (2023). *Nature Communications*, 14, 2585.
+* Integrating concept of pharmacophore with graph neural networks for chemical property prediction and interpretation. (2022). *Journal of Cheminformatics*, 14, 52.
+* Lundberg, S. M., & Lee, S. I. (2017). A unified approach to interpreting model predictions. *Advances in Neural Information Processing Systems*, 30, 4765-4774.
+* Jiang, D., Wu, Z., Hsieh, C. Y., Chen, G., Liao, B., Wang, Z., ... & Hou, T. (2021). Could graph neural networks learn better molecular representation for drug discovery? A comparison study of descriptor-based and graph-based models. *Journal of Cheminformatics*, 13(1), 1-23.
+* 
 ---
 
 ### Section 3.3 – Quiz Questions
