@@ -371,6 +371,7 @@ plt.tight_layout(); plt.show()
 * Fey, M., & Lenssen, J. E. (2019). *PyTorch Geometric*.
 * Hu, W. et al. (2020). *Open Graph Benchmark*.
 * Wu, Z. et al. (2018). *MoleculeNet*.
+
 ---
 
 ### 3.3.3 Same Split, Two Architectures: **GCN** vs **Edge-aware MPNN**
