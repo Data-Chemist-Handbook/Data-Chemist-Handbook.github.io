@@ -370,11 +370,10 @@ After message passing, we need a fixed-size representation for the whole reactio
 
 **Key intuition**: GNNs can learn chemistry rules. For instance, it might learn a node update rule that when a nitrogen (in a base) is adjacent to a bulky substituent, the message it sends indicates “I’m a hindered base” which might be correlated with lower yield. Or an aryl halide node might send a message to its neighbors indicating “I’m an electron-poor (or electron-rich) ring”, affecting how the palladium catalyst would oxdiatively insert, and thus yield. After training on many examples, these learned messages and node states encode what substructures and connectivity patterns are favorable or unfavorable for the reaction.  
   
-###Implementing a GNN for Yield Prediction  
+### Implementing a GNN for Yield Prediction  
 Let’s outline how we could train a GNN on the same Buchwald-Hartwig dataset. Instead of feeding sequences to a model, we will feed molecular graphs. One approach is to use a library like Deep Graph Library (DGL) or PyTorch Geometric for convenience.  
   
-#### Implementation Example: PyTorch Geometric GNN
-Below is a full PyTorch Geometric workflow with the same “lab notebook” style used in the RNN section. Each step can be pasted into a Colab or local notebook to download the Buchwald–Hartwig dataset, convert molecules into graphs, and train a 3-layer GCN to regress the yields.
+Below is a full PyTorch Geometric workflow with the same “lab notebook” style used in the RNN section. Each step can be pasted into a Colab or local notebook to download the Buchwald–Hartwig dataset, convert molecules into graphs, and train a 3-layer GCN to regress the yields.  
 
 #### 0. Install dependencies (Colab / fresh env)
 ```bash
