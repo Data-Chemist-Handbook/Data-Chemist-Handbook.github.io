@@ -700,7 +700,7 @@ Another big advantage: interpretability. Random forests can give you measures li
 
 However, a limitation is that you only learn from what you explicitly describe in the features. If a crucial aspect of the chemistry is not encoded (for example, you did not include a descriptor capturing some subtle interaction), the model can’t learn it. This is where the deep learning models (RNNs, GNNs) have an edge by learning representations automatically. But for many cases, carefully chosen descriptors + random forest remain a very effective solution, especially when data is limited.  
 
-### How Random Forests Work (Briefly)  
+### How Random Forests Work  
 A single decision tree splits the data based on feature values. For example, it might first split on “Ligand = bulky vs not bulky”, then within the “bulky” branch split on “Base pKa > X or <= X”, and so on, eventually reaching a small group of training points at each leaf which is used to make a prediction (like the average yield of that group). Decision trees tend to overfit if grown deep, but a random forest combats this by averaging many trees . Each tree in the forest is trained on a slightly different subset of the data and typically a different subset of features for each split. This “randomness” ensures the trees are diverse. When we predict, each tree gives a vote and the forest outputs the average of all trees’ outputs.  
 
 The result is a stable predictor that usually has better generalization than a single tree, and it can model complex nonlinear relationships without a lot of parameter fiddling.
@@ -844,8 +844,9 @@ One thing to note: the random forest can’t extrapolate beyond the chemistry it
 - **Ease of use**: They work out-of-the-box with minimal tuning. No need for extensive architecture design.  
 - **Interpretability**: Decision trees and ensembles of them can provide insight. You can calculate feature importance or even inspect individual trees to see what splits they learned (though a forest with 100 trees is cumbersome to fully interpret).  
 - **Small data friendly:** They don’t require massive datasets, even with a few hundred data points, a random forest can perform decently, whereas deep models might overfit.  
-- **Fast prediction:** After training, making predictions with a random forest is usually very fast, which is useful for screening large reaction spaces.    
-#### Limitations:
+- **Fast prediction:** After training, making predictions with a random forest is usually very fast, which is useful for screening large reaction spaces.
+  
+#### Limitations:  
 - **Feature engineering required**: You must decide how to represent the reaction. The model itself won’t invent new features. It only knows what you feed it. If the fingerprint or descriptors miss a key aspect (e.g., whether the reaction is intramolecular or not), the forest can’t compensate.  
 - **Curse of dimensionality**: If you use very high-dimensional fingerprints with lots of bits, many of them might be irrelevant. Random forests handle this better than linear models (they’ll just tend to ignore useless features), but extremely sparse, high-d dimensions can still be problematic unless you have lots of data.  
 - **Not sequence or graph native**: Unlike RNNs or GNNs, forests can’t directly use structured data. We had to flatten the chemistry into a vector. This means some relational information could be lost or diluted. For example, the descriptors might not explicitly encode which ligand was paired with which base in a particular instance, whereas a structured model might. Moreover, the random forest can’t extrapolate beyond the chemistry it has seen.  
@@ -1146,8 +1147,9 @@ print(f"Final Test R²:   {r2:.3f}")
 - **Flexible function approximation**: An MLP can learn any mapping given enough data and complexity. It can model interactions between input features in ways linear models can not.    
 - **Fast inference**: Once trained, computing a yield from an MLP is just a few matrix multiplies, very fast even for large input vectors.     
 - **Can be combined with learned features**: In more advanced workflows, one could integrate an MLP with a graph or sequence model. For example, use a GNN to featurize each reactant and then an MLP to predict yield from those features, training all together.    
-- **Well-understood training**: We know how to optimize them with backpropagation, and many frameworks make it easy to experiment with layer sizes.    
-#### Limitations:  
+- **Well-understood training**: We know how to optimize them with backpropagation, and many frameworks make it easy to experiment with layer sizes.
+    
+#### Limitations:    
 - **Data requirements**: Neural networks have many parameters. Without enough data, they are prone to overfitting, essentially memorizing the training set rather than learning general patterns. In yield prediction tasks with limited examples, this can be an issue. Regularization strategies (like dropout or weight decay) can help, but there is no guarantee without adequate data.  
 - **No built-in chemistry**: The MLP does not know a thing about chemistry. If you permute the input features randomly, it has no way to know (whereas a GNN would be inherently tied to atomic connections). It’s up to the input encoding to make chemical sense.  
 - **Hyperparameter tuning**: The performance can depend on choosing the right number of layers, neurons, learning rate. With limited data, tuning these can be tricky (too large and you overfit, too small and you underfit).   
