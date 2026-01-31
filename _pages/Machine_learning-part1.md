@@ -221,14 +221,14 @@ print("Accuracy:", accuracy)
 print("Classification Report:", classification_report(y_test, y_pred))
 ```
 
-## **Step 8: Visualizing Example Decision Trees**
+#### Step 8: Visualizing Example Decision Trees
 
 Although a Random Forest typically contains many decision trees, it is often helpful to visualize **a few individual trees** to gain intuition about how the model makes decisions. 
 
 In this section, we visualize **three representative decision trees** from the trained Random Forest.
 To keep the figures readable, only the **top three levels** of each tree are shown.
 
-### **Step 8.1: Visualizing Individual Trees**
+##### Step 8.1: Visualizing Individual Trees
 
 Each internal node splits on a **Morgan fingerprint bit** (e.g., `bit_919`).
 The condition `bit_k <= 0.5` means the bit is **absent (0)** vs. **present (1)**.
@@ -263,7 +263,7 @@ for tid in selected_tree_ids:
     plt.show()
 ```
 
-### **Step 8.2: Example Trees**
+##### Step 8.2: Example Trees
 
 ![Random Forest Tree Example 1](../../resource/img/random_forest_decision_tree/rf_tree_80_depth3.png)
 
