@@ -223,27 +223,29 @@ print("Classification Report:", classification_report(y_test, y_pred))
 
 ## **Step 8: Visualizing Example Decision Trees**
 
-Although a Random Forest typically contains many decision trees, it is often helpful to visualize **a few individual trees** to gain intuition about how the model makes decisions.
+Although a Random Forest typically contains many decision trees, it is often helpful to visualize **a few individual trees** to gain intuition about how the model makes decisions. 
 
 In this section, we visualize **three representative decision trees** from the trained Random Forest.
 To keep the figures readable, only the **top three levels** of each tree are shown.
 
 ### **Step 8.1: Visualizing Individual Trees**
 
-Each internal node in the tree corresponds to a split on a **Morgan fingerprint bit** (e.g., `bit_123`), indicating whether a particular molecular substructure is present (`1`) or absent (`0`).
-Leaf nodes show the class distribution and the predicted class.
+Each internal node splits on a **Morgan fingerprint bit** (e.g., `bit_919`).
+The condition `bit_k <= 0.5` means the bit is **absent (0)** vs. **present (1)**.
+To keep the figure readable, we display only the **first 3 levels** of each tree.
 
 ```python
 import matplotlib.pyplot as plt
 from sklearn.tree import plot_tree
 
-feature_names = [f"bit_{i}" for i in range(X_train.shape[1])]
+# Use the same feature/class labels as in the training script
+feature_names = [f"bit_{i}" for i in range(N_BITS)]
 class_names = ["non-permeable (0)", "permeable (1)"]
 
-PLOT_MAX_DEPTH = 3
-TREE_IDS = [91, 89, 80]  # example tree indices selected from the forest
+PLOT_MAX_DEPTH = 3  # show only top levels for readability
 
-for tid in TREE_IDS:
+# Visualize the selected trees (e.g., the "smallest" trees picked earlier)
+for tid in selected_tree_ids:
     plt.figure(figsize=(24, 12))
     plot_tree(
         rf_model.estimators_[tid],
@@ -252,30 +254,31 @@ for tid in TREE_IDS:
         class_names=class_names,
         filled=True,
         rounded=True,
-        proportion=True,
-        impurity=False
+        proportion=True,   # show samples as proportions (matches our figures)
+        impurity=False,
+        fontsize=10
     )
-    plt.title(f"Random Forest – Tree #{tid} (first {PLOT_MAX_DEPTH} levels)")
+    plt.title(f"Random Forest - Tree #{tid} (first {PLOT_MAX_DEPTH} levels only)")
     plt.tight_layout()
     plt.show()
 ```
 
 ### **Step 8.2: Example Trees**
 
-![Random Forest Tree Example 1](../../resource/img/random_forest_decision_tree/rf_tree_91_depth3.png)
+![Random Forest Tree Example 1](../../resource/img/random_forest_decision_tree/rf_tree_80_depth3.png)
 
-*Figure: Example decision tree from the Random Forest (Tree #91).  
-Early splits test the presence or absence of specific fingerprint bits, gradually separating permeable and non-permeable compounds.*
+*Figure: Example decision tree (Tree #80).  
+This tree is globally biased toward predicting permeability, while a few specific fingerprint bits create small branches that strongly indicate non-permeability.*
 
 ![Random Forest Tree Example 2](../../resource/img/random_forest_decision_tree/rf_tree_89_depth3.png)
 
-*Figure: A second decision tree illustrating an alternative decision pathway learned by the forest.  
-Different fingerprint bits are selected, highlighting the diversity among trees.*
+*Figure: Example decision tree (Tree #89).  
+Most samples follow a permeable path, but a small subset is quickly classified as non-permeable once certain fingerprint bits are present.*
 
-![Random Forest Tree Example 3](../../resource/img/random_forest_decision_tree/rf_tree_80_depth3.png)
+![Random Forest Tree Example 3](../../resource/img/random_forest_decision_tree/rf_tree_91_depth3.png)
 
-*Figure: A third example tree showing another combination of fingerprint-based splits.  
-This diversity is a key reason why Random Forest models are robust and accurate.*
+*Figure: Example decision tree (Tree #91).  
+The tree refines predictions within the permeable class while reserving a few high-confidence branches for non-permeable compounds.*
 
 These visualizations illustrate how individual decision trees in a Random Forest make predictions based on molecular fingerprint features, while the ensemble combines many such trees to achieve strong overall performance.
 
