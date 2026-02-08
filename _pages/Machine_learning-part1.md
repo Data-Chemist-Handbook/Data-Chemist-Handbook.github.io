@@ -10,6 +10,8 @@ Machine learning (ML) is a subfield of artificial intelligence (AI) focused on d
 
 ML encompasses various techniques, including supervised learning, where models are trained on labeled data to predict outcomes; unsupervised learning, which involves discovering hidden patterns or groupings within unlabeled data; and reinforcement learning, where models learn optimal actions through trial and error in dynamic environments. These methods are applied across diverse domains, from natural language processing and computer vision to recommendation systems and autonomous vehicles, revolutionizing how technology interacts with the world.
 
+Completed and Compiled Code (3.1): [Click Here](https://colab.research.google.com/drive/1UVCRurBock2EZIlwDvR879tOr3s8ZW6J?usp=sharing)
+
 ## 3.1 Decision Tree and Random Forest
 
 ### 3.1.1 Decision Trees
@@ -51,117 +53,64 @@ The goal is to predict whether a given chemical compound will cross the blood-br
 We need to use the RDKit library, which is essential for converting **SMILES strings** into molecular fingerprints, a numerical representation of the molecule.
 
 ```python
-# Install the RDKit package via conda-forge
-!pip install -q condacolab
-import condacolab
-condacolab.install()
+# Install the RDKit library using pip
+!pip install rdkit
 
-# Now install RDKit
-!mamba install -c conda-forge rdkit -y
-
-# Import RDKit and check if it's installed successfully
 from rdkit import Chem
-print("RDKit is successfully installed!")
-```
-
-#### Step 2: Download the BBBP Dataset from Kaggle
-
-The **BBBP dataset** is hosted on Kaggle, a popular platform for datasets and machine learning competitions. To access the dataset, you need a Kaggle account and an API key for authentication. Here's how you can set it up:
-
-##### Step 2.1: Create a Kaggle Account
-1. Visit Kaggle and create an account if you don't already have one.
-2. Once you're logged in, go to your profile by clicking on your profile picture in the top right corner, and select My Account.
-
-##### Step 2.2: Set Up the Kaggle API Key
-1. Scroll down to the section labeled API on your account page.
-2. Click on the button "Create New API Token". This will download a file named kaggle.json to your computer.
-3. Keep this file safe! It contains your API key, which you'll use to authenticate when downloading datasets.
-
-##### Step 2.3: Upload the Kaggle API Key
-Once you have the kaggle.json file, you need to upload it to your Python environment:
-
-1. If you're using a notebook environment like Google Colab, use the code below to upload the file:
-
-```python
-# Upload the kaggle.json file from google.colab import 
-files uploaded = files.upload() 
-# Move the file to the right directory for authentication 
-!mkdir -p ~/.kaggle !mv kaggle.json ~/.kaggle/ !chmod 600 ~/.kaggle/kaggle.json
-```
-
-2. If you're using a local Jupyter Notebook:
-   Place the kaggle.json file in a folder named .kaggle within your home directory:
-   - On Windows: Place it in C:\Users\<YourUsername>\.kaggle.
-   - On Mac/Linux: Place it in ~/.kaggle.
-
-##### Step 2.4: Install the Required Libraries
-To interact with Kaggle and download the dataset, you need the Kaggle API client. Install it with the following command:
-
-```python
-!pip install kaggle
-```
-
-##### Step 2.5: Download the BBBP Dataset
-Now that the API key is set up, you can download the dataset using the Kaggle API:
-
-```python
-# Download the BBBP dataset using the Kaggle API 
-!kaggle datasets download -d priyanagda/bbbp-smiles 
-# Unzip the downloaded file 
-!unzip bbbp-smiles.zip -d bbbp_dataset
-```
-
-This code will:
-1. Download the dataset into your environment.
-2. Extract the dataset files into a folder named bbbp_dataset.
-
-##### Step 2.6: Verify the Download
-After downloading, check the dataset files to confirm that everything is in place:
-
-```python
-# List the files in the dataset folder 
-import os 
-dataset_path = "bbbp_dataset" 
-files = os.listdir(dataset_path) 
-print("Files in the dataset:", files)
-```
-
-By following these steps, you will have successfully downloaded and extracted the BBBP dataset, ready for further analysis and processing.
-
-#### Step 3: Load the BBBP Dataset
-
-After downloading the dataset, we'll load the **BBBP dataset** into a **pandas DataFrame**. The dataset contains the **SMILES strings** and the **target variable** (`p_np`), which indicates whether the compound can cross the blood-brain barrier (binary classification: `1` for permeable, `0` for non-permeable).
-
-```python
+from rdkit.Chem import Draw
+# Import the modern fingerprint generator
+from rdkit.Chem import rdFingerprintGenerator 
 import pandas as pd
+import numpy as np
 
-# Load the BBBP dataset (adjust the filename if it's different)
-data = pd.read_csv("bbbp.csv")  # Assuming the dataset is named bbbp.csv
-print("Dataset Head:", data.head())
+# Verify the RDKit installation
+print(f"RDKit version: {Chem.rdBase.rdkitVersion}")
 ```
 
-#### Step 4: Convert SMILES to Molecular Fingerprints
+#### Step 2: Download the BBBP Dataset 
+
+Instead of a manual download, we can pull the dataset directly from the DeepChem AWS repository. This dataset contains SMILES strings and a target column p_np ($1$ for permeable, $0$ for non-permeable).
+
+```python
+# Define the URL for the Blood-Brain Barrier Penetration (BBBP) dataset
+url = "https://deepchemdata.s3-us-west-1.amazonaws.com/datasets/BBBP.csv"
+
+# Read the CSV file directly from the URL into a pandas DataFrame
+data = pd.read_csv(url)
+
+# Print the first five rows to inspect columns like 'smiles' and 'p_np'
+print(data.head())
+```
+
+#### Step 3: Convert SMILES to Molecular Fingerprints
 
 To use the **SMILES strings** for modeling, we need to convert them into **molecular fingerprints**. This process turns the chemical structures into a numerical format that can be fed into machine learning models. We'll use **RDKit** to generate these fingerprints using the **Morgan Fingerprint** method.
 
 ```python
-from rdkit import Chem
-from rdkit.Chem import AllChem
-import numpy as np
+# Initialize the generator outside the loop for better efficiency
+# radius=2 captures the local neighborhood of each atom
+# fpSize=1024 creates a bit-vector of length 1024
+mfpgen = rdFingerprintGenerator.GetMorganGenerator(radius=2, fpSize=1024)
 
-# Function to convert SMILES to molecular fingerprints
 def featurize_molecule(smiles):
+    """Converts a SMILES string into a Morgan fingerprint bit vector."""
     mol = Chem.MolFromSmiles(smiles)
     if mol:
-        return AllChem.GetMorganFingerprintAsBitVect(mol, 2, nBits=1024)
+        # Use the generator object to create the fingerprint
+        return mfpgen.GetFingerprint(mol)
     else:
+        # Return None if the SMILES string is invalid or cannot be parsed
         return None
 
-# Apply featurization to the dataset
-features = [featurize_molecule(smi) for smi in data['smiles']]  # Replace 'smiles' with the actual column name if different
-features = [list(fp) if fp is not None else np.zeros(1024) for fp in features]  # Handle missing data by filling with zeros
+# Generate fingerprints for every SMILES string in the dataset
+features = [featurize_molecule(smi) for smi in data['smiles']]
+
+# Convert objects to lists, or use a zero-vector for failed molecules
+features = [list(fp) if fp is not None else np.zeros(1024) for fp in features]
+
+# Create the final feature matrix X and target vector y
 X = np.array(features)
-y = data['p_np']  # Target column (1 for permeable, 0 for non-permeable)
+y = data['p_np']
 ```
 
 The diagram below provides a visual representation of what this code does:
@@ -170,7 +119,7 @@ The diagram below provides a visual representation of what this code does:
 
 *Figure: SMILES to Molecular Fingerprints Conversion Process*
 
-#### Step 5: Split Data into Training and Testing Sets
+#### Step 4: Split Data into Training and Testing Sets
 
 To evaluate the model, we need to split the data into training and testing sets. The **train_test_split** function from **scikit-learn** will handle this. We'll use 80% of the data for training and 20% for testing.
 
@@ -187,7 +136,7 @@ The diagram below provides a visual representation of what this code does:
 
 *Figure: Data Splitting Process for Training and Testing*
 
-#### Step 6: Train the Random Forest Model
+#### Step 5: Train the Random Forest Model
 
 We'll use the **RandomForestClassifier** from **scikit-learn** to build the model. A Random Forest is an ensemble method that uses multiple decision trees to make predictions. The more trees (`n_estimators`) we use, the more robust the model will be, but the longer the model will take to run. For the most part, n_estimators is set to 100 in most versions of scikit-learn. However, for more complex datasets, higher values like 500 or 1000 may improve performance.
 
@@ -205,9 +154,35 @@ The diagram below provides a visual explanation of what is going on here:
 
 *Figure: Random Forest Algorithm Structure*
 
-#### Step 7: Evaluate the Model
+#### Step 6: Evaluate the Model
 
-After training the model, we'll use the **test data** to evaluate its performance. We will print the accuracy and the classification report to assess the model's precision, recall, and F1 score.
+After training the model, we use the test data to check how well it performs. We measure its accuracy and also look at a classification report, which includes precision, recall, and F1 score.
+
+**Accuracy** is the simplest metric: it tells us the percentage of all predictions the model got right — both permeable and non-permeable molecules.
+
+**Precision** tells us how trustworthy the model’s positive (BBBP+) predictions are.
+
+If the model predicts that a molecule can penetrate the blood-brain barrier, precision answers: Out of those predictions, how many were actually correct?
+
+High precision means the model doesn’t make a lot of false positive mistakes — that is, it doesn’t often say a molecule can penetrate when it really can’t.
+
+👉 Think of precision as: “When the model says yes, how often is it right?”
+
+**Recall** tells us how good the model is at finding all the real positive cases.
+
+In our BBBP example: out of all the molecules that actually can penetrate the blood-brain barrier, recall measures how many the model successfully identified.
+
+High recall means the model finds most of the real positive cases and doesn’t miss many.
+
+👉 Think of recall as: “How many of the true ‘yes’ molecules did the model catch?”
+
+**F1 score** is a single number that balances precision and recall.
+
+Sometimes a model may have high precision but low recall (it only predicts yes when very sure), or high recall but low precision (it predicts yes a lot, including mistakes).
+
+The F1 score combines both precision and recall into one metric so we can judge overall performance when both are important.
+
+👉 F1 is especially useful when the dataset is imbalanced — for example, if there are many more molecules that don’t cross the blood-brain barrier than those that do — because just looking at accuracy can be misleading in that case.
 
 ```python
 from sklearn.metrics import accuracy_score, classification_report
@@ -238,28 +213,42 @@ To keep the figure readable, we display only the **first 3 levels** of each tree
 import matplotlib.pyplot as plt
 from sklearn.tree import plot_tree
 
-# Use the same feature/class labels as in the training script
-feature_names = [f"bit_{i}" for i in range(N_BITS)]
-class_names = ["non-permeable (0)", "permeable (1)"]
+# 1. Automatically determine fingerprint length based on the training data shape
+n_bits = X_train.shape[1] 
+# Generate generic feature names (e.g., bit_0, bit_1, ...)
+feature_names = [f"bit_{i}" for i in range(n_bits)]
+# Define labels for the target classes
+class_names = ["Non-Permeable (0)", "Permeable (1)"]
 
-PLOT_MAX_DEPTH = 3  # show only top levels for readability
+# 2. Select specific tree indices from the Random Forest to visualize
+# Using [0, 1] will visualize the first and second trees
+selected_tree_ids = [0, 1] 
 
-# Visualize the selected trees (e.g., the "smallest" trees picked earlier)
+# Set the maximum depth to display; 2 or 3 is best to prevent the plot from being too crowded
+PLOT_MAX_DEPTH = 2  
+
 for tid in selected_tree_ids:
-    plt.figure(figsize=(24, 12))
+    # Initialize a figure with high DPI for better text readability
+    fig, ax = plt.subplots(figsize=(20, 10), dpi=100) 
+    
+    # Plot the decision tree logic
     plot_tree(
-        rf_model.estimators_[tid],
-        max_depth=PLOT_MAX_DEPTH,
+        rf_model.estimators_[tid], # Select the specific tree estimator
+        max_depth=PLOT_MAX_DEPTH,   # Limit depth to keep the visual clean
         feature_names=feature_names,
         class_names=class_names,
-        filled=True,
-        rounded=True,
-        proportion=True,   # show samples as proportions (matches our figures)
-        impurity=False,
-        fontsize=10
+        filled=True,                # Color nodes by majority class
+        rounded=True,               # Use rounded boxes for aesthetics
+        proportion=True,            # Show percentages instead of raw sample counts
+        impurity=False,             # Hide impurity metrics to reduce clutter
+        fontsize=12,
+        ax=ax                       # Explicitly assign to current axis
     )
-    plt.title(f"Random Forest - Tree #{tid} (first {PLOT_MAX_DEPTH} levels only)")
-    plt.tight_layout()
+    
+    # Add a title identifying the specific tree number
+    ax.set_title(f"Random Forest - Tree #{tid}", fontsize=15)
+    
+    # Render the plot for each iteration
     plt.show()
 ```
 
