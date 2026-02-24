@@ -1765,9 +1765,7 @@ plt.show()
 
 <!-- #TODO After updating new practice problem, also add an ouput -->
 **Output**
-```python
-
-```
+![Normal Distribution Solution Code](../../resource/img/preliminaries/pre_2-2/2.2.6-5.png)
 
 #### Hypothesis Testing
 
