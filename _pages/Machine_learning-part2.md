@@ -446,6 +446,8 @@ In the previous sections, we explored how neural networks are structured and how
 
 Rather than using high-level abstractions, we'll walk through the full training process: from preparing chemical data to building, training, evaluating, and interpreting a neural network model.
 
+> **⚠️ Note:** This example uses a **toy dataset of only 8 synthetic data points** for pedagogical purposes. A real neural network for molecular property prediction would typically require **hundreds to thousands** of labeled data points (see [Section 3.2.6](#326-how-much-data-do-you-need)). For practice with real data, consider [MoleculeNet](https://doi.org/10.1039/C7SC02664A) benchmarks such as ESOL (~1,128 molecules), FreeSolv (~643), or BBBP (~2,039).
+
 **Chemical Context**
 
 Solubility determines how well a molecule dissolves in water, which affects its absorption and distribution in biological systems. Predicting this property accurately can save time and cost in early drug discovery. By using features like molecular weight, lipophilicity (LogP), and number of rotatable bonds, we can teach a neural network to approximate this property from molecular descriptors.
@@ -467,7 +469,7 @@ from tensorflow.keras.layers import Dense
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import MinMaxScaler
 
-# Step 1: Simulated chemical data
+# Step 1: Toy data (8 synthetic molecules — for demonstration only, not sufficient for real training)
 X = np.array([
     [350.2, 3.3, 5],
     [275.4, 1.8, 4],
@@ -517,7 +519,7 @@ plt.show()
 
 **Summary**
 
-This section demonstrated how a basic neural network can be trained on molecular descriptors to predict solubility. While our dataset was small and artificial, the same principles apply to real-world cheminformatics datasets.
+This section demonstrated how a basic neural network can be trained on molecular descriptors to predict solubility. **Important:** the dataset used here (8 synthetic molecules) is far too small for any real application — a neural network trained on so few points will not generalize. In practice, you would need at least several hundred to a few thousand labeled molecules to train a reliable model. See [Section 3.2.6](#326-how-much-data-do-you-need) for detailed guidance on data requirements across different model types.
 
 You now understand:
 - How to process input features from molecules
@@ -525,6 +527,31 @@ You now understand:
 - How to interpret loss, predictions, and model performance
 
 This hands-on foundation prepares you to tackle more complex models like convolutional and graph neural networks in the next sections.
+
+---
+
+### 3.2.6 How Much Data Do You Need?
+
+One of the most common questions when starting a machine learning project in chemistry is: *how much experimental data do I actually need before I can make useful predictions?* The answer depends on several factors — the complexity of the model, the dimensionality of the feature space, and the difficulty of the prediction task.
+
+As a general rule, simpler models with fewer parameters can generalize from less data, while complex deep learning architectures require substantially more. However, data **quality and diversity** across chemical space often matter as much as — or more than — sheer quantity. A thousand molecules sampled from a narrow region of chemical space may be less informative than three hundred carefully chosen to cover diverse scaffolds and property ranges.
+
+The table below provides rough practical guidelines informed by the cheminformatics literature. These are not hard thresholds — they are starting points to help you decide which model is realistic given the data you have or can acquire.
+
+| Model Type | Rough Minimum | Typical Range | Notes |
+|---|---|---|---|
+| Linear / Logistic Regression | ~50–100 | 100–500 | Few parameters, so [less data is needed to avoid overfitting](https://doi.org/10.1023/A:1025386326946). Works well for simple structure–activity relationships. |
+| Random Forest | ~200–500 | 500–2,000 | [Robust on moderate-sized chemical datasets](https://doi.org/10.1039/C7SC02664A) and less prone to overfitting than single decision trees. A strong default choice when data is limited. |
+| Feed-Forward Neural Network | ~500–1,000 | 1,000–10,000 | More parameters mean higher data needs. [Performance scales significantly with dataset size](https://doi.org/10.1038/s41467-023-41948-6); regularization techniques (dropout, weight decay) help but cannot fully compensate for scarce data. |
+| Graph Neural Network (GNN) | ~500–1,000 | 1,000–10,000+ | Learns directly from molecular graphs. [Can work with fewer samples when combined with transfer learning](https://doi.org/10.1016/j.xcrp.2022.101113), but generally needs ≥1,000 molecules for reliable performance. |
+| Transformer (fine-tuning) | ~1,000+ | 5,000–50,000+ | Models like [ChemBERTa](https://doi.org/10.48550/arXiv.2209.01712) and [MolFormer](https://doi.org/10.1038/s42256-022-00580-7) are pre-trained on tens of millions to over a billion molecules, so fine-tuning requires less task-specific data — but still more than simpler models. |
+
+**Important caveats:**
+- These numbers are approximate and will vary depending on the number of features, task complexity, class balance, and the diversity of your chemical space.
+- For classification tasks with imbalanced classes (e.g., few active compounds among many inactives), you may need more data or specialized techniques like oversampling.
+- In chemistry, experimental data is often expensive and slow to acquire. If your dataset is small (fewer than a few hundred labeled examples), start with simpler models such as linear regression or random forests before attempting deep learning.
+
+**Strategies for limited data:** When experimental data is scarce, several techniques can help you get more out of what you have — including transfer learning, multi-task learning, data augmentation, and active learning. For a comprehensive overview of these approaches, see [this recent review on machine learning strategies for data-limited drug discovery](https://doi.org/10.1016/j.addr.2025.115762).
 
 ---
 
