@@ -1647,7 +1647,7 @@ The molecular GNN workflow typically involves the following steps:
 ```
 
 ```python
-# Step 1: Install required libraries
+# Step 2: Install required libraries
 import torch
 import pandas as pd
 from rdkit import Chem
