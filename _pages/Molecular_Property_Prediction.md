@@ -966,153 +966,6 @@ This will output per-atom and per-bond features such as atomic number, bond type
 
 ### 4.2.3 Constructing Molecular Graphs with PyTorch Geometric
 
-**Completed and Compiled Code:** *Fully runnable in Google Colab*
-
-Before we can apply a Graph Neural Network (GNN) to a molecule, we need to convert its SMILES string into a graph representation that the model can understand. This includes defining the nodes (atoms), the edges (bonds), and their associated features. In this section, we’ll use the Python library PyTorch Geometric (PyG) to build molecular graphs from SMILES using features extracted with RDKit.
-
----
-
-#### Overview of the Workflow
-
-* Parse SMILES using RDKit to extract the molecular structure
-* Define node features: For each atom, compute a feature vector (e.g., atomic number, degree, aromaticity)
-* Define edge index: List all bonds as pairs of connected atoms
-* Define edge features: For each bond, compute features like bond type and conjugation
-* Package into a `torch_geometric.data.Data` object — the standard graph container in PyG
-
----
-
-#### Installation (Google Colab)
-
-```python
-# PyTorch and PyTorch Geometric setup (Colab)
-!pip install -q rdkit
-!pip install -q torch-scatter -f https://data.pyg.org/whl/torch-2.0.0+cpu.html
-!pip install -q torch-geometric
-```
-
----
-
-#### Example: Convert a Single SMILES to a PyG Graph
-
-```python
-from rdkit import Chem
-from rdkit.Chem import rdmolops
-import torch
-from torch_geometric.data import Data
-
-# Helper function to get atom features
-def atom_features(atom):
-    return torch.tensor([
-        atom.GetAtomicNum(),
-        atom.GetDegree(),
-        int(atom.GetIsAromatic())
-    ], dtype=torch.float)
-
-# Helper function to get bond features
-def bond_features(bond):
-    bond_type = bond.GetBondType()
-    return torch.tensor([
-        int(bond_type == Chem.rdchem.BondType.SINGLE),
-        int(bond_type == Chem.rdchem.BondType.DOUBLE),
-        int(bond_type == Chem.rdchem.BondType.TRIPLE),
-        int(bond_type == Chem.rdchem.BondType.AROMATIC),
-        int(bond.GetIsConjugated())
-    ], dtype=torch.float)
-
-# Convert SMILES to molecular graph
-def smiles_to_pyg(smiles):
-    mol = Chem.MolFromSmiles(smiles)
-    if mol is None:
-        return None
-
-    # Node features
-    atom_feats = [atom_features(atom) for atom in mol.GetAtoms()]
-    x = torch.stack(atom_feats)  # Shape: [num_nodes, num_node_features]
-
-    # Edge list and edge features
-    edge_index = []
-    edge_attr = []
-    for bond in mol.GetBonds():
-        i = bond.GetBeginAtomIdx()
-        j = bond.GetEndAtomIdx()
-        edge_index += [[i, j], [j, i]]  # undirected edges
-        edge_feat = bond_features(bond)
-        edge_attr += [edge_feat, edge_feat]
-
-    edge_index = torch.tensor(edge_index, dtype=torch.long).t().contiguous()
-    edge_attr = torch.stack(edge_attr)
-
-    return Data(x=x, edge_index=edge_index, edge_attr=edge_attr)
-
-# Test with a molecule
-graph = smiles_to_pyg("CCO")  # Ethanol
-print(graph)
-```
-
----
-
-#### Output (Graph Summary)
-
-```text
-Data(x=[3, 3], edge_index=[2, 4], edge_attr=[4, 5])
-```
-
-**Explanation:**
-
-* `x=[3, 3]`: 3 atoms with 3 features each
-* `edge_index=[2, 4]`: 4 directed edges (2 bonds, bidirectional)
-* `edge_attr=[4, 5]`: 4 edges with 5-dimensional bond features
-
----
-
-#### Feature Explanation
-
-* **Node Features (x):** `[Atomic Number, Degree, Is Aromatic]`
-
-  * e.g., `[6, 4, 0]` for a non-aromatic carbon with 4 neighbors
-* **Edge Features (edge\_attr):** `[is_single, is_double, is_triple, is_aromatic, is_conjugated]`
-
-  * e.g., `[1, 0, 0, 0, 0]` for a plain single bond
-
----
-
-#### Practice Problem 1: Visualizing Molecular Graph Features
-
-**Task:**
-
-* Use RDKit to parse a molecule of your choice
-* Extract and print atom and bond features using the `smiles_to_pyg()` function
-* Try SMILES like: `"c1ccccc1O"` (phenol) or `"CC(=O)O"` (acetic acid)
-
-```python
-your_smiles = "CC(=O)O"
-graph = smiles_to_pyg(your_smiles)
-
-print("Node Features:")
-print(graph.x)
-
-print("\nEdge Index:")
-print(graph.edge_index)
-
-print("\nEdge Features:")
-print(graph.edge_attr)
-```
-
----
-
-#### Summary
-
-* Parse a SMILES string into a graph of atoms and bonds
-* Extract chemically meaningful node and edge features
-* Format the molecule as a PyTorch Geometric `Data` object
-
-**Next:** In the next section (4.2.4), we’ll use these graph objects to build and train a real GCN model for molecular property prediction.
-
----
-
-### 4.2.3 Constructing Molecular Graphs with PyTorch Geometric
-
 **Completed and Compiled Code:** [Click Here](https://colab.research.google.com/drive/1zQq6MJU6Al4QiV309mzXRi5DNB3o5Tko?usp=sharing)
 
 Before we can apply a Graph Neural Network (GNN) to a molecule, we need to convert its SMILES string into a graph representation that the model can understand. This includes defining the nodes (atoms), the edges (bonds), and their associated features. In this section, we’ll use the Python library PyTorch Geometric (PyG) to build molecular graphs from SMILES using features extracted with RDKit.
@@ -1245,12 +1098,10 @@ graph = smiles_to_pyg(your_smiles)
 print("Node Features (x):")
 print(graph.x)
 
-print("
-Edge Index (edge_index):")
+print("\nEdge Index (edge_index):")
 print(graph.edge_index)
 
-print("
-Edge Features (edge_attr):")
+print("\nEdge Features (edge_attr):")
 print(graph.edge_attr)
 ```
 
@@ -3359,5 +3210,3 @@ Explanation: Shuffling breaks the feature–label relationship; larger performan
 </details>
 
 ---
-
-
