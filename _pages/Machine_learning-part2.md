@@ -238,17 +238,20 @@ MSE penalizes larger errors more severely than smaller ones, which is especially
 
 Once the model calculates the loss, it needs to adjust its internal weights to reduce that loss. This optimization process is called **gradient descent**.
 
-Gradient descent updates the model's weights in the opposite direction of the gradient of the loss function:
+**What is a gradient?** Think of the loss as the altitude on a hilly landscape — you are standing somewhere and want to reach the lowest valley (minimum error). The **gradient** is simply the slope under your feet: it tells you which direction is uphill and how steep it is. To reduce the loss, you take a step in the **opposite** direction — downhill. That's gradient descent.
+
+For a chemist, this is analogous to titration: you measure pH (loss), observe which direction it's moving (gradient), and adjust the volume of titrant (weights) accordingly.
+
+Mathematically, gradient descent updates each weight like this:
 
 $$
 w_{\text{new}} = w_{\text{old}} - \alpha \cdot \frac{\partial \text{Loss}}{\partial w}
 $$
 
 Where:
-- $w$ is a weight in the network  
+- $w$ is a weight in the network
 - $\alpha$ is the **learning rate**, a small scalar that determines the step size
-
-This iterative update helps the model gradually "descend" toward a configuration that minimizes the prediction error.
+- $\frac{\partial \text{Loss}}{\partial w}$ is the gradient — how much the loss changes when this particular weight changes
 
 #### Backpropagation: Updating the Network
 
@@ -257,6 +260,8 @@ This iterative update helps the model gradually "descend" toward a configuration
 1. It begins by computing the prediction and measuring the loss.
 2. Then, it calculates how much each neuron contributed to the final error by applying the **chain rule** from calculus.
 3. Finally, it adjusts all weights by propagating the error backward from the output layer to the input layer.
+
+In short: **backpropagation computes the gradient** (how much each weight contributed to the error), and **gradient descent uses that gradient** to update the weights. They work as a team.
 
 Over time, the network becomes better at associating input features with the correct output properties.
 
@@ -314,6 +319,20 @@ plt.show()
 - How the network calculates and minimizes the loss function (MSE)
 - How backpropagation adjusts weights over time
 - How loss consistently decreases with each epoch
+
+**See Gradient Descent in Action**
+
+Open [TensorFlow Playground](https://playground.tensorflow.org/#activation=tanh&batchSize=10&dataset=circle&regDataset=reg-plane&learningRate=0.03&regularizationRate=0&noise=0&networkShape=4,2&seed=0.03240&showTestData=false&discretize=false&percTrainData=50&x=true&y=true&xTimesY=false&xSquared=false&ySquared=false&cosX=false&sinX=false&cosY=false&sinY=false&collectStats=false&problem=classification&initZero=false&hideText=false) and click the **Play** button. Watch:
+- The **loss curve** (top right) dropping over epochs — this is gradient descent minimizing the error
+- The **lines between neurons** changing color and thickness — these are the weights being updated by backpropagation
+- The **decision boundary** (main panel) evolving as the network learns
+
+Try these experiments:
+1. **Change the learning rate** (top menu) to 0.001 vs 1.0 — see how step size affects convergence
+2. **Click Play and pause** after a few steps — hover over a connection to see its current weight value
+3. **Switch the dataset** (top left) from circle to spiral — observe how the network needs more neurons/layers to solve a harder problem
+
+This is exactly what `model.fit()` does internally: compute gradients, update weights, repeat.
 
 **Practice Problem: Observe the Learning Curve**
 
