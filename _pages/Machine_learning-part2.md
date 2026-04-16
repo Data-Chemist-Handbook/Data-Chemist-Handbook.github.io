@@ -273,7 +273,7 @@ A neural network does the same—after each "trial" (training pass), it adjusts 
 
 **Visualizing Loss Reduction During Training**
 
-This code demonstrates how a simple neural network learns over time by minimizing error through backpropagation and gradient descent. It also visualizes the loss curve to help you understand how training progresses.
+This code demonstrates how a simple neural network learns over time by minimizing error through backpropagation and gradient descent. It also visualizes the loss curve to help you understand how training progresses. Note that we first normalize the input features using `MinMaxScaler` — this is a critical preprocessing step because our descriptors (molecular weight, LogP, rotatable bonds) have very different numerical ranges, and training without normalization can cause the network to fail to converge.
 
 ```python
 # 3.2.3 Example: Visualizing Loss Reduction During Training
@@ -281,7 +281,8 @@ This code demonstrates how a simple neural network learns over time by minimizin
 import numpy as np
 import matplotlib.pyplot as plt
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense
+from tensorflow.keras.layers import Dense, Input
+from sklearn.preprocessing import MinMaxScaler
 
 # Simulated training data: [molecular_weight, logP, rotatable_bonds]
 X_train = np.array([
@@ -295,16 +296,22 @@ X_train = np.array([
 # Simulated solubility labels (normalized between 0 and 1)
 y_train = np.array([0.42, 0.63, 0.91, 0.52, 0.86])
 
+# Normalize features so all descriptors are on the same scale
+scaler = MinMaxScaler()
+X_scaled = scaler.fit_transform(X_train)
+
 # Define a simple neural network
-model = Sequential()
-model.add(Dense(10, input_dim=3, activation='relu'))
-model.add(Dense(1, activation='sigmoid'))  # Regression output
+model = Sequential([
+    Input(shape=(3,)),                     # 3 input features per molecule
+    Dense(10, activation='relu'),          # Hidden layer
+    Dense(1)                               # Output layer (linear for regression)
+])
 
 # Compile the model using MSE (Mean Squared Error) loss
 model.compile(optimizer='adam', loss='mean_squared_error')
 
 # Train the model and record loss values
-history = model.fit(X_train, y_train, epochs=100, verbose=0)
+history = model.fit(X_scaled, y_train, epochs=100, verbose=0)
 
 # Plot the training loss over time
 plt.plot(history.history['loss'])
@@ -319,6 +326,7 @@ plt.show()
 - How the network calculates and minimizes the loss function (MSE)
 - How backpropagation adjusts weights over time
 - How loss consistently decreases with each epoch
+- Why feature normalization matters: molecular weight (~125–410), LogP (~0.2–3.3), and rotatable bonds (~1–5) have very different scales. Without `MinMaxScaler`, large-valued features dominate the gradients, causing the network to train poorly or not at all
 
 **See Gradient Descent in Action**
 
@@ -336,20 +344,26 @@ This is exactly what `model.fit()` does internally: compute gradients, update we
 
 **Practice Problem: Observe the Learning Curve**
 
-Reinforce the concepts of backpropagation and gradient descent by modifying the model to exaggerate or dampen learning behavior.
-1. Change the optimizer from "adam" to "sgd" and observe how the loss reduction changes.
-2. Add validation_split=0.2 to model.fit() to visualize both training and validation loss.
-3. Plot both loss curves using matplotlib.
+Reinforce the concepts of backpropagation and gradient descent by comparing different optimizers.
+1. Build a new model from scratch (important: do not reuse the already-trained model, as its weights would carry over) and compile it with the "sgd" optimizer instead of "adam".
+2. Train it on the same normalized data with `validation_split=0.2` to track both training and validation loss.
+3. Plot both loss curves using matplotlib and compare the convergence speed to the Adam result above.
 
 ```python
-# Add validation and switch optimizer
-model.compile(optimizer='sgd', loss='mean_squared_error')
+# Rebuild the model from scratch with SGD optimizer
+model_sgd = Sequential([
+    Input(shape=(3,)),
+    Dense(10, activation='relu'),
+    Dense(1)
+])
+model_sgd.compile(optimizer='sgd', loss='mean_squared_error')
 
-history = model.fit(X_train, y_train, epochs=100, validation_split=0.2, verbose=0)
+# Train with validation split
+history_sgd = model_sgd.fit(X_scaled, y_train, epochs=100, validation_split=0.2, verbose=0)
 
 # Plot training and validation loss
-plt.plot(history.history['loss'], label='Training Loss')
-plt.plot(history.history['val_loss'], label='Validation Loss')
+plt.plot(history_sgd.history['loss'], label='Training Loss')
+plt.plot(history_sgd.history['val_loss'], label='Validation Loss')
 plt.title('Training vs Validation Loss')
 plt.xlabel('Epoch')
 plt.ylabel('Loss')
