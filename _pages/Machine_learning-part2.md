@@ -422,6 +422,16 @@ $$
 **Analogy**: Models systems with directionality — such as positive vs. negative binding affinity.  
 **Use**: Sometimes preferred over sigmoid in hidden layers.
 
+**4. Softmax**
+
+$$
+\text{Softmax}(z_i) = \frac{e^{z_i}}{\sum_{j=1}^{K} e^{z_j}}
+$$
+
+**Behavior**: Takes a vector of $K$ raw scores and converts them into a probability distribution — each output is between 0 and 1, and all outputs sum to 1.
+**Analogy**: Imagine ranking several candidate solvents by predicted effectiveness. Softmax turns raw scores into relative probabilities, so you can say "there is a 70% chance solvent A is the best choice, 20% for B, and 10% for C."
+**Use**: Standard choice for the output layer in multi-class classification (e.g., predicting which toxicity category a molecule belongs to). Also used in attention mechanisms (e.g., Graph Attention Networks) to normalize attention weights across neighboring atoms.
+
 **Why Are They Important**
 
 Without activation functions, neural networks would be limited to computing weighted sums—essentially doing linear algebra. This would be like trying to model the melting point of a compound using only molecular weight: too simplistic for real-world chemistry.

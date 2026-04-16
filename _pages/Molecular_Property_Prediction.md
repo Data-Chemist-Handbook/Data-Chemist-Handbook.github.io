@@ -1385,7 +1385,7 @@ Where:
 * $\mathbf{W}$ is a learnable linear transformation
 * $\mathbf{a}$ is a learnable attention vector
 * $\|$ denotes vector concatenation
-* The softmax ensures attention scores are normalized across neighbors
+* The softmax (see [Section 3.2.4](/jekyll/2024-08-13-Machine_learning-part2.html#324-activation-functions)) ensures attention scores are normalized across neighbors
 
 These learned coefficients allow the network to focus more on chemically important atoms during graph aggregation.
 
