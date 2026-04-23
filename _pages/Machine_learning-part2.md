@@ -58,60 +58,84 @@ This process repeats over many examples, gradually improving the model's accurac
 
 #### Completed and Compiled Code: [Click Here](https://colab.research.google.com/drive/1xBQ6a24F6L45uOFkgML4E6z58jzsbRFe?usp=sharing)
 
-The structure of a neural network refers to how its components are organized and how information flows from the input to the output. Understanding this structure is essential for applying neural networks to chemical problems, where numerical data about molecules must be transformed into meaningful predictions—such as solubility, reactivity, toxicity, or classification into chemical groups.
+The structure of a neural network refers to how its components are organized and how information flows from the input to the output. In chemistry, this matters because molecular data must be converted from numerical descriptors into a useful prediction, such as solubility, toxicity, reactivity, or class membership.
 
 **Basic Building Blocks**
 
-A typical neural network consists of three types of layers:
+A typical feedforward neural network contains three kinds of layers.
 
-1. **Input Layer**
+**1. Input layer.**  
+The input layer stores the features you give to the model. In chemistry, these may be molecular fingerprints, descriptor vectors, or learned embeddings. If a molecule is represented by $d$ numerical features, we write the input as:
 
-This is the first layer and represents the data you give the model. In chemistry, this might include:
-- Molecular fingerprints (e.g., Morgan or ECFP4)
-- Descriptor vectors (e.g., molecular weight, number of rotatable bonds)
-- Graph embeddings (in more advanced architectures)
+$$
+\mathbf{x} = [x_1, x_2, \ldots, x_d]^T
+$$
 
-Each input feature corresponds to one "neuron" in this layer. The network doesn't modify the data here; it simply passes it forward.
+Each input feature corresponds to one input node. The input layer does not transform the data; it simply passes the feature values to the first hidden layer.
 
-2. **Hidden Layers**
+**2. Hidden layers.**  
+The hidden layers perform the actual computation. For one neuron $j$ in the first hidden layer, the network first forms a weighted sum plus a bias:
 
-These are the core of the network. They are composed of interconnected neurons that process the input data through a series of transformations. Each neuron:
-- Multiplies each input by a weight (a learned importance factor)
-- Adds the results together, along with a bias term
-- Passes the result through an activation function to determine the output
+$$
+z_j^{[1]} = \sum_{i=1}^{d} w_{ji}^{[1]} x_i + b_j^{[1]}
+$$
 
-Multiple hidden layers can extract increasingly abstract features. For example:
-- First hidden layer: detects basic structural motifs (e.g., aromatic rings)
-- Later hidden layers: model higher-order relationships (e.g., presence of specific pharmacophores)
+Then it applies an activation function:
 
-The depth of a network (number of hidden layers) increases its capacity to model complex patterns, but also makes it more challenging to train.
+$$
+a_j^{[1]} = \phi(z_j^{[1]})
+$$
 
-3. **Output Layer**
+Here:
+- $z_j^{[1]}$ is the pre-activation value
+- $a_j^{[1]}$ is the activated output passed to the next layer
+- $w_{ji}^{[1]}$ is the weight connecting input $x_i$ to hidden neuron $j$
+- $b_j^{[1]}$ is the bias term
+- $\phi$ is an activation function such as ReLU
 
-This layer generates the final prediction. The number of output neurons depends on the type of task:
-- One neuron for regression (e.g., predicting solubility)
-- One neuron with a sigmoid function for binary classification (e.g., active vs. inactive)
-- Multiple neurons with softmax for multi-class classification (e.g., toxicity categories)
+This is the key point: the activation function is part of the hidden-layer computation, not a separate idea.
 
-**Activation Functions**
+If we write the entire hidden layer at once, the same computation becomes:
 
-The activation function introduces non-linearity to the model. Without it, the network would behave like a linear regression model, unable to capture complex relationships. Common activation functions include:
-- **ReLU (Rectified Linear Unit):** Returns 0 for negative inputs and the input itself for positive values. Efficient and widely used.
-- **Sigmoid:** Squeezes inputs into the range (0,1), useful for probabilities.
-- **Tanh:** Similar to sigmoid but outputs values between -1 and 1, often used in earlier layers.
+$$
+\mathbf{z}^{[1]} = W^{[1]}\mathbf{x} + \mathbf{b}^{[1]}, \qquad \mathbf{a}^{[1]} = \phi(\mathbf{z}^{[1]})
+$$
 
-These functions allow neural networks to model subtle chemical relationships, such as how a substructure might enhance activity in one molecular context but reduce it in another.
+With multiple hidden layers, the network can learn increasingly complex chemical patterns. Early layers may respond to simple combinations of descriptors, while later layers combine those signals into higher-level relationships.
+
+**3. Output layer.**  
+The output layer converts the last hidden representation into the final prediction. Its form depends on the task:
+- Regression: $\hat{y} = z^{[L]}$
+- Binary classification: $\hat{y} = \sigma(z^{[L]})$
+- Multi-class classification: $\hat{\mathbf{y}} = \text{softmax}(\mathbf{z}^{[L]})$
+
+Here, $L$ denotes the final layer of the network.
+
+![Network anatomy diagram](../../resource/img/neural_network/network_anatomy.png)
+
+*Figure 3.2.2a. A feedforward neural network contains an input layer, one or more hidden layers, and an output layer. Each hidden neuron first computes a weighted sum plus bias, then applies an activation function.*
 
 **Forward Pass: How Data Flows Through the Network**
 
-The process of making a prediction is known as the forward pass. Here's what happens step-by-step:
+The process of making a prediction is called the forward pass. The same two-step pattern is repeated layer by layer. Let $\mathbf{a}^{[0]} = \mathbf{x}$. For layer $l$:
 
-1. Each input feature (e.g., molecular weight = 300) is multiplied by a corresponding weight.
-2. The weighted inputs are summed and combined with a bias.
-3. The result is passed through the activation function.
-4. The output becomes the input to the next layer.
+$$
+\mathbf{z}^{[l]} = W^{[l]}\mathbf{a}^{[l-1]} + \mathbf{b}^{[l]}, \qquad \mathbf{a}^{[l]} = \phi^{[l]}(\mathbf{z}^{[l]})
+$$
 
-This process repeats until the final output is produced.
+In words, each layer:
+1. receives an input vector,
+2. computes a weighted sum plus bias,
+3. applies an activation function,
+4. passes the resulting activations to the next layer.
+
+This repeats until the final layer produces $\hat{y}$ or $\hat{\mathbf{y}}$.
+
+For example, if a molecule is represented by $\mathbf{x} = [300, 2.5, 6]^T$, a hidden neuron combines those values using learned weights and a bias to produce $z$, then applies an activation function such as ReLU to produce $a$. That activated value is then passed forward to the next layer.
+
+![Forward pass infographic](../../resource/img/neural_network/forward_pass_infographic.png)
+
+*Figure 3.2.2b. In a forward pass, the network repeatedly performs a linear step followed by an activation step until it reaches the final output.*
 
 **Building a Simple Neural Network for Molecular Property Prediction**
 
