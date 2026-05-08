@@ -42,7 +42,7 @@ C0 - C1 - O2
 
 Here `C0` is the carbon in `CH3`, `C1` is the carbon in `CH2`, and `O2` is the oxygen in `OH`. The hydrogens are often treated as implicit because many molecular datasets store only heavy atoms by default.
 
-<!-- Figure 3.3.1 to add after generation: ../../resource/img/gnn/ethanol_molecular_graph.png -->
+![Ethanol as a molecular graph](../../resource/img/gnn/ethanol_molecular_graph.png)
 
 **Code for this idea.** RDKit can read a SMILES string and expose the atoms and bonds that become the graph.
 
@@ -104,7 +104,7 @@ In PyTorch Geometric, this information is usually stored in three objects:
 - `edge_index`: which atoms are connected
 - `edge_attr`: bond features for each edge
 
-<!-- Figure 3.3.2 to add after generation: ../../resource/img/gnn/ethanol_graph_data.png -->
+![PyG-style graph data for ethanol](../../resource/img/gnn/ethanol_graph_data.png)
 
 **Code for this idea.** This example builds a small PyTorch Geometric `Data` object from ethanol. The features are deliberately simple so that the representation is easy to inspect.
 
@@ -164,7 +164,7 @@ A molecular graph keeps the molecule connected. The model can update each atom b
 - A regular neural network usually receives one fixed vector per molecule.
 - A GNN receives a graph: atom features plus bond connections.
 
-<!-- Figure 3.3.3 to add after generation: ../../resource/img/gnn/fingerprint_vs_graph.png -->
+![Fingerprints versus molecular graphs](../../resource/img/gnn/fingerprint_vs_graph.png)
 
 **Code for this idea.** The same SMILES string can be converted into either a fingerprint or a molecular graph.
 
@@ -195,7 +195,7 @@ A graph neural network updates each node by using information from nearby nodes.
 
 At the start, an oxygen atom may only know simple facts like "I am oxygen" and "I am sp3." After one message-passing layer, it can know that it is attached to carbon. After two layers, it can receive information from atoms two bonds away. In ethanol, the oxygen can gradually learn that it is part of an alcohol attached to an ethyl group.
 
-<!-- Figure 3.3.4 to add after generation: ../../resource/img/gnn/ethanol_message_passing.png -->
+![Message passing in ethanol](../../resource/img/gnn/ethanol_message_passing.png)
 
 The main operation is:
 
@@ -253,7 +253,7 @@ For chemists, the simplest way to read "pooling" is:
 
 > Pooling means summarizing all atom-level information into one molecule-level representation.
 
-<!-- Figure 3.3.5 to add after generation: ../../resource/img/gnn/ethanol_pooling_readout.png -->
+![Pooling atom embeddings into a molecule embedding](../../resource/img/gnn/ethanol_pooling_readout.png)
 
 **Code for this idea.** PyG provides pooling functions that know which atoms belong to which molecule in a batch.
 
@@ -332,7 +332,7 @@ This matters chemically. A C-C single bond, a C=O double bond, and an aromatic b
 
 In the MPNN below, `NNConv` uses `edge_attr` to shape the message along each bond.
 
-<!-- Figure 3.3.7 to add after generation: ../../resource/img/gnn/gcn_vs_mpnn_messages.png -->
+![GCN and MPNN message passing](../../resource/img/gnn/gcn_vs_mpnn_messages.png)
 
 **Code for this idea.**
 
