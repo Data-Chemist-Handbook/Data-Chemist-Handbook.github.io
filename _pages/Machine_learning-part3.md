@@ -193,6 +193,18 @@ Fingerprints are still very useful. They are fast, simple, and often strong base
 
 A graph neural network updates each node by using information from nearby nodes. In a molecular GNN, that means each atom updates its representation using information from bonded atoms.
 
+**What actually gets trained?**
+The molecular graph is the input, not the part that learns. The trainable part is the neural-network math that acts on that graph: the message-passing layers learn how to transform information from neighboring atoms, and the final prediction layer learns how to turn the molecule representation into a property prediction.
+
+| Part of the pipeline | Role |
+| --- | --- |
+| Atom features, such as atom type, charge, aromaticity | Input data; not trained |
+| Graph connectivity, such as which atoms are bonded | Input structure; not trained |
+| Graph convolution / message passing | Trainable math; updates atom representations |
+| Atom embeddings | Intermediate representations produced by the model |
+| Pooling / readout | Usually a fixed combine step, such as mean or sum |
+| Final prediction layer | Trainable math; maps the molecule vector to the target property |
+
 At the start, an oxygen atom may only know simple facts like "I am oxygen" and "I am sp3." After one message-passing layer, it can know that it is attached to carbon. After two layers, it can receive information from atoms two bonds away. In ethanol, the oxygen can gradually learn that it is part of an alcohol attached to an ethyl group.
 
 ![Message passing in ethanol](../../resource/img/gnn/ethanol_message_passing.png)
